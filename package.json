@@ -1,0 +1,16 @@
+{
+  "name": "impact-hub-system",
+  "version": "1.0.0",
+  "description": "Impact Hub Egypt - عالم التعليم التفاعلي",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "mkdir -p dist && cp *.html dist/ && cp server.js dist/",
+    "start": "node server.js",
+    "lint": "echo 'No linting required'"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

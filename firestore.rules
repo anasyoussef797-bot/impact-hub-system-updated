@@ -1,0 +1,183 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==========================================
+    // دالات التحقق العامة لضمان صحة وهيكل البيانات بشكل صارم ودون اختصارات
+    // ==========================================
+    
+    function isString(val) {
+      return val is string;
+    }
+    
+    function isNumber(val) {
+      return val is int || val is float;
+    }
+    
+    function isList(val) {
+      return val is list;
+    }
+    
+    function isMap(val) {
+      return val is map;
+    }
+    
+    function isValidNurseryId(id) {
+      return isString(id) && id.size() > 0 && id.size() <= 100;
+    }
+
+    // ==========================================
+    // 1. إعدادات الواجهة العامة والمنتجات (شاملة التحقق من أنواع البيانات والمدخلات)
+    // ==========================================
+    
+    match /web_settings/{docId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data);
+    }
+    
+    match /public_site/{docId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data);
+    }
+    
+    match /public_site_items/{docId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data);
+    }
+    
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && (!('price' in request.resource.data) || isNumber(request.resource.data.price))
+        && (!('name' in request.resource.data) || isString(request.resource.data.name));
+    }
+
+    // ==========================================
+    // 2. إدارة المستخدمين والحضانات (حماية هيكل الحسابات)
+    // ==========================================
+    
+    match /nurseries/{nurseryId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && (!('name' in request.resource.data) || isString(request.resource.data.name));
+    }
+    
+    match /nursery_users/{userId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.name)
+        && isString(request.resource.data.phone)
+        && (!('email' in request.resource.data) || isString(request.resource.data.email))
+        && isString(request.resource.data.role)
+        && (request.resource.data.role == 'teacher' || request.resource.data.role == 'parent' || request.resource.data.role == 'admin');
+    }
+
+    // ==========================================
+    // 3. المنشورات والتفاعل (التايم لاين - حماية من النصوص الضخمة والبيانات الخاطئة)
+    // ==========================================
+    
+    match /global_posts/{postId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isString(request.resource.data.authorName)
+        && isString(request.resource.data.body);
+    }
+    
+    match /nursery_posts/{postId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.authorName)
+        && isString(request.resource.data.body)
+        && request.resource.data.body.size() <= 5000 // الحد الأقصى للمنشور لحماية قواعد البيانات
+        && (!('image' in request.resource.data) || isString(request.resource.data.image)) // للصور المرفوعة كـ Base64
+        && (!('likes' in request.resource.data) || isList(request.resource.data.likes))
+        && (!('comments' in request.resource.data) || isList(request.resource.data.comments));
+    }
+
+    // ==========================================
+    // 4. الطلبات اللوجستية (منع التلاعب ببيانات الحجز وسير العملية اللوجستية)
+    // ==========================================
+    
+    match /orders/{orderId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.parentId)
+        && isString(request.resource.data.parentName)
+        && isList(request.resource.data.items)
+        && isString(request.resource.data.status)
+        && (request.resource.data.status == 'pending' || request.resource.data.status == 'approved' || request.resource.data.status == 'rejected');
+    }
+
+    // ==========================================
+    // 5. الحصص والبث المباشر (التحقق الصارم من الحقول وحالات الحصص الافتراضية)
+    // ==========================================
+    
+    match /booked_classes/{classId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.teacherId)
+        && isString(request.resource.data.studentName)
+        && isString(request.resource.data.date)
+        && isString(request.resource.data.time)
+        && isString(request.resource.data.status)
+        && (request.resource.data.status == 'upcoming' || request.resource.data.status == 'completed' || request.resource.data.status == 'cancelled');
+    }
+    
+    match /live_classes/{classId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.roomName)
+        && isString(request.resource.data.roomUrl)
+        && isString(request.resource.data.teacherName)
+        && isString(request.resource.data.studentName)
+        && isString(request.resource.data.status)
+        && (request.resource.data.status == 'active' || request.resource.data.status == 'ended');
+    }
+    
+    match /teacher_availability/{slotId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.teacherId)
+        && isString(request.resource.data.teacherName)
+        && isString(request.resource.data.day)
+        && isString(request.resource.data.time);
+    }
+    
+    match /teacher_ratings/{ratingId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isString(request.resource.data.teacherId)
+        && isNumber(request.resource.data.rating)
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+        && (!('feedback' in request.resource.data) || isString(request.resource.data.feedback));
+    }
+
+    // ==========================================
+    // 6. الشات والواجبات التفاعلية (أمان المحادثات وحجم الرسائل)
+    // ==========================================
+    
+    match /support_chats/{chatId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isString(request.resource.data.senderId)
+        && isList(request.resource.data.participants)
+        && isString(request.resource.data.text)
+        && request.resource.data.text.size() <= 1000; // منع الرسائل الضخمة العشوائية
+    }
+    
+    match /homework_assignments/{hwId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data)
+        && isValidNurseryId(request.resource.data.nurseryId)
+        && isString(request.resource.data.gameName)
+        && isString(request.resource.data.status)
+        && (request.resource.data.status == 'pending' || request.resource.data.status == 'completed');
+    }
+  }
+}

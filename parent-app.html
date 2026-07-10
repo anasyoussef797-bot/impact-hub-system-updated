@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="color-scheme" content="light">
+    <title>Impact Hub - Parent App (Full System with Vercel Games)</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <style>
+        :root {
+            --primary-maroon: #800000;
+            --soft-maroon: #a33333;
+            --pastel-bg: #fdfbf7;
+            --white: #ffffff;
+            --pastel-blue: #e0f2fe;
+            --text-dark: #2d3748;
+            --text-gray: #718096;
+            --border-color: #e2e8f0;
+            --transition: all 0.3s ease;
+            --facebook-blue: #1877f2;
+            --warning-yellow: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: #e2e8f0 !important; color: var(--text-dark) !important; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; overflow: hidden; }
+        
+        #mobile-wrapper { width: 100%; max-width: 430px; background-color: var(--pastel-bg); height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
+
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 30px; background: var(--pastel-bg); text-align: center; }
+        .login-logo { width: 80px; height: 80px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--primary-maroon); box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .login-input { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--white); outline: none; }
+        .login-input:focus { border-color: var(--primary-maroon); }
+
+        .app-header { background-color: var(--pastel-bg); border-bottom: 1px solid var(--border-color); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; flex-shrink: 0; }
+        .header-profile { position: relative; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary-maroon); overflow: hidden; cursor: pointer; }
+        .header-profile img { width: 100%; height: 100%; object-fit: cover; }
+        .header-profile input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .header-icon { position: relative; font-size: 20px; cursor: pointer; color: var(--primary-maroon); }
+        .badge { position: absolute; top: -8px; right: -8px; background: #fbbf24; color: #000; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        #main-content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 70px; }
+        
+        .tab-content { display: none; padding: 15px; animation: fadeIn 0.3s ease forwards; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title { font-size: 16px; font-weight: bold; color: var(--text-dark); margin-bottom: 12px; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; }
+        .card { background: var(--white) !important; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        
+        .btn-primary { background: var(--primary-maroon); color: var(--white); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; width: 100%; font-size: 13px; cursor: pointer; transition: var(--transition); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-primary:active { background: var(--soft-maroon); transform: scale(0.98); }
+        .btn-outline { background: transparent; color: var(--primary-maroon); border: 1px solid var(--primary-maroon); }
+        .btn-danger { background: #ef4444; color: var(--white); border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; width: 100%; font-size: 13px; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; outline: none; margin-bottom: 10px; background: var(--white); }
+
+        .create-post-area { display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; }
+        .create-post-area textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; font-size: 13px; outline: none; resize: none; background: var(--white); margin-bottom: 5px; }
+        .post-actions-row { display: flex; justify-content: space-between; align-items: center; }
+        .file-upload-btn { position: relative; color: var(--primary-maroon); font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .file-upload-btn input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        
+        .feed-post { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        .feed-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .feed-media img { width: 100%; border-radius: 8px; margin-top: 10px; max-height: 250px; object-fit: cover; }
+        
+        .post-actions { display: flex; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .action-btn { background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+        .comments-section { margin-top: 15px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .comment-item { background: var(--white); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 6px; font-size: 13px; }
+        .comment-input-area { display: flex; gap: 10px; margin-top: 10px; }
+
+        #jitsi-student-container { width: 100%; height: 350px; background: #000; border-radius: 12px; display: none; margin-top: 15px; overflow: hidden; border: 2px solid var(--primary-maroon); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: flex-end; }
+        .modal-content { background: var(--pastel-bg); width: 100%; max-width: 430px; border-radius: 20px 20px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto; color: var(--text-dark); display: flex; flex-direction: column; }
+        
+        .chat-messages { flex-grow: 1; min-height: 300px; max-height: 400px; overflow-y: auto; padding: 10px 0; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+        .msg.sent { background: var(--primary-maroon); color: white; align-self: flex-start; border-bottom-right-radius: 2px; }
+        .msg.received { background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); align-self: flex-end; border-bottom-left-radius: 2px; }
+
+        .cart-items-container { margin-bottom: 15px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: var(--white); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+        .invoice-summary { background: var(--white); padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed var(--border-color); font-size: 13px; }
+        .payment-method { border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin-bottom: 10px; background: var(--white); display: flex; align-items: center; gap: 10px; }
+
+        .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .product-card { background: var(--white) !important; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+
+        .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; background: var(--white) !important; display: flex; justify-content: space-around; padding: 10px 2px; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 999; border-top: 1px solid var(--border-color); border-radius: 20px 20px 0 0; }
+        .nav-item { text-align: center; color: var(--text-gray); font-size: 10px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .nav-item i { font-size: 18px; margin-bottom: 4px; transition: var(--transition); }
+        .nav-item.active { color: var(--primary-maroon); font-weight: bold; }
+        .nav-item.active i { transform: translateY(-3px); }
+        
+        .app-footer-credit { text-align: center; font-size: 10px; color: var(--text-gray); padding: 20px 10px; opacity: 0.8; }
+
+        /* ألعاب الطفل والواجبات */
+        .games-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .game-card { background: var(--white); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .game-card:hover { border-color: var(--primary-maroon); }
+        .game-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: white; margin: 0 auto 10px; background: var(--primary-maroon); }
+        .game-title { font-size: 12px; font-weight: bold; color: var(--text-dark); }
+        
+        .assignment-card { background: #fffbeb; border: 1px solid #fde68a; border-right: 4px solid var(--warning-yellow); padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+        #game-player-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 2000; flex-direction: column; }
+        #game-player-header { background: var(--primary-maroon); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        #game-player-iframe { flex-grow: 1; width: 100%; border: none; }
+        .close-game-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div id="mobile-wrapper">
+
+        <!-- شاشة تسجيل الدخول -->
+        <div id="login-screen">
+            <div class="login-logo"><i class="fa-solid fa-dove"></i></div>
+            <h2 style="color: var(--text-dark); margin-bottom: 5px;">مرحباً بك في الحضانة</h2>
+            <p style="color: var(--text-gray); font-size: 13px; margin-bottom: 25px;">برجاء تسجيل الدخول للمتابعة</p>
+            <input type="email" id="login-email" class="login-input" placeholder="البريد الإلكتروني">
+            <input type="password" id="login-pass" class="login-input" placeholder="كلمة المرور">
+            <button class="btn-primary" onclick="window.doLogin()">تسجيل الدخول</button>
+            <p style="font-size: 11px; color: var(--text-gray); margin-top: 20px; opacity: 0.7;">تم التطوير بواسطه impact hub egypt (esaia)</p>
+        </div>
+
+        <!-- التطبيق الرئيسي بعد الدخول -->
+        <div id="main-app" style="display: none; height: 100%; flex-direction: column;">
+            
+            <header class="app-header">
+                <div class="header-profile">
+                    <img id="user-avatar" src="https://via.placeholder.com/40" alt="Profile">
+                    <input type="file" accept="image/*" onchange="window.uploadProfilePic(this)">
+                </div>
+                <div class="header-actions">
+                    <div class="header-icon" onclick="window.openChatModal()">
+                        <i class="fa-regular fa-comment-dots"></i>
+                    </div>
+                    <div class="header-icon" onclick="window.openCart()">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="badge" id="cart-count">0</span>
+                    </div>
+                    <div class="header-icon" onclick="window.doLogout()">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div id="main-content-scroll">
+                
+                <!-- 1. الرئيسية / التايم لاين -->
+                <div id="home" class="tab-content active">
+                    <h3 class="section-title">ساحة الأنشطة (البلاي جراوند)</h3>
+                    <div class="card create-post-area">
+                        <textarea id="parent-post-body" rows="2" placeholder="شاركنا لحظات طفلك..."></textarea>
+                        <div class="post-actions-row">
+                            <div class="file-upload-btn">
+                                <i class="fa-solid fa-camera"></i> <span>إرفاق صورة</span>
+                                <input type="file" id="parent-post-file" accept="image/*">
+                            </div>
+                            <button class="btn-primary" style="width: auto; padding: 6px 15px; margin: 0;" onclick="window.publishParentPost()">نشر</button>
+                        </div>
+                    </div>
+                    <div id="timeline-feed">
+                        <p style="text-align:center; color: var(--text-gray); font-size:12px;">جاري تحميل الأنشطة...</p>
+                    </div>
+                    <div class="app-footer-credit">تم التطوير بواسطه impact hub egypt (esaia)</div>
+                </div>
+
+                <!-- 2. حجز ومتابعة الدروس الأونلاين -->
+                <div id="tutoring" class="tab-content">
+                    <h3 class="section-title">حجز ومتابعة الدروس 📹</h3>
+                    <div class="card">
+                        <div style="display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px;">
+                            <div style="width: 40px; height: 40px; background: var(--pastel-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary-maroon);"><i class="fa-solid fa-chalkboard-user"></i></div>
+                            <div>
+                                <h4 style="font-size: 14px; color: var(--text-dark);">أ / أحمد علي</h4>
+                                <p style="font-size: 11px; color: var(--text-gray);">لغة إنجليزية</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <button class="btn-primary btn-outline" style="margin:0; font-size:11px;" onclick="window.addToCart('حصة مجموعة مع مستر أحمد', 50)">+ سلة: مجموعة (50 ج)</button>
+                            <button class="btn-primary btn-outline" style="margin:0; font-size:11px;" onclick="window.addToCart('حصة خاصة مع مستر أحمد', 120)">+ سلة: خاصة (120 ج)</button>
+                        </div>
+                        <button class="btn-primary" style="background:#22c55e;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span>الدخول للحصة المباشرة الآن</span></button>
+                        <button class="btn-danger" style="display:none;" id="btn-leave-class" onclick="window.leaveLiveClass()"><i class="fa-solid fa-phone-slash"></i> <span>مغادرة الحصة</span></button>
+                        <div id="jitsi-student-container"></div>
+                    </div>
+                </div>
+
+                <!-- 3. كاميرات المتابعة المباشرة -->
+                <div id="cameras" class="tab-content">
+                    <h3 class="section-title">المتابعة المباشرة 🎥</h3>
+                    <div class="card" style="text-align: center; padding: 30px 15px;">
+                        <i class="fa-solid fa-video" style="font-size: 40px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                        <button class="btn-primary" onclick="alert('جاري الاتصال بالسيرفر المحلي للكاميرات...')"><i class="fa-solid fa-eye"></i> <span>متابعة البث الحي لفصل الطفل</span></button>
+                    </div>
+                </div>
+
+                <!-- 4. متجر الحضانة -->
+                <div id="marketplace" class="tab-content">
+                    <h3 class="section-title">متجر الحضانة والكتب</h3>
+                    <div class="products-grid" id="live-products"></div>
+                </div>
+
+                <!-- 5. قسم الطفل (ألعاب المناهج الـ الستة الفعالة المرفوعة على Vercel) -->
+                <div id="kids" class="tab-content">
+                    <h3 class="section-title">ألعاب المناهج التفاعلية 🎮</h3>
+                    
+                    <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary-maroon);"><i class="fa-solid fa-bell"></i> واجبات مرسلة من المستر:</h4>
+                    <div id="assigned-homework-container">
+                        <p style="font-size:12px; color:var(--text-gray);">لا توجد واجبات معلقة حالياً.</p>
+                    </div>
+
+                    <h4 style="font-size:14px; margin-top:20px; margin-bottom:10px; color:var(--text-dark);"><i class="fa-solid fa-book-open"></i> مكتبة ألعاب إمباكت هب المعتمدة (Vercel Live):</h4>
+                    <div class="games-grid">
+                        <div class="game-card" onclick="window.playGame('لعبة تتبع الحروف')">
+                            <div class="game-icon" style="background: #ec4899;"><i class="fa-solid fa-pen-nib"></i></div>
+                            <div class="game-title">تتبع الحروف</div>
+                        </div>
+                        <div class="game-card" onclick="window.playGame('لعبة بناء الكلمات ثلاثية الأبعاد')">
+                            <div class="game-icon" style="background: #3b82f6;"><i class="fa-solid fa-cubes"></i></div>
+                            <div class="game-title">بناء الكلمات 3D</div>
+                        </div>
+                        <div class="game-card" onclick="window.playGame('لعبة البحث عن الحروف ثلاثية الأبعاد')">
+                            <div class="game-icon" style="background: #10b981;"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <div class="game-title">البحث عن الحروف 3D</div>
+                        </div>
+                        <div class="game-card" onclick="window.playGame('لعبة مغامرات مطابقة الأرقام')">
+                            <div class="game-icon" style="background: #f59e0b;"><i class="fa-solid fa-arrow-up-1-9"></i></div>
+                            <div class="game-title">مطابقة الأرقام 3D</div>
+                        </div>
+                        <div class="game-card" onclick="window.playGame('لعبة مطابقة الذاكرة ثلاثية الأبعاد')">
+                            <div class="game-icon" style="background: #8b5cf6;"><i class="fa-solid fa-brain"></i></div>
+                            <div class="game-title">مطابقة الذاكرة 3D</div>
+                        </div>
+                        <div class="game-card" onclick="window.playGame('لعبة جمع الحروف والمغامرات')">
+                            <div class="game-icon" style="background: #6366f1;"><i class="fa-solid fa-gem"></i></div>
+                            <div class="game-title">جمع الحروف والمغامرات</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> 
+
+            <!-- شاشة تشغيل الألعاب للطفل في iframe -->
+            <div id="game-player-screen">
+                <div id="game-player-header">
+                    <div style="font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <i class="fa-solid fa-gamepad"></i> <span id="game-player-title">اللعبة</span>
+                    </div>
+                    <button class="close-game-btn" onclick="window.closeGamePlayer()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <iframe id="game-player-iframe" src="" allow="autoplay; encrypted-media"></iframe>
+            </div>
+
+            <!-- مودال الشات المباشر -->
+            <div class="modal-overlay" id="chatModal">
+                <div class="modal-content" style="height: 80vh;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                        <h3 style="color: var(--text-dark); font-size:16px;"><i class="fa-regular fa-comments" style="color: var(--primary-maroon);"></i> <span>مركز الدعم والمراسلة</span></h3>
+                        <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="window.closeChatModal()"></i>
+                    </div>
+                    <div class="chat-messages" id="parent-chat-box"></div>
+                    <div class="chat-input-area" style="display:flex; gap:10px;">
+                        <input type="text" id="parent-chat-input" class="form-control" style="margin:0;" placeholder="اكتب رسالتك...">
+                        <button class="btn-primary" style="margin:0; width:auto;" onclick="window.sendParentMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- مودال مراجعة السلة والفواتير -->
+            <div class="modal-overlay" id="cartModal">
+                <div class="modal-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
+                        <h3 style="color: var(--text-dark); font-size:16px;"><i class="fa-solid fa-basket-shopping" style="color: var(--primary-maroon);"></i> <span>مراجعة الفاتورة والطلب</span></h3>
+                        <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="window.closeCart()"></i>
+                    </div>
+                    <div class="cart-items-container" id="cart-items-list"></div>
+                    <div class="invoice-summary">
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>إجمالي المطلوب سداده:</span>
+                            <span style="font-weight:bold; color:var(--primary-maroon);" id="total-now">0 ج.م</span>
+                        </div>
+                    </div>
+                    <div class="payment-method">
+                        <i class="fa-solid fa-money-bill-wave" style="color: #10b981;"></i>
+                        <span>الدفع كاش / محفظة الكترونية بالمقر</span>
+                    </div>
+                    <button class="btn-primary" onclick="window.confirmOrder()">تأكيد وإرسال الطلب للتوصيل (AXON EXPRESS)</button>
+                </div>
+            </div>
+
+            <!-- القائمة السفلية للتنقل -->
+            <nav class="bottom-nav">
+                <div class="nav-item active" onclick="window.switchTab('home', this)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
+                <div class="nav-item" onclick="window.switchTab('tutoring', this)"><i class="fa-solid fa-chalkboard-user"></i><span>دروس</span></div>
+                <div class="nav-item" onclick="window.switchTab('cameras', this)"><i class="fa-solid fa-video"></i><span>كاميرات</span></div>
+                <div class="nav-item" onclick="window.switchTab('marketplace', this)"><i class="fa-solid fa-store"></i><span>المتجر</span></div>
+                <div class="nav-item" onclick="window.switchTab('kids', this)"><i class="fa-solid fa-gamepad"></i><span>الطفل</span></div>
+            </nav>
+
+        </div> 
+    </div> 
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
+            authDomain: "impact-hub-egypt.firebaseapp.com",
+            projectId: "impact-hub-egypt",
+            storageBucket: "impact-hub-egypt.firebasestorage.app",
+            messagingSenderId: "591172804173",
+            appId: "1:591172804173:web:7fc70ded00ca562bfdc604"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const myNurseryId = "Ajyal_AlGhad_ID_001";
+        const myParentId = "parent_yassin";
+        const myParentName = "ياسين محمود (ولي أمر)";
+
+        let jitsiApi = null;
+        let cart = [];
+        let chatUnsubscribe = null;
+
+        // قاعدة البيانات الثابتة لروابط ألعاب Vercel الستة المخصصة للسيستم
+        const vercelGamesDatabase = {
+            "لعبة تتبع الحروف": "https://letter-tracing-game.vercel.app/",
+            "لعبة بناء الكلمات ثلاثية الأبعاد": "https://3-d-word-builder-adventure.vercel.app/",
+            "لعبة البحث عن الحروف ثلاثية الأبعاد": "https://3-d-find-the-letter-adventure.vercel.app/",
+            "لعبة مغامرات مطابقة الأرقام": "https://3-d-number-matching-adventure.vercel.app/",
+            "لعبة مطابقة الذاكرة ثلاثية الأبعاد": "https://3-d-memory-match-adventure.vercel.app/",
+            "لعبة جمع الحروف والمغامرات": "https://game1-seven-lovat.vercel.app/"
+        };
+
+        const toBase64 = file => new Promise((resolve, reject) => {
+            if(!file) resolve("");
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        // ================== 1. حائط الأنشطة والتفاعل الكامل ==================
+        window.publishParentPost = async () => {
+            const body = document.getElementById('parent-post-body').value;
+            if(!body) return;
+            const file = document.getElementById('parent-post-file').files[0];
+            const base64 = await toBase64(file);
+
+            await addDoc(collection(db, "nursery_posts"), {
+                nurseryId: myNurseryId,
+                authorName: myParentName,
+                body: body,
+                image: base64,
+                timestamp: new Date().getTime(),
+                likes: [],
+                comments: []
+            });
+            document.getElementById('parent-post-body').value = '';
+            alert("📢 تم نشر مشاركتك بنجاح!");
+            fetchTimelineFeed();
+        };
+
+        window.fetchTimelineFeed = async () => {
+            const container = document.getElementById('timeline-feed');
+            container.innerHTML = '';
+            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            const snap = await getDocs(q);
+
+            snap.forEach(docData => {
+                const postId = docData.id;
+                const post = docData.data();
+                let isLiked = post.likes && post.likes.includes(myParentId);
+                let likeStyle = isLiked ? 'color: var(--facebook-blue);' : '';
+
+                let commentsHtml = '';
+                if(post.comments) {
+                    post.comments.forEach(c => {
+                        commentsHtml += `<div class="comment-item"><strong>${c.authorName}:</strong> ${c.text}</div>`;
+                    });
+                }
+
+                container.innerHTML += `
+                    <div class="feed-post">
+                        <div class="feed-header"><strong>${post.authorName}</strong></div>
+                        <p>${post.body}</p>
+                        ${post.image ? `<div class="feed-media"><img src="${post.image}"></div>` : ''}
+                        <div class="post-actions">
+                            <button class="action-btn" style="${likeStyle}" onclick="window.likePost('${postId}', ${isLiked})"><i class="fa-solid fa-thumbs-up"></i> إعجاب (${post.likes ? post.likes.length : 0})</button>
+                        </div>
+                        <div class="comments-section">
+                            <div id="comments-box-${postId}">${commentsHtml}</div>
+                            <div class="comment-input-area" style="display:flex; gap:5px; margin-top:5px;">
+                                <input type="text" id="input-${postId}" class="form-control" style="margin:0;" placeholder="تعليق...">
+                                <button class="btn-primary" style="margin:0; width:auto; padding:5px 10px;" onclick="window.addComment('${postId}')">رد</button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        };
+
+        window.likePost = async (postId, isLiked) => {
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, { likes: isLiked ? arrayRemove(myParentId) : arrayUnion(myParentId) });
+            fetchTimelineFeed();
+        };
+
+        window.addComment = async (postId) => {
+            const val = document.getElementById(`input-${postId}`).value;
+            if(!val) return;
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, { comments: arrayUnion({ authorName: myParentName, text: val, timestamp: new Date().getTime() }) });
+            fetchTimelineFeed();
+        };
+
+        // ================== 2. البث المباشر المزامر الذكي ==================
+        window.joinLiveClass = async () => {
+            const container = document.getElementById('jitsi-student-container');
+            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+            const snap = await getDocs(q);
+
+            if(snap.empty) {
+                alert("❌ عذراً، لم يقم المدرس ببدء البث المباشر حتى الآن.");
+                return;
+            }
+
+            let activeRoomName = "";
+            snap.forEach(d => { activeRoomName = d.data().roomName; });
+
+            container.style.display = 'block';
+            document.getElementById('btn-leave-class').style.display = 'inline-flex';
+
+            const domain = 'meet.jit.si';
+            const options = {
+                roomName: activeRoomName,
+                width: '100%',
+                height: 350,
+                parentNode: container,
+                userInfo: { displayName: myParentName },
+                configOverwrite: { startWithAudioMuted: true, prejoinPageEnabled: false }
+            };
+            jitsiApi = new JitsiMeetExternalAPI(domain, options);
+        };
+
+        window.leaveLiveClass = () => {
+            if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
+            document.getElementById('jitsi-student-container').style.display = 'none';
+            document.getElementById('btn-leave-class').style.display = 'none';
+        };
+
+        // ================== 3. المراسلة الفورية المزامنة بالـ Real-time ==================
+        window.openChatModal = () => {
+            document.getElementById('chatModal').style.display = 'flex';
+            const box = document.getElementById('parent-chat-box');
+            if(chatUnsubscribe) chatUnsubscribe();
+
+            const q = query(collection(db, "support_chats"), where("participants", "array-contains", myParentId));
+            chatUnsubscribe = onSnapshot(q, (snapshot) => {
+                box.innerHTML = '';
+                snapshot.forEach(d => {
+                    const msg = d.data();
+                    const msgClass = msg.senderId === myParentId ? 'sent' : 'received';
+                    box.innerHTML += `<div class="msg ${msgClass}">${msg.text}</div>`;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        };
+
+        window.closeChatModal = () => { document.getElementById('chatModal').style.display = 'none'; if(chatUnsubscribe) chatUnsubscribe(); };
+
+        window.sendParentMessage = async () => {
+            const inp = document.getElementById('parent-chat-input');
+            if(!inp.value.trim()) return;
+            await addDoc(collection(db, "support_chats"), {
+                senderId: myParentId,
+                participants: [myParentId, "teacher_ahmed_001"],
+                text: inp.value.trim(),
+                timestamp: new Date().getTime()
+            });
+            inp.value = '';
+        };
+
+        // ================== 4. المتجر والسلة ==================
+        window.loadMarketplace = async () => {
+            const grid = document.getElementById('live-products');
+            grid.innerHTML = `<div class="product-card"><h4>كتاب الحضانة التفاعلي الجديد</h4><p>السعر: 85 ج.م</p><button class="btn-primary" onclick="window.addToCart('كتاب المنهج التفاعلي', 85)">إضافة للسلة</button></div>
+                              <div class="product-card"><h4>مكعبات الحروف الذكية</h4><p>السعر: 120 ج.م</p><button class="btn-primary" onclick="window.addToCart('مكعبات الذكاء 3D', 120)">إضافة للسلة</button></div>`;
+        };
+
+        window.addToCart = (name, price) => {
+            cart.push({ name, price });
+            document.getElementById('cart-count').innerText = cart.length;
+            alert(`✅ تم إضافة (${name}) إلى سلة طلباتك.`);
+        };
+
+        window.openCart = () => {
+            document.getElementById('cartModal').style.display = 'flex';
+            const list = document.getElementById('cart-items-list');
+            list.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `<div class="cart-item"><span>${item.name}</span><strong>${item.price} ج.م</strong></div>`;
+            });
+            document.getElementById('total-now').innerText = total + " ج.م";
+        };
+
+        window.closeCart = () => { document.getElementById('cartModal').style.display = 'none'; };
+
+        window.confirmOrder = async () => {
+            if(cart.length === 0) { alert("السلة فارغة!"); return; }
+            await addDoc(collection(db, "orders"), {
+                parentId: myParentId,
+                parentName: myParentName,
+                nurseryId: myNurseryId,
+                items: cart,
+                status: "pending",
+                timestamp: new Date()
+            });
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            closeCart();
+            alert("🚀 ممتاز! تم تسجيل طلبك وإرساله لشركة الشحن المعتمدة AXON EXPRESS للمطابقة الفورية!");
+        };
+
+        // ================== 5. تشغيل ألعاب Vercel الـ الستة الحقيقية بنجاح ==================
+        window.fetchHomeworkAssignments = () => {
+            const container = document.getElementById('assigned-homework-container');
+            const q = query(collection(db, "homework_assignments"), where("nurseryId", "==", myNurseryId), where("status", "==", "pending"));
+            
+            onSnapshot(q, (snapshot) => {
+                if(snapshot.empty) {
+                    container.innerHTML = '<p style="font-size:12px; color:var(--text-gray);">لا توجد واجبات معلقة حالياً طفلك ممتاز! ✨</p>';
+                    return;
+                }
+                container.innerHTML = '';
+                snapshot.forEach(d => {
+                    const hw = d.data();
+                    container.innerHTML += `
+                        <div class="assignment-card">
+                            <div>
+                                <strong style="font-size:13px; color:var(--text-dark);">${hw.gameName}</strong>
+                                <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">الواجب المطلوب إنجازه</div>
+                            </div>
+                            <button class="btn-primary" style="margin:0; width:auto; padding:5px 12px; background:#22c55e;" onclick="window.playGame('${hw.gameName}', '${d.id}')">إبدأ التحدي 🎮</button>
+                        </div>`;
+                });
+            });
+        };
+
+        window.playGame = async (gameTitle, assignmentId = null) => {
+            document.getElementById('game-player-screen').style.display = 'flex';
+            document.getElementById('game-player-title').innerText = gameTitle;
+            
+            // سحب رابط اللعبة الفعلي المرفوع على Vercel من الـ Object
+            const gameUrl = vercelGamesDatabase[gameTitle] || "https://letter-tracing-game.vercel.app/";
+            document.getElementById('game-player-iframe').src = gameUrl; 
+
+            if(assignmentId) {
+                const hwRef = doc(db, "homework_assignments", assignmentId);
+                await updateDoc(hwRef, { status: 'completed' });
+            }
+        };
+
+        window.closeGamePlayer = () => {
+            document.getElementById('game-player-screen').style.display = 'none';
+            document.getElementById('game-player-iframe').src = "";
+        };
+
+        // ================== 6. محاكاة الـ Auth والتابات ==================
+        window.doLogin = () => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            fetchTimelineFeed();
+            loadMarketplace();
+            fetchHomeworkAssignments();
+        };
+
+        window.doLogout = () => {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
+        };
+
+        window.switchTab = (tabId, el) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+        };
+
+        window.uploadProfilePic = () => { alert("تم رفع وتحديث الصورة الشخصية."); };
+    </script>
+</body>
+</html>

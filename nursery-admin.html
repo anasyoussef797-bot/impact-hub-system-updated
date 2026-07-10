@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Hub Egypt - Manager Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-maroon: #800000;
+            --soft-maroon: #a33333;
+            --bg-light: #fdfbf7;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-gray: #718096;
+            --border-color: #e2e8f0;
+            --success-green: #22c55e;
+            --warning-yellow: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; min-height: 100vh; }
+
+        /* الشريط الجانبي */
+        .sidebar { width: 280px; background-color: var(--white); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .profile-section { padding: 25px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning-yellow); margin-bottom: 10px; }
+        .profile-section h3 { color: var(--text-dark); font-size: 18px; }
+        .profile-section p { font-size: 12px; color: var(--text-gray); margin-top: 2px; }
+
+        .nav-menu { flex-grow: 1; padding: 10px 0; }
+        .nav-item { padding: 14px 25px; display: flex; align-items: center; gap: 15px; color: var(--text-gray); cursor: pointer; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background-color: #fffbeb; color: var(--warning-yellow); border-right-color: var(--warning-yellow); font-weight: bold; }
+
+        /* منطقة المحتوى */
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .panel { background: var(--white); border-radius: 16px; border: 1px solid var(--border-color); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .panel-header { font-size: 18px; color: var(--primary-maroon); font-weight: bold; margin-bottom: 25px; padding-bottom: 12px; border-bottom: 2px solid #fdf2f2; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* الجداول */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        th { background-color: #f8fafc; color: var(--text-dark); font-weight: bold; }
+        tr:hover { background-color: #fdfbf7; }
+
+        /* الأزرار والنماذج */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: bold; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--warning-yellow); }
+        
+        .btn-primary { background: var(--primary-maroon); color: var(--white); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+        .btn-success { background: var(--success-green); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-voda { background: #e60000; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-insta { background: #6366f1; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img" style="background: var(--warning-yellow); color: white; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px;">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <h3>إدارة الحضانة</h3>
+            <p>السوبر أدمن</p>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="switchTab('approvals-tab', this)"><i class="fa-solid fa-money-check-dollar"></i> مراجعة المدفوعات والحجوزات</div>
+            <div class="nav-item" onclick="switchTab('users-tab', this)"><i class="fa-solid fa-users-gear"></i> إنشاء حسابات الشبكة</div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <div id="approvals-tab" class="tab-content active">
+            <div class="panel">
+                <div class="panel-header">
+                    <span><i class="fa-solid fa-hourglass-half"></i> طلبات الحجز المعلقة (Pending Orders)</span>
+                    <span style="font-size:13px; font-weight:normal; color:var(--text-gray);"><i class="fa-solid fa-circle-info"></i> بمجرد الموافقة، ستظهر الحصة تلقائياً للمدرس.</span>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>تاريخ الطلب</th>
+                                <th>اسم ولي الأمر</th>
+                                <th>تفاصيل الحجز</th>
+                                <th>إجراءات الإدارة (تأكيد استلام الأموال)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-orders-body">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-gray);">جاري تحميل الحجوزات المعلقة...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="users-tab" class="tab-content">
+            <div class="panel">
+                <div class="panel-header"><i class="fa-solid fa-user-plus"></i> إنشاء حسابات جديدة (مدرسين / أولياء أمور)</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>اسم المستخدم بالكامل</label>
+                        <input type="text" id="new-user-name" class="form-control" placeholder="أدخل الاسم رباعي...">
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الموبايل (لتسجيل الدخول)</label>
+                        <input type="text" id="new-user-phone" class="form-control" placeholder="01xxxxxxxxx">
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني (اختياري)</label>
+                        <input type="email" id="new-user-email" class="form-control" placeholder="example@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>نوع الصلاحية (Role)</label>
+                        <select id="new-user-role" class="form-control">
+                            <option value="teacher">مدرس (Teacher App)</option>
+                            <option value="parent">ولي أمر (Parent App)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" style="background: var(--warning-yellow);" onclick="createNewUser()"><i class="fa-solid fa-check"></i> تأكيد إنشاء الحساب</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // إعدادات الفايربيز الخاصة بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
+            authDomain: "impact-hub-egypt.firebaseapp.com",
+            projectId: "impact-hub-egypt",
+            storageBucket: "impact-hub-egypt.firebasestorage.app",
+            messagingSenderId: "591172804173",
+            appId: "1:591172804173:web:7fc70ded00ca562bfdc604"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const myNurseryId = "Ajyal_AlGhad_ID_001"; // كود الحضانة الثابت
+
+        // ================= 1. جلب الطلبات المعلقة (الكوبري) =================
+        window.fetchPendingOrders = () => {
+            const tbody = document.getElementById('pending-orders-body');
+            
+            // بنقرا من كوليكشن orders اللي ولي الأمر بيرمي فيه
+            const q = query(collection(db, "orders"), where("nurseryId", "==", myNurseryId), where("status", "==", "pending"));
+            
+            onSnapshot(q, (snapshot) => {
+                tbody.innerHTML = '';
+                if(snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--success-green); font-weight:bold;"><i class="fa-solid fa-check-circle"></i> لا توجد حجوزات معلقة. جميع الأمور مستقرة!</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const order = docSnap.data();
+                    const orderId = docSnap.id;
+                    
+                    // استخراج تفاصيل العناصر اللي ولي الأمر اشتراها/حجزها
+                    let itemsHtml = '';
+                    let totalAmount = 0;
+                    if(order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            itemsHtml += `<div>- ${item.name} (${item.price} ج)</div>`;
+                            totalAmount += item.price;
+                        });
+                    }
+
+                    const orderDate = order.timestamp && order.timestamp.toDate ? order.timestamp.toDate().toLocaleDateString('ar-EG') : 'اليوم';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orderDate}</td>
+                            <td><strong>${order.parentName}</strong></td>
+                            <td>
+                                ${itemsHtml}
+                                <div style="margin-top:5px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount} ج.م</div>
+                            </td>
+                            <td>
+                                <div style="display:flex; flex-wrap:wrap; gap:5px;">
+                                    <button class="btn-success" onclick="approveOrder('${orderId}', '${order.parentName}', 'كاش نقدي')"><i class="fa-solid fa-money-bill"></i> استلمت نقدي</button>
+                                    <button class="btn-voda" onclick="approveOrder('${orderId}', '${order.parentName}', 'فودافون كاش')"><i class="fa-solid fa-mobile-screen"></i> فودافون كاش</button>
+                                    <button class="btn-insta" onclick="approveOrder('${orderId}', '${order.parentName}', 'انستاباي')"><i class="fa-solid fa-building-columns"></i> انستاباي</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        };
+
+        // ================= 2. الموافقة وإرسال الحصة للمدرس =================
+        window.approveOrder = async (orderId, parentName, paymentMethod) => {
+            if(!confirm(`هل أنت متأكد من استلام الأموال عبر (${paymentMethod})؟ سيتم تأكيد الحصة للمدرس فوراً.`)) return;
+
+            try {
+                // 1. نغير حالة الطلب لـ approved عشان يختفي من عند المديرة
+                await updateDoc(doc(db, "orders", orderId), { 
+                    status: "approved",
+                    paymentMethod: paymentMethod,
+                    approvedAt: new Date().getTime()
+                });
+
+                // 2. الكوبري السحري: نكريت الحصة في جدول المدرس (booked_classes) بحالة upcoming
+                // ملحوظة: حالياً بنرميها للمدرس "أحمد علي" كمثال، لو في كذا مدرس نقدر نختارهم
+                await addDoc(collection(db, "booked_classes"), {
+                    teacherId: "teacher_ahmed_001",
+                    nurseryId: myNurseryId,
+                    studentName: parentName,
+                    date: new Date().toLocaleDateString('ar-EG'), // تاريخ اليوم كمبدئي
+                    time: "بالتنسيق مع ولي الأمر",
+                    status: "upcoming"
+                });
+
+                alert("✅ تم التأكيد بنجاح! الحصة الآن تظهر في تطبيق المدرس لفتح الغرفة المباشرة.");
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ أثناء الموافقة، يرجى المحاولة مرة أخرى.");
+            }
+        };
+
+        // ================= 3. إنشاء الحسابات =================
+        window.createNewUser = async () => {
+            const name = document.getElementById('new-user-name').value;
+            const phone = document.getElementById('new-user-phone').value;
+            const email = document.getElementById('new-user-email').value;
+            const role = document.getElementById('new-user-role').value;
+
+            if(!name || !phone) {
+                alert("برجاء إدخال الاسم ورقم الموبايل على الأقل.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "nursery_users"), {
+                    nurseryId: myNurseryId,
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    role: role,
+                    createdAt: new Date().getTime()
+                });
+
+                alert(`🎉 تم إنشاء حساب (${role === 'teacher' ? 'مدرس' : 'ولي أمر'}) للمستخدم ${name} بنجاح!`);
+                document.getElementById('new-user-name').value = '';
+                document.getElementById('new-user-phone').value = '';
+                document.getElementById('new-user-email').value = '';
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ أثناء إنشاء الحساب.");
+            }
+        };
+
+        // تبديل التابات
+        window.switchTab = (tabId, element) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            element.classList.add('active');
+        };
+
+        // التشغيل التلقائي
+        fetchPendingOrders();
+    </script>
+</body>
+</html>
