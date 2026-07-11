@@ -1,143 +1,555 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impact Hub Egypt - Manager Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title data-i18n="app_title">إمباكت هب مصر - لوحة تحكم مديرة الحضانة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-maroon: #800000;
             --soft-maroon: #a33333;
-            --bg-light: #fdfbf7;
+            --kid-pink: #ff4b72;
+            --kid-blue: #00c6ff;
+            --kid-yellow: #ffb703;
+            --kid-green: #00d084;
+            --kid-purple: #8338ec;
+            --bg-light: #f4f9fc;
             --white: #ffffff;
-            --text-dark: #2d3748;
-            --text-gray: #718096;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
             --border-color: #e2e8f0;
-            --success-green: #22c55e;
-            --warning-yellow: #f59e0b;
+            --card-shadow: 0 10px 30px -10px rgba(128, 0, 0, 0.08);
+            --success-green: #10b981;
+            --danger-red: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; min-height: 100vh; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+            color: var(--text-dark);
+            font-family: 'Tajawal', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* حاوي التطبيق */
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
 
         /* الشريط الجانبي */
-        .sidebar { width: 280px; background-color: var(--white); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .profile-section { padding: 25px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning-yellow); margin-bottom: 10px; }
-        .profile-section h3 { color: var(--text-dark); font-size: 18px; }
-        .profile-section p { font-size: 12px; color: var(--text-gray); margin-top: 2px; }
+        .sidebar {
+            width: 290px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(128, 0, 0, 0.08);
+            border-right: 1px solid rgba(128, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            right: 0;
+            top: 0;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        .nav-menu { flex-grow: 1; padding: 10px 0; }
-        .nav-item { padding: 14px 25px; display: flex; align-items: center; gap: 15px; color: var(--text-gray); cursor: pointer; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background-color: #fffbeb; color: var(--warning-yellow); border-right-color: var(--warning-yellow); font-weight: bold; }
+        .profile-section {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+        }
+
+        .profile-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--white);
+            box-shadow: 0 8px 20px rgba(128, 0, 0, 0.15);
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+        }
+
+        .profile-badge {
+            background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon));
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(255, 183, 3, 0.3);
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .profile-section h3 {
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(128, 0, 0, 0.04);
+            color: var(--primary-maroon);
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            color: var(--white);
+            box-shadow: 0 10px 20px -10px rgba(128, 0, 0, 0.4);
+        }
+
+        /* اختيار اللغة */
+        .language-picker-sidebar {
+            padding: 15px;
+            border-top: 1px solid rgba(128, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .lang-flag-btn {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-flag-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            border-color: var(--primary-maroon);
+        }
+
+        .lang-flag-btn.active {
+            background: var(--primary-maroon);
+            color: var(--white);
+            border-color: var(--primary-maroon);
+            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.2);
+        }
 
         /* منطقة المحتوى */
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .panel { background: var(--white); border-radius: 16px; border: 1px solid var(--border-color); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .panel-header { font-size: 18px; color: var(--primary-maroon); font-weight: bold; margin-bottom: 25px; padding-bottom: 12px; border-bottom: 2px solid #fdf2f2; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* الجداول */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 15px; text-align: right; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        th { background-color: #f8fafc; color: var(--text-dark); font-weight: bold; }
-        tr:hover { background-color: #fdfbf7; }
+        .main-content {
+            margin-right: 290px;
+            flex-grow: 1;
+            padding: 40px;
+            width: calc(100% - 290px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        /* الأزرار والنماذج */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: bold; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--warning-yellow); }
-        
-        .btn-primary { background: var(--primary-maroon); color: var(--white); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
-        .btn-success { background: var(--success-green); color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-voda { background: #e60000; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-insta { background: #6366f1; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+        .panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .panel-header {
+            font-size: 18px;
+            color: var(--primary-maroon);
+            font-weight: 900;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed rgba(128, 0, 0, 0.08);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* الجداول الأنيقة والمستجيبة */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-weight: 900;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: rgba(128, 0, 0, 0.01);
+        }
+
+        /* حقول الإدخال */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-maroon);
+            box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.08);
+        }
+
+        /* الأزرار الملونة الفاخرة */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            color: var(--white);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(128, 0, 0, 0.25);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: var(--white);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-voda {
+            background: #e60000;
+            color: var(--white);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(230, 0, 0, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-voda:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(230, 0, 0, 0.25);
+        }
+
+        .btn-insta {
+            background: #6366f1;
+            color: var(--white);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-insta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* الجوال */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-maroon);
+            color: var(--white);
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 101;
+            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                right: -290px;
+            }
+            .sidebar.open {
+                right: 0;
+            }
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+                padding: 25px;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            html[dir="ltr"] .sidebar {
+                left: -290px;
+                right: auto;
+            }
+            html[dir="ltr"] .sidebar.open {
+                left: 0;
+                right: auto;
+            }
+            html[dir="ltr"] .menu-toggle {
+                left: auto;
+                right: 20px;
+            }
+            th, td {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="profile-section">
-            <div class="profile-img" style="background: var(--warning-yellow); color: white; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 10px;">
-                <i class="fa-solid fa-user-tie"></i>
-            </div>
-            <h3>إدارة الحضانة</h3>
-            <p>السوبر أدمن</p>
-        </div>
-        <nav class="nav-menu">
-            <div class="nav-item active" onclick="switchTab('approvals-tab', this)"><i class="fa-solid fa-money-check-dollar"></i> مراجعة المدفوعات والحجوزات</div>
-            <div class="nav-item" onclick="switchTab('users-tab', this)"><i class="fa-solid fa-users-gear"></i> إنشاء حسابات الشبكة</div>
-        </nav>
-    </aside>
+    <!-- زر قائمة الجوال -->
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
 
-    <main class="main-content">
+    <div class="app-container">
         
-        <div id="approvals-tab" class="tab-content active">
-            <div class="panel">
-                <div class="panel-header">
-                    <span><i class="fa-solid fa-hourglass-half"></i> طلبات الحجز المعلقة (Pending Orders)</span>
-                    <span style="font-size:13px; font-weight:normal; color:var(--text-gray);"><i class="fa-solid fa-circle-info"></i> بمجرد الموافقة، ستظهر الحصة تلقائياً للمدرس.</span>
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="appSidebar">
+            <div class="profile-section">
+                <div class="profile-img">
+                    <i class="fa-solid fa-user-tie"></i>
                 </div>
-                
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>تاريخ الطلب</th>
-                                <th>اسم ولي الأمر</th>
-                                <th>تفاصيل الحجز</th>
-                                <th>إجراءات الإدارة (تأكيد استلام الأموال)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pending-orders-body">
-                            <tr>
-                                <td colspan="4" style="text-align: center; color: var(--text-gray);">جاري تحميل الحجوزات المعلقة...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <h3 data-i18n="manager_title">إدارة الحضانة</h3>
+                <span class="profile-badge" data-i18n="role_manager">مدير الحضانة 💼</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="switchTab('approvals-tab', this)">
+                    <i class="fa-solid fa-money-check-dollar"></i> 
+                    <span data-i18n="nav_payments">مراجعة المدفوعات والحجوزات</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('users-tab', this)">
+                    <i class="fa-solid fa-users-gear"></i> 
+                    <span data-i18n="nav_accounts">إنشاء حسابات الشبكة</span>
+                </div>
+            </nav>
+
+            <!-- المترجم الأربعة للغات الحضانة -->
+            <div class="language-picker-sidebar">
+                <button class="lang-flag-btn active" id="flag-ar" onclick="changeManagerLanguage('ar')">عربي</button>
+                <button class="lang-flag-btn" id="flag-en" onclick="changeManagerLanguage('en')">EN</button>
+                <button class="lang-flag-btn" id="flag-fr" onclick="changeManagerLanguage('fr')">FR</button>
+                <button class="lang-flag-btn" id="flag-de" onclick="changeManagerLanguage('de')">DE</button>
+            </div>
+        </aside>
+
+        <!-- منطقة المحتوى الرئيسية -->
+        <main class="main-content">
+            
+            <!-- تابة مراجعة المدفوعات والحجوزات -->
+            <div id="approvals-tab" class="tab-content active">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span><i class="fa-solid fa-hourglass-half"></i> <span data-i18n="pending_orders">طلبات الحجز المعلقة (Pending Orders)</span></span>
+                        <span style="font-size: 13px; font-weight: normal; color: var(--text-gray);"><i class="fa-solid fa-circle-info"></i> <span data-i18n="pending_notice">بمجرد الموافقة، ستظهر الحصة تلقائياً للمدرس.</span></span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_date">تاريخ الطلب</th>
+                                    <th data-i18n="th_parent">اسم ولي الأمر</th>
+                                    <th data-i18n="th_details">تفاصيل الحجز</th>
+                                    <th data-i18n="th_actions">إجراءات الإدارة (تأكيد استلام الأموال)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pending-orders-body">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-gray);" data-i18n="loading_orders">جاري تحميل الحجوزات المعلقة...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="users-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header"><i class="fa-solid fa-user-plus"></i> إنشاء حسابات جديدة (مدرسين / أولياء أمور)</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>اسم المستخدم بالكامل</label>
-                        <input type="text" id="new-user-name" class="form-control" placeholder="أدخل الاسم رباعي...">
+            <!-- تابة إنشاء الحسابات -->
+            <div id="users-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-user-plus"></i> 
+                        <span data-i18n="create_accounts_title">إنشاء حسابات جديدة (مدرسين / أولياء أمور)</span>
                     </div>
-                    <div class="form-group">
-                        <label>رقم الموبايل (لتسجيل الدخول)</label>
-                        <input type="text" id="new-user-phone" class="form-control" placeholder="01xxxxxxxxx">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label data-i18n="lbl_fullname">اسم المستخدم بالكامل</label>
+                            <input type="text" id="new-user-name" class="form-control" data-i18n-placeholder="placeholder_fullname" placeholder="أدخل الاسم رباعي...">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="lbl_phone">رقم الموبايل (لتسجيل الدخول)</label>
+                            <input type="text" id="new-user-phone" class="form-control" placeholder="01xxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="lbl_email">البريد الإلكتروني (اختياري)</label>
+                            <input type="email" id="new-user-email" class="form-control" placeholder="example@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="lbl_role">نوع الصلاحية (Role)</label>
+                            <select id="new-user-role" class="form-control">
+                                <option value="teacher" data-i18n="opt_teacher">مدرس (Teacher App)</option>
+                                <option value="parent" data-i18n="opt_parent">ولي أمر (Parent App)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني (اختياري)</label>
-                        <input type="email" id="new-user-email" class="form-control" placeholder="example@gmail.com">
-                    </div>
-                    <div class="form-group">
-                        <label>نوع الصلاحية (Role)</label>
-                        <select id="new-user-role" class="form-control">
-                            <option value="teacher">مدرس (Teacher App)</option>
-                            <option value="parent">ولي أمر (Parent App)</option>
-                        </select>
-                    </div>
+                    <button class="btn-primary" style="background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon)); box-shadow: 0 8px 15px rgba(255, 183, 3, 0.15);" onclick="createNewUser()">
+                        <i class="fa-solid fa-check"></i> 
+                        <span data-i18n="confirm_create_btn">تأكيد إنشاء الحساب</span>
+                    </button>
                 </div>
-                <button class="btn-primary" style="background: var(--warning-yellow);" onclick="createNewUser()"><i class="fa-solid fa-check"></i> تأكيد إنشاء الحساب</button>
             </div>
-        </div>
 
-    </main>
+            <!-- ذيل الصفحة -->
+            <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
+                تم التطوير بواسطه impact hub egypt (esaia)
+            </div>
+
+        </main>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // إعدادات الفايربيز الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
             authDomain: "impact-hub-egypt.firebaseapp.com",
@@ -149,19 +561,216 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const myNurseryId = "Ajyal_AlGhad_ID_001"; // كود الحضانة الثابت
+        const myNurseryId = "Ajyal_AlGhad_ID_001";
 
-        // ================= 1. جلب الطلبات المعلقة (الكوبري) =================
+        // معجم اللغات الأربعة لمديرة الحضانة
+        const managerTranslations = {
+            ar: {
+                app_title: "إمباكت هب مصر - لوحة تحكم مديرة الحضانة",
+                manager_title: "إدارة الحضانة",
+                role_manager: "مدير الحضانة 💼",
+                nav_payments: "مراجعة المدفوعات والحجوزات",
+                nav_accounts: "إنشاء حسابات الشبكة",
+                pending_orders: "طلبات الحجز المعلقة (Pending Orders)",
+                pending_notice: "بمجرد الموافقة، ستظهر الحصة تلقائياً للمدرس.",
+                th_date: "تاريخ الطلب",
+                th_parent: "اسم ولي الأمر",
+                th_details: "تفاصيل الحجز",
+                th_actions: "إجراءات الإدارة (تأكيد استلام الأموال)",
+                loading_orders: "جاري تحميل الحجوزات المعلقة...",
+                create_accounts_title: "إنشاء حسابات جديدة (مدرسين / أولياء أمور)",
+                lbl_fullname: "اسم المستخدم بالكامل",
+                placeholder_fullname: "أدخل الاسم رباعي...",
+                lbl_phone: "رقم الموبايل (لتسجيل الدخول)",
+                lbl_email: "البريد الإلكتروني (اختياري)",
+                lbl_role: "نوع الصلاحية (Role)",
+                opt_teacher: "مدرس (Teacher App)",
+                opt_parent: "ولي أمر (Parent App)",
+                confirm_create_btn: "تأكيد إنشاء الحساب",
+                dev_credit: "تم التطوير بواسطه impact hub egypt (esaia)",
+                no_orders_msg: "<i class='fa-solid fa-check-circle'></i> لا توجد حجوزات معلقة. جميع الأمور مستقرة!",
+                cash_btn: "استلمت نقدي",
+                voda_btn: "فودافون كاش",
+                insta_btn: "انستاباي",
+                alert_confirm_prefix: "هل أنت متأكد من استلام الأموال عبر (",
+                alert_confirm_suffix: ")؟ سيتم تأكيد الحصة للمدرس فوراً.",
+                alert_success_approve: "✅ تم التأكيد بنجاح! الحصة الآن تظهر في تطبيق المدرس لفتح الغرفة المباشرة.",
+                alert_err_approve: "حدث خطأ أثناء الموافقة، يرجى المحاولة مرة أخرى.",
+                alert_err_fill: "برجاء إدخال الاسم ورقم الموبايل على الأقل.",
+                alert_success_create: "🎉 تم إنشاء حساب جديد للمستخدم بنجاح!",
+                alert_err_create: "حدث خطأ أثناء إنشاء الحساب.",
+                price_lbl: "الإجمالي:",
+                egp_lbl: " ج.م"
+            },
+            en: {
+                app_title: "Impact Hub - Manager Dashboard",
+                manager_title: "Nursery Administration",
+                role_manager: "Nursery Manager 💼",
+                nav_payments: "Verify Payments & Bookings",
+                nav_accounts: "Create Network Accounts",
+                pending_orders: "Pending Reservation Requests",
+                pending_notice: "Upon approval, tutoring session will appear for teacher.",
+                th_date: "Request Date",
+                th_parent: "Parent Name",
+                th_details: "Booking Details",
+                th_actions: "Admin Actions (Confirm Receipt of Funds)",
+                loading_orders: "Loading pending orders...",
+                create_accounts_title: "Create New User Accounts (Teachers / Parents)",
+                lbl_fullname: "Full Username",
+                placeholder_fullname: "Enter full name...",
+                lbl_phone: "Mobile Number (Login ID)",
+                lbl_email: "Email Address (Optional)",
+                lbl_role: "User Role",
+                opt_teacher: "Teacher (Teacher App)",
+                opt_parent: "Parent (Parent App)",
+                confirm_create_btn: "Confirm Account Creation",
+                dev_credit: "Developed by Impact Hub Egypt (ESAIA)",
+                no_orders_msg: "<i class='fa-solid fa-check-circle'></i> No pending requests. Everything is clean and stable!",
+                cash_btn: "Received Cash",
+                voda_btn: "Vodafone Cash",
+                insta_btn: "InstaPay",
+                alert_confirm_prefix: "Are you sure you received funds via (",
+                alert_confirm_suffix: ")? This will confirm the session for the teacher immediately.",
+                alert_success_approve: "✅ Success! Session is now visible on teacher dashboard.",
+                alert_err_approve: "Error occurred during approval. Please try again.",
+                alert_err_fill: "Please enter at least username and mobile number.",
+                alert_success_create: "🎉 Account created successfully for user!",
+                alert_err_create: "Error occurred during account creation.",
+                price_lbl: "Total Price:",
+                egp_lbl: " EGP"
+            },
+            fr: {
+                app_title: "Impact Hub - Tableau de Bord Directrice",
+                manager_title: "Administration Crèche",
+                role_manager: "Directrice Crèche 💼",
+                nav_payments: "Vérifier Paiements & Réservations",
+                nav_accounts: "Créer Comptes Réseau",
+                pending_orders: "Demandes de réservation en attente",
+                pending_notice: "Dès approbation, la séance de tutorat sera visible pour l'enseignant.",
+                th_date: "Date de la demande",
+                th_parent: "Nom du Parent",
+                th_details: "Détails de Réservation",
+                th_actions: "Actions d'Administration (Confirmer réception des fonds)",
+                loading_orders: "Chargement des demandes en attente...",
+                create_accounts_title: "Créer nouveaux comptes utilisateurs (Enseignants / Parents)",
+                lbl_fullname: "Nom Complet de l'utilisateur",
+                placeholder_fullname: "Entrez le nom complet...",
+                lbl_phone: "Numéro de Mobile (ID connexion)",
+                lbl_email: "Adresse Email (Optionnelle)",
+                lbl_role: "Rôle de l'utilisateur",
+                opt_teacher: "Enseignant (Teacher App)",
+                opt_parent: "Parent (Parent App)",
+                confirm_create_btn: "Confirmer la création du compte",
+                dev_credit: "Développé par Impact Hub Egypt (ESAIA)",
+                no_orders_msg: "<i class='fa-solid fa-check-circle'></i> Aucune demande en attente. Tout est stable !",
+                cash_btn: "Reçu en Espèces",
+                voda_btn: "Vodafone Cash",
+                insta_btn: "InstaPay",
+                alert_confirm_prefix: "Êtes-vous sûr d'avoir reçu les fonds via (",
+                alert_confirm_suffix: ") ? Cela confirmera la session immédiatement.",
+                alert_success_approve: "✅ Succès! La session est maintenant disponible pour l'enseignant.",
+                alert_err_approve: "Une erreur est survenue lors de l'approbation.",
+                alert_err_fill: "Veuillez entrer au moins le nom complet et le numéro de téléphone.",
+                alert_success_create: "🎉 Compte créé avec succès pour l'utilisateur!",
+                alert_err_create: "Erreur lors de la création du compte.",
+                price_lbl: "Prix total:",
+                egp_lbl: " EGP"
+            },
+            de: {
+                app_title: "Impact Hub - Kita-Leitung Dashboard",
+                manager_title: "Kita-Leitung",
+                role_manager: "Kita-Leiterin 💼",
+                nav_payments: "Zahlungen & Buchungen prüfen",
+                nav_accounts: "Netzwerkkonten erstellen",
+                pending_orders: "Ausstehende Reservierungen",
+                pending_notice: "Nach der Genehmigung wird der Unterricht für den Lehrer freigeschaltet.",
+                th_date: "Anforderungsdatum",
+                th_parent: "Name der Eltern",
+                th_details: "Buchungsdetails",
+                th_actions: "Verwaltungsaktionen (Zahlungseingang bestätigen)",
+                loading_orders: "Ausstehende Anfragen werden geladen...",
+                create_accounts_title: "Neue Benutzerkonten erstellen (Lehrer / Eltern)",
+                lbl_fullname: "Vollständiger Name",
+                placeholder_fullname: "Geben Sie den vollständigen Namen ein...",
+                lbl_phone: "Mobiltelefonnummer (Anmelde-ID)",
+                lbl_email: "E-Mail-Adresse (Optional)",
+                lbl_role: "Benutzerrolle",
+                opt_teacher: "Lehrer (Teacher App)",
+                opt_parent: "Eltern (Parent App)",
+                confirm_create_btn: "Kontoerstellung bestätigen",
+                dev_credit: "Entwickelt von Impact Hub Egypt (ESAIA)",
+                no_orders_msg: "<i class='fa-solid fa-check-circle'></i> Keine ausstehenden Anforderungen. Alles ist sauber und stabil!",
+                cash_btn: "Bar erhalten",
+                voda_btn: "Vodafone Cash",
+                insta_btn: "InstaPay",
+                alert_confirm_prefix: "Sind Sie sicher, dass Sie den Betrag über (",
+                alert_confirm_suffix: ") erhalten haben? Dies schaltet den Unterricht sofort frei.",
+                alert_success_approve: "✅ Erfolg! Sitzung ist jetzt auf dem Lehrer-Dashboard sichtbar.",
+                alert_err_approve: "Fehler während der Genehmigung. Bitte versuchen Sie es erneut.",
+                alert_err_fill: "Bitte geben Sie mindestens den Namen und die Mobiltelefonnummer ein.",
+                alert_success_create: "🎉 Konto erfolgreich für den Benutzer erstellt!",
+                alert_err_create: "Fehler bei der Kontoerstellung.",
+                price_lbl: "Gesamtpreis:",
+                egp_lbl: " EGP"
+            }
+        };
+
+        // تغيير لغة لوحة تحكم المديرة
+        window.changeManagerLanguage = (lang) => {
+            localStorage.setItem('selected_language', lang);
+            
+            // تنشيط العلم المختار
+            document.querySelectorAll('.lang-flag-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`flag-${lang}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const dict = managerTranslations[lang] || managerTranslations.ar;
+
+            // تطبيق الاتجاه
+            const htmlRoot = document.getElementById('html-root');
+            if (lang === 'ar') {
+                htmlRoot.dir = 'rtl';
+                htmlRoot.lang = 'ar';
+                document.body.style.fontFamily = "'Tajawal', sans-serif";
+            } else {
+                htmlRoot.dir = 'ltr';
+                htmlRoot.lang = lang;
+                document.body.style.fontFamily = "'Outfit', sans-serif";
+            }
+
+            // ترجمة العناصر data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerHTML = dict[key];
+                }
+            });
+
+            // ترجمة الواصفات data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.placeholder = dict[key];
+                }
+            });
+
+            // إعادة رسم جدول الطلبات بلغة العرض النشطة
+            fetchPendingOrders();
+        };
+
+        // ================= 1. جلب الطلبات المعلقة =================
         window.fetchPendingOrders = () => {
             const tbody = document.getElementById('pending-orders-body');
             
-            // بنقرا من كوليكشن orders اللي ولي الأمر بيرمي فيه
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
             const q = query(collection(db, "orders"), where("nurseryId", "==", myNurseryId), where("status", "==", "pending"));
             
             onSnapshot(q, (snapshot) => {
                 tbody.innerHTML = '';
                 if(snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--success-green); font-weight:bold;"><i class="fa-solid fa-check-circle"></i> لا توجد حجوزات معلقة. جميع الأمور مستقرة!</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--success-green); font-weight:bold;">${dict.no_orders_msg}</td></tr>`;
                     return;
                 }
 
@@ -169,17 +778,16 @@
                     const order = docSnap.data();
                     const orderId = docSnap.id;
                     
-                    // استخراج تفاصيل العناصر اللي ولي الأمر اشتراها/حجزها
                     let itemsHtml = '';
                     let totalAmount = 0;
                     if(order.items && order.items.length > 0) {
                         order.items.forEach(item => {
-                            itemsHtml += `<div>- ${item.name} (${item.price} ج)</div>`;
+                            itemsHtml += `<div>- ${item.name} (${item.price}${dict.egp_lbl})</div>`;
                             totalAmount += item.price;
                         });
                     }
 
-                    const orderDate = order.timestamp && order.timestamp.toDate ? order.timestamp.toDate().toLocaleDateString('ar-EG') : 'اليوم';
+                    const orderDate = order.timestamp && order.timestamp.toDate ? order.timestamp.toDate().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US') : 'Today';
 
                     tbody.innerHTML += `
                         <tr>
@@ -187,13 +795,13 @@
                             <td><strong>${order.parentName}</strong></td>
                             <td>
                                 ${itemsHtml}
-                                <div style="margin-top:5px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount} ج.م</div>
+                                <div style="margin-top:5px; font-weight:bold; color:var(--primary-maroon);">${dict.price_lbl} ${totalAmount}${dict.egp_lbl}</div>
                             </td>
                             <td>
-                                <div style="display:flex; flex-wrap:wrap; gap:5px;">
-                                    <button class="btn-success" onclick="approveOrder('${orderId}', '${order.parentName}', 'كاش نقدي')"><i class="fa-solid fa-money-bill"></i> استلمت نقدي</button>
-                                    <button class="btn-voda" onclick="approveOrder('${orderId}', '${order.parentName}', 'فودافون كاش')"><i class="fa-solid fa-mobile-screen"></i> فودافون كاش</button>
-                                    <button class="btn-insta" onclick="approveOrder('${orderId}', '${order.parentName}', 'انستاباي')"><i class="fa-solid fa-building-columns"></i> انستاباي</button>
+                                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                                    <button class="btn-success" onclick="approveOrder('${orderId}', '${order.parentName}', '${dict.cash_btn}')"><i class="fa-solid fa-money-bill"></i> ${dict.cash_btn}</button>
+                                    <button class="btn-voda" onclick="approveOrder('${orderId}', '${order.parentName}', 'Vodafone Cash')"><i class="fa-solid fa-mobile-screen"></i> ${dict.voda_btn}</button>
+                                    <button class="btn-insta" onclick="approveOrder('${orderId}', '${order.parentName}', 'InstaPay')"><i class="fa-solid fa-building-columns"></i> ${dict.insta_btn}</button>
                                 </div>
                             </td>
                         </tr>
@@ -204,43 +812,46 @@
 
         // ================= 2. الموافقة وإرسال الحصة للمدرس =================
         window.approveOrder = async (orderId, parentName, paymentMethod) => {
-            if(!confirm(`هل أنت متأكد من استلام الأموال عبر (${paymentMethod})؟ سيتم تأكيد الحصة للمدرس فوراً.`)) return;
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
+            if(!confirm(`${dict.alert_confirm_prefix}${paymentMethod}${dict.alert_confirm_suffix}`)) return;
 
             try {
-                // 1. نغير حالة الطلب لـ approved عشان يختفي من عند المديرة
                 await updateDoc(doc(db, "orders", orderId), { 
                     status: "approved",
                     paymentMethod: paymentMethod,
                     approvedAt: new Date().getTime()
                 });
 
-                // 2. الكوبري السحري: نكريت الحصة في جدول المدرس (booked_classes) بحالة upcoming
-                // ملحوظة: حالياً بنرميها للمدرس "أحمد علي" كمثال، لو في كذا مدرس نقدر نختارهم
                 await addDoc(collection(db, "booked_classes"), {
                     teacherId: "teacher_ahmed_001",
                     nurseryId: myNurseryId,
                     studentName: parentName,
-                    date: new Date().toLocaleDateString('ar-EG'), // تاريخ اليوم كمبدئي
-                    time: "بالتنسيق مع ولي الأمر",
+                    date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US'),
+                    time: currentLang === 'ar' ? "بالتنسيق مع ولي الأمر" : "Coordinated with parent",
                     status: "upcoming"
                 });
 
-                alert("✅ تم التأكيد بنجاح! الحصة الآن تظهر في تطبيق المدرس لفتح الغرفة المباشرة.");
+                alert(dict.alert_success_approve);
             } catch (error) {
                 console.error(error);
-                alert("حدث خطأ أثناء الموافقة، يرجى المحاولة مرة أخرى.");
+                alert(dict.alert_err_approve);
             }
         };
 
         // ================= 3. إنشاء الحسابات =================
         window.createNewUser = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
             const name = document.getElementById('new-user-name').value;
             const phone = document.getElementById('new-user-phone').value;
             const email = document.getElementById('new-user-email').value;
             const role = document.getElementById('new-user-role').value;
 
             if(!name || !phone) {
-                alert("برجاء إدخال الاسم ورقم الموبايل على الأقل.");
+                alert(dict.alert_err_fill);
                 return;
             }
 
@@ -254,13 +865,13 @@
                     createdAt: new Date().getTime()
                 });
 
-                alert(`🎉 تم إنشاء حساب (${role === 'teacher' ? 'مدرس' : 'ولي أمر'}) للمستخدم ${name} بنجاح!`);
+                alert(dict.alert_success_create);
                 document.getElementById('new-user-name').value = '';
                 document.getElementById('new-user-phone').value = '';
                 document.getElementById('new-user-email').value = '';
             } catch (error) {
                 console.error(error);
-                alert("حدث خطأ أثناء إنشاء الحساب.");
+                alert(dict.alert_err_create);
             }
         };
 
@@ -270,10 +881,21 @@
             document.getElementById(tabId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             element.classList.add('active');
+            
+            // إغلاق الشريط الجانبي على الجوال
+            document.getElementById('appSidebar').classList.remove('open');
         };
 
-        // التشغيل التلقائي
-        fetchPendingOrders();
+        // تبديل قائمة الموبايل
+        window.toggleSidebar = () => {
+            document.getElementById('appSidebar').classList.toggle('open');
+        };
+
+        // تحميل اللغة المفضلة تلقائياً
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selected_language') || 'ar';
+            window.changeManagerLanguage(savedLang);
+        });
     </script>
 </body>
 </html>

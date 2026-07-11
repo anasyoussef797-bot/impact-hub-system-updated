@@ -4,25 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Impact Hub Egypt - عالم التعليم التفاعلي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <!-- Modern Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-maroon: #800000;
-            --soft-maroon: #a33333;
-            --kid-pink: #ff4b72;
-            --kid-blue: #00c6ff;
-            --kid-yellow: #ffb703;
-            --kid-green: #00d084;
-            --kid-purple: #8338ec;
-            --bg-light: #f4f9fc;
+            --primary-indigo: #4f46e5;
+            --primary-violet: #8b5cf6;
+            --kid-pink: #f43f5e;
+            --kid-blue: #0ea5e9;
+            --kid-yellow: #eab308;
+            --kid-green: #10b981;
+            --kid-purple: #6366f1;
+            --bg-light: #fafbfd;
             --white: #ffffff;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --border-color: #e2e8f0;
+            --text-dark: #0f172a;
+            --text-gray: #475569;
+            --border-color: #f1f5f9;
             --gold-star: #fbbf24;
+            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.1);
         }
 
+        /* Base Styles */
         html, body { 
             width: 100%;
             max-width: 100vw; 
@@ -30,7 +36,8 @@
             box-sizing: border-box;
             margin: 0; 
             padding: 0; 
-            font-family: 'Tajawal', sans-serif; 
+            font-family: 'Tajawal', 'Outfit', sans-serif;
+            scroll-behavior: smooth;
         }
 
         * { box-sizing: border-box; }
@@ -39,10 +46,25 @@
             background-color: var(--bg-light); 
             color: var(--text-dark); 
             line-height: 1.6; 
-            background-image: radial-gradient(var(--kid-blue) 0.5px, transparent 0.5px), radial-gradient(var(--kid-pink) 0.5px, #f4f9fc 0.5px);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
+            background-image: 
+                radial-gradient(circle, var(--border-color) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
             position: relative;
+        }
+
+        /* Orbiting floating elements for emotion & playroom vibe */
+        .deco-emoji {
+            position: absolute;
+            font-size: 2.5rem;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0.15;
+            z-index: 1;
+            animation: float-slow 6s ease-in-out infinite alternate;
+        }
+        @keyframes float-slow {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(15deg); }
         }
 
         @keyframes float {
@@ -57,327 +79,962 @@
             100% { transform: scale(1); }
         }
 
-        /* Navbar */
-        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-bottom: 3px solid var(--kid-blue); width: 100%; flex-wrap: wrap; }
-        .logo { font-size: 26px; font-weight: 900; color: var(--kid-purple); display: flex; align-items: center; gap: 10px; }
-        .logo i { color: var(--kid-pink); font-size: 30px; animation: float 3s ease-in-out infinite; }
-        .logo img { max-height: 45px; object-fit: contain; }
+        @keyframes subtle-glow {
+            0% { box-shadow: 0 0 10px rgba(79, 70, 229, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.25); }
+            100% { box-shadow: 0 0 10px rgba(79, 70, 229, 0.1); }
+        }
+
+        /* Glass Navbar */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            padding: 16px 6%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(241, 245, 249, 0.8); 
+            width: 100%; 
+            transition: all 0.3s ease;
+        }
         
-        .nav-links { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-size: 15px; font-weight: 800; transition: 0.3s; padding: 6px 12px; border-radius: 20px; }
-        .nav-links a:hover { color: var(--kid-blue); background: rgba(0, 198, 255, 0.1); transform: translateY(-2px); }
+        .logo { 
+            font-size: 24px; 
+            font-weight: 900; 
+            color: var(--primary-indigo); 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            text-decoration: none;
+        }
+        .logo i { 
+            color: var(--kid-pink); 
+            font-size: 28px; 
+            animation: float 3s ease-in-out infinite; 
+        }
+        .logo img { 
+            max-height: 48px; 
+            object-fit: contain; 
+            border-radius: 8px;
+        }
         
+        .nav-links { 
+            display: flex; 
+            gap: 12px; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+        }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text-dark); 
+            font-size: 14px; 
+            font-weight: 700; 
+            transition: all 0.2s ease; 
+            padding: 8px 16px; 
+            border-radius: 9999px; 
+        }
+        .nav-links a:hover { 
+            color: var(--primary-indigo); 
+            background: rgba(79, 70, 229, 0.06); 
+            transform: translateY(-1px); 
+        }
+        
+        /* Premium Language Dropdown */
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background-color: var(--white); min-width: 180px; box-shadow: 0px 10px 30px rgba(0,0,0,0.1); z-index: 1; top: 100%; right: 0; border-radius: 16px; overflow: hidden; border: 2px solid var(--kid-yellow); padding: 10px; }
-        .dropdown-content a { color: var(--text-dark); padding: 10px 16px; text-decoration: none; display: block; border-radius: 12px; margin-bottom: 5px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-        .dropdown-content a:hover { background-color: var(--kid-yellow); color: var(--white); transform: translateX(-5px); }
+        .dropdown-trigger {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(241, 245, 249, 0.6);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .dropdown-trigger:hover {
+            background: rgba(241, 245, 249, 1);
+        }
+        .dropdown-content { 
+            display: none; 
+            position: absolute; 
+            background-color: var(--white); 
+            min-width: 180px; 
+            box-shadow: var(--shadow-lg); 
+            z-index: 1010; 
+            top: 120%; 
+            border-radius: 16px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+            padding: 8px; 
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        html[dir="rtl"] .dropdown-content { right: 0; left: auto; }
+        html[dir="ltr"] .dropdown-content { left: 0; right: auto; }
+
+        .dropdown-content a { 
+            color: var(--text-dark); 
+            padding: 10px 14px; 
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 10px; 
+            margin-bottom: 2px; 
+            font-weight: 700; 
+            border-bottom: none;
+            font-size: 13.5px;
+        }
+        .dropdown-content a:hover { 
+            background-color: rgba(79, 70, 229, 0.08); 
+            color: var(--primary-indigo); 
+        }
         .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a.active-lang {
+            background-color: rgba(79, 70, 229, 0.12);
+            color: var(--primary-indigo);
+        }
 
-        .login-btn { background: linear-gradient(45deg, var(--primary-maroon), var(--soft-maroon)); color: var(--white) !important; padding: 10px 25px !important; border-radius: 30px !important; box-shadow: 0 4px 15px rgba(128, 0, 0, 0.3); animation: pulse 2s infinite; white-space: nowrap; }
+        .login-btn { 
+            background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); 
+            color: var(--white) !important; 
+            padding: 10px 24px !important; 
+            border-radius: 9999px !important; 
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); 
+            font-weight: 800 !important;
+            transition: all 0.2s ease !important;
+            white-space: nowrap; 
+        }
+        .login-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45) !important;
+        }
 
-        /* Floating Assets */
+        /* Floating Assets Container */
         .floating-asset { position: absolute; z-index: 20; opacity: 0.9; pointer-events: none; animation: float 4s ease-in-out infinite; max-width: 150px; }
 
-        /* Hero Section */
-        .hero { position: relative; padding: 80px 5% 120px; text-align: center; background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); overflow: hidden; width: 100%; box-sizing: border-box; }
-        .hero::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 50px; background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23f4f9fc" fill-opacity="1" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,208,864,213.3C960,219,1056,192,1152,170.7C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom; background-size: cover; }
-        .hero h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 900; color: var(--white); margin-bottom: 20px; text-shadow: 2px 4px 10px rgba(0,0,0,0.1); position: relative; z-index: 10; padding: 0 10px; outline: none; }
-        .hero p { font-size: clamp(14px, 3vw, 18px); color: var(--white); font-weight: 700; max-width: 800px; margin: 0 auto 30px; text-shadow: 1px 2px 5px rgba(0,0,0,0.1); position: relative; z-index: 10; padding: 0 10px; outline: none; }
-        .video-container { width: 100%; max-width: 850px; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(131, 56, 236, 0.3); border: 8px solid var(--white); position: relative; z-index: 10; transform: translateY(20px); }
+        /* Modern Hero Section */
+        .hero { 
+            position: relative; 
+            padding: 100px 6% 140px; 
+            text-align: center; 
+            background: radial-gradient(circle at 50% 50%, rgba(224, 195, 252, 0.25) 0%, rgba(142, 197, 252, 0.15) 100%);
+            overflow: hidden; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        .hero-shapes {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hero h1 { 
+            font-size: clamp(32px, 6vw, 54px); 
+            font-weight: 950; 
+            color: var(--text-dark); 
+            margin-bottom: 24px; 
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            position: relative; 
+            z-index: 10; 
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            outline: none; 
+        }
+        .hero p { 
+            font-size: clamp(16px, 3.5vw, 20px); 
+            color: var(--text-gray); 
+            font-weight: 600; 
+            max-width: 800px; 
+            margin: 0 auto 36px; 
+            line-height: 1.6;
+            position: relative; 
+            z-index: 10; 
+            outline: none; 
+        }
+        
+        .video-container { 
+            width: 100%; 
+            max-width: 850px; 
+            margin: 0 auto; 
+            border-radius: 32px; 
+            overflow: hidden; 
+            box-shadow: var(--shadow-xl); 
+            border: 12px solid var(--white); 
+            position: relative; 
+            z-index: 10; 
+            transform: translateY(20px); 
+            transition: transform 0.3s ease;
+        }
+        .video-container:hover {
+            transform: translateY(15px);
+        }
         .video-container iframe { width: 100%; height: 460px; border: none; }
 
-        /* الأقسام والمجموعات */
-        .marketing-section { padding: 60px 5%; text-align: center; position: relative; z-index: 2; width: 100%; box-sizing: border-box; overflow-x: hidden; }
-        .dynamic-section { padding: 60px 0; text-align: center; position: relative; z-index: 2; width: 100%; box-sizing: border-box; overflow-x: hidden; }
-        .section-title { font-size: clamp(24px, 4vw, 32px); font-weight: 900; color: var(--kid-purple); margin-bottom: 15px; position: relative; display: inline-block; padding: 0 10px; }
-        .section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 5px; background: var(--kid-yellow); border-radius: 10px; }
-        .section-subtitle { font-size: clamp(14px, 2.5vw, 16px); color: var(--text-gray); margin-bottom: 40px; font-weight: bold; padding: 0 10px; }
-
-        /* السلايدر الأفقي للكروت */
-        .cards-slider { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding: 20px 5%; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; width: 100%; }
-        .cards-slider::-webkit-scrollbar { height: 8px; }
-        .cards-slider::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        .cards-slider::-webkit-scrollbar-thumb { background: var(--kid-blue); border-radius: 10px; }
+        /* Section Headings */
+        .marketing-section { padding: 80px 6%; text-align: center; position: relative; z-index: 2; width: 100%; box-sizing: border-box; }
+        .dynamic-section { padding: 80px 0; text-align: center; position: relative; z-index: 2; width: 100%; box-sizing: border-box; }
         
-        .content-card, .teacher-card, .testimonial-card, .product-card { background: var(--white); border-radius: 24px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.04); transition: 0.4s; border: 3px solid transparent; flex: 0 0 auto; width: 300px; scroll-snap-align: start; white-space: normal; position: relative; }
-        .content-card:hover, .teacher-card:hover, .testimonial-card:hover, .product-card:hover { transform: translateY(-12px); box-shadow: 0 20px 30px rgba(0,198,255,0.15); border-color: var(--kid-blue); }
-        
-        /* الجريد العادي لقسم المميزات فقط */
-        .features-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; width: 100%; box-sizing: border-box; padding: 0 10px; }
-        .feature-card { background: var(--white); border-radius: 24px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.04); transition: 0.4s; border: 3px solid transparent; }
-        .feature-card:hover { transform: translateY(-12px); border-color: var(--kid-blue); }
-        .feature-card i { font-size: 40px; margin-bottom: 15px; display: inline-block; }
-        .feature-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
-        .feature-card p { font-size: 14px; color: var(--text-gray); font-weight: 600; }
+        .section-header {
+            max-width: 700px;
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+        .section-title { 
+            font-size: clamp(26px, 4.5vw, 36px); 
+            font-weight: 900; 
+            color: var(--text-dark); 
+            margin-bottom: 16px; 
+            position: relative; 
+            display: inline-block; 
+            padding: 0 10px; 
+        }
+        .section-title::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -6px; 
+            left: 10%; 
+            width: 80%; 
+            height: 6px; 
+            background: linear-gradient(90deg, var(--primary-indigo), var(--kid-pink)); 
+            border-radius: 9999px; 
+        }
+        .section-subtitle { 
+            font-size: clamp(15px, 2.5vw, 17px); 
+            color: var(--text-gray); 
+            font-weight: 600; 
+            margin-top: 16px;
+        }
 
+        /* Modern Slider & Bento Cards */
+        .cards-slider { 
+            display: flex; 
+            flex-wrap: nowrap; 
+            gap: 24px; 
+            overflow-x: auto; 
+            padding: 24px 6% 40px; 
+            scroll-snap-type: x mandatory; 
+            -webkit-overflow-scrolling: touch; 
+            width: 100%; 
+        }
+        .cards-slider::-webkit-scrollbar { height: 10px; }
+        .cards-slider::-webkit-scrollbar-track { background: var(--border-color); border-radius: 9999px; }
+        .cards-slider::-webkit-scrollbar-thumb { background: rgba(79, 70, 229, 0.25); border-radius: 9999px; }
+        .cards-slider::-webkit-scrollbar-thumb:hover { background: var(--primary-indigo); }
+        
+        .content-card, .teacher-card, .testimonial-card, .product-card { 
+            background: var(--white); 
+            border-radius: 28px; 
+            padding: 28px; 
+            box-shadow: var(--shadow-md); 
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid var(--border-color); 
+            flex: 0 0 auto; 
+            width: 310px; 
+            scroll-snap-align: start; 
+            white-space: normal; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .content-card:hover, .teacher-card:hover, .testimonial-card:hover, .product-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: var(--shadow-xl); 
+            border-color: rgba(79, 70, 229, 0.2); 
+        }
+        
+        /* Features Bento Grid Layout */
+        .features-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 28px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        .feature-card { 
+            background: var(--white); 
+            border-radius: 28px; 
+            padding: 36px 28px; 
+            box-shadow: var(--shadow-md); 
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid var(--border-color); 
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+        }
+        html[dir="ltr"] .feature-card { text-align: left; }
+        
+        .feature-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: var(--shadow-lg); 
+            border-color: rgba(79, 70, 229, 0.2); 
+        }
+        .feature-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .feature-card h3 { 
+            font-size: 20px; 
+            font-weight: 900; 
+            margin-bottom: 12px; 
+            color: var(--text-dark);
+        }
+        .feature-card p { 
+            font-size: 14.5px; 
+            color: var(--text-gray); 
+            font-weight: 600; 
+            line-height: 1.6;
+        }
+
+        /* Interactive Dynamic Section Card */
         .content-card { padding: 0; overflow: hidden; }
-        .content-img { width: 100%; height: 200px; object-fit: cover; }
-        .content-info { padding: 20px; text-align: center; }
+        .content-img { width: 100%; height: 210px; object-fit: cover; transition: transform 0.5s ease; }
+        .content-card:hover .content-img { transform: scale(1.08); }
+        .content-info { padding: 24px; text-align: center; }
         .content-title { font-size: 18px; font-weight: 800; color: var(--text-dark); }
-        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 200px; background: rgba(255, 75, 114, 0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; backdrop-filter: blur(2px); }
+        .play-overlay { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 210px; 
+            background: rgba(79, 70, 229, 0.6); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            opacity: 0; 
+            transition: all 0.3s ease; 
+            backdrop-filter: blur(4px); 
+            -webkit-backdrop-filter: blur(4px);
+        }
         .content-card:hover .play-overlay { opacity: 1; }
-        .play-overlay i { font-size: 55px; color: var(--white); animation: pulse 1.5s infinite; }
+        .play-overlay i { font-size: 60px; color: var(--white); animation: pulse 1.5s infinite; }
 
-        /* 2. قسم المدرسين */
-        .teachers-section { background: #fffbeb; border-top: 2px dashed #fcd34d; border-bottom: 2px dashed #fcd34d; padding: 60px 0; position: relative; width: 100%; box-sizing: border-box; overflow-x: hidden; }
-        .teacher-card { padding-top: 40px; text-align: center; }
-        .teacher-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:60px; background: var(--kid-yellow); }
-        .teacher-avatar { width: 90px; height: 90px; border-radius: 50%; border: 4px solid var(--white); margin: 0 auto 15px; object-fit: cover; position: relative; z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .teacher-name { font-size: 18px; font-weight: 800; position: relative; z-index: 2; }
-        .teacher-subject { color: var(--kid-purple); font-size: 14px; font-weight: 700; margin-bottom: 15px; position: relative; z-index: 2; }
-        .teacher-slots { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
-        .slot-badge { background: #fef3c7; color: #b45309; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid #fde68a; }
-        .book-btn { background: var(--kid-green); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; text-decoration: none; display: inline-block; box-shadow: 0 4px 12px rgba(0, 208, 132, 0.3); }
+        /* Teachers Slider */
+        .teachers-section { 
+            background: radial-gradient(circle at 10% 20%, rgba(254, 243, 199, 0.4) 0%, rgba(255, 255, 255, 1) 90%);
+            border-top: 1px solid var(--border-color); 
+            border-bottom: 1px solid var(--border-color); 
+            padding: 80px 0; 
+            position: relative; 
+            width: 100%; 
+            box-sizing: border-box; 
+            overflow-x: hidden; 
+        }
+        .teacher-card { padding-top: 48px; text-align: center; }
+        .teacher-card::before { 
+            content:''; 
+            position:absolute; 
+            top:0; left:0; width:100%; height:70px; 
+            background: linear-gradient(135deg, var(--kid-yellow), #f59e0b); 
+        }
+        .teacher-avatar { 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            border: 4px solid var(--white); 
+            margin: 0 auto 16px; 
+            object-fit: cover; 
+            position: relative; 
+            z-index: 2; 
+            box-shadow: var(--shadow-md); 
+        }
+        .teacher-name { font-size: 19px; font-weight: 900; position: relative; z-index: 2; color: var(--text-dark); }
+        .teacher-subject { color: var(--primary-indigo); font-size: 14px; font-weight: 700; margin-bottom: 16px; position: relative; z-index: 2; }
+        .teacher-slots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; min-height: 60px; }
+        .slot-badge { 
+            background: rgba(254, 243, 199, 0.6); 
+            color: #b45309; 
+            padding: 6px 12px; 
+            border-radius: 9999px; 
+            font-size: 12px; 
+            font-weight: 700; 
+            border: 1px solid rgba(253, 230, 138, 0.5); 
+        }
+        .book-btn { 
+            background: linear-gradient(135deg, var(--kid-green), #059669); 
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 9999px; 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 800; 
+            transition: all 0.2s ease; 
+            text-decoration: none; 
+            display: inline-block; 
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); 
+        }
+        .book-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
 
-        /* 3. قسم الآراء */
-        .testimonial-card p { font-style: italic; font-size: 15px; color: var(--text-dark); margin-bottom: 15px; font-weight: 600; }
-        .testimonial-user { font-weight: 800; font-size: 14px; color: var(--kid-pink); }
-        .testimonial-stars { color: var(--gold-star); margin-bottom: 10px; font-size: 18px; }
+        /* Testimonials Section */
+        .testimonial-card { text-align: right; }
+        html[dir="ltr"] .testimonial-card { text-align: left; }
+        .testimonial-card p { font-style: italic; font-size: 15px; color: var(--text-dark); margin-bottom: 16px; font-weight: 600; line-height: 1.6; }
+        .testimonial-user { font-weight: 900; font-size: 14px; color: var(--kid-pink); }
+        .testimonial-stars { color: var(--gold-star); margin-bottom: 12px; font-size: 18px; }
 
-        /* 4. قسم انضم إلينا */
-        .cta-box { background: linear-gradient(135deg, var(--kid-purple), #6366f1); border-radius: 24px; padding: 50px 30px; color: var(--white); text-align: center; box-shadow: 0 15px 30px rgba(131, 56, 236, 0.2); width: 100%; box-sizing: border-box; }
-        .cta-btn { background: var(--kid-yellow); color: var(--text-dark); padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: 900; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0, 0.2); transition: 0.3s; white-space: nowrap; }
-        .cta-btn:hover { transform: scale(1.05); }
+        /* Store Products Styling */
+        .product-card {
+            background: var(--white);
+            border-radius: 28px;
+            padding: 24px;
+            text-align: center;
+        }
+        .product-icon-box {
+            width: 72px;
+            height: 72px;
+            background: rgba(14, 165, 233, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--kid-blue);
+            font-size: 32px;
+        }
 
-        /* 5. قسم الأسئلة الشائعة */
-        .faq-container { max-width: 750px; margin: 0 auto; text-align: right; width: 100%; box-sizing: border-box; padding: 0 10px; }
-        .faq-item { background: var(--white); border-radius: 14px; margin-bottom: 15px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .faq-question { padding: 15px 20px; font-weight: 800; color: var(--text-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fff; transition: 0.3s; }
-        .faq-question:hover { background: #fdfdfd; color: var(--kid-blue); }
-        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; color: var(--text-gray); font-size: 14px; font-weight: 600; background: #fafbfc; border-top: 1px solid transparent; }
+        /* Premium CTA Join Us Section */
+        .cta-box { 
+            background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); 
+            border-radius: 36px; 
+            padding: 60px 40px; 
+            color: var(--white); 
+            text-align: center; 
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.25); 
+            width: 100%; 
+            box-sizing: border-box; 
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-box::before {
+            content: '🌟';
+            position: absolute;
+            font-size: 5rem;
+            bottom: -20px;
+            right: -10px;
+            opacity: 0.15;
+        }
+        .cta-btn { 
+            background: var(--white); 
+            color: var(--primary-indigo); 
+            padding: 14px 28px; 
+            border-radius: 9999px; 
+            text-decoration: none; 
+            font-weight: 900; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            box-shadow: var(--shadow-md); 
+            transition: all 0.25s ease; 
+            white-space: nowrap; 
+        }
+        .cta-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: var(--shadow-lg);
+            background: #fafbff;
+        }
 
-        /* ويدجت الشات المباشر */
-        .chat-widget-btn { position: fixed; bottom: 25px; left: 25px; background: linear-gradient(45deg, var(--kid-pink), #ff758c); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 8px 25px rgba(255, 75, 114, 0.4); cursor: pointer; z-index: 9999; transition: 0.3s; }
-        .chat-widget-btn:hover { transform: scale(1.1) rotate(15deg); }
-        .chat-window { position: fixed; bottom: 95px; left: 25px; width: 330px; height: 420px; background: var(--white); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 2px solid var(--kid-blue); display: none; flex-direction: column; overflow: hidden; z-index: 9999; max-width: 90vw; }
-        .chat-header { background: var(--kid-blue); color: white; padding: 15px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
-        .chat-body { flex-grow: 1; padding: 15px; overflow-y: auto; background: var(--bg-light); display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: 600; }
-        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; line-height: 1.4; }
-        .chat-msg.bot { background: #e0f2fe; color: var(--text-dark); align-self: flex-start; }
-        .chat-msg.user { background: var(--kid-blue); color: white; align-self: flex-end; }
-        .chat-footer { padding: 10px; background: #fff; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
-        .chat-footer input { flex-grow: 1; padding: 8px 15px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; font-size: 13px; }
-        .chat-footer button { background: var(--kid-blue); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        /* Beautiful FAQ Accordion */
+        .faq-container { max-width: 800px; margin: 0 auto; text-align: right; width: 100%; box-sizing: border-box; padding: 0 10px; }
+        html[dir="ltr"] .faq-container { text-align: left; }
+        .faq-item { 
+            background: var(--white); 
+            border-radius: 20px; 
+            margin-bottom: 16px; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--shadow-sm); 
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            border-color: rgba(79, 70, 229, 0.15);
+            box-shadow: var(--shadow-md);
+        }
+        .faq-question { 
+            padding: 20px 24px; 
+            font-weight: 800; 
+            color: var(--text-dark); 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: #fff; 
+            transition: all 0.2s ease; 
+            font-size: 16px;
+        }
+        .faq-question:hover { color: var(--primary-indigo); }
+        .faq-answer { 
+            padding: 0 24px; 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            color: var(--text-gray); 
+            font-size: 14.5px; 
+            font-weight: 600; 
+            background: #fafbfc; 
+            border-top: 1px solid transparent; 
+        }
 
-        /* Video Modal */
-        .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 41, 59, 0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .video-modal-content { width: 90%; max-width: 850px; position: relative; }
-        .close-modal { position: absolute; top: -45px; right: 0; color: white; font-size: 35px; cursor: pointer; transition: 0.3s; }
+        /* Certified Nurseries network */
+        .nurseries-compact-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; width: 100%; box-sizing: border-box; padding: 0 10px; }
+        .nursery-compact-card { 
+            width: 124px; 
+            height: 124px; 
+            background: var(--white); 
+            border-radius: 20px; 
+            padding: 12px; 
+            text-align: center; 
+            box-shadow: var(--shadow-sm); 
+            border: 2px solid transparent; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            position: relative; 
+            z-index: 10;
+        }
+        .nursery-compact-card:hover { 
+            border-color: var(--kid-pink); 
+            transform: translateY(-4px); 
+            box-shadow: var(--shadow-lg); 
+        }
+        .nursery-compact-logo { 
+            width: 58px; 
+            height: 58px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-bottom: 8px; 
+            border: 2px solid var(--primary-indigo); 
+            padding: 2px; 
+        }
+        .nursery-compact-name { 
+            font-size: 12px; 
+            font-weight: 800; 
+            color: var(--text-dark); 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            width: 100%; 
+        }
+
+        /* Live Chat Widget UI */
+        .chat-widget-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            background: linear-gradient(135deg, var(--kid-pink), #ff5a79); 
+            color: white; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 26px; 
+            box-shadow: 0 8px 30px rgba(244, 63, 94, 0.4); 
+            cursor: pointer; 
+            z-index: 9999; 
+            transition: all 0.3s ease; 
+        }
+        html[dir="rtl"] .chat-widget-btn { left: 30px; }
+        html[dir="ltr"] .chat-widget-btn { right: 30px; }
+        .chat-widget-btn:hover { transform: scale(1.1) rotate(10deg); }
+
+        .chat-window { 
+            position: fixed; 
+            bottom: 105px; 
+            width: 350px; 
+            height: 440px; 
+            background: var(--white); 
+            border-radius: 24px; 
+            box-shadow: var(--shadow-xl); 
+            border: 1px solid var(--border-color); 
+            display: none; 
+            flex-direction: column; 
+            overflow: hidden; 
+            z-index: 9999; 
+            max-width: 90vw; 
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        html[dir="rtl"] .chat-window { left: 30px; }
+        html[dir="ltr"] .chat-window { right: 30px; }
+        .chat-header { 
+            background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); 
+            color: white; 
+            padding: 16px 20px; 
+            font-weight: 800; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .chat-body { 
+            flex-grow: 1; 
+            padding: 20px; 
+            overflow-y: auto; 
+            background: #faf8f5; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            font-size: 13px; 
+            font-weight: 600; 
+        }
+        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 16px; line-height: 1.4; }
+        .chat-msg.bot { 
+            background: var(--white); 
+            color: var(--text-dark); 
+            align-self: flex-start; 
+            box-shadow: var(--shadow-sm);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-msg.user { 
+            background: var(--primary-indigo); 
+            color: white; 
+            align-self: flex-end; 
+            border-bottom-right-radius: 4px;
+        }
+        .chat-footer { padding: 12px; background: #fff; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
+        .chat-footer input { 
+            flex-grow: 1; 
+            padding: 10px 18px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 9999px; 
+            outline: none; 
+            font-size: 13.5px; 
+        }
+        .chat-footer button { 
+            background: var(--primary-indigo); 
+            color: white; 
+            border: none; 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .chat-footer button:hover {
+            transform: scale(1.05);
+            background: var(--primary-violet);
+        }
+
+        /* Modern Video Modal */
+        .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .video-modal-content { width: 92%; max-width: 850px; position: relative; }
+        .close-modal { position: absolute; top: -50px; right: 0; color: white; font-size: 38px; cursor: pointer; transition: 0.3s; }
         .close-modal:hover { color: var(--kid-pink); transform: rotate(90deg); }
-        .video-modal iframe { width: 100%; height: 480px; border: none; border-radius: 24px; border: 4px solid var(--white); }
+        .video-modal iframe { width: 100%; height: 480px; border: none; border-radius: 32px; border: 4px solid var(--white); }
 
-        .footer { background: var(--kid-purple); color: var(--white); text-align: center; padding: 40px 5%; font-weight: 700; border-top: 4px solid var(--kid-yellow); width: 100%; }
+        /* Premium Modern Footer */
+        .footer { 
+            background: var(--text-dark); 
+            color: var(--white); 
+            text-align: center; 
+            padding: 60px 6% 40px; 
+            font-weight: 700; 
+            border-top: 6px solid var(--primary-indigo); 
+            width: 100%; 
+        }
 
-        /* شبكة الحضانات */
-        .nurseries-compact-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; box-sizing: border-box; padding: 0 10px; }
-        .nursery-compact-card { width: 110px; height: 110px; background: var(--white); border-radius: 12px; padding: 8px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 2px solid transparent; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 10;}
-        .nursery-compact-card:hover { border-color: var(--kid-pink); transform: translateY(-5px); box-shadow: 0 10px 15px rgba(255, 75, 114, 0.2); }
-        .nursery-compact-logo { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 2px solid var(--kid-blue); padding: 2px; }
-        .nursery-compact-name { font-size: 11px; font-weight: 800; color: var(--kid-purple); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-
-        /* تنسيقات شريط الإدارة (Live Builder Toolbar) */
+        /* Live Builder Toolbar Settings */
         #admin-toolbar {
             display: none;
             position: fixed;
             bottom: 0; left: 0; width: 100%;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-            color: white; padding: 15px;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white; padding: 16px;
             z-index: 999999;
             justify-content: space-around;
             align-items: center;
             border-top: 4px solid var(--kid-pink);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
         }
         .admin-btn {
-            background: var(--kid-blue); color: white;
-            border: none; padding: 10px 20px;
-            border-radius: 20px; font-weight: bold;
+            background: var(--primary-indigo); color: white;
+            border: none; padding: 12px 24px;
+            border-radius: 9999px; font-weight: bold;
             cursor: pointer; transition: 0.3s;
             display: inline-flex; align-items: center; gap: 8px;
         }
         .admin-btn:hover { transform: translateY(-2px); }
         .editable-active { border: 2px dashed var(--kid-yellow); padding: 5px; cursor: text; border-radius: 8px; transition: 0.3s; }
-        .editable-active:focus { background: rgba(255,255,255,0.2); outline: none; border-color: var(--kid-pink); }
+        .editable-active:focus { background: rgba(255,255,255,0.1); outline: none; border-color: var(--kid-pink); }
         
         .temp-draggable-wrapper {
             position: absolute; display: inline-block; cursor: grab; z-index: 100;
         }
         .temp-draggable-wrapper:active { cursor: grabbing; }
         .temp-save-btn {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
-            background: var(--success-green); color: white; border: none;
-            padding: 5px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;
+            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+            background: var(--kid-green); color: white; border: none;
+            padding: 6px 14px; border-radius: 12px; font-size: 12px; font-weight: bold;
             cursor: pointer; white-space: nowrap;
         }
 
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-indigo);
+        }
+
         @media (max-width: 768px) {
-            .video-container iframe { height: 250px; }
-            .nav-links { flex-direction: column; width: 100%; margin-top: 10px; display: none; }
-            .navbar { flex-direction: column; }
+            .video-container iframe { height: 260px; }
+            .nav-links { display: none; width: 100%; margin-top: 16px; flex-direction: column; gap: 8px; }
+            .nav-links.mobile-show { display: flex; }
+            .navbar { flex-direction: column; padding: 16px; }
+            .navbar-header-mobile { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+            .menu-toggle-btn { display: block !important; }
             .dropdown-content { position: static; box-shadow: none; border: none; width: 100%; }
             .floating-asset { max-width: 80px; opacity: 0.4; z-index: 0; }
-            .cards-slider > div { width: 280px; } 
-            #admin-toolbar { flex-direction: column; gap: 10px; padding: 10px; }
+            .cards-slider > div { width: 285px; } 
+            #admin-toolbar { flex-direction: column; gap: 12px; padding: 16px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Orb-emojis floating in backgrounds for high sensory immersion & joy -->
+    <div class="deco-emoji" style="top: 15%; right: 10%;">🧸</div>
+    <div class="deco-emoji" style="top: 30%; left: 8%; animation-delay: 1.5s;">🎨</div>
+    <div class="deco-emoji" style="top: 60%; right: 5%; animation-delay: 3s;">🌈</div>
+    <div class="deco-emoji" style="top: 80%; left: 12%; animation-delay: 4.5s;">🚀</div>
+
     <nav class="navbar">
-        <div class="logo" id="pub-main-logo">
-            <i class="fa-solid fa-shapes" style="margin-left: 8px;"></i> <span style="font-size: 24px; font-weight: 900; color: var(--kid-purple);">Impact Hub Egypt</span>
+        <div class="navbar-header-mobile" style="display: flex; justify-content: space-between; align-items: center; width: auto; flex-grow: 1;">
+            <a href="index.html" class="logo" id="pub-main-logo">
+                <i class="fa-solid fa-shapes"></i> 
+                <span>Impact Hub Egypt</span>
+            </a>
+            <!-- Mobile Menu Toggle Button -->
+            <button class="menu-toggle-btn" onclick="toggleMobileMenu()" style="display: none; background: none; border: none; font-size: 24px; color: var(--text-dark); cursor: pointer; padding: 8px;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
-        <div class="nav-links">
-            <a href="#hero-section">الرئيسية</a>
+        
+        <div class="nav-links" id="nav-links-container">
+            <a href="#hero-section" data-i18n="nav_home">الرئيسية</a>
+            
             <div class="dropdown">
-                <a href="#dynamic-content-wrapper">أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></a>
+                <a href="#dynamic-content-wrapper" data-i18n="nav_explore">أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></a>
                 <div class="dropdown-content" id="dynamic-nav-dropdown"></div>
             </div>
             
             <div class="dropdown">
-                <a href="#"><i class="fa-solid fa-globe"></i> اللغة <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></a>
+                <div class="dropdown-trigger">
+                    <i class="fa-solid fa-globe"></i> <span data-i18n="nav_lang">اللغة</span> <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
+                </div>
                 <div class="dropdown-content">
-                    <a href="#">العربية</a>
-                    <a href="#">English</a>
-                    <a href="#">Français</a>
-                    <a href="#">Deutsch</a>
+                    <a href="#" onclick="changeAppLanguage('ar', event)" id="lang-ar">🇸🇦 العربية</a>
+                    <a href="#" onclick="changeAppLanguage('en', event)" id="lang-en">🇬🇧 English</a>
+                    <a href="#" onclick="changeAppLanguage('fr', event)" id="lang-fr">🇫🇷 Français</a>
+                    <a href="#" onclick="changeAppLanguage('de', event)" id="lang-de">🇩🇪 Deutsch</a>
                 </div>
             </div>
 
-            <a href="#features-section">مميزاتنا</a>
-            <a href="#teachers-section">دروس أونلاين</a>
-            <a href="#nurseries-section">شبكة الحضانات</a>
-            <a href="parent-app.html" class="login-btn"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
+            <a href="#features-section" data-i18n="nav_features">مميزاتنا</a>
+            <a href="#teachers-section" data-i18n="nav_lessons">دروس أونلاين</a>
+            <a href="#nurseries-section" data-i18n="nav_nurseries">شبكة الحضانات</a>
+            <a href="parent-app.html" class="login-btn" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
         </div>
     </nav>
 
-    <!-- حاوية لزراعة الصور العائمة (Floating Assets) -->
+    <!-- Floating Assets Draggable Container -->
     <div id="floating-assets-container"></div>
 
-    <!-- شريط الإدارة العائم (مخفي افتراضياً، يظهر لو adminMode=true) -->
+    <!-- Live Builder Mode UI Toolbar -->
     <div id="admin-toolbar">
         <div style="font-weight:bold; font-size:16px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--kid-yellow);"></i> وضع مُنشئ الواجهة (Live Builder)</div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            <button class="admin-btn" style="background:var(--success-green);" onclick="window.saveLiveTexts()"><i class="fa-solid fa-floppy-disk"></i> حفظ النصوص</button>
+            <button class="admin-btn" style="background:var(--kid-green);" onclick="window.saveLiveTexts()"><i class="fa-solid fa-floppy-disk"></i> حفظ النصوص</button>
             <input type="file" id="live-img-uploader" style="display:none;" accept="image/png, image/webp" onchange="window.handleLiveImageUpload(event)">
             <button class="admin-btn" style="background:var(--kid-pink);" onclick="document.getElementById('live-img-uploader').click()"><i class="fa-solid fa-image"></i> إضافة صورة عائمة هنا</button>
             <button class="admin-btn" style="background:var(--text-gray);" onclick="window.close()"><i class="fa-solid fa-xmark"></i> إنهاء</button>
         </div>
     </div>
 
+    <!-- Hero Area -->
     <section class="hero" id="hero-section">
-        <!-- نصوص تجريبية قوية لو مفيش داتا لسه في الفايربيز -->
-        <h1 id="pub-hero-title">مرحباً بك في عالم Impact Hub التفاعلي</h1>
-        <p id="pub-hero-subtitle">نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل.</p>
-        <p id="pub-about-text" style="font-size: 16px; color: var(--white); max-width: 700px; margin: 0 auto 30px; opacity: 0.95;"></p>
+        <h1 id="pub-hero-title" data-i18n="hero_title">مرحباً بك في عالم Impact Hub التفاعلي 🌟</h1>
+        <p id="pub-hero-subtitle" data-i18n="hero_subtitle">نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸</p>
+        <p id="pub-about-text" style="font-size: 16px; color: var(--text-gray); max-width: 700px; margin: 0 auto 30px; opacity: 0.95; font-weight: 500;"></p>
         <div class="video-container" id="pub-video-container" style="display:none;"></div>
     </section>
 
-    <!-- سيتم حقن فيديو بلوك هنا لو مكانه after-hero -->
+    <!-- YouTube video Smart Blocks inject hook -->
     <div id="video-after-hero"></div>
 
+    <!-- Dynamic Interactive Playrooms content -->
     <div id="dynamic-content-wrapper">
-        <p style="text-align:center; padding: 50px; color: var(--text-gray); font-weight: bold;"><i class="fa-solid fa-spinner fa-spin"></i> جاري إعداد ركن الأنشطة والمرح...</p>
+        <p style="text-align:center; padding: 60px; color: var(--text-gray); font-weight: bold;"><i class="fa-solid fa-spinner fa-spin"></i> جاري إعداد ركن الأنشطة والمرح...</p>
     </div>
 
+    <!-- Features Bento Grid Section -->
     <section class="marketing-section" id="features-section">
-        <h2 class="section-title">لماذا تختار منصة Impact Hub؟</h2>
-        <p class="section-subtitle">نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة للطفل</p>
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="features_title">لماذا تختار منصة Impact Hub؟ 🤔</h2>
+            <p class="section-subtitle" data-i18n="features_subtitle">نظام ذكي متكامل بمواصفات عالمية وتكامل مباشر لتوفير أفضل تجربة للطفل 🚀</p>
+        </div>
+        
         <div class="features-container">
             <div class="feature-card">
-                <i class="fa-solid fa-video" style="color: var(--kid-pink);"></i>
-                <h3>كاميرات ومتابعة لايف</h3>
-                <p>تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
+                <div class="feature-icon-wrapper" style="background: rgba(244, 63, 94, 0.08); color: var(--kid-pink);">
+                    <i class="fa-solid fa-video"></i>
+                </div>
+                <h3 data-i18n="feat_cameras_title">كاميرات ومتابعة لايف 🎥</h3>
+                <p data-i18n="feat_cameras_desc">تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
             </div>
+            
             <div class="feature-card">
-                <i class="fa-solid fa-book-open-reader" style="color: var(--kid-blue);"></i>
-                <h3>مناهج تفاعلية حديثة</h3>
-                <p>مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
+                <div class="feature-icon-wrapper" style="background: rgba(14, 165, 233, 0.08); color: var(--kid-blue);">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <h3 data-i18n="feat_curricula_title">مناهج تفاعلية حديثة 📚</h3>
+                <p data-i18n="feat_curricula_desc">مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
             </div>
+            
             <div class="feature-card">
-                <i class="fa-solid fa-chalkboard-user" style="color: var(--kid-green);"></i>
-                <h3>حصص تأسيس مباشرة</h3>
-                <p>فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
+                <div class="feature-icon-wrapper" style="background: rgba(16, 185, 129, 0.08); color: var(--kid-green);">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <h3 data-i18n="feat_classes_title">حصص تأسيس مباشرة 👩‍🏫</h3>
+                <p data-i18n="feat_classes_desc">فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
             </div>
+            
             <div class="feature-card">
-                <i class="fa-solid fa-wallet" style="color: var(--kid-purple);"></i>
-                <h3>متجر ومدفوعات ذكية</h3>
-                <p>سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
+                <div class="feature-icon-wrapper" style="background: rgba(99, 102, 241, 0.08); color: var(--kid-purple);">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <h3 data-i18n="feat_wallet_title">متجر ومدفوعات ذكية 💳</h3>
+                <p data-i18n="feat_wallet_desc">سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
             </div>
         </div>
     </section>
 
+    <!-- YouTube video block slot -->
     <div id="video-after-features"></div>
 
+    <!-- Live Lessons Teachers Section -->
     <section class="teachers-section" id="teachers-section">
-        <h2 class="section-title" style="color: #b45309;">خبراء التعليم المباشر</h2>
-        <p class="section-subtitle" style="color: #d97706;">احجز حصتك الفردية أو الجماعية الآن واضمن تأسيس طفلك صح</p>
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="teachers_title">خبراء التعليم المباشر 🌟</h2>
+            <p class="section-subtitle" data-i18n="teachers_subtitle">احجز حصتك الفردية أو الجماعية الآن واضمن تأسيس طفلك صح 🎓</p>
+        </div>
         <div class="cards-slider" id="teachers-grid">
-            <p style="text-align:center; width:100%; font-weight: bold; color: #b45309;">جاري جلب قائمة المدرسين المعتمدين...</p>
+            <p style="text-align:center; width:100%; font-weight: bold; color: var(--primary-indigo);" data-i18n="teachers_loading">جاري جلب قائمة المدرسين المعتمدين... ⏳</p>
         </div>
     </section>
 
+    <!-- YouTube video block slot -->
     <div id="video-after-teachers"></div>
 
+    <!-- Store Section Teaser -->
     <section class="marketing-section" id="store-teaser-section">
-        <h2 class="section-title">المتجر التعليمي المتميز</h2>
-        <p class="section-subtitle">تصفح عينات من حقائب المناهج التفاعلية والكتب المطبوعة المتاحة لأطفالنا</p>
-        <div class="cards-slider" id="live-products-teaser"></div>
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="store_title">المتجر التعليمي المتميز 🎒</h2>
+            <p class="section-subtitle" data-i18n="store_subtitle">تصفح عينات من حقائب المناهج التفاعلية والكتب المطبوعة المتاحة لأطفالنا 📖</p>
+        </div>
+        <div class="cards-slider" id="live-products-teaser">
+            <p style="text-align:center; width:100%; font-weight: bold; color: var(--text-gray);" data-i18n="store_loading">جاري تحميل المنتجات... ⏳</p>
+        </div>
     </section>
 
+    <!-- Certified Nurseries network Section -->
     <section class="nurseries-section marketing-section" id="nurseries-section">
-        <h2 class="section-title" style="left:50%; transform:translateX(-50%);">شبكة الحضانات المعتمدة بالشرق الأوسط</h2>
-        <p class="section-subtitle" style="text-align:center; margin-top:15px;">الحضانات التي تطبق معايير ومناهج Impact Hub المتطورة</p>
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="nurseries_title">شبكة الحضانات المعتمدة بالشرق الأوسط 🏫</h2>
+            <p class="section-subtitle" data-i18n="nurseries_subtitle">الحضانات التي تطبق معايير ومناهج Impact Hub المتطورة 🎓</p>
+        </div>
         <div class="nurseries-compact-grid" id="pub-nurseries-grid">
-            <p style="text-align:center; width: 100%;">جاري جلب القائمة...</p>
+            <p style="text-align:center; width: 100%;" data-i18n="nurseries_loading">جاري جلب القائمة... ⏳</p>
         </div>
     </section>
 
-    <section class="marketing-section" id="testimonials-section" style="background: #fdffff; border-top: 1px solid var(--border-color);">
-        <h2 class="section-title">قالوا عن تجربتهم معنا</h2>
-        <p class="section-subtitle">سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم</p>
+    <!-- Parents Reviews / Testimonials -->
+    <section class="marketing-section" id="testimonials-section" style="background: #ffffff; border-top: 1px solid var(--border-color);">
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="testimonials_title">قالوا عن تجربتهم معنا ❤️</h2>
+            <p class="section-subtitle" data-i18n="testimonials_subtitle">سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم 🌟</p>
+        </div>
         <div class="cards-slider" id="pub-reviews-grid">
-            <p style="text-align:center; width:100%; color: var(--text-gray); font-size: 16px; font-weight:bold;">قم بإضافة آراء وتقييمات أولياء الأمور من خلال لوحة السوبر أدمن لتظهر هنا.</p>
+            <p style="text-align:center; width:100%; color: var(--text-gray); font-size: 15px; font-weight:bold;">قم بإضافة آراء وتقييمات أولياء الأمور من خلال لوحة السوبر أدمن لتظهر هنا.</p>
         </div>
     </section>
 
+    <!-- CTA Section -->
     <section class="marketing-section">
         <div class="cta-box">
-            <h2 style="font-size:28px; font-weight:900; margin-bottom:15px;">انضم لشبكة Impact Hub الأكبر في الشرق الأوسط</h2>
-            <p style="font-weight:700; opacity:0.9;">سواء كنت صاحب حضانة تبحث عن التطوير، أو معلماً متميزاً تبحث عن فرصة للإبداع، مكانك معنا.</p>
-            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-top:25px;">
-                <a href="https://wa.me/201030013810" target="_blank" class="cta-btn"><i class="fa-solid fa-school"></i> تواصل لتفعيل السيستم لحضانتك</a>
-                <a href="https://wa.me/201030013810" target="_blank" class="cta-btn" style="background:var(--kid-pink); color:white;"><i class="fa-solid fa-chalkboard-user"></i> تقديم طلب توظيف لفريق التدريس</a>
+            <h2 style="font-size: clamp(22px, 4vw, 32px); font-weight:900; margin-bottom:20px; text-shadow: 0 4px 10px rgba(0,0,0,0.15);" data-i18n="cta_title">انضم لشبكة Impact Hub الأكبر في الشرق الأوسط 🚀</h2>
+            <p style="font-weight:700; opacity:0.95; font-size: 16px; max-width: 800px; margin: 0 auto 30px;" data-i18n="cta_desc">سواء كنت صاحب حضانة تبحث عن التطوير، أو معلماً متميزاً تبحث عن فرصة للإبداع، مكانك معنا. ✨</p>
+            <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-top:30px;">
+                <a href="https://wa.me/201030013810" target="_blank" class="cta-btn" data-i18n="cta_nursery"><i class="fa-solid fa-school"></i> تواصل لتفعيل السيستم لحضانتك 🏫</a>
+                <a href="https://wa.me/201030013810" target="_blank" class="cta-btn" style="background:var(--kid-pink); color:white; box-shadow: 0 4px 14px rgba(244, 63, 94, 0.3);" data-i18n="cta_teacher"><i class="fa-solid fa-chalkboard-user"></i> تقديم طلب توظيف لفريق التدريس 👩‍🏫</a>
             </div>
         </div>
     </section>
 
+    <!-- FAQ Section -->
     <section class="marketing-section" id="faq-section">
-        <h2 class="section-title">الأسئلة الشائعة (FAQ)</h2>
-        <p class="section-subtitle">إجابات سريعة على أهم الاستفسارات التي تهم أولياء الأمور والمديرين</p>
+        <div class="section-header">
+            <h2 class="section-title" data-i18n="faq_title">الأسئلة الشائعة (FAQ) ❓</h2>
+            <p class="section-subtitle" data-i18n="faq_subtitle">إجابات سريعة على أهم الاستفسارات التي تهم أولياء الأمور والمديرين 💡</p>
+        </div>
         <div class="faq-container" id="pub-faq-container">
-            <p style="text-align:center; color: var(--text-gray); font-size: 16px; font-weight:bold;">جاري تحميل الأسئلة الشائعة...</p>
+            <p style="text-align:center; color: var(--text-gray); font-size: 15px; font-weight:bold;" data-i18n="faq_loading">جاري تحميل الأسئلة الشائعة... ⏳</p>
         </div>
     </section>
 
+    <!-- Smart block pre-footer slot -->
     <div id="video-before-footer"></div>
 
+    <!-- AI Chatbot Widget Button and Window -->
     <div class="chat-widget-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-comments"></i></div>
     <div class="chat-window" id="publicChatWindow">
         <div class="chat-header">
-            <span><i class="fa-solid fa-robot"></i> مساعد ومستشار زوار منصتنا</span>
+            <span><i class="fa-solid fa-robot"></i> <span data-i18n="chat_header">مساعد ومستشار زوار منصتنا 🤖</span></span>
             <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleChatWindow()"></i>
         </div>
         <div class="chat-body" id="public-chat-messages">
-            <div class="chat-msg bot">مرحباً بك في Impact Hub Egypt! عساك بخير يا فندم؟ أنا هنا لمساعدتك في التعرف على السيستم أو حجز المناهج والحصص. تفضل بسؤالك!</div>
+            <div class="chat-msg bot" data-i18n="chat_welcome">مرحباً بك في Impact Hub Egypt! عساك بخير يا فندم؟ أنا هنا لمساعدتك في التعرف على السيستم أو حجز المناهج والحصص. تفضل بسؤالك!</div>
         </div>
         <div class="chat-footer">
-            <input type="text" id="public-chat-input" placeholder="اكتب سؤالك هنا...">
+            <input type="text" id="public-chat-input" placeholder="اكتب سؤالك هنا..." data-i18n-placeholder="chat_placeholder">
             <button onclick="sendPublicChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
+    <!-- Iframe Video Popup modal -->
     <div class="video-modal" id="videoModal">
         <div class="video-modal-content">
             <i class="fa-solid fa-xmark close-modal" onclick="closeVideo()"></i>
@@ -385,14 +1042,333 @@
         </div>
     </div>
 
+    <!-- Main Footer -->
     <footer class="footer">
-        <div id="pub-footer-logo" style="margin-bottom: 15px; background: var(--white); padding: 10px 20px; border-radius: 12px; display: inline-block;">
-            <span style="font-size: 24px; font-weight: 900; color: var(--kid-purple);">Impact Hub Egypt</span>
+        <div id="pub-footer-logo" style="margin-bottom: 20px; background: var(--white); padding: 12px 28px; border-radius: 16px; display: inline-block; box-shadow: var(--shadow-sm);">
+            <span style="font-size: 24px; font-weight: 900; color: var(--primary-indigo);">Impact Hub Egypt</span>
         </div>
-        <p><i class="fa-solid fa-heart" style="color:var(--kid-pink);"></i> بيئة تعليمية مبهجة وآمنة لأجل مستقبل أطفالنا</p>
-        <p style="font-size: 13px; opacity: 0.8; margin-top: 5px;">جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)</p>
+        <p data-i18n="footer_slogan"><i class="fa-solid fa-heart" style="color:var(--kid-pink);"></i> بيئة تعليمية مبهجة وآمنة لأجل مستقبل أطفالنا ❤️</p>
+        <p style="font-size: 13.5px; opacity: 0.75; margin-top: 12px;" data-i18n="footer_copyright">جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)</p>
     </footer>
 
+    <!-- i18n Dictionary Script -->
+    <script>
+        const translations = {
+            ar: {
+                nav_home: "الرئيسية",
+                nav_explore: 'أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
+                nav_lang: "اللغة",
+                nav_features: "مميزاتنا",
+                nav_lessons: "دروس أونلاين",
+                nav_nurseries: "شبكة الحضانات",
+                nav_login: '<i class="fa-solid fa-rocket"></i> دخول المنصة',
+                
+                hero_title: "مرحباً بك في عالم Impact Hub التفاعلي 🌟",
+                hero_subtitle: "نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸",
+                hero_video_title: "شاهد كيف يعمل السيستم في دقيقتين 🎥",
+                
+                features_title: "لماذا تختار منصة Impact Hub؟ 🤔",
+                features_subtitle: "نظام ذكي متكامل بمواصفات عالمية وتكامل مباشر لتوفير أفضل تجربة للطفل 🚀",
+                
+                feat_cameras_title: "كاميرات ومتابعة لايف 🎥",
+                feat_cameras_desc: "تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.",
+                feat_curricula_title: "مناهج تفاعلية حديثة 📚",
+                feat_curricula_desc: "مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.",
+                feat_classes_title: "حصص تأسيس مباشرة 👩‍🏫",
+                feat_classes_desc: "فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.",
+                feat_wallet_title: "متجر ومدفوعات ذكية 💳",
+                feat_wallet_desc: "سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.",
+                
+                teachers_title: "خبراء التعليم المباشر 🌟",
+                teachers_subtitle: "احجز حصتك الفردية أو الجماعية الآن واضمن تأسيس طفلك صح 🎓",
+                teachers_loading: "جاري جلب قائمة المدرسين المعتمدين... ⏳",
+                teachers_empty: "لا يوجد مدرسين متاحين للعرض حالياً.",
+                teachers_sub_badge: "حصص ومتابعة أونلاين تفاعلية 💻",
+                teachers_book_btn: "احجز حصتك الاستكشافية 🗓️",
+                
+                store_title: "المتجر التعليمي المتميز 🎒",
+                store_subtitle: "تصفح عينات من حقائب المناهج التفاعلية والكتب المطبوعة المتاحة لأطفالنا 📖",
+                store_loading: "جاري تحميل المنتجات... ⏳",
+                store_order_btn: "طلب وتوصيل عبر التطبيق 🚚",
+                
+                nurseries_title: "شبكة الحضانات المعتمدة بالشرق الأوسط 🏫",
+                nurseries_subtitle: "الحضانات التي تطبق معايير ومناهج Impact Hub المتطورة 🎓",
+                nurseries_loading: "جاري جلب القائمة... ⏳",
+                
+                testimonials_title: "قالوا عن تجربتهم معنا ❤️",
+                testimonials_subtitle: "سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم 🌟",
+                
+                cta_title: "انضم لشبكة Impact Hub الأكبر في الشرق الأوسط 🚀",
+                cta_desc: "سواء كنت صاحب حضانة تبحث عن التطوير، أو معلماً متميزاً تبحث عن فرصة للإبداع، مكانك معنا. ✨",
+                cta_nursery: "تواصل لتفعيل السيستم لحضانتك 🏫",
+                cta_teacher: "تقديم طلب توظيف لفريق التدريس 👩‍🏫",
+                
+                faq_title: "الأسئلة الشائعة (FAQ) ❓",
+                faq_subtitle: "إجابات سريعة على أهم الاستفسارات التي تهم أولياء الأمور والمديرين 💡",
+                faq_loading: "جاري تحميل الأسئلة الشائعة... ⏳",
+                
+                chat_header: "مساعد ومستشار زوار منصتنا 🤖",
+                chat_welcome: "مرحباً بك في Impact Hub Egypt! عساك بخير يا فندم؟ أنا هنا لمساعدتك في التعرف على السيستم أو حجز المناهج والحصص. تفضل بسؤالك!",
+                chat_placeholder: "اكتب سؤالك هنا...",
+                chat_reply: "يا أهلاً بك يا فندم! لتسجيل طفلك أو طلب حقيبة المناهج والكتب التفاعلية، يرجى التوجه لزر \"دخول المنصة\" لتسجيل الدخول، أو التواصل مباشرة مع إدارة المبيعات عبر الواتساب على رقمنا الموحد <b>01030013810</b> وسنقوم بخدمتك فوراً! ✨",
+                
+                footer_slogan: "بيئة تعليمية مبهجة وآمنة لأجل مستقبل أطفالنا ❤️",
+                footer_copyright: "جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)"
+            },
+            en: {
+                nav_home: "Home",
+                nav_explore: 'Playrooms & Curricula <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
+                nav_lang: "Language",
+                nav_features: "Features",
+                nav_lessons: "Online Lessons",
+                nav_nurseries: "Nurseries Network",
+                nav_login: '<i class="fa-solid fa-rocket"></i> Login Platform',
+                
+                hero_title: "Welcome to Impact Hub Interactive World 🌟",
+                hero_subtitle: "An integrated smart ecosystem linking administration, teachers, and parents to provide the ultimate joyful learning journey. 🧸",
+                hero_video_title: "How It Works in 2 Minutes 🎥",
+                
+                features_title: "Why Choose Impact Hub Platform? 🤔",
+                features_subtitle: "A world-class integrated platform designed to optimize growth, safety, and engagement for your preschool child 🚀",
+                
+                feat_cameras_title: "Live Cam & Safe Monitoring 🎥",
+                feat_cameras_desc: "Watch your child's milestones live from classroom and play areas with state-of-the-art secure localized parent streams.",
+                feat_curricula_title: "Modern Interactive Curricula 📚",
+                feat_curricula_desc: "Tailored educational resources and high-durability UV-printed books designed to foster organic childhood development.",
+                feat_classes_title: "Live Interactive Tutoring 👩‍🏫",
+                feat_classes_desc: "Premium virtual classrooms to empower your child's math, logic and language skills with certified educational experts.",
+                feat_wallet_title: "Smart Shop & E-Payments 💳",
+                feat_wallet_desc: "A unified system to purchase books, materials, and uniforms with secure integrated local wallet transfers.",
+                
+                teachers_title: "Live Education Experts 🌟",
+                teachers_subtitle: "Book your individual or group exploratory session now for a solid educational start 🎓",
+                teachers_loading: "Fetching certified educators list... ⏳",
+                teachers_empty: "No educators available at the moment.",
+                teachers_sub_badge: "Interactive tutoring & monitoring 💻",
+                teachers_book_btn: "Book Discovery Session 🗓️",
+                
+                store_title: "Premium Educational Store 🎒",
+                store_subtitle: "Explore samples of physical curriculum packages and books tailored for nursery students 📖",
+                store_loading: "Loading shop products... ⏳",
+                store_order_btn: "Order via Application 🚚",
+                
+                nurseries_title: "Certified Nurseries in Middle East 🏫",
+                nurseries_subtitle: "Premier nurseries implementing global standards of Impact Hub curriculum 🎓",
+                nurseries_loading: "Loading nursery directory... ⏳",
+                
+                testimonials_title: "Loved by Parents ❤️",
+                testimonials_subtitle: "Trusted by thousands of families for premium quality, transparency, and safety 🌟",
+                
+                cta_title: "Join the Largest Impact Hub Network 🚀",
+                cta_desc: "Whether you seek to modernize your nursery management or display your teaching brilliance to the region, you belong with us. ✨",
+                cta_nursery: "Get System for Your Nursery 🏫",
+                cta_teacher: "Apply to Join Teaching Staff 👩‍🏫",
+                
+                faq_title: "Frequently Asked Questions ❓",
+                faq_subtitle: "Quick answers to help nurseries, teachers, and parents understand our services 💡",
+                faq_loading: "Loading FAQs... ⏳",
+                
+                chat_header: "Our AI Assistant 🤖",
+                chat_welcome: "Welcome to Impact Hub Egypt! How are you doing today? I am here to help you explore our features, or register your child. Let me know your questions!",
+                chat_placeholder: "Type your query here...",
+                chat_reply: "Greetings! To sign up or order our interactive learning kits, please click the \"Login Platform\" button to log in, or chat with our sales team directly on WhatsApp at <b>01030013810</b> for immediate booking! ✨",
+                
+                footer_slogan: "A joyful and secure learning environment for our children's future ❤️",
+                footer_copyright: "All rights reserved &copy; 2026 - Developed by Impact Hub Egypt (ESAIA)"
+            },
+            fr: {
+                nav_home: "Accueil",
+                nav_explore: 'Programmes <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
+                nav_lang: "Langue",
+                nav_features: "Atouts",
+                nav_lessons: "Cours en Ligne",
+                nav_nurseries: "Réseau Crèches",
+                nav_login: '<i class="fa-solid fa-rocket"></i> Connexion',
+                
+                hero_title: "Bienvenue dans l'Univers Interactif d'Impact Hub 🌟",
+                hero_subtitle: "Un écosystème intelligent complet reliant les directeurs, enseignants et parents pour un parcours éducatif joyeux. 🧸",
+                hero_video_title: "Démo Rapide de 2 Minutes 🎥",
+                
+                features_title: "Pourquoi Choisir Impact Hub ? 🤔",
+                features_subtitle: "Une plateforme intégrée de classe mondiale conçue pour optimiser le développement et la sécurité de votre enfant 🚀",
+                
+                feat_cameras_title: "Caméras en Direct Sécurisées 🎥",
+                feat_cameras_desc: "Suivez chaque instant clé de votre enfant en classe et dans la cour grâce à des flux en direct hautement protégés.",
+                feat_curricula_title: "Programmes Interactifs Modernes 📚",
+                feat_curricula_desc: "Des manuels d'apprentissage UV durables et du matériel didactique conçus pour éveiller les esprits créatifs.",
+                feat_classes_title: "Tutorat Interactif en Direct 👩‍🏫",
+                feat_classes_desc: "Salles de classe virtuelles de qualité pour renforcer les compétences linguistiques et mathématiques de vos petits.",
+                feat_wallet_title: "Boutique & Paiements Faciles 💳",
+                feat_wallet_desc: "Un espace unifié pour commander uniformes, livres et kits avec des transferts instantanés par portefeuille mobile.",
+                
+                teachers_title: "Experts de l'Éducation en Direct 🌟",
+                teachers_subtitle: "Réservez dès maintenant votre séance d'évaluation privée pour démarrer en confiance 🎓",
+                teachers_loading: "Récupération des enseignants... ⏳",
+                teachers_empty: "Aucun enseignant disponible pour le moment.",
+                teachers_sub_badge: "Tutorat interactif et suivi 💻",
+                teachers_book_btn: "Réserver un Cours d'Essai 🗓️",
+                
+                store_title: "Boutique Scolaire Privilégiée 🎒",
+                store_subtitle: "Découvrez notre sélection de kits éducatifs physiques et de livres d'éveil préscolaire 📖",
+                store_loading: "Chargement de la boutique... ⏳",
+                store_order_btn: "Commander sur l'Application 🚚",
+                
+                nurseries_title: "Crèches Agréées au Moyen-Orient 🏫",
+                nurseries_subtitle: "Le réseau d'élite de crèches appliquant la méthodologie Impact Hub 🎓",
+                nurseries_loading: "Chargement du réseau... ⏳",
+                
+                testimonials_title: "La Confiance des Parents ❤️",
+                testimonials_subtitle: "Adopté par des milliers de familles pour sa transparence, sa rigueur et sa bienveillance 🌟",
+                
+                cta_title: "Rejoignez le Plus Grand Réseau Impact Hub 🚀",
+                cta_desc: "Que vous souhaitiez moderniser votre établissement ou exprimer votre passion pédagogique, vous êtes à votre place. ✨",
+                cta_nursery: "Activer le Système pour Ma Crèche 🏫",
+                cta_teacher: "Postuler pour Rejoindre l'Équipe 👩‍🏫",
+                
+                faq_title: "Foire Aux Questions ❓",
+                faq_subtitle: "Des réponses simples à toutes vos questions d'organisation et d'admission 💡",
+                faq_loading: "Chargement des questions... ⏳",
+                
+                chat_header: "Assistant Virtuel 🤖",
+                chat_welcome: "Bienvenue sur Impact Hub Egypt ! Comment allez-vous aujourd'hui ? Je suis là pour vous présenter nos fonctionnalités ou vous aider à réserver.",
+                chat_placeholder: "Écrivez votre question ici...",
+                chat_reply: "Bonjour ! Pour inscrire votre enfant ou acheter des trousses d'activités, cliquez sur \"Connexion\" ou contactez notre équipe via WhatsApp au <b>01030013810</b> ! ✨",
+                
+                footer_slogan: "Un environnement d'apprentissage sécurisé et mémorable ❤️",
+                footer_copyright: "Tous droits réservés &copy; 2026 - Développé par Impact Hub Egypt (ESAIA)"
+            },
+            de: {
+                nav_home: "Startseite",
+                nav_explore: 'Spielräume & Pläne <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
+                nav_lang: "Sprache",
+                nav_features: "Vorteile",
+                nav_lessons: "Online-Unterricht",
+                nav_nurseries: "Kita-Netzwerk",
+                nav_login: '<i class="fa-solid fa-rocket"></i> Einloggen',
+                
+                hero_title: "Willkommen in der interaktiven Impact Hub Welt 🌟",
+                hero_subtitle: "Ein voll integriertes intelligentes System, das Kitas, Pädagogen und Eltern für eine optimale Lernreise verbindet. 🧸",
+                hero_video_title: "Funktionsweise in 2 Minuten 🎥",
+                
+                features_title: "Warum Impact Hub wählen? 🤔",
+                features_subtitle: "Ein erstklassiges Ökosystem, das Sicherheit, Freude und exzellente Bildung für Ihr Vorschulkind maximiert 🚀",
+                
+                feat_cameras_title: "Sichere Live-Kameras 🎥",
+                feat_cameras_desc: "Beobachten Sie das tägliche Spielen und Lernen Ihres Kindes live über einen extrem sicheren, passwortgeschützten Stream.",
+                feat_curricula_title: "Interaktive Lehrpläne 📚",
+                feat_curricula_desc: "Speziell entwickelte UV-gedruckte Lehrmaterialien und Lernkits zur optimalen kognitiven Frühförderung.",
+                feat_classes_title: "Online-Einzelunterricht 👩‍🏫",
+                feat_classes_desc: "Virtuelle Klassenzimmer, um Fremdsprachen und mathematische Grundlagen mit diplomierten Lehrern zu üben.",
+                feat_wallet_title: "Smarte Zahlungen & Shop 💳",
+                feat_wallet_desc: "Bücher, Uniformen und Zubehör bequem per integrierter App bestellen und direkt digital bezahlen.",
+                
+                teachers_title: "Live-Bildungsexperten 🌟",
+                teachers_subtitle: "Sichern Sie Ihrem Kind jetzt eine unverbindliche Probestunde für den perfekten Einstieg 🎓",
+                teachers_loading: "Lehrkräfte werden geladen... ⏳",
+                teachers_empty: "Derzeit sind keine Lehrkräfte verfügbar.",
+                teachers_sub_badge: "Interaktive Betreuung & Nachhilfe 💻",
+                teachers_book_btn: "Probestunde Buchen 🗓️",
+                
+                store_title: "Premium-Lernshop 🎒",
+                store_subtitle: "Entdecken Sie Proben unserer physischen Lehrplanpakete und Bücher für Kindergärten 📖",
+                store_loading: "Produkte werden geladen... ⏳",
+                store_order_btn: "Per App Bestellen 🚚",
+                
+                nurseries_title: "Zertifizierte Kitas im Nahen Osten 🏫",
+                nurseries_subtitle: "Erstklassige Partnereinrichtungen, die den fortschrittlichen Impact Hub-Lehrplan anwenden 🎓",
+                nurseries_loading: "Kita-Netzwerk wird geladen... ⏳",
+                
+                testimonials_title: "Stimmen der Eltern ❤️",
+                testimonials_subtitle: "Von Tausenden Familien geschätzt für Transparenz, Engagement und hohe Sicherheit 🌟",
+                
+                cta_title: "Werden Sie Teil unseres Netzwerks 🚀",
+                cta_desc: "Modernisieren Sie Ihr Kita-Management oder entfalten Sie Ihr volles Potenzial als Spitzenpädagoge bei uns. ✨",
+                cta_nursery: "System für meine Kita anfordern 🏫",
+                cta_teacher: "Als Lehrkraft Bewerben 👩‍🏫",
+                
+                faq_title: "Häufig Gestellte Fragen ❓",
+                faq_subtitle: "Schnelle Antworten auf die wichtigsten Fragen von Eltern, Kitas und Bewerbern 💡",
+                faq_loading: "FAQs werden geladen... ⏳",
+                
+                chat_header: "KI-Assistent 🤖",
+                chat_welcome: "Willkommen bei Impact Hub Egypt! Wie geht es Ihnen heute? Ich kann Ihnen helfen, das System zu verstehen oder sich anzumelden.",
+                chat_placeholder: "Schreiben Sie Ihre Frage hier...",
+                chat_reply: "Herzlich willkommen! Um Ihr Kind anzumelden oder Lernsets zu bestellen, klicken Sie bitte auf \"Einloggen\" oder kontaktieren Sie uns direkt über WhatsApp unter <b>01030013810</b>! ✨",
+                
+                footer_slogan: "Eine glückliche und sichere Lernumgebung für die Zukunft unserer Kinder ❤️",
+                footer_copyright: "Alle Rechte vorbehalten &copy; 2026 - Entwickelt von Impact Hub Egypt (ESAIA)"
+            }
+        };
+
+        function changeAppLanguage(lang, e) {
+            if (e) e.preventDefault();
+            localStorage.setItem('selected_language', lang);
+            applyLanguageTranslations(lang);
+            toggleMobileMenu(false);
+        }
+
+        function applyLanguageTranslations(lang) {
+            const currentLang = translations[lang] ? lang : 'ar';
+            const dict = translations[currentLang];
+            
+            // Toggle active classes in dropdown links
+            ['ar', 'en', 'fr', 'de'].forEach(l => {
+                const link = document.getElementById(`lang-${l}`);
+                if (link) {
+                    if (l === currentLang) link.classList.add('active-lang');
+                    else link.classList.remove('active-lang');
+                }
+            });
+
+            // Set HTML properties
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+            // Set typography fonts based on language
+            if (currentLang === 'ar') {
+                document.body.style.fontFamily = "'Tajawal', sans-serif";
+            } else {
+                document.body.style.fontFamily = "'Outfit', sans-serif";
+            }
+
+            // Apply translations using data attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerHTML = dict[key];
+                }
+            });
+
+            // Translate input placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.placeholder = dict[key];
+                }
+            });
+
+            // Dispatch event for components that pull dynamic database strings
+            window.dispatchEvent(new CustomEvent('appLanguageChanged', { detail: { lang: currentLang } }));
+        }
+
+        function toggleMobileMenu(forceState) {
+            const container = document.getElementById('nav-links-container');
+            if (typeof forceState === 'boolean') {
+                if (forceState) container.classList.add('mobile-show');
+                else container.classList.remove('mobile-show');
+            } else {
+                container.classList.toggle('mobile-show');
+            }
+        }
+
+        // Initialize early on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('selected_language') || 'ar';
+            applyLanguageTranslations(saved);
+        });
+    </script>
+
+    <!-- Core Dynamic Data Fetching and Real-time listener Module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, query, where, limit, onSnapshot, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -409,14 +1385,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ================== وضع مُنشئ الواجهة (Live Builder Logic) ==================
+        // Track global language state
+        let activeLang = localStorage.getItem('selected_language') || 'ar';
+        window.addEventListener('appLanguageChanged', (e) => {
+            activeLang = e.detail.lang;
+            fetchDynamicContent();
+            fetchAvailableTeachers();
+            fetchTopNurseries();
+            fetchProductsTeaser();
+        });
+
+        // ================== Live Builder Logic ==================
         const urlParams = new URLSearchParams(window.location.search);
         const isAdminMode = urlParams.get('adminMode') === 'true';
 
         if (isAdminMode) {
             document.getElementById('admin-toolbar').style.display = 'flex';
             
-            // تحويل النصوص العادية لـ مساحات قابلة للتعديل
+            // Enable in-place editing
             const editableIds = ['pub-hero-title', 'pub-hero-subtitle', 'pub-about-text'];
             editableIds.forEach(id => {
                 const el = document.getElementById(id);
@@ -426,7 +1412,7 @@
                 }
             });
 
-            // دالة حفظ النصوص
+            // Save text settings
             window.saveLiveTexts = async () => {
                 const title = document.getElementById('pub-hero-title').innerText;
                 const subtitle = document.getElementById('pub-hero-subtitle').innerText;
@@ -442,7 +1428,6 @@
                 } catch(e) { console.error(e); alert('حدث خطأ أثناء الحفظ.'); }
             };
 
-            // ضغط الصورة (عشان متتقلش الفايربيز)
             const compressImage = (file, maxWidth, maxHeight) => {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -465,13 +1450,11 @@
                 });
             };
 
-            // رفع صورة عائمة وسحبها بالماوس
             window.handleLiveImageUpload = async (event) => {
                 const file = event.target.files[0];
                 if(!file) return;
                 const base64Img = await compressImage(file, 300, 300);
 
-                // صنع حاوية للصورة قابلة للسحب
                 const wrapper = document.createElement('div');
                 wrapper.className = 'temp-draggable-wrapper';
                 wrapper.style.top = '50%';
@@ -479,7 +1462,7 @@
 
                 const img = document.createElement('img');
                 img.src = base64Img;
-                img.style.width = '120px'; // حجم افتراضي
+                img.style.width = '120px';
 
                 const saveBtn = document.createElement('button');
                 saveBtn.className = 'temp-save-btn';
@@ -489,23 +1472,17 @@
                 wrapper.appendChild(img);
                 document.body.appendChild(wrapper);
 
-                // منطق السحب بالماوس
                 let isDragging = false;
                 wrapper.addEventListener('mousedown', () => isDragging = true);
                 window.addEventListener('mousemove', (e) => {
                     if(!isDragging) return;
-                    // عشان الصورة تمشي مع الماوس بالظبط
                     wrapper.style.left = (e.clientX - wrapper.offsetWidth/2) + 'px';
                     wrapper.style.top = (e.clientY - wrapper.offsetHeight/2) + 'px';
                 });
                 window.addEventListener('mouseup', () => isDragging = false);
 
-                // لما يدوس حفظ
                 saveBtn.onclick = async () => {
-                    // نحسب النسب المئوية عشان تتأقلم مع الموبايل والكمبيوتر
                     const leftPct = (parseInt(wrapper.style.left) / window.innerWidth) * 100;
-                    const topPct = (parseInt(wrapper.style.top) / window.innerHeight) * 100; // Relative to viewport, but wait, body is scrollable. 
-                    // الأفضل حسابها كنسبة مئوية بالنسبة للصفحة ككل (ScrollY)
                     const absoluteTop = parseInt(wrapper.style.top) + window.scrollY;
                     const topPctBody = (absoluteTop / document.body.scrollHeight) * 100;
 
@@ -523,25 +1500,22 @@
                 };
             };
         }
-        // ==============================================================================
 
-
-        // 1. جلب إعدادات الواجهة لحظياً (Real-time) للزوار والمدير
+        // 1. Get real-time public configurations
         function fetchWebSettingsLive() {
             onSnapshot(doc(db, "web_settings", "landing_page"), (docSnap) => {
                 if(docSnap.exists()) {
                     const data = docSnap.data();
 
                     if(data.logo) {
-                        const headerImgHtml = `<img src="${data.logo}" alt="Impact Hub Logo" style="max-height: 45px; object-fit: contain; margin-left: 8px;"> <span style="font-size: 24px; font-weight: 900; color: var(--kid-purple);">Impact Hub Egypt</span>`;
+                        const headerImgHtml = `<img src="${data.logo}" alt="Impact Hub Logo" style="max-height: 48px; object-fit: contain; margin-left: 8px;"> <span>Impact Hub Egypt</span>`;
                         document.getElementById('pub-main-logo').innerHTML = headerImgHtml;
                         
-                        const footerImgHtml = `<img src="${data.logo}" style="max-height: 50px; object-fit: contain; display: block; margin: 0 auto 5px;"> <span style="font-size: 20px; font-weight: 900; color: var(--kid-purple);">Impact Hub Egypt</span>`;
+                        const footerImgHtml = `<img src="${data.logo}" style="max-height: 55px; object-fit: contain; display: block; margin: 0 auto 10px;"> <span>Impact Hub Egypt</span>`;
                         document.getElementById('pub-footer-logo').innerHTML = footerImgHtml;
                     }
 
-                    // --- رسم بلوكات الفيديو المرنة (Smart Blocks) ---
-                    // تصفير البلوكات الأول عشان متتكررش
+                    // --- Smart Video Blocks ---
                     document.getElementById('video-after-hero').innerHTML = '';
                     document.getElementById('video-after-features').innerHTML = '';
                     document.getElementById('video-after-teachers').innerHTML = '';
@@ -551,22 +1525,22 @@
                         data.videoBlocks.forEach(vid => {
                             const iframeHtml = `
                                 <div class="marketing-section" style="padding-top:20px; padding-bottom:20px;">
-                                    <div class="video-container" style="border-color: var(--kid-blue);">
+                                    <div class="video-container" style="border-color: var(--primary-indigo);">
                                         <iframe src="https://www.youtube.com/embed/${vid.youtubeId}" allowfullscreen></iframe>
                                     </div>
                                 </div>
                             `;
-                            // حقن الفيديو في المكان المناسب
                             const targetDiv = document.getElementById(`video-${vid.position}`);
                             if(targetDiv) targetDiv.innerHTML += iframeHtml;
                         });
                     }
 
+                    // --- Testimonial Reviews ---
                     const reviewsGrid = document.getElementById('pub-reviews-grid');
                     if(data.reviews && data.reviews.length > 0) {
                         reviewsGrid.innerHTML = '';
                         data.reviews.forEach(r => {
-                            const starsHtml = Array(r.stars).fill('<i class="fa-solid fa-star"></i>').join('');
+                            const starsHtml = Array(r.stars || 5).fill('<i class="fa-solid fa-star"></i>').join('');
                             reviewsGrid.innerHTML += `
                                 <div class="testimonial-card">
                                     <div class="testimonial-stars">${starsHtml}</div>
@@ -576,6 +1550,7 @@
                         });
                     }
 
+                    // --- Accordion FAQ ---
                     const faqContainer = document.getElementById('pub-faq-container');
                     if(data.faqs && data.faqs.length > 0) {
                         faqContainer.innerHTML = '';
@@ -588,6 +1563,7 @@
                         });
                     }
 
+                    // --- Floating Assets ---
                     const floatContainer = document.getElementById('floating-assets-container');
                     floatContainer.innerHTML = ''; 
                     if(data.floatingAssets && data.floatingAssets.length > 0) {
@@ -600,13 +1576,22 @@
             }, (error) => { console.error("Error with live snapshot: ", error); });
         }
 
+        // 2. Fetch landing text data
         function fetchLandingDataLive() {
             onSnapshot(doc(db, "public_site", "landing_data"), (docSnap) => {
                 if(docSnap.exists()) {
                     const data = docSnap.data();
-                    if(data.heroTitle && !isAdminMode) document.getElementById('pub-hero-title').innerText = data.heroTitle;
-                    if(data.heroSubtitle && !isAdminMode) document.getElementById('pub-hero-subtitle').innerText = data.heroSubtitle;
-                    if(data.aboutText && !isAdminMode) document.getElementById('pub-about-text').innerText = data.aboutText;
+                    if(data.heroTitle && !isAdminMode) {
+                        document.getElementById('pub-hero-title').innerText = data.heroTitle;
+                        document.getElementById('pub-hero-title').removeAttribute('data-i18n'); // Let custom take priority
+                    }
+                    if(data.heroSubtitle && !isAdminMode) {
+                        document.getElementById('pub-hero-subtitle').innerText = data.heroSubtitle;
+                        document.getElementById('pub-hero-subtitle').removeAttribute('data-i18n');
+                    }
+                    if(data.aboutText && !isAdminMode) {
+                        document.getElementById('pub-about-text').innerText = data.aboutText;
+                    }
                     
                     if(data.promoVideoUrl) {
                         const ytId = data.promoVideoUrl.split('v=')[1]?.split('&')[0] || data.promoVideoUrl.split('/').pop();
@@ -618,6 +1603,7 @@
             });
         }
 
+        // 3. Fetch dynamic playrooms / categories content
         async function fetchDynamicContent() {
             const wrapper = document.getElementById('dynamic-content-wrapper');
             const dropdown = document.getElementById('dynamic-nav-dropdown');
@@ -648,7 +1634,7 @@
                         }
                         cardsHtml += `
                             <div class="content-card" ${clickAction}>
-                                <div style="position:relative;">
+                                <div style="position:relative; overflow:hidden;">
                                     <img src="${item.image}" class="content-img" alt="${item.title}">
                                     ${playOverlay}
                                 </div>
@@ -665,12 +1651,19 @@
             } catch(e) { console.error(e); }
         }
 
+        // 4. Fetch featured certified teachers
         async function fetchAvailableTeachers() {
             const grid = document.getElementById('teachers-grid');
             try {
                 const q = query(collection(db, "teacher_availability"), where("featured", "==", true));
                 const snap = await getDocs(q);
-                if(snap.empty) { grid.innerHTML = '<p style="text-align:center; width:100%; font-weight:bold; color:var(--text-gray);">لا يوجد مدرسين متاحين للعرض حالياً.</p>'; return; }
+                
+                const dict = translations[activeLang] || translations.ar;
+
+                if(snap.empty) { 
+                    grid.innerHTML = `<p style="text-align:center; width:100%; font-weight:bold; color:var(--text-gray);">${dict.teachers_empty}</p>`; 
+                    return; 
+                }
 
                 const teachersMap = {};
                 snap.forEach(doc => {
@@ -681,28 +1674,36 @@
 
                 grid.innerHTML = '';
                 Object.keys(teachersMap).forEach(teacherId => {
-                    const t = teachersMap[teacherId]; const slotsHtml = t.slots.map(s => `<span class="slot-badge">${s}</span>`).join('');
-                    const placeholderAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=8338ec&color=fff&rounded=true&size=120`;
+                    const t = teachersMap[teacherId]; 
+                    const slotsHtml = t.slots.map(s => `<span class="slot-badge">${s}</span>`).join('');
+                    const placeholderAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=4f46e5&color=fff&rounded=true&size=120`;
+                    
                     grid.innerHTML += `
                         <div class="teacher-card">
                             <img src="${placeholderAvatar}" class="teacher-avatar">
                             <div class="teacher-name">${t.name}</div>
-                            <div class="teacher-subject"><i class="fa-solid fa-laptop-code"></i> حصص ومتابعة أونلاين تفاعلية</div>
+                            <div class="teacher-subject"><i class="fa-solid fa-laptop-code"></i> ${dict.teachers_sub_badge}</div>
                             <div class="teacher-slots">${slotsHtml}</div>
-                            <a href="parent-app.html" class="book-btn"><i class="fa-solid fa-video"></i> احجز حصتك الاستكشافية</a>
+                            <a href="parent-app.html" class="book-btn"><i class="fa-solid fa-calendar-check"></i> ${dict.teachers_book_btn}</a>
                         </div>`;
                 });
             } catch(e) { console.error(e); }
         }
 
+        // 5. Fetch Middle-East certified nurseries
         async function fetchTopNurseries() {
             const grid = document.getElementById('pub-nurseries-grid');
             try {
                 const snap = await getDocs(collection(db, "nurseries")); grid.innerHTML = '';
                 let nurseries = []; snap.forEach(doc => { if(doc.data().status !== "inactive") nurseries.push(doc.data()); });
-                nurseries.sort((a, b) => b.rating - a.rating);
+                nurseries.sort((a, b) => (b.rating || 5) - (a.rating || 5));
 
-                if(nurseries.length === 0) { grid.innerHTML = '<p style="text-align:center; width: 100%;">لا توجد حضانات مضافة حالياً.</p>'; return; }
+                const dict = translations[activeLang] || translations.ar;
+
+                if(nurseries.length === 0) { 
+                    grid.innerHTML = `<p style="text-align:center; width: 100%; color:var(--text-gray);">${dict.nurseries_loading}</p>`; 
+                    return; 
+                }
                 
                 nurseries.forEach(nursery => {
                     grid.innerHTML += `
@@ -714,19 +1715,28 @@
             } catch(e) { console.error(e); }
         }
 
+        // 6. Fetch products teaser limit 4
         async function fetchProductsTeaser() {
             const container = document.getElementById('live-products-teaser');
             try {
                 const snap = await getDocs(query(collection(db, "products"), limit(4))); container.innerHTML = '';
-                if(snap.empty) { container.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:var(--text-gray);">سيتم إضافة الكتب والمناهج المتاحة قريباً!</p>'; return; }
+                const dict = translations[activeLang] || translations.ar;
+
+                if(snap.empty) { 
+                    container.innerHTML = `<p style="text-align:center; grid-column:1/-1; color:var(--text-gray);">${dict.store_loading}</p>`; 
+                    return; 
+                }
                 snap.forEach(docData => {
                     const prod = docData.data();
+                    const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
                     container.innerHTML += `
-                        <div class="product-card" style="background:#fff; padding:20px; border-radius:24px; text-align:center; box-shadow:0 10px 20px rgba(0,0,0,0.02);">
-                            <div style="width:70px; height:70px; background:#f0f9ff; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; color:var(--kid-blue); font-size:30px;"><i class="fa-solid fa-book-bookmark"></i></div>
-                            <h4 style="font-size:16px; font-weight:800; margin-bottom:10px;">${prod.title}</h4>
-                            <div style="color:var(--kid-pink); font-weight:900; font-size:16px;">${prod.price} ج.م</div>
-                            <a href="parent-app.html" class="book-btn" style="background:var(--kid-blue); margin-top:15px; font-size:13px; box-shadow:0 4px 10px rgba(0,198,255,0.2);">طلب وتوصيل عبر التطبيق</a>
+                        <div class="product-card">
+                            <div class="product-icon-box">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                            </div>
+                            <h4 style="font-size:16.5px; font-weight:800; margin-bottom:12px; color: var(--text-dark);">${prod.title}</h4>
+                            <div style="color:var(--kid-pink); font-weight:900; font-size:18px; margin-bottom: 16px;">${prod.price}${currency}</div>
+                            <a href="parent-app.html" class="book-btn" style="background:linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); font-size:13px;">${dict.store_order_btn}</a>
                         </div>`;
                 });
             } catch(e) { console.error(e); }
@@ -741,7 +1751,7 @@
             document.getElementById('videoModal').style.display = 'none';
         };
 
-        // تشغيل المحركات
+        // Initialize Firebase processes
         fetchWebSettingsLive();
         fetchLandingDataLive(); 
         fetchDynamicContent(); 
@@ -753,8 +1763,13 @@
     <script>
         function toggleFaq(el) {
             const answer = el.nextElementSibling; const icon = el.querySelector('i');
-            if (answer.style.maxHeight && answer.style.maxHeight !== '0px') { answer.style.maxHeight = '0px'; icon.className = 'fa-solid fa-plus'; } 
-            else { answer.style.maxHeight = answer.scrollHeight + 'px'; icon.className = 'fa-solid fa-minus'; }
+            if (answer.style.maxHeight && answer.style.maxHeight !== '0px') { 
+                answer.style.maxHeight = '0px'; 
+                icon.className = 'fa-solid fa-plus'; 
+            } else { 
+                answer.style.maxHeight = answer.scrollHeight + 'px'; 
+                icon.className = 'fa-solid fa-minus'; 
+            }
         }
 
         function toggleChatWindow() {
@@ -763,15 +1778,21 @@
         }
 
         function sendPublicChatMessage() {
-            const input = document.getElementById('public-chat-input'); const text = input.value.trim(); if(!text) return;
+            const input = document.getElementById('public-chat-input'); 
+            const text = input.value.trim(); 
+            if(!text) return;
             const box = document.getElementById('public-chat-messages');
-            box.innerHTML += `<div class="chat-msg user">${text}</div>`; input.value = '';
+            box.innerHTML += `<div class="chat-msg user">${text}</div>`; 
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
             
+            const savedLang = localStorage.getItem('selected_language') || 'ar';
+            const dictReply = translations[savedLang] ? translations[savedLang].chat_reply : translations.ar.chat_reply;
+
             setTimeout(() => {
-                box.innerHTML += `<div class="chat-msg bot">يا أهلاً بك يا فندم! لتسجيل طفلك أو طلب حقيبة المناهج والكتب التفاعلية، يرجى التوجه لزر "دخول المنصة" لتسجيل الدخول، أو التواصل مباشرة مع إدارة المبيعات عبر الواتساب على رقمنا الموحد <b>01030013810</b> وسنقوم بخدمتك فوراً! ✨</div>`;
+                box.innerHTML += `<div class="chat-msg bot">${dictReply}</div>`;
                 box.scrollTop = box.scrollHeight;
             }, 1000);
-            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>

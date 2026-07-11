@@ -1,339 +1,911 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Impact Hub Egypt - Central Super Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title data-i18n="app_title">إمباكت هب مصر - لوحة السوبر أدمن المركزي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-maroon: #800000;
             --soft-maroon: #a33333;
-            --bg-light: #fdfbf7;
+            --kid-pink: #ff4b72;
+            --kid-blue: #00c6ff;
+            --kid-yellow: #ffb703;
+            --kid-green: #00d084;
+            --kid-purple: #8338ec;
+            --bg-light: #f4f9fc;
             --white: #ffffff;
-            --text-dark: #2d3748;
-            --text-gray: #718096;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
             --border-color: #e2e8f0;
+            --card-shadow: 0 10px 30px -10px rgba(128, 0, 0, 0.08);
             --danger-red: #ef4444;
             --gold-star: #ffd700;
             --gray-star: #cbd5e1;
-            --facebook-blue: #1877f2;
-            --success-green: #22c55e;
-            --kid-blue: #00c6ff;
-            --kid-pink: #ff4b72;
+            --success-green: #10b981;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); display: flex; min-height: 100vh; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+            color: var(--text-dark);
+            font-family: 'Tajawal', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* حاوي التطبيق */
+        .app-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
 
         /* الشريط الجانبي */
-        .sidebar { width: 280px; background-color: var(--white); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 2px 0 15px rgba(0,0,0,0.02); }
-        .brand-area { padding: 25px; text-align: center; border-bottom: 1px solid var(--border-color); }
-        .brand-area h1 { color: var(--primary-maroon); font-size: 22px; font-weight: bold; }
-        .brand-area p { font-size: 11px; color: var(--text-gray); margin-top: 5px; }
-        
-        .nav-menu { flex-grow: 1; padding: 20px 0; }
-        .nav-item { padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; gap: 15px; color: var(--text-gray); cursor: pointer; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background-color: #fdf2f2; color: var(--primary-maroon); border-right-color: var(--primary-maroon); font-weight: bold; }
-        .live-builder-btn { background-color: var(--kid-pink); color: white; border-radius: 8px; margin: 10px 15px; box-shadow: 0 4px 10px rgba(255, 75, 114, 0.3); }
-        .live-builder-btn:hover { background-color: #ff335e; color: white; transform: translateY(-2px); }
+        .sidebar {
+            width: 290px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(128, 0, 0, 0.08);
+            border-right: 1px solid rgba(128, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            right: 0;
+            top: 0;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .brand-area {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+        }
+
+        .brand-area h1 {
+            color: var(--primary-maroon);
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .brand-area p {
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-top: 5px;
+            font-weight: 800;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item i {
+            font-size: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(128, 0, 0, 0.04);
+            color: var(--primary-maroon);
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            color: var(--white);
+            box-shadow: 0 10px 20px -10px rgba(128, 0, 0, 0.4);
+        }
+
+        .live-builder-btn {
+            background: linear-gradient(135deg, var(--kid-pink), var(--soft-maroon));
+            color: var(--white);
+            border-radius: 12px;
+            margin: 10px 5px;
+            box-shadow: 0 4px 12px rgba(255, 75, 114, 0.3);
+            font-weight: 800;
+        }
+
+        .live-builder-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* اختيار اللغة */
+        .language-picker-sidebar {
+            padding: 15px;
+            border-top: 1px solid rgba(128, 0, 0, 0.05);
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .lang-flag-btn {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-flag-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            border-color: var(--primary-maroon);
+        }
+
+        .lang-flag-btn.active {
+            background: var(--primary-maroon);
+            color: var(--white);
+            border-color: var(--primary-maroon);
+            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.2);
+        }
 
         /* منطقة المحتوى */
-        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .panel { background: var(--white); border-radius: 16px; border: 1px solid var(--border-color); padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); }
-        .panel-header { font-size: 18px; color: var(--primary-maroon); font-weight: bold; margin-bottom: 25px; padding-bottom: 12px; border-bottom: 2px solid #fdf2f2; }
-        
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: bold; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; }
-        .form-control:focus { border-color: var(--primary-maroon); }
-        
-        .btn-primary { background: var(--primary-maroon); color: var(--white); border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-primary:hover { background: var(--soft-maroon); }
-        .btn-danger { background: var(--danger-red); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .btn-success { background: var(--success-green); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .main-content {
+            margin-right: 290px;
+            flex-grow: 1;
+            padding: 40px;
+            width: calc(100% - 290px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        /* التابات الداخلية */
-        .sub-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .sub-tab-btn { padding: 10px 20px; border: 1px solid var(--border-color); background: var(--white); border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--text-gray); }
-        .sub-tab-btn.active { background: var(--primary-maroon); color: var(--white); border-color: var(--primary-maroon); }
+        .panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
 
-        /* جداول البيانات */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 15px; text-align: right; border-bottom: 1px solid var(--border-color); }
-        th { color: var(--text-gray); font-size: 13px; background: #fafafa; }
-        
-        /* التقييم بالنجوم */
-        .star-rating { color: var(--gray-star); cursor: pointer; font-size: 20px; display: inline-flex; gap: 4px; direction: ltr; }
-        .star-rating .fa-star.checked { color: var(--gold-star); }
-        
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .panel-header {
+            font-size: 18px;
+            color: var(--primary-maroon);
+            font-weight: 900;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed rgba(128, 0, 0, 0.08);
+        }
 
-        .nursery-profile-view { display: none; background: #fafbfc; border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-top: 25px; border-right: 4px solid var(--primary-maroon); }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
 
-        /* تصميم حائط المنشورات والتفاعل */
-        .feed-container { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
-        .feed-post { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
-        .feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .feed-author { font-weight: bold; color: var(--primary-maroon); display: flex; align-items: center; gap: 10px; }
-        .feed-badge { background: #fef08a; color: #854d0e; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-        .feed-body { color: var(--text-dark); line-height: 1.6; margin-bottom: 15px; font-size: 15px; }
-        .feed-media img { max-width: 100%; border-radius: 8px; margin-top: 10px; max-height: 400px; object-fit: cover; }
-        
-        .post-actions { display: flex; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .action-btn { background: none; border: none; color: var(--text-gray); font-weight: bold; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-        .action-btn:hover { color: var(--primary-maroon); }
-        
-        .comments-section { margin-top: 15px; background: #fdfbf7; padding: 15px; border-radius: 8px; display: none; border: 1px solid var(--border-color); }
-        .comment-item { display: flex; flex-direction: column; background: var(--white); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 10px; }
-        .comment-author { font-size: 13px; font-weight: bold; color: var(--primary-maroon); margin-bottom: 4px; }
-        .comment-text { font-size: 14px; color: var(--text-dark); }
-        .comment-input-area { display: flex; gap: 10px; margin-top: 10px; }
-        .comment-input-area input { flex-grow: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 20px; outline: none; }
-        .comment-input-area button { background: var(--primary-maroon); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        
-        .item-list-box { background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 15px; }
-        .setting-item-row { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 8px; font-size: 14px; }
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-maroon);
+            box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.08);
+        }
+
+        /* الأزرار الخلابة */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            color: var(--white);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px rgba(128, 0, 0, 0.25);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+        }
+
+        /* التابات والفرعيات */
+        .sub-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1.5px solid var(--border-color);
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .sub-tab-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            color: var(--text-gray);
+            transition: all 0.2s ease;
+        }
+
+        .sub-tab-btn.active {
+            background: var(--primary-maroon);
+            color: var(--white);
+            border-color: var(--primary-maroon);
+            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.15);
+        }
+
+        /* الجداول */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-weight: 900;
+        }
+
+        /* النجوم للتقييم */
+        .star-rating {
+            color: var(--gray-star);
+            cursor: pointer;
+            font-size: 18px;
+            display: inline-flex;
+            gap: 4px;
+            direction: ltr;
+        }
+
+        .star-rating .fa-star.checked {
+            color: var(--gold-star);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* منظر الحضانة المخصص */
+        .nursery-profile-view {
+            display: none;
+            background: rgba(244, 249, 252, 0.7);
+            border: 1.5px dashed var(--primary-maroon);
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 25px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* الفعاليات والأنشطة */
+        .feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feed-post {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .feed-author {
+            font-weight: 900;
+            color: var(--primary-maroon);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feed-badge {
+            background: #fef08a;
+            color: #854d0e;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .feed-body {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .feed-media img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 10px;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .item-list-box {
+            background: rgba(244, 249, 252, 0.6);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .setting-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 800;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* الجوال */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-maroon);
+            color: var(--white);
+            border: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 101;
+            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.2);
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                right: -290px;
+            }
+            .sidebar.open {
+                right: 0;
+            }
+            .main-content {
+                margin-right: 0;
+                width: 100%;
+                padding: 25px;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            html[dir="ltr"] .sidebar {
+                left: -290px;
+                right: auto;
+            }
+            html[dir="ltr"] .sidebar.open {
+                left: 0;
+                right: auto;
+            }
+            html[dir="ltr"] .menu-toggle {
+                left: auto;
+                right: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="brand-area">
-            <h1>Impact Hub Egypt</h1>
-            <p>الإدارة العليا والمتابعة</p>
-        </div>
-        <nav class="nav-menu">
-            <div class="nav-item active" onclick="switchTab('nurseries-tab', this)"><span><i class="fa-solid fa-school"></i> إدارة الحضانات</span></div>
-            <div class="nav-item" onclick="switchTab('global-broadcast-tab', this)"><span><i class="fa-solid fa-bullhorn"></i> مركز النشر العام</span></div>
-            <div class="nav-item" onclick="switchTab('online-teachers-tab', this)"><span><i class="fa-solid fa-chalkboard-user"></i> المدرسين الأونلاين</span></div>
-            <div class="nav-item" onclick="switchTab('web-settings-tab', this)"><span><i class="fa-solid fa-sliders"></i> إعدادات الواجهة العامة</span></div>
-            <div class="nav-item" onclick="switchTab('marketplace-tab', this)"><span><i class="fa-solid fa-store"></i> المتجر المركزي</span></div>
-            <div class="nav-item" onclick="switchTab('orders-tab', this)"><span><i class="fa-solid fa-truck-fast"></i> إدارة الطلبات</span></div>
-            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-            <div class="nav-item live-builder-btn" onclick="openLiveBuilder()">
-                <span><i class="fa-solid fa-wand-magic-sparkles"></i> مُنشئ الواجهة (Live)</span>
-                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
-            </div>
-        </nav>
-    </aside>
+    <!-- زر قائمة الجوال -->
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
 
-    <main class="main-content">
+    <div class="app-container">
         
-        <div id="nurseries-tab" class="tab-content active">
-            <div class="panel">
-                <div class="panel-header">إنشاء كيان حضانة جديد مركزيًا</div>
-                <div class="form-grid">
-                    <div class="form-group"><label>اسم الحضانة الرسمي</label><input type="text" id="n-name" class="form-control" placeholder="حضانة أجيال الغد"></div>
-                    <div class="form-group"><label>اسم المدير / المديرة</label><input type="text" id="n-admin" class="form-control" placeholder="أ / هند صبري"></div>
-                    <div class="form-group"><label>العنوان بالتفصيل</label><input type="text" id="n-address" class="form-control" placeholder="الإسكندرية - جليم"></div>
-                    <div class="form-group"><label>وسائل الاتصال (رقم الهاتف)</label><input type="text" id="n-phone" class="form-control" placeholder="01XXXXXXXXX"></div>
-                    <div class="form-group"><label>عدد المدرسين الحالي</label><input type="number" id="n-teachers" class="form-control" value="0"></div>
-                    <div class="form-group"><label>عدد الطلاب الحالي</label><input type="number" id="n-students" class="form-control" value="0"></div>
-                    <div class="form-group"><label>رفع الشعار (لوجو كملف حقيقي)</label><input type="file" id="n-logo" class="form-control" accept="image/*"></div>
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="appSidebar">
+            <div class="brand-area">
+                <h1 data-i18n="central_brand">إمباكت هب مصر</h1>
+                <p data-i18n="central_desc">الإدارة العليا والمتابعة</p>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="switchTab('nurseries-tab', this)">
+                    <span><i class="fa-solid fa-school"></i> <span data-i18n="nav_nurseries">إدارة الحضانات</span></span>
                 </div>
-                <button class="btn-primary" onclick="createNurseryEntity()">حفظ وإنشاء الكيان</button>
+                <div class="nav-item" onclick="switchTab('global-broadcast-tab', this)">
+                    <span><i class="fa-solid fa-bullhorn"></i> <span data-i18n="nav_broadcast">مركز النشر العام</span></span>
+                </div>
+                <div class="nav-item" onclick="switchTab('online-teachers-tab', this)">
+                    <span><i class="fa-solid fa-chalkboard-user"></i> <span data-i18n="nav_teachers">المدرسين الأونلاين</span></span>
+                </div>
+                <div class="nav-item" onclick="switchTab('web-settings-tab', this)">
+                    <span><i class="fa-solid fa-sliders"></i> <span data-i18n="nav_web">إعدادات الواجهة العامة</span></span>
+                </div>
+                <div class="nav-item" onclick="switchTab('marketplace-tab', this)">
+                    <span><i class="fa-solid fa-store"></i> <span data-i18n="nav_market">المتجر المركزي</span></span>
+                </div>
+                <div class="nav-item" onclick="switchTab('orders-tab', this)">
+                    <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="nav_orders">إدارة الطلبات</span></span>
+                </div>
+                <hr style="border: 0; border-top: 1px solid rgba(128, 0, 0, 0.05); margin: 15px 10px;">
+                <div class="nav-item live-builder-btn" onclick="openLiveBuilder()">
+                    <span><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="live_builder">مُنشئ الواجهة (Live)</span></span>
+                    <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
+                </div>
+            </nav>
+
+            <!-- المترجم الأربعة للسوبر أدمن الموحد -->
+            <div class="language-picker-sidebar">
+                <button class="lang-flag-btn active" id="flag-ar" onclick="changeSuperLanguage('ar')">عربي</button>
+                <button class="lang-flag-btn" id="flag-en" onclick="changeSuperLanguage('en')">EN</button>
+                <button class="lang-flag-btn" id="flag-fr" onclick="changeSuperLanguage('fr')">FR</button>
+                <button class="lang-flag-btn" id="flag-de" onclick="changeSuperLanguage('de')">DE</button>
+            </div>
+        </aside>
+
+        <!-- منطقة المحتوى الرئيسية -->
+        <main class="main-content">
+            
+            <!-- تابة إدارة الحضانات -->
+            <div id="nurseries-tab" class="tab-content active">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="create_nursery_title">إنشاء كيان حضانة جديد مركزيًا</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_name">اسم الحضانة الرسمي</label>
+                            <input type="text" id="n-name" class="form-control" data-i18n-placeholder="n_ph_name" placeholder="حضانة أجيال الغد">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_admin">اسم المدير / المديرة</label>
+                            <input type="text" id="n-admin" class="form-control" data-i18n-placeholder="n_ph_admin" placeholder="أ / هند صبري">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_address">العنوان بالتفصيل</label>
+                            <input type="text" id="n-address" class="form-control" data-i18n-placeholder="n_ph_address" placeholder="الإسكندرية - جليم">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_phone">وسائل الاتصال (رقم الهاتف)</label>
+                            <input type="text" id="n-phone" class="form-control" placeholder="01XXXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_teachers">عدد المدرسين الحالي</label>
+                            <input type="number" id="n-teachers" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_students">عدد الطلاب الحالي</label>
+                            <input type="number" id="n-students" class="form-control" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="n_lbl_logo">رفع الشعار (لوجو كملف حقيقي)</label>
+                            <input type="file" id="n-logo" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="createNurseryEntity()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 
+                        <span data-i18n="btn_create_nursery">حفظ وإنشاء الكيان</span>
+                    </button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header" data-i18n="network_nurseries_title">جميع الحضانات المشتركة بالشبكة</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_logo">اللوجو</th>
+                                    <th data-i18n="th_nursery">اسم الحضانة</th>
+                                    <th data-i18n="th_admin_phone">الإدارة ووسائل الاتصال</th>
+                                    <th data-i18n="th_stats">الإحصائيات</th>
+                                    <th data-i18n="th_rating">التقييم المركزي</th>
+                                    <th data-i18n="th_actions">الحالة والتحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nurseries-tbody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- معاينة الحضانة والأنشطة الخاصة -->
+                    <div id="nursery-profile-panel" class="nursery-profile-view">
+                        <h3 style="color: var(--primary-maroon); margin-bottom: 15px; font-weight: 900;" id="view-nursery-title">صفحة الحضانة المخصصة</h3>
+                        <div style="background: var(--white); padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 15px; color: var(--text-dark); font-weight: 900;"><i class="fa-solid fa-paper-plane"></i> <span data-i18n="send_guideline_title">إرسال توجيه خاص لهذه الحضانة</span></h4>
+                            <input type="hidden" id="target-nursery-id">
+                            <input type="hidden" id="target-nursery-name">
+                            <div class="form-group">
+                                <label data-i18n="target_scoped_lbl">الجهة المستهدفة داخل الحضانة</label>
+                                <select id="scoped-target-app" class="form-control" style="width: auto;">
+                                    <option value="parents" data-i18n="opt_parents_scoped">أولياء أمور هذه الحضانة فقط</option>
+                                    <option value="teachers" data-i18n="opt_teachers_scoped">مدرسي هذه الحضانة فقط</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="scoped_post_title">عنوان التحديث الخاص</label>
+                                <input type="text" id="scoped-post-title" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="scoped_post_body">نص المنشور / التوجيه</label>
+                                <textarea id="scoped-post-body" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="scoped_post_img">إرفاق صورة</label>
+                                <input type="file" id="scoped-post-file" class="form-control" accept="image/*">
+                            </div>
+                            <button class="btn-primary" onclick="publishScopedPost()">
+                                <i class="fa-solid fa-paper-plane"></i> 
+                                <span data-i18n="btn_send_scoped">إرسال التحديث الخاص</span>
+                            </button>
+                            <button class="btn-primary" style="background: #64748b;" onclick="document.getElementById('nursery-profile-panel').style.display='none'">
+                                <span data-i18n="btn_close">إغلاق</span>
+                            </button>
+                        </div>
+
+                        <h4 style="color: var(--text-dark); border-bottom: 2px solid var(--border-color); padding-bottom: 10px; font-weight: 900;"><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="activity_wall_title">حائط أنشطة الحضانة (للمراقبة والتفاعل)</span></h4>
+                        <div class="feed-container" id="specific-nursery-feed">
+                            <p style="text-align: center; color: var(--text-gray);" data-i18n="select_nursery_feed">اختر حضانة لعرض أنشطتها...</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-header">جميع الحضانات المشتركة بالشبكة</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اللوجو</th>
-                            <th>اسم الحضانة</th>
-                            <th>الإدارة ووسائل الاتصال</th>
-                            <th>الإحصائيات</th>
-                            <th>التقييم المركزي</th>
-                            <th>الحالة والتحكم</th>
-                        </tr>
-                    </thead>
-                    <tbody id="nurseries-tbody"></tbody>
-                </table>
-
-                <div id="nursery-profile-panel" class="nursery-profile-view">
-                    <h3 style="color: var(--primary-maroon); margin-bottom: 15px;" id="view-nursery-title">صفحة الحضانة المخصصة</h3>
-                    <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px;">
-                        <h4 style="margin-bottom:15px; color:var(--text-dark);"><i class="fa-solid fa-paper-plane"></i> إرسال توجيه خاص لهذه الحضانة</h4>
-                        <input type="hidden" id="target-nursery-id">
-                        <input type="hidden" id="target-nursery-name">
+            <!-- تابة النشر العام والمراقبة للشبكة -->
+            <div id="global-broadcast-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="central_network_title">الشبكة المركزية (النشر والمراقبة)</div>
+                    <div class="sub-tabs">
+                        <button id="tab-btn-create" class="sub-tab-btn active" onclick="switchGlobalTab('create')" data-i18n="sub_tab_post">نشر تعميم جديد</button>
+                        <button id="tab-btn-archive" class="sub-tab-btn" onclick="switchGlobalTab('archive')" data-i18n="sub_tab_archive">أرشيف التعميمات</button>
+                        <button id="tab-btn-network" class="sub-tab-btn" onclick="switchGlobalTab('network')" data-i18n="sub_tab_wall">حائط شبكة الحضانات المُجمع</button>
+                    </div>
+                    
+                    <div id="global-create-section">
                         <div class="form-group">
-                            <label>الجهة المستهدفة داخل الحضانة</label>
-                            <select id="scoped-target-app" class="form-control" style="width: auto;">
-                                <option value="parents">أولياء أمور هذه الحضانة فقط</option>
-                                <option value="teachers">مدرسي هذه الحضانة فقط</option>
+                            <label data-i18n="global_target_lbl">الجهة المستهدفة بالتعميم</label>
+                            <select id="global-target-select" class="form-control" style="width: auto;">
+                                <option value="parents" data-i18n="opt_parents_all">جميع أولياء الأمور (كل الحضانات)</option>
+                                <option value="teachers" data-i18n="opt_teachers_all">جميع المدرسين (كل الحضانات)</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>عنوان التحديث الخاص</label><input type="text" id="scoped-post-title" class="form-control"></div>
-                        <div class="form-group"><label>نص المنشور / التوجيه</label><textarea id="scoped-post-body" class="form-control" rows="3"></textarea></div>
-                        <div class="form-group"><label>إرفاق صورة</label><input type="file" id="scoped-post-file" class="form-control" accept="image/*"></div>
-                        <button class="btn-primary" onclick="publishScopedPost()">إرسال التحديث الخاص</button>
-                        <button class="btn-primary" style="background:#555;" onclick="document.getElementById('nursery-profile-panel').style.display='none'">إغلاق</button>
+                        <div class="form-group">
+                            <label data-i18n="global_title_lbl">العنوان</label>
+                            <input type="text" id="global-title" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="global_body_lbl">تفاصيل الرسالة</label>
+                            <textarea id="global-body" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="global_img_lbl">إرفاق صورة</label>
+                            <input type="file" id="global-file" class="form-control" accept="image/*">
+                        </div>
+                        <button class="btn-primary" onclick="publishGlobalPost()">
+                            <i class="fa-solid fa-share-nodes"></i> 
+                            <span data-i18n="btn_publish_all">نشر وتعميم فوراً</span>
+                        </button>
                     </div>
 
-                    <h4 style="color:var(--text-dark); border-bottom: 2px solid var(--border-color); padding-bottom:10px;"><i class="fa-solid fa-clock-rotate-left"></i> حائط أنشطة الحضانة (للمراقبة والتفاعل)</h4>
-                    <div class="feed-container" id="specific-nursery-feed">
-                        <p style="text-align:center; color: var(--text-gray);">اختر حضانة لعرض أنشطتها...</p>
+                    <div id="global-archive-section" style="display: none;">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="th_target">الجهة</th>
+                                        <th data-i18n="th_title">العنوان</th>
+                                        <th data-i18n="th_control">التحكم</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="global-posts-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="global-network-section" style="display: none;">
+                        <div style="background: #fafbfc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                            <label style="font-weight: bold; color: var(--primary-maroon);"><i class="fa-solid fa-filter"></i> <span data-i18n="filter_feed_lbl">تصفية وعرض حائط حضانة معينة:</span></label>
+                            <select id="network-feed-filter" class="form-control" style="width: auto; min-width: 250px;" onchange="window.fetchGlobalNetworkFeed()">
+                                <option value="all" data-i18n="opt_all_feeds">عرض منشورات جميع الحضانات المجمعة</option>
+                            </select>
+                        </div>
+                        <div class="feed-container" id="network-feed-container"></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="global-broadcast-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">الشبكة المركزية (النشر والمراقبة)</div>
-                <div class="sub-tabs">
-                    <button id="tab-btn-create" class="sub-tab-btn active" onclick="switchGlobalTab('create')">نشر تعميم جديد</button>
-                    <button id="tab-btn-archive" class="sub-tab-btn" onclick="switchGlobalTab('archive')">أرشيف التعميمات</button>
-                    <button id="tab-btn-network" class="sub-tab-btn" onclick="switchGlobalTab('network')">حائط شبكة الحضانات المُجمع</button>
+            <!-- تابة المدرسين الأونلاين -->
+            <div id="online-teachers-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="online_teachers_header"><i class="fa-solid fa-chalkboard-user"></i> المدرسين الأونلاين المتاحين للتعيين بالواجهة</div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px;" data-i18n="online_teachers_desc">المدرسين بالأسفل قاموا بكتابة مواعيدهم مسبقاً عبر حساباتهم. اختر منهم من يمثل "Impact Hub" لرفعه وعرضه على الواجهة الرئيسية العامة.</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_teacher_name">اسم المدرس</th>
+                                    <th data-i18n="th_subject">التخصص التعليمي</th>
+                                    <th data-i18n="th_availability">المواعيد المسجلة مسبقاً</th>
+                                    <th data-i18n="th_status_landing">الحالة على الرئيسية</th>
+                                    <th data-i18n="th_actions_landing">الإجراء والتحكم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="online-teachers-tbody">
+                                <tr><td colspan="5" style="text-align: center; color: gray;" data-i18n="loading_teachers">جاري تحميل المدرسين المتاحين للتحكم...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                
-                <div id="global-create-section">
+            </div>
+
+            <!-- تابة إعدادات الواجهة العامة للموقع -->
+            <div id="web-settings-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="web_settings_header"><i class="fa-solid fa-sliders"></i> التحكم بالهوية والبيانات التسويقية للواجهة العامة</div>
+                    
+                    <div style="margin-bottom: 25px; background: rgba(244, 249, 252, 0.6); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--primary-maroon); margin-bottom: 10px; font-weight: 900;"><i class="fa-solid fa-image"></i> <span data-i18n="official_logo_lbl">اللوجو الرسمي للمؤسسة (Impact Hub)</span></h4>
+                        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                            <input type="file" id="web-logo-file" class="form-control" accept="image/*" style="width: 300px;">
+                            <button class="btn-success" onclick="window.saveWebLogo()">
+                                <span data-i18n="btn_save_logo">تحديث وحفظ اللوجو</span>
+                            </button>
+                        </div>
+                        <div id="current-logo-preview" style="margin-top: 10px;"></div>
+                    </div>
+
+                    <div style="margin-bottom: 25px; background: rgba(244, 249, 252, 0.6); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); border-left: 4px solid var(--kid-blue);">
+                        <h4 style="color: var(--kid-blue); margin-bottom: 15px; font-weight: 900;"><i class="fa-brands fa-youtube"></i> <span data-i18n="video_blocks_title">إدارة البلوكات المرنة (أقسام الفيديو)</span></h4>
+                        <p style="font-size: 12px; color: gray; margin-bottom: 15px;" data-i18n="video_blocks_desc">أضف مقاطع فيديو يوتيوب وضعها كأقسام (Sections) مستقلة بين محتوى الصفحة لضمان تناسق العرض على الموبايل والكمبيوتر.</p>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label data-i18n="video_url_lbl">1. رابط فيديو يوتيوب</label>
+                                <input type="text" id="video-block-url" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="video_pos_lbl">2. موقع البلوك (القسم) في الصفحة</label>
+                                <select id="video-block-position" class="form-control">
+                                    <option value="after-hero" data-i18n="opt_after_hero">تحت القسم الترحيبي (أعلى الصفحة)</option>
+                                    <option value="after-features" data-i18n="opt_after_features">بعد قسم المميزات</option>
+                                    <option value="after-teachers" data-i18n="opt_after_teachers">بعد قسم المدرسين الأونلاين</option>
+                                    <option value="before-footer" data-i18n="opt_before_footer">أعلى ذيل الصفحة (الفوتر)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="background-color: var(--kid-blue);" onclick="window.addVideoBlock()">
+                            <span data-i18n="btn_add_video_block">إضافة بلوك الفيديو للواجهة</span>
+                        </button>
+                        
+                        <div class="item-list-box" id="web-video-blocks-list" style="margin-top: 20px;" data-i18n="loading_video_blocks">جاري تحميل أقسام الفيديو الحالية...</div>
+                    </div>
+
+                    <div style="margin-bottom: 25px; background: rgba(244, 249, 252, 0.6); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--primary-maroon); margin-bottom: 15px; font-weight: 900;"><i class="fa-solid fa-comments"></i> <span data-i18n="manage_reviews_title">إدارة وتزويد كروت الريفيوهات (Reviews)</span></h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label data-i18n="rev_author_lbl">اسم كاتب المراجعة</label>
+                                <input type="text" id="rev-author" class="form-control" data-i18n-placeholder="rev_author_ph" placeholder="أ / محمد علي (ولي أمر)">
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="rev_text_lbl">نص المراجعة / الرأي</label>
+                                <input type="text" id="rev-text" class="form-control" data-i18n-placeholder="rev_text_ph" placeholder="المنهج رائع وفرق جداً في مستوى طفلي...">
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="rev_stars_lbl">عدد النجوم</label>
+                                <select id="rev-stars" class="form-control">
+                                    <option value="5" data-i18n="stars_5">5 نجوم</option>
+                                    <option value="4" data-i18n="stars_4">4 نجوم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="window.addWebReview()">
+                            <span data-i18n="btn_add_review">إضافة كارت ريفيو جديد لشبكة الواجهة</span>
+                        </button>
+                        <div class="item-list-box" id="web-reviews-list" data-i18n="loading_reviews">جاري تحميل المراجعات الحالية...</div>
+                    </div>
+
+                    <div style="background: rgba(244, 249, 252, 0.6); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--primary-maroon); margin-bottom: 15px; font-weight: 900;"><i class="fa-solid fa-circle-question"></i> <span data-i18n="manage_faq_title">إدارة وتعديل الأسئلة الشائعة (FAQ) في النهاية</span></h4>
+                        <div class="form-group">
+                            <label data-i18n="faq_q_lbl">السؤال بالكامل</label>
+                            <input type="text" id="faq-question" class="form-control" data-i18n-placeholder="faq_q_ph" placeholder="كيف يمكنني تسجيل طفلي في أقرب حضانة؟">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="faq_a_lbl">الإجابة النموذجية</label>
+                            <textarea id="faq-answer" class="form-control" rows="2" data-i18n-placeholder="faq_a_ph" placeholder="يمكنك اختيار شبكة الحضانات المعتمدة من القائمة وحجز المقعد..."></textarea>
+                        </div>
+                        <button class="btn-primary" onclick="window.addWebFaq()">
+                            <span data-i18n="btn_add_faq">إضافة أو تحديث السؤال في الواجهة</span>
+                        </button>
+                        <div class="item-list-box" id="web-faqs-list" data-i18n="loading_faq">جاري تحميل الأسئلة الشائعة...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تابة الماركت بليس المركزي -->
+            <div id="marketplace-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="add_product_title">إضافة منتج مركزي للماركت بليس الموحد</div>
                     <div class="form-group">
-                        <label>الجهة المستهدفة بالتعميم</label>
-                        <select id="global-target-select" class="form-control" style="width: auto;">
-                            <option value="parents">جميع أولياء الأمور (كل الحضانات)</option>
-                            <option value="teachers">جميع المدرسين (كل الحضانات)</option>
-                        </select>
+                        <label data-i18n="p_lbl_title">اسم المنتج أو الباقة التعليمية / المنهج</label>
+                        <input type="text" id="prod-title" class="form-control">
                     </div>
-                    <div class="form-group"><label>العنوان</label><input type="text" id="global-title" class="form-control"></div>
-                    <div class="form-group"><label>تفاصيل الرسالة</label><textarea id="global-body" class="form-control" rows="4"></textarea></div>
-                    <div class="form-group"><label>إرفاق صورة</label><input type="file" id="global-file" class="form-control" accept="image/*"></div>
-                    <button class="btn-primary" onclick="publishGlobalPost()"><i class="fa-solid fa-share-nodes"></i> نشر وتعميم فوراً</button>
-                </div>
-
-                <div id="global-archive-section" style="display:none;">
-                    <table>
-                        <thead><tr><th>الجهة</th><th>العنوان</th><th>التحكم</th></tr></thead>
-                        <tbody id="global-posts-tbody"></tbody>
-                    </table>
-                </div>
-
-                <div id="global-network-section" style="display:none;">
-                    <div style="background:#fafbfc; padding:15px; border-radius:8px; border:1px solid var(--border-color); margin-bottom:20px; display:flex; align-items:center; gap:15px;">
-                        <label style="font-weight:bold; color:var(--primary-maroon);"><i class="fa-solid fa-filter"></i> تصفية وعرض حائط حضانة معينة:</label>
-                        <select id="network-feed-filter" class="form-control" style="width:auto; min-width:250px;" onchange="window.fetchGlobalNetworkFeed()">
-                            <option value="all">عرض منشورات جميع الحضانات المجمعة</option>
-                        </select>
+                    <div class="form-group">
+                        <label data-i18n="p_lbl_price">السعر الثابت (ج.م)</label>
+                        <input type="number" id="prod-price" class="form-control">
                     </div>
-                    <div class="feed-container" id="network-feed-container"></div>
+                    <div class="form-group">
+                        <label data-i18n="p_lbl_image">صورة المنتج الحقيقية (ملف)</label>
+                        <input type="file" id="prod-image" class="form-control" accept="image/*">
+                    </div>
+                    <button class="btn-primary" onclick="uploadMarketProduct()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 
+                        <span data-i18n="btn_publish_market">نشر بالماركت بليس الموحد</span>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <div id="online-teachers-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header"><i class="fa-solid fa-chalkboard-user"></i> المدرسين الأونلاين المتاحين للتعيين بالواجهة</div>
-                <p style="font-size:13px; color:var(--text-gray); margin-bottom:15px;">المدرسين بالأسفل قاموا بكتابة مواعيدهم مسبقاً عبر حساباتهم. اختر منهم من يمثل "Impact Hub" لرفعه وعرضه على الواجهة الرئيسية العامة.</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>اسم المدرس</th>
-                            <th>التخصص التعليمي</th>
-                            <th>المواعيد المسجلة مسبقاً</th>
-                            <th>الحالة على الرئيسية</th>
-                            <th>الإجراء والتحكم</th>
-                        </tr>
-                    </thead>
-                    <tbody id="online-teachers-tbody">
-                        <tr><td colspan="5" style="text-align:center; color:gray;">جاري تحميل المدرسين المتاحين للتحكم...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="web-settings-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header"><i class="fa-solid fa-sliders"></i> التحكم بالهوية والبيانات التسويقية للواجهة العامة</div>
-                
-                <div style="margin-bottom:25px; background:#fafafa; padding:20px; border-radius:8px; border:1px solid var(--border-color);">
-                    <h4 style="color:var(--primary-maroon); margin-bottom:10px;"><i class="fa-solid fa-image"></i> اللوجو الرسمي للمؤسسة (Impact Hub)</h4>
-                    <div style="display:flex; align-items:center; gap:20px;">
-                        <input type="file" id="web-logo-file" class="form-control" accept="image/*" style="width:300px;">
-                        <button class="btn-success" onclick="window.saveWebLogo()">تحديث وحفظ اللوجو</button>
+            <!-- تابة إدارة طلبات الشحن اللوجستية (Axon Express) -->
+            <div id="orders-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" data-i18n="shipping_header"><i class="fa-solid fa-truck-fast"></i> إدارة الطلبات اللوجستية (جاهزة للشحن عبر Axon Express)</div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px;" data-i18n="shipping_desc">هنا تظهر الطلبات التي أكدت المديرات استلام قيمتها. تفاصيل الحضانة ظاهرة لتسهيل عملية الشحن والتوصيل عبر نظام (Axon Express).</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_nursery_details">تفاصيل الحضانة (للتوصيل)</th>
+                                    <th data-i18n="th_parent_student">ولي الأمر / الطالب</th>
+                                    <th data-i18n="th_requested_prods">المنتجات المطلوبة</th>
+                                    <th data-i18n="th_order_status">حالة الطلب</th>
+                                    <th data-i18n="th_shipping_action">إجراء الشحن</th>
+                                </tr>
+                            </thead>
+                            <tbody id="central-orders-tbody">
+                                <tr><td colspan="5" style="text-align: center;" data-i18n="loading_orders">جاري جلب الطلبات...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div id="current-logo-preview" style="margin-top:10px;"></div>
-                </div>
-
-                <div style="margin-bottom:25px; background:#fafafa; padding:20px; border-radius:8px; border:1px solid var(--border-color); border-left: 4px solid var(--kid-blue);">
-                    <h4 style="color:var(--kid-blue); margin-bottom:15px;"><i class="fa-brands fa-youtube"></i> إدارة البلوكات المرنة (أقسام الفيديو)</h4>
-                    <p style="font-size:12px; color:gray; margin-bottom:15px;">أضف مقاطع فيديو يوتيوب وضعها كأقسام (Sections) مستقلة بين محتوى الصفحة لضمان تناسق العرض على الموبايل والكمبيوتر.</p>
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>1. رابط فيديو يوتيوب</label>
-                            <input type="text" id="video-block-url" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
-                        </div>
-                        <div class="form-group">
-                            <label>2. موقع البلوك (القسم) في الصفحة</label>
-                            <select id="video-block-position" class="form-control">
-                                <option value="after-hero">تحت القسم الترحيبي (أعلى الصفحة)</option>
-                                <option value="after-features">بعد قسم المميزات</option>
-                                <option value="after-teachers">بعد قسم المدرسين الأونلاين</option>
-                                <option value="before-footer">أعلى ذيل الصفحة (الفوتر)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="btn-primary" style="background-color: var(--kid-blue);" onclick="window.addVideoBlock()">إضافة بلوك الفيديو للواجهة</button>
-                    
-                    <div class="item-list-box" id="web-video-blocks-list" style="margin-top: 20px;">جاري تحميل أقسام الفيديو الحالية...</div>
-                </div>
-
-                <div style="margin-bottom:25px; background:#fafafa; padding:20px; border-radius:8px; border:1px solid var(--border-color);">
-                    <h4 style="color:var(--primary-maroon); margin-bottom:15px;"><i class="fa-solid fa-comments"></i> إدارة وتزويد كروت الريفيوهات (Reviews)</h4>
-                    <div class="form-grid">
-                        <div class="form-group"><label>اسم كاتب المراجعة</label><input type="text" id="rev-author" class="form-control" placeholder="أ / محمد علي (ولي أمر)"></div>
-                        <div class="form-group"><label>نص المراجعة / الرأي</label><input type="text" id="rev-text" class="form-control" placeholder="المنهج رائع وفرق جداً في مستوى طفلي..."></div>
-                        <div class="form-group"><label>عدد النجوم</label><select id="rev-stars" class="form-control"><option value="5">5 نجوم</option><option value="4">4 نجوم</option></select></div>
-                    </div>
-                    <button class="btn-primary" onclick="window.addWebReview()">إضافة كارت ريفيو جديد لشبكة الواجهة</button>
-                    <div class="item-list-box" id="web-reviews-list">جاري تحميل المراجعات الحالية...</div>
-                </div>
-
-                <div style="background:#fafafa; padding:20px; border-radius:8px; border:1px solid var(--border-color);">
-                    <h4 style="color:var(--primary-maroon); margin-bottom:15px;"><i class="fa-solid fa-circle-question"></i> إدارة وتعديل الأسئلة الشائعة (FAQ) في النهاية</h4>
-                    <div class="form-group"><label>السؤال بالكامل</label><input type="text" id="faq-question" class="form-control" placeholder="كيف يمكنني تسجيل طفلي في أقرب حضانة؟"></div>
-                    <div class="form-group"><label>الإجابة النموذجية</label><textarea id="faq-answer" class="form-control" rows="2" placeholder="يمكنك اختيار شبكة الحضانات المعتمدة من القائمة وحجز المقعد..."></textarea></div>
-                    <button class="btn-primary" onclick="window.addWebFaq()">إضافة أو تحديث السؤال في الواجهة</button>
-                    <div class="item-list-box" id="web-faqs-list">جاري تحميل الأسئلة الشائعة...</div>
                 </div>
             </div>
-        </div>
 
-        <div id="marketplace-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header">إضافة منتج مركزي للماركت بليس الموحد</div>
-                <div class="form-group"><label>اسم المنتج أو الباقة التعليمية / المنهج</label><input type="text" id="prod-title" class="form-control"></div>
-                <div class="form-group"><label>السعر الثابت (ج.م)</label><input type="number" id="prod-price" class="form-control"></div>
-                <div class="form-group"><label>صورة المنتج الحقيقية (ملف)</label><input type="file" id="prod-image" class="form-control" accept="image/*"></div>
-                <button class="btn-primary" onclick="uploadMarketProduct()">نشر بالماركت بليس الموحد</button>
+            <!-- ذيل الصفحة -->
+            <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
+                تم التطوير بواسطه impact hub egypt (esaia)
             </div>
-        </div>
 
-        <div id="orders-tab" class="tab-content">
-            <div class="panel">
-                <div class="panel-header"><i class="fa-solid fa-truck-fast"></i> إدارة الطلبات اللوجستية (جاهزة للشحن عبر Axon Express)</div>
-                <p style="font-size:13px; color:var(--text-gray); margin-bottom:15px;">هنا تظهر الطلبات التي أكدت المديرات استلام قيمتها. تفاصيل الحضانة ظاهرة لتسهيل عملية الشحن والتوصيل عبر نظام (Axon Express).</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>تفاصيل الحضانة (للتوصيل)</th>
-                            <th>ولي الأمر / الطالب</th>
-                            <th>المنتجات المطلوبة</th>
-                            <th>حالة الطلب</th>
-                            <th>إجراء الشحن</th>
-                        </tr>
-                    </thead>
-                    <tbody id="central-orders-tbody">
-                        <tr><td colspan="5" style="text-align:center;">جاري جلب الطلبات...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </main>
+        </main>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -351,19 +923,595 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         
-        const currentUser = { id: "super_admin_1", name: "الإدارة العليا (Impact Hub)" };
-        let allNurseriesMap = {}; 
+        let allNurseriesMap = {};
 
-        // دالة الـ Base64 العادية للصور الصغيرة
-        const toBase64 = file => new Promise((resolve, reject) => {
-            if(!file) resolve("");
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
+        // معجم اللغات الأربعة للوحة السوبر أدمن
+        const superTranslations = {
+            ar: {
+                app_title: "إمباكت هب مصر - لوحة السوبر أدمن المركزي",
+                central_brand: "إمباكت هب مصر",
+                central_desc: "الإدارة العليا والمتابعة",
+                nav_nurseries: "إدارة الحضانات",
+                nav_broadcast: "مركز النشر العام",
+                nav_teachers: "المدرسين الأونلاين",
+                nav_web: "إعدادات الواجهة العامة",
+                nav_market: "المتجر المركزي",
+                nav_orders: "إدارة الطلبات",
+                live_builder: "مُنشئ الواجهة (Live)",
+                create_nursery_title: "إنشاء كيان حضانة جديد مركزيًا",
+                n_lbl_name: "اسم الحضانة الرسمي",
+                n_ph_name: "حضانة أجيال الغد",
+                n_lbl_admin: "اسم المدير / المديرة",
+                n_ph_admin: "أ / هند صبري",
+                n_lbl_address: "العنوان بالتفصيل",
+                n_ph_address: "الإسكندرية - جليم",
+                n_lbl_phone: "وسائل الاتصال (رقم الهاتف)",
+                n_lbl_teachers: "عدد المدرسين الحالي",
+                n_lbl_students: "عدد الطلاب الحالي",
+                n_lbl_logo: "رفع الشعار (لوجو كملف حقيقي)",
+                btn_create_nursery: "حفظ وإنشاء الكيان",
+                network_nurseries_title: "جميع الحضانات المشتركة بالشبكة",
+                th_logo: "اللوجو",
+                th_nursery: "اسم الحضانة",
+                th_admin_phone: "الإدارة ووسائل الاتصال",
+                th_stats: "الإحصائيات",
+                th_rating: "التقييم المركزي",
+                th_actions: "الحالة والتحكم",
+                send_guideline_title: "إرسال توجيه خاص لهذه الحضانة",
+                target_scoped_lbl: "الجهة المستهدفة داخل الحضانة",
+                opt_parents_scoped: "أولياء أمور هذه الحضانة فقط",
+                opt_teachers_scoped: "مدرسي هذه الحضانة فقط",
+                scoped_post_title: "عنوان التحديث الخاص",
+                scoped_post_body: "نص المنشور / التوجيه",
+                scoped_post_img: "إرفاق صورة",
+                btn_send_scoped: "إرسال التحديث الخاص",
+                btn_close: "إغلاق",
+                activity_wall_title: "حائط أنشطة الحضانة (للمراقبة والتفاعل)",
+                select_nursery_feed: "اختر حضانة لعرض أنشطتها...",
+                central_network_title: "الشبكة المركزية (النشر والمراقبة)",
+                sub_tab_post: "نشر تعميم جديد",
+                sub_tab_archive: "أرشيف التعميمات",
+                sub_tab_wall: "حائط شبكة الحضانات المُجمع",
+                global_target_lbl: "الجهة المستهدفة بالتعميم",
+                opt_parents_all: "جميع أولياء الأمور (كل الحضانات)",
+                opt_teachers_all: "جميع المدرسين (كل الحضانات)",
+                global_title_lbl: "العنوان",
+                global_body_lbl: "تفاصيل الرسالة",
+                global_img_lbl: "إرفاق صورة",
+                btn_publish_all: "نشر وتعميم فوراً",
+                th_target: "الجهة",
+                th_title: "العنوان",
+                th_control: "التحكم",
+                filter_feed_lbl: "تصفية وعرض حائط حضانة معينة:",
+                opt_all_feeds: "عرض منشورات جميع الحضانات المجمعة",
+                online_teachers_header: "المدرسين الأونلاين المتاحين للتعيين بالواجهة",
+                online_teachers_desc: "المدرسين بالأسفل قاموا بكتابة مواعيدهم مسبقاً عبر حساباتهم. اختر منهم من يمثل \"Impact Hub\" لرفعه وعرضه على الواجهة الرئيسية العامة.",
+                th_teacher_name: "اسم المدرس",
+                th_subject: "التخصص التعليمي",
+                th_availability: "المواعيد المسجلة مسبقاً",
+                th_status_landing: "الحالة على الرئيسية",
+                th_actions_landing: "الإجراء والتحكم",
+                loading_teachers: "جاري تحميل المدرسين المتاحين للتحكم...",
+                web_settings_header: "التحكم بالهوية والبيانات التسويقية للواجهة العامة",
+                official_logo_lbl: "اللوجو الرسمي للمؤسسة (Impact Hub)",
+                btn_save_logo: "تحديث وحفظ اللوجو",
+                video_blocks_title: "إدارة البلوكات المرنة (أقسام الفيديو)",
+                video_blocks_desc: "أضف مقاطع فيديو يوتيوب وضعها كأقسام (Sections) مستقلة بين محتوى الصفحة لضمان تناسق العرض على الموبايل والكمبيوتر.",
+                video_url_lbl: "1. رابط فيديو يوتيوب",
+                video_pos_lbl: "2. موقع البلوك (القسم) في الصفحة",
+                opt_after_hero: "تحت القسم الترحيبي (أعلى الصفحة)",
+                opt_after_features: "بعد قسم المميزات",
+                opt_after_teachers: "بعد قسم المدرسين الأونلاين",
+                opt_before_footer: "أعلى ذيل الصفحة (الفوتر)",
+                btn_add_video_block: "إضافة بلوك الفيديو للواجهة",
+                loading_video_blocks: "جاري تحميل أقسام الفيديو الحالية...",
+                manage_reviews_title: "إدارة وتزويد كروت الريفيوهات (Reviews)",
+                rev_author_lbl: "اسم كاتب المراجعة",
+                rev_author_ph: "أ / محمد علي (ولي أمر)",
+                rev_text_lbl: "نص المراجعة / الرأي",
+                rev_text_ph: "المنهج رائع وفرق جداً في مستوى طفلي...",
+                rev_stars_lbl: "عدد النجوم",
+                stars_5: "5 نجوم",
+                stars_4: "4 نجوم",
+                btn_add_review: "إضافة كارت ريفيو جديد لشبكة الواجهة",
+                loading_reviews: "جاري تحميل المراجعات الحالية...",
+                manage_faq_title: "إدارة وتعديل الأسئلة الشائعة (FAQ) في النهاية",
+                faq_q_lbl: "السؤال بالكامل",
+                faq_q_ph: "كيف يمكنني تسجيل طفلي في أقرب حضانة؟",
+                faq_a_lbl: "الإجابة النموذجية",
+                faq_a_ph: "يمكنك اختيار شبكة الحضانات المعتمدة من القائمة وحجز المقعد...",
+                btn_add_faq: "إضافة أو تحديث السؤال في الواجهة",
+                loading_faq: "جاري تحميل الأسئلة الشائعة...",
+                add_product_title: "إضافة منتج مركزي للماركت بليس الموحد",
+                p_lbl_title: "اسم المنتج أو الباقة التعليمية / المنهج",
+                p_lbl_price: "السعر الثابت (ج.م)",
+                p_lbl_image: "صورة المنتج الحقيقية (ملف)",
+                btn_publish_market: "نشر بالماركت بليس الموحد",
+                shipping_header: "إدارة الطلبات اللوجستية (جاهزة للشحن عبر Axon Express)",
+                shipping_desc: "هنا تظهر الطلبات التي أكدت المديرات استلام قيمتها. تفاصيل الحضانة ظاهرة لتسهيل عملية الشحن والتوصيل عبر نظام (Axon Express).",
+                th_nursery_details: "تفاصيل الحضانة (للتوصيل)",
+                th_parent_student: "ولي الأمر / الطالب",
+                th_requested_prods: "المنتجات المطلوبة",
+                th_order_status: "حالة الطلب",
+                th_shipping_action: "إجراء الشحن",
+                loading_orders: "جاري جلب الطلبات...",
+                dev_credit: "تم التطوير بواسطه impact hub egypt (esaia)",
+                alert_fill_nursery: "الاسم، المديرة، العنوان، الهاتف، والشعار متطلبات أساسية!",
+                alert_success_nursery: "✅ تم إنشاء كيان الحضانة بنجاح!",
+                alert_success_rating: "⭐ تم حفظ التقييم بنجاح!",
+                alert_kill_warn: "🚨 تحذير: سيتم منع جميع منتسبي الحضانة من الدخول! هل توافق؟",
+                alert_scoped_fill: "برجاء كتابة عنوان وتفاصيل المنشور!",
+                alert_scoped_success: "🔒 تم النشر بنجاح على حائط الحضانة المحددة!",
+                alert_global_fill: "برجاء كتابة بيانات التعميم!",
+                alert_global_success: "📢 تم نشر التعميم بنجاح لجميع الحضانات!",
+                alert_delete_warn: "هل أنت متأكد من حذف هذا العنصر نهائياً من الواجهة؟",
+                alert_delete_post_warn: "سيتم حذف التعميم من أجهزة الجميع. موافق؟",
+                alert_featured_on: "✅ تم تفعيل وعرض المدرس برأس الصفحة الرئيسية!",
+                alert_featured_off: "❌ تم إلغاء عرض المدرس من الواجهة.",
+                alert_logo_choose: "برجاء اختيار ملف لوجو أولاً!",
+                alert_logo_success: "✅ تم حفظ وتحديث اللوجو الرسمي للواجهة بنجاح!",
+                alert_video_url: "برجاء كتابة رابط يوتيوب صالح!",
+                alert_video_success: "🎥 تم إضافة بلوك الفيديو بنجاح في المكان المحدد!",
+                alert_review_fill: "برجاء ملء اسم الكاتب ونص الريفيو كاملاً لزيادة الكروت!",
+                alert_review_success: "✅ تم إضافة كارت المراجعة الجديد للواجهة العامة!",
+                alert_faq_fill: "برجاء كتابة السؤال والإجابة!",
+                alert_faq_success: "✅ تم حفظ وتحديث قائمة الأسئلة بنجاح!",
+                alert_market_fill: "برجاء استيفاء بيانات المنتج والصورة!",
+                alert_market_success: "✅ تم نشر المنتج بالمتجر المركزي!",
+                alert_shipped_warn: "سيتم تحديث حالة الطلب إلى (تم الشحن) لتظهر لدى مديرة الحضانة. هل قمت بتسليم الطلب لـ Axon Express؟",
+                alert_shipped_success: "🚚 تم تسجيل الشحنة بنجاح! تم إبلاغ مديرة الحضانة."
+            },
+            en: {
+                app_title: "Impact Hub Egypt - Central Super Admin Dashboard",
+                central_brand: "Impact Hub Egypt",
+                central_desc: "Central Management & Supervison",
+                nav_nurseries: "Manage Nurseries",
+                nav_broadcast: "Global Broadcast",
+                nav_teachers: "Online Teachers",
+                nav_web: "Landing Page Settings",
+                nav_market: "Central Marketplace",
+                nav_orders: "Order Management",
+                live_builder: "Live Interface Builder",
+                create_nursery_title: "Create New Nursery Entity",
+                n_lbl_name: "Official Nursery Name",
+                n_ph_name: "Ajyal Al-Ghad Nursery",
+                n_lbl_admin: "Manager Name",
+                n_ph_admin: "Mrs. Hend Sabry",
+                n_lbl_address: "Detailed Address",
+                n_ph_address: "Alexandria - Glim",
+                n_lbl_phone: "Contact phone",
+                n_lbl_teachers: "Current Teachers count",
+                n_lbl_students: "Current Kids count",
+                n_lbl_logo: "Upload Logo (Image File)",
+                btn_create_nursery: "Save & Create Entity",
+                network_nurseries_title: "All Network-Subscribed Nurseries",
+                th_logo: "Logo",
+                th_nursery: "Nursery Name",
+                th_admin_phone: "Manager & Contact",
+                th_stats: "Statistics",
+                th_rating: "Central Rating",
+                th_actions: "Status & Control",
+                send_guideline_title: "Send Private Directive to this Nursery",
+                target_scoped_lbl: "Target Scope inside Nursery",
+                opt_parents_scoped: "Nursery Parents only",
+                opt_teachers_scoped: "Nursery Teachers only",
+                scoped_post_title: "Scoped Directive Title",
+                scoped_post_body: "Post / Directive details",
+                scoped_post_img: "Attach Image",
+                btn_send_scoped: "Send Private Update",
+                btn_close: "Close",
+                activity_wall_title: "Nursery Activity Feed (Supervision & Monitoring)",
+                select_nursery_feed: "Select a nursery to view its activity wall...",
+                central_network_title: "Central Network Feed",
+                sub_tab_post: "Publish New Broadcast",
+                sub_tab_archive: "Broadcast Archive",
+                sub_tab_wall: "Combined Network Feed",
+                global_target_lbl: "Target Scope for Broadcast",
+                opt_parents_all: "All Parents (All nurseries)",
+                opt_teachers_all: "All Teachers (All nurseries)",
+                global_title_lbl: "Broadcast Title",
+                global_body_lbl: "Message Details",
+                global_img_lbl: "Attach Image",
+                btn_publish_all: "Publish & Broadcast Now",
+                th_target: "Target",
+                th_title: "Title",
+                th_control: "Control",
+                filter_feed_lbl: "Filter combined feed by nursery:",
+                opt_all_feeds: "Display combined feed of all nurseries",
+                online_teachers_header: "Online Teachers Available for Landing Page",
+                online_teachers_desc: "The teachers below configured their availability. Choose which teacher represents Impact Hub to feature on the public landing page.",
+                th_teacher_name: "Teacher Name",
+                th_subject: "Subject Speciality",
+                th_availability: "Availability Schedule",
+                th_status_landing: "Status on Landing",
+                th_actions_landing: "Featured Action",
+                loading_teachers: "Loading online teachers...",
+                web_settings_header: "Control public Landing Page Branding & Marketing",
+                official_logo_lbl: "Official Brand Logo (Impact Hub)",
+                btn_save_logo: "Update & Save Logo",
+                video_blocks_title: "Manage Flexible Video Sections",
+                video_blocks_desc: "Add YouTube videos and choose their placement as standalone blocks in the landing page for fluid rendering.",
+                video_url_lbl: "1. YouTube Video URL",
+                video_pos_lbl: "2. Block placement on landing",
+                opt_after_hero: "Below welcome hero (top)",
+                opt_after_features: "Below features block",
+                opt_after_teachers: "Below featured teachers section",
+                opt_before_footer: "Above landing footer (bottom)",
+                btn_add_video_block: "Add Video Section Block",
+                loading_video_blocks: "Loading active video sections...",
+                manage_reviews_title: "Manage Customer Reviews",
+                rev_author_lbl: "Review Author Name",
+                rev_author_ph: "Mr. Mohamed Ali (Parent)",
+                rev_text_lbl: "Review text content",
+                rev_text_ph: "The curriculum is wonderful...",
+                rev_stars_lbl: "Stars count",
+                stars_5: "5 Stars",
+                stars_4: "4 Stars",
+                btn_add_review: "Add Review Card to Landing page",
+                loading_reviews: "Loading testimonials...",
+                manage_faq_title: "Manage Frequently Asked Questions (FAQ)",
+                faq_q_lbl: "FAQ Question",
+                faq_q_ph: "How can I register my kid?",
+                faq_a_lbl: "Standard Answer",
+                faq_a_ph: "You can select the certified nursery...",
+                btn_add_faq: "Add or Update FAQ on Landing page",
+                loading_faq: "Loading active FAQs...",
+                add_product_title: "Add Product to Central Marketplace",
+                p_lbl_title: "Product / Course Bundle Name",
+                p_lbl_price: "Price (EGP)",
+                p_lbl_image: "Product cover photo",
+                btn_publish_market: "Publish to Central Marketplace",
+                shipping_header: "Logistics Dashboard (Ready for Axon Express Shipping)",
+                shipping_desc: "The orders below are verified for payment by local nursery managers. Delivered directly via Axon Express logistics network.",
+                th_nursery_details: "Nursery Delivery Address",
+                th_parent_student: "Parent / Kid",
+                th_requested_prods: "Requested Goods",
+                th_order_status: "Order Status",
+                th_shipping_action: "Shipment Control",
+                loading_orders: "Loading warehouse orders...",
+                dev_credit: "Developed by Impact Hub Egypt (ESAIA)",
+                alert_fill_nursery: "Nursery name, manager, address, phone and logo are required!",
+                alert_success_nursery: "✅ Nursery entity created successfully!",
+                alert_success_rating: "⭐ Central rating saved successfully!",
+                alert_kill_warn: "🚨 WARNING: This will lock out all nursery users! Proceed?",
+                alert_scoped_fill: "Please fill scoped directive title & content!",
+                alert_scoped_success: "🔒 Scoped update sent to target nursery feed!",
+                alert_global_fill: "Please fill broadcast details!",
+                alert_global_success: "📢 Broadcast sent successfully to all nurseries!",
+                alert_delete_warn: "Are you sure you want to permanently delete this setting element?",
+                alert_delete_post_warn: "This will delete the broadcast from everyone's screen. Proceed?",
+                alert_featured_on: "✅ Teacher promoted and featured on landing page!",
+                alert_featured_off: "❌ Teacher removed from landing page featured list.",
+                alert_logo_choose: "Please select a logo image first!",
+                alert_logo_success: "✅ Brand logo updated successfully!",
+                alert_video_url: "Please type a valid YouTube link!",
+                alert_video_success: "🎥 Video block embedded successfully!",
+                alert_review_fill: "Please write author name and content!",
+                alert_review_success: "✅ Testimonial published successfully!",
+                alert_faq_fill: "Please write FAQ question and answer!",
+                alert_faq_success: "✅ FAQ list synchronized successfully!",
+                alert_market_fill: "Please select product title, price and image!",
+                alert_market_success: "✅ Product uploaded to Central Marketplace!",
+                alert_shipped_warn: "Verify handover to Axon Express shipping courier?",
+                alert_shipped_success: "🚚 Order dispatched with Axon Express courier! Status updated."
+            },
+            fr: {
+                app_title: "Impact Hub Egypt - Super Admin Central",
+                central_brand: "Impact Hub Egypt",
+                central_desc: "Gestion & Supervision Centrale",
+                nav_nurseries: "Gérer les Crèches",
+                nav_broadcast: "Diffusion Globale",
+                nav_teachers: "Enseignants en Ligne",
+                nav_web: "Paramètres de la page d'accueil",
+                nav_market: "Boutique Centrale",
+                nav_orders: "Gestion des Commandes",
+                live_builder: "Générateur Web Live",
+                create_nursery_title: "Créer une nouvelle entité Crèche",
+                n_lbl_name: "Nom officiel de la crèche",
+                n_ph_name: "Crèche Ajyal Al-Ghad",
+                n_lbl_admin: "Nom de la directrice",
+                n_ph_admin: "Mme Hend Sabry",
+                n_lbl_address: "Adresse détaillée",
+                n_ph_address: "Alexandrie - Glim",
+                n_lbl_phone: "Téléphone de contact",
+                n_lbl_teachers: "Nombre d'enseignants",
+                n_lbl_students: "Nombre d'enfants",
+                n_lbl_logo: "Uploader Logo (Fichier image)",
+                btn_create_nursery: "Sauvegarder & Créer l'entité",
+                network_nurseries_title: "Toutes les crèches membres du réseau",
+                th_logo: "Logo",
+                th_nursery: "Nom de la crèche",
+                th_admin_phone: "Administration & Contact",
+                th_stats: "Statistiques",
+                th_rating: "Évaluation centrale",
+                th_actions: "Statut & Contrôle",
+                send_guideline_title: "Envoyer une directive privée à cette crèche",
+                target_scoped_lbl: "Portée de la directive",
+                opt_parents_scoped: "Parents de cette crèche uniquement",
+                opt_teachers_scoped: "Enseignants de cette crèche uniquement",
+                scoped_post_title: "Titre de la directive",
+                scoped_post_body: "Détails de la directive",
+                scoped_post_img: "Attacher une image",
+                btn_send_scoped: "Envoyer la mise à jour privée",
+                btn_close: "Fermer",
+                activity_wall_title: "Fil d'activités de la crèche (Supervision)",
+                select_nursery_feed: "Sélectionnez une crèche pour voir son fil...",
+                central_network_title: "Réseau de communication centralisé",
+                sub_tab_post: "Publier une nouvelle diffusion",
+                sub_tab_archive: "Archives des diffusions",
+                sub_tab_wall: "Fil réseau combiné",
+                global_target_lbl: "Cible de la diffusion",
+                opt_parents_all: "Tous les parents (Toutes les crèches)",
+                opt_teachers_all: "Tous les enseignants (Toutes les crèches)",
+                global_title_lbl: "Titre de la diffusion",
+                global_body_lbl: "Détails du message",
+                global_img_lbl: "Attacher une image",
+                btn_publish_all: "Publier & Diffuser maintenant",
+                th_target: "Cible",
+                th_title: "Titre",
+                th_control: "Contrôle",
+                filter_feed_lbl: "Filtrer le fil combiné par crèche:",
+                opt_all_feeds: "Afficher le fil combiné de toutes les crèches",
+                online_teachers_header: "Enseignants disponibles pour la page d'accueil",
+                online_teachers_desc: "Les enseignants ont configuré leurs heures. Sélectionnez les enseignants à mettre en vedette sur la page d'accueil.",
+                th_teacher_name: "Nom de l'enseignant",
+                th_subject: "Spécialité",
+                th_availability: "Horaires de disponibilité",
+                th_status_landing: "Statut d'affichage",
+                th_actions_landing: "Action vedette",
+                loading_teachers: "Chargement des enseignants...",
+                web_settings_header: "Contrôle de l'image de marque et du marketing",
+                official_logo_lbl: "Logo officiel (Impact Hub)",
+                btn_save_logo: "Mettre à jour & Sauvegarder le Logo",
+                video_blocks_title: "Gérer les sections vidéo flexibles",
+                video_blocks_desc: "Ajoutez des vidéos YouTube et choisissez leur emplacement pour un affichage optimal.",
+                video_url_lbl: "1. URL de la vidéo YouTube",
+                video_pos_lbl: "2. Emplacement du bloc sur la page d'accueil",
+                opt_after_hero: "Sous le bloc d'accueil (haut)",
+                opt_after_features: "Sous les caractéristiques",
+                opt_after_teachers: "Sous les enseignants en vedette",
+                opt_before_footer: "Au-dessus du footer (bas)",
+                btn_add_video_block: "Ajouter la section vidéo",
+                loading_video_blocks: "Chargement des sections vidéo...",
+                manage_reviews_title: "Gérer les avis clients",
+                rev_author_lbl: "Nom de l'auteur",
+                rev_author_ph: "M. Mohamed Ali (Parent)",
+                rev_text_lbl: "Contenu de l'avis",
+                rev_text_ph: "Le programme est formidable...",
+                rev_stars_lbl: "Nombre d'étoiles",
+                stars_5: "5 Étoiles",
+                stars_4: "4 Étoiles",
+                btn_add_review: "Ajouter l'avis à la page d'accueil",
+                loading_reviews: "Chargement des avis...",
+                manage_faq_title: "Gérer la Foire aux Questions (FAQ)",
+                faq_q_lbl: "Question FAQ",
+                faq_q_ph: "Comment puis-je m'inscrire ?",
+                faq_a_lbl: "Réponse standard",
+                faq_a_ph: "Vous pouvez choisir la crèche agréée...",
+                btn_add_faq: "Ajouter ou mettre à jour la FAQ",
+                loading_faq: "Chargement des FAQ...",
+                add_product_title: "Ajouter un produit à la Boutique Centrale",
+                p_lbl_title: "Nom du produit / cours",
+                p_lbl_price: "Prix (EGP)",
+                p_lbl_image: "Photo de couverture",
+                btn_publish_market: "Publier dans la Boutique Centrale",
+                shipping_header: "Logistique & Livraison (Prêt pour Axon Express)",
+                shipping_desc: "Les commandes ci-dessous sont validées et prêtes pour expédition directe via Axon Express.",
+                th_nursery_details: "Adresse de livraison de la crèche",
+                th_parent_student: "Parent / Enfant",
+                th_requested_prods: "Articles demandés",
+                th_order_status: "Statut de la commande",
+                th_shipping_action: "Contrôle de l'expédition",
+                loading_orders: "Chargement des commandes...",
+                dev_credit: "Développé par Impact Hub Egypt (ESAIA)",
+                alert_fill_nursery: "Le nom, la directrice, l'adresse, le téléphone et le logo sont requis !",
+                alert_success_nursery: "✅ Entité Crèche créée avec succès !",
+                alert_success_rating: "⭐ Évaluation sauvegardée avec succès !",
+                alert_kill_warn: "🚨 ATTENTION: Cela bloquera tous les accès à cette crèche ! Continuer ?",
+                alert_scoped_fill: "Veuillez remplir le titre et le contenu de la directive !",
+                alert_scoped_success: "🔒 Directive envoyée à la crèche ciblée !",
+                alert_global_fill: "Veuillez remplir les détails de la diffusion !",
+                alert_global_success: "📢 Diffusion globale envoyée avec succès !",
+                alert_delete_warn: "Êtes-vous sûr de vouloir supprimer cet élément de paramètre ?",
+                alert_delete_post_warn: "Cela supprimera la diffusion pour tous les utilisateurs. Continuer ?",
+                alert_featured_on: "✅ Enseignant promu en page d'accueil !",
+                alert_featured_off: "❌ Enseignant retiré de la page d'accueil.",
+                alert_logo_choose: "Veuillez choisir une image de logo !",
+                alert_logo_success: "✅ Logo de la marque mis à jour !",
+                alert_video_url: "Veuillez entrer un lien YouTube valide !",
+                alert_video_success: "🎥 Bloc vidéo intégré avec succès !",
+                alert_review_fill: "Veuillez entrer le nom et le texte de l'auteur !",
+                alert_review_success: "✅ Témoignage publié avec succès !",
+                alert_faq_fill: "Veuillez entrer la question et la réponse de la FAQ !",
+                alert_faq_success: "✅ Liste des FAQ synchronisée !",
+                alert_market_fill: "Veuillez remplir le titre, le prix et l'image du produit !",
+                alert_market_success: "✅ Produit publié dans la boutique centrale !",
+                alert_shipped_warn: "Confirmer la remise du colis au transporteur Axon Express ?",
+                alert_shipped_success: "🚚 Commande expédiée avec Axon Express !"
+            },
+            de: {
+                app_title: "Impact Hub Egypt - Zentraler Super-Admin",
+                central_brand: "Impact Hub Egypt",
+                central_desc: "Zentrale Leitung & Überwachung",
+                nav_nurseries: "Kitas verwalten",
+                nav_broadcast: "Globale Rundschreiben",
+                nav_teachers: "Online-Lehrer",
+                nav_web: "Einstellungen der Landingpage",
+                nav_market: "Zentraler Marktplatz",
+                nav_orders: "Bestellungsverwaltung",
+                live_builder: "Live Web-Editor",
+                create_nursery_title: "Neue Kita-Einheit erstellen",
+                n_lbl_name: "Offizieller Kita-Name",
+                n_ph_name: "Kita Ajyal Al-Ghad",
+                n_lbl_admin: "Name der Leiterin",
+                n_ph_admin: "Frau Hend Sabry",
+                n_lbl_address: "Detaillierte Adresse",
+                n_ph_address: "Alexandria - Glim",
+                n_lbl_phone: "Kontakttelefon",
+                n_lbl_teachers: "Anzahl der Lehrer",
+                n_lbl_students: "Anzahl der Kinder",
+                n_lbl_logo: "Logo hochladen (Bilddatei)",
+                btn_create_nursery: "Speichern & Einheit erstellen",
+                network_nurseries_title: "Alle Netzwerk-Mitgliedskitas",
+                th_logo: "Logo",
+                th_nursery: "Kita-Name",
+                th_admin_phone: "Leitung & Kontakt",
+                th_stats: "Statistiken",
+                th_rating: "Zentrale Bewertung",
+                th_actions: "Status & Kontrolle",
+                send_guideline_title: "Private Richtlinie an diese Kita senden",
+                target_scoped_lbl: "Zielbereich der Richtlinie",
+                opt_parents_scoped: "Nur Eltern dieser Kita",
+                opt_teachers_scoped: "Nur Lehrer dieser Kita",
+                scoped_post_title: "Titel der Richtlinie",
+                scoped_post_body: "Details der Richtlinie",
+                scoped_post_img: "Bild anhängen",
+                btn_send_scoped: "Private Aktualisierung senden",
+                btn_close: "Schließen",
+                activity_wall_title: "Kita-Aktivitätsfeed (Überwachung)",
+                select_nursery_feed: "Wählen Sie eine Kita, um deren Feed anzuzeigen...",
+                central_network_title: "Zentrales Kita-Netzwerkzentrum",
+                sub_tab_post: "Neuen Rundbrief veröffentlichen",
+                sub_tab_archive: "Rundschreiben-Archiv",
+                sub_tab_wall: "Kombinierter Netzwerkfeed",
+                global_target_lbl: "Ziel des Rundschreibens",
+                opt_parents_all: "Alle Eltern (Alle Kitas)",
+                opt_teachers_all: "Alle Lehrer (Alle Kitas)",
+                global_title_lbl: "Rundschreibentitel",
+                global_body_lbl: "Nachrichtendetails",
+                global_img_lbl: "Bild anhängen",
+                btn_publish_all: "Veröffentlichen & Rundsenden",
+                th_target: "Ziel",
+                th_title: "Titel",
+                th_control: "Kontrolle",
+                filter_feed_lbl: "Kombinierten Feed nach Kita filtern:",
+                opt_all_feeds: "Kombinierten Feed aller Kitas anzeigen",
+                online_teachers_header: "Verfügbare Lehrer für die Landingpage",
+                online_teachers_desc: "Die unten stehenden Lehrer haben ihre Zeiten eingetragen. Wählen Sie Lehrer aus, die auf der Homepage angezeigt werden sollen.",
+                th_teacher_name: "Name des Lehrers",
+                th_subject: "Fachgebiet",
+                th_availability: "Verfügbarkeitsplan",
+                th_status_landing: "Anzeigestatus",
+                th_actions_landing: "Empfohlene Aktion",
+                loading_teachers: "Online-Lehrer werden geladen...",
+                web_settings_header: "Steuerung von Markenidentität & Marketing",
+                official_logo_lbl: "Offizielles Markenlogo (Impact Hub)",
+                btn_save_logo: "Logo aktualisieren & speichern",
+                video_blocks_title: "Flexible Videosektionen verwalten",
+                video_blocks_desc: "Fügen Sie YouTube-Videos hinzu und bestimmen Sie deren Platzierung für ein flüssiges Layout.",
+                video_url_lbl: "1. YouTube-Video URL",
+                video_pos_lbl: "2. Platzierung des Video-Blocks",
+                opt_after_hero: "Unter dem Willkommensbereich (oben)",
+                opt_after_features: "Unter den Funktionen",
+                opt_after_teachers: "Unter den vorgestellten Lehrern",
+                opt_before_footer: "Über dem Landingpage-Footer (unten)",
+                btn_add_video_block: "Videosektion hinzufügen",
+                loading_video_blocks: "Videosektionen werden geladen...",
+                manage_reviews_title: "Kundenbewertungen verwalten",
+                rev_author_lbl: "Name des Autors",
+                rev_author_ph: "Herr Mohamed Ali (Elternteil)",
+                rev_text_lbl: "Inhalt der Bewertung",
+                rev_text_ph: "Der Lehrplan ist wunderbar...",
+                rev_stars_lbl: "Anzahl Sterne",
+                stars_5: "5 Sterne",
+                stars_4: "4 Sterne",
+                btn_add_review: "Bewertung zur Landingpage hinzufügen",
+                loading_reviews: "Kundenstimmen werden geladen...",
+                manage_faq_title: "Häufig gestellte Fragen (FAQ)",
+                faq_q_lbl: "FAQ-Frage",
+                faq_q_ph: "Wie kann ich mich registrieren?",
+                faq_a_lbl: "Standardantwort",
+                faq_a_ph: "Sie können die zertifizierte Kita wählen...",
+                btn_add_faq: "FAQ hinzufügen oder aktualisieren",
+                loading_faq: "FAQs werden geladen...",
+                add_product_title: "Produkt zum zentralen Marktplatz hinzufügen",
+                p_lbl_title: "Produkt- / Kursname",
+                p_lbl_price: "Preis (EGP)",
+                p_lbl_image: "Titelbild des Produkts",
+                btn_publish_market: "Auf dem zentralen Marktplatz veröffentlichen",
+                shipping_header: "Logistik & Versand (Bereit für Axon Express)",
+                shipping_desc: "Die unten stehenden Bestellungen wurden bezahlt und sind bereit für den Direktversand über Axon Express.",
+                th_nursery_details: "Versandadresse der Kita",
+                th_parent_student: "Elternteil / Kind",
+                th_requested_prods: "Bestellte Artikel",
+                th_order_status: "Bestellstatus",
+                th_shipping_action: "Versandsteuerung",
+                loading_orders: "Bestellungen werden geladen...",
+                dev_credit: "Entwickelt von Impact Hub Egypt (ESAIA)",
+                alert_fill_nursery: "Name, Leiterin, Adresse, Telefon und Logo sind erforderlich!",
+                alert_success_nursery: "✅ Kita-Einheit erfolgreich erstellt!",
+                alert_success_rating: "⭐ Bewertung erfolgreich gespeichert!",
+                alert_kill_warn: "🚨 WARNUNG: Dies blockiert alle Kita-Nutzer! Fortfahren?",
+                alert_scoped_fill: "Bitte füllen Sie Titel und Inhalt des Richtlinienbeitrags aus!",
+                alert_scoped_success: "🔒 Richtlinie an die Ziel-Kita gesendet!",
+                alert_global_fill: "Bitte füllen Sie die Rundschreibendetails aus!",
+                alert_global_success: "📢 Rundschreiben erfolgreich an alle Kitas gesendet!",
+                alert_delete_warn: "Sind Sie sicher, dass Sie diesen Einstellungseintrag löschen möchten?",
+                alert_delete_post_warn: "Dies wird das Rundschreiben für alle Benutzer löschen. Fortfahren?",
+                alert_featured_on: "✅ Lehrer erfolgreich auf der Landingpage beworben!",
+                alert_featured_off: "❌ Lehrer von der Landingpage entfernt.",
+                alert_logo_choose: "Bitte wählen Sie zuerst ein Logo aus!",
+                alert_logo_success: "✅ Markenlogo erfolgreich aktualisiert!",
+                alert_video_url: "Bitte geben Sie einen gültigen YouTube-Link ein!",
+                alert_video_success: "🎥 Video-Block erfolgreich eingebettet!",
+                alert_review_fill: "Bitte geben Sie den Namen und den Text des Autors ein!",
+                alert_review_success: "✅ Bewertung erfolgreich veröffentlicht!",
+                alert_faq_fill: "Bitte geben Sie die Frage und die Antwort der FAQ ein!",
+                alert_faq_success: "✅ FAQ-Liste erfolgreich synchronisiert!",
+                alert_market_fill: "Bitte geben Sie Titel, Preis und Bild des Produkts an!",
+                alert_market_success: "✅ Produkt auf dem zentralen Marktplatz veröffentlicht!",
+                alert_shipped_warn: "Übergabe an Axon Express Versanddienst bestätigen?",
+                alert_shipped_success: "🚚 Bestellung erfolgreich an Axon Express übergeben!"
+            }
+        };
 
-        // دالة ضغط الصور لتجنب مشكلة الـ 1 ميجا في الفايربيز
+        // إدارة لغات السوبر أدمن
+        window.changeSuperLanguage = (lang) => {
+            localStorage.setItem('selected_language', lang);
+            
+            // تحديث تصميم كلاسات العلم
+            document.querySelectorAll('.lang-flag-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`flag-${lang}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const dict = superTranslations[lang] || superTranslations.ar;
+
+            // تطبيق الاتجاه
+            const htmlRoot = document.getElementById('html-root');
+            if (lang === 'ar') {
+                htmlRoot.dir = 'rtl';
+                htmlRoot.lang = 'ar';
+                document.body.style.fontFamily = "'Tajawal', sans-serif";
+            } else {
+                htmlRoot.dir = 'ltr';
+                htmlRoot.lang = lang;
+                document.body.style.fontFamily = "'Outfit', sans-serif";
+            }
+
+            // ترجمة العناصر data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerHTML = dict[key];
+                }
+            });
+
+            // ترجمة التلميحات data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.placeholder = dict[key];
+                }
+            });
+
+            // إعادة رسم الجداول والأنشطة باللغة النشطة
+            fetchNurseriesList();
+            fetchOnlineTeachers();
+            loadWebSettings();
+            fetchCentralOrders();
+        };
+
+        // دالة ضغط الصور لمنع تخطي الحد الأقصى في فايربيز
         const compressImage = (file, maxWidth, maxHeight) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -386,7 +1534,7 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/webp', 0.8)); 
+                        resolve(canvas.toDataURL('image/webp', 0.8));
                     };
                     img.onerror = (e) => reject(e);
                 };
@@ -395,6 +1543,9 @@
 
         // 1. إدارة الحضانات
         window.createNurseryEntity = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const name = document.getElementById('n-name').value;
             const admin = document.getElementById('n-admin').value;
             const address = document.getElementById('n-address').value;
@@ -403,7 +1554,7 @@
             const students = document.getElementById('n-students').value;
             const logoFile = document.getElementById('n-logo').files[0];
 
-            if(!name || !admin || !address || !phone || !logoFile) { alert('الاسم، المديرة، العنوان، الهاتف، والشعار متطلبات أساسية!'); return; }
+            if(!name || !admin || !address || !phone || !logoFile) { alert(dict.alert_fill_nursery); return; }
             const compressedLogo = await compressImage(logoFile, 300, 300);
 
             await addDoc(collection(db, "nurseries"), {
@@ -412,7 +1563,7 @@
                 studentsCount: parseInt(students) || 0,
                 logo: compressedLogo, rating: 0, status: "active"
             });
-            alert('✅ تم إنشاء كيان الحضانة بنجاح!');
+            alert(dict.alert_success_nursery);
             document.getElementById('n-name').value = ''; document.getElementById('n-admin').value = ''; document.getElementById('n-address').value = ''; document.getElementById('n-phone').value = '';
             fetchNurseriesList();
         };
@@ -420,22 +1571,30 @@
         window.fetchNurseriesList = async () => {
             const tbody = document.getElementById('nurseries-tbody');
             const filterDropdown = document.getElementById('network-feed-filter');
+            
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const snap = await getDocs(collection(db, "nurseries"));
             tbody.innerHTML = '';
-            filterDropdown.innerHTML = '<option value="all">عرض منشورات جميع الحضانات المجمعة</option>';
-            allNurseriesMap = {}; 
+            filterDropdown.innerHTML = `<option value="all">${dict.opt_all_feeds}</option>`;
+            allNurseriesMap = {};
             
             snap.forEach((docData) => {
                 const item = docData.data();
                 const id = docData.id;
                 const isInactive = item.status === "inactive";
-                allNurseriesMap[id] = item.name; 
+                allNurseriesMap[id] = item.name;
                 filterDropdown.innerHTML += `<option value="${id}">${item.name}</option>`;
 
                 tbody.innerHTML += `
                     <tr style="${isInactive ? 'opacity:0.4; background:#ffe2e2;' : ''}">
                         <td><img src="${item.logo || 'https://via.placeholder.com/50'}" width="50" style="border-radius:8px; height:50px; object-fit:cover;"></td>
-                        <td><a href="#" style="color:var(--primary-maroon); font-weight:bold; text-decoration:none;" onclick="window.openNurseryProfile('${id}', '${item.name}')">${item.name} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i></a></td>
+                        <td>
+                            <a href="#" style="color:var(--primary-maroon); font-weight:bold; text-decoration:none;" onclick="window.openNurseryProfile('${id}', '${item.name}')">
+                                ${item.name} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+                            </a>
+                        </td>
                         <td>${item.admin}<br><small>${item.phone}</small><br><small style="color:gray;">${item.address}</small></td>
                         <td>👨‍🏫 ${item.teachersCount || 0} | 👶 ${item.studentsCount || 0}</td>
                         <td>
@@ -445,8 +1604,8 @@
                             <button style="display:block; font-size:10px; margin-top:4px; color:var(--primary-maroon); background:none; border:none; cursor:pointer; font-weight:bold;" onclick="window.saveRatingToDb('${id}', ${item.rating})">حفظ التقييم</button>
                         </td>
                         <td>
-                            <button class="btn-danger" style="background: ${isInactive ? '#22c55e' : 'var(--danger-red)'}" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')">
-                                ${isInactive ? '<i class="fa-solid fa-user-check"></i> تفعيل' : '<i class="fa-solid fa-user-slash"></i> إيقاف'}
+                            <button class="btn-danger" style="background: ${isInactive ? '#10b981' : 'var(--danger-red)'}" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')">
+                                ${isInactive ? 'تفعيل' : 'إيقاف'}
                             </button>
                         </td>
                     </tr>
@@ -465,47 +1624,75 @@
         };
 
         window.saveRatingToDb = async (id, fallback) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const ratingNode = document.querySelector(`.star-rating[data-id="${id}"]`);
             const selectedRating = ratingNode.getAttribute('data-current-selected') || fallback;
             await updateDoc(doc(db, "nurseries", id), { rating: parseInt(selectedRating) });
-            alert('⭐ تم حفظ التقييم بنجاح!'); fetchNurseriesList();
+            alert(dict.alert_success_rating); 
+            fetchNurseriesList();
         };
 
         window.toggleNurseryKillSwitch = async (id, currentStatus) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const nextStatus = currentStatus === "active" ? "inactive" : "active";
-            if(nextStatus === "inactive" && !confirm("🚨 تحذير: سيتم منع جميع منتسبي الحضانة من الدخول! هل توافق؟")) return;
-            await updateDoc(doc(db, "nurseries", id), { status: nextStatus }); fetchNurseriesList();
+            if(nextStatus === "inactive" && !confirm(dict.alert_kill_warn)) return;
+            await updateDoc(doc(db, "nurseries", id), { status: nextStatus }); 
+            fetchNurseriesList();
         };
 
         window.openNurseryProfile = (id, name) => {
             document.getElementById('nursery-profile-panel').style.display = 'block';
-            document.getElementById('view-nursery-title').innerText = `لوحة المتابعة الخاصة لـ: ${name}`;
+            document.getElementById('view-nursery-title').innerText = `${name}`;
             document.getElementById('target-nursery-id').value = id;
             document.getElementById('target-nursery-name').value = name;
             document.getElementById('nursery-profile-panel').scrollIntoView({ behavior: 'smooth' });
             window.fetchSpecificNurseryFeed(id);
         };
 
+        window.fetchSpecificNurseryFeed = async (nurseryId) => {
+            const container = document.getElementById('specific-nursery-feed');
+            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", nurseryId));
+            const snap = await getDocs(q);
+            container.innerHTML = '';
+            if(snap.empty) { container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">لا يوجد منشورات لهذه الحضانة حالياً.</p>'; return; }
+            snap.forEach(docData => {
+                const post = docData.data();
+                container.innerHTML += `
+                    <div class="feed-post">
+                        <strong style="color:var(--primary-maroon);">${post.authorName}</strong>
+                        <h4 style="margin-top:5px; font-weight:800;">${post.title}</h4>
+                        <p style="margin-top:5px; font-size:13px; color:var(--text-dark);">${post.body}</p>
+                    </div>
+                `;
+            });
+        };
+
         window.publishScopedPost = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const nurseryId = document.getElementById('target-nursery-id').value;
             const nurseryName = document.getElementById('target-nursery-name').value;
             const targetApp = document.getElementById('scoped-target-app').value;
             const title = document.getElementById('scoped-post-title').value;
             const body = document.getElementById('scoped-post-body').value;
             const fileInput = document.getElementById('scoped-post-file').files[0];
-            const youtubeUrl = document.getElementById('scoped-post-youtube').value;
 
-            if(!title || !body) { alert('برجاء كتابة عنوان وتفاصيل المنشور!'); return; }
+            if(!title || !body) { alert(dict.alert_scoped_fill); return; }
             const mediaBase64 = fileInput ? await compressImage(fileInput, 800, 800) : "";
 
             await addDoc(collection(db, "nursery_posts"), {
                 nurseryId: nurseryId, nurseryName: nurseryName, authorName: "الإدارة العليا (Impact Hub)", 
-                targetApp: targetApp, title: title, body: body, image: mediaBase64, youtubeUrl: youtubeUrl || "", 
+                targetApp: targetApp, title: title, body: body, image: mediaBase64, youtubeUrl: "", 
                 timestamp: new Date().getTime(), likes: [], comments: [], isGlobal: false
             });
-            alert('🔒 تم النشر بنجاح على حائط الحضانة المحددة!');
-            document.getElementById('scoped-post-title').value = ''; document.getElementById('scoped-post-body').value = ''; document.getElementById('scoped-post-youtube').value = ''; document.getElementById('scoped-post-file').value = '';
-            window.fetchSpecificNurseryFeed(nurseryId);
+            alert(dict.alert_scoped_success);
+            document.getElementById('scoped-post-title').value = ''; document.getElementById('scoped-post-body').value = ''; document.getElementById('scoped-post-file').value = '';
+            window.openNurseryProfile(nurseryId, nurseryName);
         };
 
         // 2. النشر العام وإدارة التابات
@@ -521,18 +1708,21 @@
         };
 
         window.publishGlobalPost = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const targetApp = document.getElementById('global-target-select').value;
             const title = document.getElementById('global-title').value;
             const body = document.getElementById('global-body').value;
             const fileInput = document.getElementById('global-file').files[0];
 
-            if(!title || !body) { alert('برجاء كتابة بيانات التعميم!'); return; }
+            if(!title || !body) { alert(dict.alert_global_fill); return; }
             const mediaBase64 = fileInput ? await compressImage(fileInput, 800, 800) : "";
 
             await addDoc(collection(db, "global_posts"), {
                 targetApp, title, body, media: mediaBase64, timestamp: new Date().getTime()
             });
-            alert('📢 تم نشر التعميم بنجاح لجميع الحضانات!');
+            alert(dict.alert_global_success);
             document.getElementById('global-title').value = ''; document.getElementById('global-body').value = ''; document.getElementById('global-file').value = '';
         };
 
@@ -553,7 +1743,13 @@
         };
 
         window.deleteGlobalPost = async (id) => {
-            if(confirm("سيتم حذف التعميم من أجهزة الجميع. موافق؟")) { await deleteDoc(doc(db, "global_posts", id)); window.fetchGlobalPostsArchive(); }
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
+            if(confirm(dict.alert_delete_post_warn)) { 
+                await deleteDoc(doc(db, "global_posts", id)); 
+                window.fetchGlobalPostsArchive(); 
+            }
         };
 
         window.fetchGlobalNetworkFeed = async () => {
@@ -585,12 +1781,16 @@
             });
         };
 
-        // 3. برمجة تابة المدرسين الأونلاين
+        // 3. المدرسين الأونلاين المتميزين
         window.fetchOnlineTeachers = async () => {
             const tbody = document.getElementById('online-teachers-tbody');
             const snap = await getDocs(collection(db, "teacher_availability"));
             tbody.innerHTML = '';
             let count = 0;
+            
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             snap.forEach(docData => {
                 count++;
                 const teacher = docData.data();
@@ -599,39 +1799,45 @@
 
                 tbody.innerHTML += `
                     <tr>
-                        <td><strong>${teacher.name || 'مدرس متعاقد'}</strong></td>
-                        <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-size:13px;">${teacher.subject || 'منهج عام'}</span></td>
-                        <td><small style="color:gray;">${teacher.slots || 'مسجل مواعيد أسبوعية مسبقة'}</small></td>
+                        <td><strong>${teacher.teacherName || 'مدرس متعاقد'}</strong></td>
+                        <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-size:13px;">${currentLang === 'ar' ? 'منهج لغات تفاعلي' : 'Interactive Curriculum'}</span></td>
+                        <td><small style="color:gray;">${teacher.day} | ${teacher.time}</small></td>
                         <td>
                             ${isFeatured ? 
-                                '<span style="color:var(--success-green); font-weight:bold;"><i class="fa-solid fa-circle-check"></i> معروض بالرئيسية</span>' : 
-                                '<span style="color:var(--text-gray);"><i class="fa-solid fa-circle-minus"></i> مخفي (فلتر مركزي)</span>'}
+                                `<span style="color:var(--success-green); font-weight:bold;"><i class="fa-solid fa-circle-check"></i> ${currentLang === 'ar' ? 'معروض بالرئيسية' : 'Featured'}</span>` : 
+                                `<span style="color:var(--text-gray);"><i class="fa-solid fa-circle-minus"></i> ${currentLang === 'ar' ? 'مخفي' : 'Hidden'}</span>`}
                         </td>
                         <td>
                             ${isFeatured ? 
-                                `<button class="btn-danger" onclick="window.toggleTeacherFeatured('${id}', false)">إلغاء العرض</button>` : 
-                                `<button class="btn-success" onclick="window.toggleTeacherFeatured('${id}', true)">تفعيل وعرض برأس الصفحة</button>`}
+                                `<button class="btn-danger" onclick="window.toggleTeacherFeatured('${id}', false)">إلغاء</button>` : 
+                                `<button class="btn-success" onclick="window.toggleTeacherFeatured('${id}', true)">تفعيل وعرض</button>`}
                         </td>
                     </tr>
                 `;
             });
-            if(count === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:gray;">لا يوجد مدرسين مسجلين مواعيد حالياً بالسيستم.</td></tr>'; }
+            if(count === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:gray;">${dict.loading_teachers}</td></tr>`; }
         };
 
         window.toggleTeacherFeatured = async (id, status) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             await updateDoc(doc(db, "teacher_availability", id), { featured: status });
-            alert(status ? '✅ تم رفع المدرس بنجاح لعرضه كواجهة للمؤسسة برأس الصفحة الرئيسية!' : '❌ تم سحب المدرس من الواجهة الرئيسية.');
+            alert(status ? dict.alert_featured_on : dict.alert_featured_off);
             window.fetchOnlineTeachers();
         };
 
-        // 4. برمجة تابة إعدادات الواجهة
+        // 4. إعدادات الهوية للواجهة
         window.loadWebSettings = async () => {
             const docSnap = await getDoc(doc(db, "web_settings", "landing_page"));
             let data = docSnap.exists() ? docSnap.data() : { logo: "", reviews: [], faqs: [], videoBlocks: [] };
 
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             // 1. معاينة اللوجو
             const logoPreview = document.getElementById('current-logo-preview');
-            if(data.logo) { logoPreview.innerHTML = `<img src="${data.logo}" style="max-height:80px; border-radius:6px; border:1px solid #ccc; padding:4px;">`; }
+            if(data.logo) { logoPreview.innerHTML = `<img src="${data.logo}" style="max-height:80px; border-radius:12px; border:1px solid #ccc; padding:4px;">`; }
             else { logoPreview.innerHTML = '<small style="color:gray;">لا يوجد لوجو مخصص حالياً، يتم عرض اللوجو الافتراضي.</small>'; }
 
             // 2. عرض بلوكات الفيديو المرنة
@@ -640,21 +1846,13 @@
             if(!data.videoBlocks || data.videoBlocks.length === 0) { videosContainer.innerHTML = '<small style="color:gray;">لا يوجد بلوكات فيديو مضافة حالياً.</small>'; }
             else {
                 data.videoBlocks.forEach((vid, idx) => {
-                    let posText = "";
-                    switch(vid.position) {
-                        case 'after-hero': posText = "تحت القسم الترحيبي"; break;
-                        case 'after-features': posText = "بعد قسم المميزات"; break;
-                        case 'after-teachers': posText = "بعد قسم المدرسين"; break;
-                        case 'before-footer': posText = "أعلى الفوتر"; break;
-                        default: posText = vid.position;
-                    }
                     videosContainer.innerHTML += `
                         <div class="setting-item-row">
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <i class="fa-brands fa-youtube" style="color:red; font-size:20px;"></i>
-                                <strong>مكان البلوك: ${posText}</strong>
+                                <strong>مكان البلوك: ${vid.position}</strong>
                             </div>
-                            <button class="btn-danger" style="padding:2px 8px;" onclick="window.deleteWebSettingItem('videoBlocks', ${idx})">حذف البلوك</button>
+                            <button class="btn-danger" style="padding:2px 8px;" onclick="window.deleteWebSettingItem('videoBlocks', ${idx})">حذف</button>
                         </div>`;
                 });
             }
@@ -689,98 +1887,120 @@
         };
 
         window.saveWebLogo = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const file = document.getElementById('web-logo-file').files[0];
-            if(!file) { alert('برجاء اختيار ملف لوجو أولاً!'); return; }
+            if(!file) { alert(dict.alert_logo_choose); return; }
             const compressedLogo = await compressImage(file, 400, 400);
             await setDoc(doc(db, "web_settings", "landing_page"), { logo: compressedLogo }, { merge: true });
-            alert('✅ تم حفظ وتحديث اللوجو الرسمي للواجهة بنجاح!'); window.loadWebSettings();
+            alert(dict.alert_logo_success); 
+            window.loadWebSettings();
         };
 
-        // إضافة بلوك فيديو جديد (Smart Blocks)
         window.addVideoBlock = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const url = document.getElementById('video-block-url').value;
             const position = document.getElementById('video-block-position').value;
             
-            if(!url) { alert('برجاء كتابة رابط يوتيوب صالح!'); return; }
-            
-            // استخراج الـ ID بتاع اليوتيوب عشان نضمن إنه يشتغل صح كـ iframe
+            if(!url) { alert(dict.alert_video_url); return; }
             const ytId = url.split('v=')[1]?.split('&')[0] || url.split('/').pop();
             
-            const newVideoBlock = { 
-                youtubeId: ytId, 
-                position: position, 
-                id: Date.now() 
-            };
-            
+            const newVideoBlock = { youtubeId: ytId, position: position, id: Date.now() };
             await setDoc(doc(db, "web_settings", "landing_page"), { videoBlocks: arrayUnion(newVideoBlock) }, { merge: true });
-            alert('🎥 تم إضافة بلوك الفيديو بنجاح في المكان المحدد!');
+            alert(dict.alert_video_success);
             document.getElementById('video-block-url').value = '';
             window.loadWebSettings();
         };
 
         window.addWebReview = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const author = document.getElementById('rev-author').value;
             const text = document.getElementById('rev-text').value;
             const stars = document.getElementById('rev-stars').value;
-            if(!author || !text) { alert('برجاء ملء اسم الكاتب ونص الريفيو كاملاً لزيادة الكروت!'); return; }
+            if(!author || !text) { alert(dict.alert_review_fill); return; }
             
             const newReview = { author, text, stars: parseInt(stars), timestamp: new Date().getTime() };
             await setDoc(doc(db, "web_settings", "landing_page"), { reviews: arrayUnion(newReview) }, { merge: true });
-            alert('✅ تم إضافة كارت المراجعة الجديد للواجهة العامة!');
+            alert(dict.alert_review_success);
             document.getElementById('rev-author').value = ''; document.getElementById('rev-text').value = '';
             window.loadWebSettings();
         };
 
         window.addWebFaq = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             const question = document.getElementById('faq-question').value;
             const answer = document.getElementById('faq-answer').value;
-            if(!question || !answer) { alert('برجاء كتابة السؤال والإجابة!'); return; }
+            if(!question || !answer) { alert(dict.alert_faq_fill); return; }
 
             const newFaq = { question, answer };
             await setDoc(doc(db, "web_settings", "landing_page"), { faqs: arrayUnion(newFaq) }, { merge: true });
-            alert('✅ تم حفظ وتحديث قائمة الأسئلة بنجاح!');
+            alert(dict.alert_faq_success);
             document.getElementById('faq-question').value = ''; document.getElementById('faq-answer').value = '';
             window.loadWebSettings();
         };
 
         window.deleteWebSettingItem = async (field, index) => {
-            if(!confirm("هل أنت متأكد من حذف هذا العنصر نهائياً من الواجهة؟")) return;
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
+            if(!confirm(dict.alert_delete_warn)) return;
             const docRef = doc(db, "web_settings", "landing_page");
             const docSnap = await getDoc(docRef);
             if(docSnap.exists()){
                 let currentData = docSnap.data()[field] || [];
-                currentData.splice(index, 1); // حذف العنصر
+                currentData.splice(index, 1);
                 await setDoc(docRef, { [field]: currentData }, { merge: true });
                 window.loadWebSettings();
             }
         };
 
-        // 5. الماركت بليس مركزي
+        // 5. الماركت بليس المركزي
         window.uploadMarketProduct = async () => {
-            const title = document.getElementById('prod-title').value; const price = document.getElementById('prod-price').value; const imgFile = document.getElementById('prod-image').files[0];
-            if(!title || !price || !imgFile) { alert('برجاء استيفاء البيانات!'); return; }
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
+            const title = document.getElementById('prod-title').value; 
+            const price = document.getElementById('prod-price').value; 
+            const imgFile = document.getElementById('prod-image').files[0];
+            if(!title || !price || !imgFile) { alert(dict.alert_market_fill); return; }
             const compressedImg = await compressImage(imgFile, 600, 600);
+            
             await addDoc(collection(db, "products"), { title, price: parseFloat(price), image: compressedImg });
-            alert('✅ تم نشر المنتج بالمتجر!'); document.getElementById('prod-title').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-image').value = '';
+            alert(dict.alert_market_success); 
+            document.getElementById('prod-title').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-image').value = '';
         };
 
-        // 6. الربط والشحن
+        // 6. الشحن والخدمات اللوجستية مع Axon Express
         window.fetchCentralOrders = async () => {
             const tbody = document.getElementById('central-orders-tbody');
+            
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
             tbody.innerHTML = `
                 <tr>
-                    <td><strong>حضانة أجيال الغد</strong><br><small style="color:var(--text-gray);">الإسكندرية - جليم</small><br><small>هاتف: 01000000000</small></td>
+                    <td><strong>${currentLang === 'ar' ? 'حضانة أجيال الغد' : 'Ajyal Al-Ghad'}</strong><br><small style="color:var(--text-gray);">${currentLang === 'ar' ? 'الإسكندرية - جليم' : 'Alexandria - Glim'}</small><br><small>01000000000</small></td>
                     <td>ياسين محمود</td>
-                    <td>كتاب تأسيس (150 ج.م)</td>
-                    <td><span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-size:11px;">جاهز للشحن</span></td>
-                    <td><button class="btn-success" onclick="window.markOrderAsShipped('order_demo_1')"><i class="fa-solid fa-truck-fast"></i> تأكيد الشحن والتسليم</button></td>
+                    <td>كتاب المناهج (150 EGP)</td>
+                    <td><span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-size:11px;">${currentLang === 'ar' ? 'جاهز للشحن' : 'Ready to Ship'}</span></td>
+                    <td><button class="btn-success" onclick="window.markOrderAsShipped()"><i class="fa-solid fa-truck-fast"></i> ${currentLang === 'ar' ? 'تأكيد الشحن والتسليم' : 'Confirm Dispatch'}</button></td>
                 </tr>
             `;
         };
 
-        window.markOrderAsShipped = async (orderId) => {
-            if(!confirm("سيتم تحديث حالة الطلب إلى (تم الشحن) لتظهر لدى مديرة الحضانة. هل قمت بتسليم الطلب لـ Axon Express؟")) return;
-            alert("🚚 تم تسجيل الشحنة بنجاح! تم إبلاغ مديرة الحضانة.");
+        window.markOrderAsShipped = () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
+            if(!confirm(dict.alert_shipped_warn)) return;
+            alert(dict.alert_shipped_success);
         };
 
         window.switchTab = (tabId, element) => {
@@ -792,16 +2012,24 @@
             if(tabId === 'online-teachers-tab') window.fetchOnlineTeachers();
             if(tabId === 'web-settings-tab') window.loadWebSettings();
             if(tabId === 'global-broadcast-tab') window.fetchGlobalNetworkFeed();
+            
+            // إغلاق الشريط الجانبي على الجوال
+            document.getElementById('appSidebar').classList.remove('open');
         };
         
         window.openLiveBuilder = () => {
-            // توجيه الزائر لصفحة index.html مع إضافة متغير adminMode في الرابط
             window.open('index.html?adminMode=true', '_blank');
         };
 
-        window.fetchNurseriesList();
-        window.fetchGlobalPostsArchive();
-        window.fetchCentralOrders();
+        window.toggleSidebar = () => {
+            document.getElementById('appSidebar').classList.toggle('open');
+        };
+
+        // تحميل اللغة المفضلة تلقائياً
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selected_language') || 'ar';
+            window.changeSuperLanguage(savedLang);
+        });
     </script>
 </body>
 </html>
