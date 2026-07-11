@@ -1408,6 +1408,9 @@
             }
         };
 
+        let activeClassDocId = "";
+        let teacherRoomListener = null;
+
         window.startLiveClassSession = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
@@ -1420,6 +1423,18 @@
             const simBox = document.getElementById('live-simulation-box');
             const simLink = document.getElementById('simulation-direct-link');
             
+            // 1. تنظيف أي حصص نشطة سابقة للحضانة لتفادي التداخل
+            try {
+                const qActive = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+                const activeSnap = await getDocs(qActive);
+                for (const docSnap of activeSnap.docs) {
+                    await updateDoc(doc(db, "live_classes", docSnap.id), { status: "ended" });
+                }
+            } catch(e) {
+                console.error("Cleanup error:", e);
+            }
+
+            container.innerHTML = ''; // Clear container
             container.style.display = 'block';
             simBox.style.display = 'block';
             document.getElementById('btn-end-class').style.display = 'inline-flex';
@@ -1429,10 +1444,17 @@
             
             simLink.href = directUrl;
 
-            // حفظ اسم الغرفة النشطة لكي يقوم تطبيق ولي الأمر بعمل Query فوري عليها ودخولها بسلاسة
-            await addDoc(collection(db, "live_classes"), {
-                nurseryId: myNurseryId, roomName: roomName, roomUrl: directUrl, teacherName: myName, studentName: studentName, status: "active", timestamp: new Date()
+            // 2. إضافة مستند الحصة الجديد كـ active
+            const docRef = await addDoc(collection(db, "live_classes"), {
+                nurseryId: myNurseryId, 
+                roomName: roomName, 
+                roomUrl: directUrl, 
+                teacherName: myName, 
+                studentName: studentName, 
+                status: "active", 
+                timestamp: new Date().getTime()
             });
+            activeClassDocId = docRef.id;
 
             const domain = 'meet.jit.si';
             const options = {
@@ -1442,17 +1464,46 @@
                 interfaceConfigOverwrite: { TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'tileview', 'chat', 'raisehand'] }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
+
+            // 3. مستمع التغييرات في الحصة المباشرة لإنهاءها فوراً من قبل المديرة
+            if(teacherRoomListener) teacherRoomListener();
+            teacherRoomListener = onSnapshot(doc(db, "live_classes", activeClassDocId), (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    if (data.status === "terminated" || data.status === "ended_by_manager") {
+                        window.leaveLiveClassFromTeacherSide();
+                        alert(currentLang === 'ar' ? '⚠️ تم إنهاء هذه الحصة فوراً بواسطة إدارة الحضانة نظراً لبلاد وجود تجاوز!' : '⚠️ This class was terminated immediately by the nursery management!');
+                    }
+                }
+            });
         };
 
-        window.endLiveClassSession = () => {
+        window.endLiveClassSession = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
+
+            if (activeClassDocId) {
+                try {
+                    await updateDoc(doc(db, "live_classes", activeClassDocId), { status: "ended" });
+                } catch(e) { console.error(e); }
+                activeClassDocId = "";
+            }
+            if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
 
             if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
             document.getElementById('jitsi-class-container').style.display = 'none';
             document.getElementById('live-simulation-box').style.display = 'none';
             document.getElementById('btn-end-class').style.display = 'none';
             alert(dict.alert_class_end);
+        };
+
+        window.leaveLiveClassFromTeacherSide = () => {
+            if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
+            activeClassDocId = "";
+            if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
+            document.getElementById('jitsi-class-container').style.display = 'none';
+            document.getElementById('live-simulation-box').style.display = 'none';
+            document.getElementById('btn-end-class').style.display = 'none';
         };
 
         // 4. نظام الشات الفوري المتزامن بالـ Real-time

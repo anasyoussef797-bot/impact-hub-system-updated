@@ -6,6 +6,7 @@
     <title data-i18n="app_title">إمباكت هب مصر - لوحة تحكم مديرة الحضانة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://meet.jit.si/external_api.js"></script>
     <style>
         :root {
             --primary-maroon: #002f6c; /* US Dept of Education Navy */
@@ -465,6 +466,10 @@
                     <i class="fa-solid fa-layer-group"></i> 
                     <span data-i18n="nav_timeline">التايم لاين والأنشطة</span>
                 </div>
+                <div class="nav-item" onclick="switchTab('live-monitor-tab', this)">
+                    <i class="fa-solid fa-desktop"></i> 
+                    <span data-i18n="nav_live_monitor">مراقبة الحصص المباشرة</span>
+                </div>
             </nav>
 
             <!-- المترجم الأربعة للغات الحضانة -->
@@ -579,6 +584,31 @@
                 </div>
             </div>
 
+            <!-- تابة مراقبة الحصص المباشرة والدروس الأونلاين -->
+            <div id="live-monitor-tab" class="tab-content">
+                <div class="panel" style="margin-bottom: 25px;">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-desktop"></i> 
+                        <span data-i18n="monitor_panel_title">مراقبة الحصص البث المباشر والدروس الجارية حالياً 📹</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px; font-weight: 800;" data-i18n="monitor_panel_desc">
+                        تتيح هذه التابة لمديرة الحضانة مراقبة الفصول المباشرة الجارية فوراً بشكل صامت وسلس، مع كامل الصلاحية لإنهاء الحصة في أي لحظة عند رصد أي تجاوز أو مخالفة.
+                    </p>
+                    
+                    <div id="active-classes-list-container" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
+                        <p style="text-align: center; color: var(--text-gray); font-size: 13px; font-weight: 800;" data-i18n="loading_live_classes">جاري فحص الحصص المباشرة الجارية...</p>
+                    </div>
+
+                    <div id="manager-jitsi-monitor-box" style="display: none; border-radius: 16px; border: 4px solid var(--primary-maroon); overflow: hidden; background: #000; margin-top: 20px; box-shadow: var(--shadow-lg);">
+                        <div style="background: var(--primary-maroon); color: white; padding: 10px 15px; font-weight: 900; font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                            <span><i class="fa-solid fa-eye"></i> نافذة المراقبة الصامتة الجارية حالياً</span>
+                            <button class="btn-danger" onclick="window.closeManagerMonitor()" style="margin: 0; padding: 4px 8px; font-size: 11px; width: auto; background: rgba(255,255,255,0.2); color: white; box-shadow: none; border-radius: 6px;">إغلاق شاشة المراقبة ✖</button>
+                        </div>
+                        <div id="manager-jitsi-container" style="width: 100%; height: 450px;"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -663,7 +693,14 @@
                 write_comment_placeholder: "اكتب تعليقاً...",
                 send_comment_btn: "إرسال",
                 alert_fill_post: "برجاء كتابة عنوان المنشور وتفاصيله!",
-                alert_post_success: "📢 تم نشر المشاركة بنجاح على التايم لاين!"
+                alert_post_success: "📢 تم نشر المشاركة بنجاح على التايم لاين!",
+                nav_live_monitor: "مراقبة الحصص المباشرة",
+                monitor_panel_title: "مراقبة الحصص البث المباشر والدروس الجارية حالياً 📹",
+                monitor_panel_desc: "تتيح هذه التابة لمديرة الحضانة مراقبة الفصول المباشرة الجارية فوراً بشكل صامت وسلس، مع كامل الصلاحية لإنهاء الحصة في أي لحظة عند رصد أي تجاوز أو مخالفة.",
+                loading_live_classes: "جاري فحص الحصص المباشرة الجارية...",
+                no_active_classes: "لا توجد حصص مباشرة نشطة حالياً.",
+                terminate_btn: "🔴 إنهاء الحصة فوراً لوجود تجاوز",
+                monitor_btn: "👁️ مراقبة البث صامتاً"
             },
             en: {
                 app_title: "Impact Hub - Manager Dashboard",
@@ -720,7 +757,14 @@
                 write_comment_placeholder: "Write a comment...",
                 send_comment_btn: "Send",
                 alert_fill_post: "Please fill in post title and body!",
-                alert_post_success: "📢 Post published successfully to timeline!"
+                alert_post_success: "📢 Post published successfully to timeline!",
+                nav_live_monitor: "Live Class Monitor",
+                monitor_panel_title: "Monitor Active Live Tutoring Classes 📹",
+                monitor_panel_desc: "This tab allows the nursery manager to monitor active live classes silently and smoothly, with full authority to end the class at any moment upon detecting any violation or misconduct.",
+                loading_live_classes: "Scanning active live classes...",
+                no_active_classes: "No active live classes at the moment.",
+                terminate_btn: "🔴 Terminate Class Immediately",
+                monitor_btn: "👁️ Monitor Silently"
             },
             fr: {
                 app_title: "Impact Hub - Tableau de Bord Directrice",
@@ -1224,6 +1268,120 @@
         };
 
         // تبديل التابات
+        let activeClassesUnsubscribe = null;
+        let managerJitsiApi = null;
+
+        window.fetchActiveLiveClasses = () => {
+            const container = document.getElementById('active-classes-list-container');
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
+            if (activeClassesUnsubscribe) activeClassesUnsubscribe();
+
+            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+            
+            activeClassesUnsubscribe = onSnapshot(q, (snapshot) => {
+                container.innerHTML = '';
+                if(snapshot.empty) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 30px; background: rgba(0,0,0,0.02); border-radius: 12px; border: 1px dashed var(--border-color);">
+                            <i class="fa-solid fa-video-slash" style="font-size: 36px; color: var(--text-gray); margin-bottom: 10px; opacity: 0.6;"></i>
+                            <p style="color: var(--text-gray); font-size: 13px; font-weight: 800;">${dict.no_active_classes || "لا توجد حصص مباشرة نشطة حالياً."}</p>
+                        </div>
+                    `;
+                    window.closeManagerMonitor();
+                    return;
+                }
+
+                snapshot.forEach(docSnapshot => {
+                    const classId = docSnapshot.id;
+                    const classData = docSnapshot.data();
+
+                    const itemHtml = `
+                        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--white); box-shadow: var(--shadow-sm); flex-wrap: wrap; gap: 15px;">
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <div style="width: 45px; height: 45px; background: rgba(0, 47, 108, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--primary-maroon);">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 14px; font-weight: 900; color: var(--text-dark); margin-bottom: 4px;">الحصة: ${classData.studentName || 'غير محدد'}</h4>
+                                    <p style="font-size: 11px; color: var(--text-gray); font-weight: 800;"><i class="fa-solid fa-chalkboard-user"></i> المعلم: ${classData.teacherName || 'غير معروف'} | <i class="fa-solid fa-clock"></i> نشط الآن</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-primary" onclick="window.startManagerMonitor('${classData.roomName}')" style="margin: 0; padding: 8px 12px; width: auto; font-size: 12px; background: var(--soft-maroon); border-radius: 8px; box-shadow: none;">
+                                    <i class="fa-solid fa-eye"></i> ${dict.monitor_btn || "👁️ مراقبة البث صامتاً"}
+                                </button>
+                                <button class="btn-primary" onclick="window.terminateClassSession('${classId}')" style="margin: 0; padding: 8px 12px; width: auto; font-size: 12px; background: var(--danger-red); border-radius: 8px; box-shadow: none;">
+                                    <i class="fa-solid fa-power-off"></i> ${dict.terminate_btn || "🔴 إنهاء الحصة فوراً لوجود تجاوز"}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += itemHtml;
+                });
+            });
+        };
+
+        window.startManagerMonitor = (roomName) => {
+            const monitorBox = document.getElementById('manager-jitsi-monitor-box');
+            const jitsiContainer = document.getElementById('manager-jitsi-container');
+            
+            jitsiContainer.innerHTML = '';
+            monitorBox.style.display = 'block';
+
+            const domain = 'meet.jit.si';
+            const options = {
+                roomName: roomName,
+                width: '100%',
+                height: 450,
+                parentNode: jitsiContainer,
+                userInfo: { displayName: "مديرة الحضانة (رقابة عامة)" },
+                configOverwrite: { 
+                    startWithAudioMuted: true, 
+                    startWithVideoMuted: true, 
+                    prejoinPageEnabled: false 
+                },
+                interfaceConfigOverwrite: { 
+                    TOOLBAR_BUTTONS: ['tileview', 'chat'] 
+                }
+            };
+            managerJitsiApi = new JitsiMeetExternalAPI(domain, options);
+        };
+
+        window.closeManagerMonitor = () => {
+            if (managerJitsiApi) {
+                managerJitsiApi.dispose();
+                managerJitsiApi = null;
+            }
+            const monitorBox = document.getElementById('manager-jitsi-monitor-box');
+            if (monitorBox) monitorBox.style.display = 'none';
+            const jitsiContainer = document.getElementById('manager-jitsi-container');
+            if (jitsiContainer) jitsiContainer.innerHTML = '';
+        };
+
+        window.terminateClassSession = async (classId) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const confirmMsg = currentLang === 'ar' ? 
+                '⚠️ هل أنت متأكد من رغبتك في إنهاء هذه الحصة فوراً وفصل البث نظراً لوجود تجاوز أو مخالفة؟' : 
+                '⚠️ Are you sure you want to terminate this class immediately and disconnect the stream due to a violation?';
+            
+            if (confirm(confirmMsg)) {
+                try {
+                    await updateDoc(doc(db, "live_classes", classId), { 
+                        status: "terminated",
+                        terminatedBy: "manager",
+                        terminatedAt: new Date().getTime()
+                    });
+                    const successMsg = currentLang === 'ar' ? '✅ تم إنهاء الحصة المباشرة وفصل البث فوراً!' : '✅ Live class was terminated and disconnected immediately!';
+                    alert(successMsg);
+                    window.closeManagerMonitor();
+                } catch (error) {
+                    console.error("Error terminating class:", error);
+                }
+            }
+        };
+
         window.switchTab = (tabId, element) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
@@ -1235,6 +1393,16 @@
 
             if (tabId === 'timeline-tab') {
                 window.fetchTimelineFeed();
+            }
+
+            if (tabId === 'live-monitor-tab') {
+                window.fetchActiveLiveClasses();
+            } else {
+                if (activeClassesUnsubscribe) {
+                    activeClassesUnsubscribe();
+                    activeClassesUnsubscribe = null;
+                }
+                window.closeManagerMonitor();
             }
         };
 

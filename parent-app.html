@@ -194,6 +194,17 @@
                 
                 <!-- 1. الرئيسية / التايم لاين -->
                 <div id="home" class="tab-content active">
+                    <!-- تنبيه الحصص المباشرة النشطة حالياً -->
+                    <div id="active-live-class-alert" style="display: none; background: linear-gradient(135deg, #dc2626, #991b1b); color: white; padding: 14px 16px; border-radius: 14px; margin: 15px; font-weight: 800; font-size: 13px; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="pulse-indicator" style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+                            <span>🔴 هناك حصة مباشرة نشطة الآن مع <strong id="active-class-teacher">أ / المعلم</strong>!</span>
+                        </div>
+                        <button class="btn-primary" onclick="window.joinLiveClassFromAlert()" style="margin: 0; padding: 6px 12px; width: auto; font-size: 11px; background: white; color: #991b1b; font-weight: 900; border-radius: 8px; box-shadow: none;">
+                            دخول الحصة فوراً 📹
+                        </button>
+                    </div>
+
                     <h3 class="section-title"><span data-i18n="playground_title">ساحة الأنشطة (البلاي جراوند)</span></h3>
                     <div class="card create-post-area">
                         <textarea id="parent-post-body" rows="2" data-i18n-placeholder="post_placeholder" placeholder="شاركنا لحظات طفلك..."></textarea>
@@ -953,6 +964,36 @@
         };
 
         // ================== 2. البث المباشر المزامر الذكي ==================
+        let activeRoomListener = null;
+        let activeLiveClassUnsub = null;
+
+        window.listenToActiveLiveClasses = () => {
+            if(activeLiveClassUnsub) activeLiveClassUnsub();
+            
+            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+            activeLiveClassUnsub = onSnapshot(q, (snapshot) => {
+                const alertBox = document.getElementById('active-live-class-alert');
+                const teacherNameSpan = document.getElementById('active-class-teacher');
+                
+                if(snapshot.empty) {
+                    if(alertBox) alertBox.style.display = 'none';
+                } else {
+                    let activeClass = null;
+                    snapshot.forEach(docData => { activeClass = docData.data(); });
+                    if(activeClass && alertBox && teacherNameSpan) {
+                        teacherNameSpan.innerText = activeClass.teacherName || "المعلم";
+                        alertBox.style.display = 'flex';
+                    }
+                }
+            });
+        };
+
+        window.joinLiveClassFromAlert = () => {
+            const btn = document.getElementById('nav-item-tutoring');
+            window.switchTab('tutoring', btn);
+            window.joinLiveClass();
+        };
+
         window.joinLiveClass = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
@@ -967,8 +1008,13 @@
             }
 
             let activeRoomName = "";
-            snap.forEach(d => { activeRoomName = d.data().roomName; });
+            let activeDocId = "";
+            snap.forEach(d => { 
+                activeRoomName = d.data().roomName; 
+                activeDocId = d.id;
+            });
 
+            container.innerHTML = ''; // Clear container
             container.style.display = 'block';
             document.getElementById('btn-leave-class').style.display = 'inline-flex';
 
@@ -982,10 +1028,29 @@
                 configOverwrite: { startWithAudioMuted: true, prejoinPageEnabled: false }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
+
+            // Listen to this specific room's status for remote termination
+            if (activeRoomListener) activeRoomListener();
+            activeRoomListener = onSnapshot(doc(db, "live_classes", activeDocId), (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    if (data.status === "ended" || data.status === "terminated" || data.status === "ended_by_manager") {
+                        window.leaveLiveClass();
+                        if (data.status === "terminated" || data.status === "ended_by_manager") {
+                            alert(currentLang === 'ar' ? '⚠️ تم إنهاء هذه الحصة فوراً بواسطة إدارة الحضانة!' : '⚠️ This class was terminated immediately by the nursery management!');
+                        } else {
+                            alert(currentLang === 'ar' ? '✅ تم إنهاء الحصة من قبل المعلم.' : '✅ The class was ended by the teacher.');
+                        }
+                    }
+                } else {
+                    window.leaveLiveClass();
+                }
+            });
         };
 
         window.leaveLiveClass = () => {
             if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
+            if(activeRoomListener) { activeRoomListener(); activeRoomListener = null; }
             document.getElementById('jitsi-student-container').style.display = 'none';
             document.getElementById('btn-leave-class').style.display = 'none';
         };
@@ -1224,6 +1289,7 @@
             fetchTimelineFeed();
             loadMarketplace();
             fetchHomeworkAssignments();
+            window.listenToActiveLiveClasses();
         };
 
         window.doLogout = () => {
