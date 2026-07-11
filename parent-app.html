@@ -862,6 +862,12 @@
                 let isLiked = post.likes && post.likes.includes(myParentId);
                 let likeStyle = isLiked ? 'color: var(--primary-maroon); font-weight: 900;' : '';
 
+                let ytIframe = '';
+                if(post.youtubeUrl) {
+                    const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
+                    ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
+                }
+
                 let commentsHtml = '';
                 if(post.comments) {
                     post.comments.forEach(c => {
@@ -886,6 +892,7 @@
                         ${post.title ? `<h4 style="font-weight:900; margin-bottom:8px; color: var(--text-dark);">${post.title}</h4>` : ''}
                         <p>${post.body}</p>
                         ${post.image ? `<div class="feed-media"><img src="${post.image}"></div>` : ''}
+                        ${ytIframe}
                         <div class="post-actions">
                             <button class="action-btn" style="${likeStyle}" onclick="window.likePost('${postId}', ${isLiked})">
                                 <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${post.likes ? post.likes.length : 0})
