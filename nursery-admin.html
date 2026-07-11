@@ -789,20 +789,35 @@
 
                     const orderDate = order.timestamp && order.timestamp.toDate ? order.timestamp.toDate().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US') : 'Today';
 
+                    const chosenMethod = order.paymentMethod || 'Cash';
+                    let methodDisplay = chosenMethod;
+                    if (chosenMethod === 'Cash') methodDisplay = currentLang === 'ar' ? 'نقداً بالمقر 💵' : 'Cash 💵';
+                    else if (chosenMethod === 'Vodafone Cash') methodDisplay = currentLang === 'ar' ? 'فودافون كاش 📱' : 'Vodafone Cash 📱';
+                    else if (chosenMethod === 'InstaPay') methodDisplay = currentLang === 'ar' ? 'انستاباي 🏛️' : 'InstaPay 🏛️';
+
+                    const proofHtml = order.paymentProof ? `
+                        <div style="margin-top:8px;">
+                            <button class="btn-outline" style="padding:4px 8px; font-size:11px; margin:0;" onclick="window.viewPaymentProof('${orderId}', '${order.paymentProof}')">
+                                <i class="fa-solid fa-image"></i> ${currentLang === 'ar' ? 'عرض إثبات الدفع 📸' : 'View Proof 📸'}
+                            </button>
+                        </div>` : '';
+
                     tbody.innerHTML += `
                         <tr>
                             <td>${orderDate}</td>
-                            <td><strong>${order.parentName}</strong></td>
+                            <td>
+                                <strong>${order.parentName}</strong>
+                                <div style="font-size:12px; color:var(--text-gray); margin-top:4px;">${currentLang === 'ar' ? 'طريقة الدفع:' : 'Payment:'} ${methodDisplay}</div>
+                                ${proofHtml}
+                            </td>
                             <td>
                                 ${itemsHtml}
                                 <div style="margin-top:5px; font-weight:bold; color:var(--primary-maroon);">${dict.price_lbl} ${totalAmount}${dict.egp_lbl}</div>
                             </td>
                             <td>
-                                <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                                    <button class="btn-success" onclick="approveOrder('${orderId}', '${order.parentName}', '${dict.cash_btn}')"><i class="fa-solid fa-money-bill"></i> ${dict.cash_btn}</button>
-                                    <button class="btn-voda" onclick="approveOrder('${orderId}', '${order.parentName}', 'Vodafone Cash')"><i class="fa-solid fa-mobile-screen"></i> ${dict.voda_btn}</button>
-                                    <button class="btn-insta" onclick="approveOrder('${orderId}', '${order.parentName}', 'InstaPay')"><i class="fa-solid fa-building-columns"></i> ${dict.insta_btn}</button>
-                                </div>
+                                <button class="btn-success" style="width:100%; padding:10px;" onclick="approveOrder('${orderId}', '${order.parentName}', '${chosenMethod}')">
+                                    <i class="fa-solid fa-circle-check"></i> ${currentLang === 'ar' ? 'موافقة وتأكيد الطلب' : 'Approve Order'}
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -810,13 +825,37 @@
             });
         };
 
+        window.viewPaymentProof = (orderId, base64Data) => {
+            let modal = document.getElementById('payment-proof-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'payment-proof-modal';
+                modal.className = 'modal-overlay';
+                modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;';
+                modal.innerHTML = `
+                    <div style="max-width:90%; max-height:90%; position:relative; background:#fff; padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:#ef4444; cursor:pointer;" onclick="document.getElementById('payment-proof-modal').style.display='none'"></i>
+                        <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold;">إثبات تحويل المبلغ</h3>
+                        <img id="payment-proof-img" src="" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; border:2px solid var(--border-color);">
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('payment-proof-img').src = base64Data;
+            modal.style.display = 'flex';
+        };
+
         // ================= 2. الموافقة وإرسال الحصة للمدرس =================
+        let isApproving = false;
         window.approveOrder = async (orderId, parentName, paymentMethod) => {
+            if (isApproving) return;
+
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = managerTranslations[currentLang] || managerTranslations.ar;
 
             if(!confirm(`${dict.alert_confirm_prefix}${paymentMethod}${dict.alert_confirm_suffix}`)) return;
 
+            isApproving = true;
             try {
                 await updateDoc(doc(db, "orders", orderId), { 
                     status: "approved",
@@ -837,6 +876,8 @@
             } catch (error) {
                 console.error(error);
                 alert(dict.alert_err_approve);
+            } finally {
+                isApproving = false;
             }
         };
 

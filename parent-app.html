@@ -145,11 +145,11 @@
             <p data-i18n="login_subtitle" style="color: var(--text-gray); font-size: 13px; margin-bottom: 25px;">برجاء تسجيل الدخول للمتابعة</p>
             
             <!-- أزرار تبديل اللغة في تسجيل الدخول -->
-            <div class="lang-switch-container">
-                <span class="lang-flag-btn active" id="flag-login-ar" onclick="window.changeParentLanguage('ar')" title="العربية">🇸🇦</span>
-                <span class="lang-flag-btn" id="flag-login-en" onclick="window.changeParentLanguage('en')" title="English">🇬🇧</span>
-                <span class="lang-flag-btn" id="flag-login-fr" onclick="window.changeParentLanguage('fr')" title="Français">🇫🇷</span>
-                <span class="lang-flag-btn" id="flag-login-de" onclick="window.changeParentLanguage('de')" title="Deutsch">🇩🇪</span>
+            <div class="lang-switch-container" style="flex-wrap: wrap;">
+                <span class="lang-flag-btn active" id="flag-login-ar" onclick="window.changeParentLanguage('ar')" title="العربية" style="font-size: 13px; font-weight: 800; padding: 4px 8px;">عربي 🇸🇦</span>
+                <span class="lang-flag-btn" id="flag-login-en" onclick="window.changeParentLanguage('en')" title="English" style="font-size: 13px; font-weight: 800; padding: 4px 8px;">انجليزي 🇬🇧</span>
+                <span class="lang-flag-btn" id="flag-login-fr" onclick="window.changeParentLanguage('fr')" title="Français" style="font-size: 13px; font-weight: 800; padding: 4px 8px;">فرنساوي 🇫🇷</span>
+                <span class="lang-flag-btn" id="flag-login-de" onclick="window.changeParentLanguage('de')" title="Deutsch" style="font-size: 13px; font-weight: 800; padding: 4px 8px;">الماني 🇩🇪</span>
             </div>
 
             <input type="email" id="login-email" class="login-input" data-i18n-placeholder="login_email_placeholder" placeholder="البريد الإلكتروني">
@@ -168,11 +168,11 @@
                 </div>
                 
                 <!-- أزرار تبديل اللغة السريعة في هيدر التطبيق -->
-                <div class="lang-switch-container" style="margin-bottom: 0; padding: 4px 10px; gap: 8px;">
-                    <span class="lang-flag-btn active" id="flag-nav-ar" onclick="window.changeParentLanguage('ar')" style="font-size: 16px;">🇸🇦</span>
-                    <span class="lang-flag-btn" id="flag-nav-en" onclick="window.changeParentLanguage('en')" style="font-size: 16px;">🇬🇧</span>
-                    <span class="lang-flag-btn" id="flag-nav-fr" onclick="window.changeParentLanguage('fr')" style="font-size: 16px;">🇫🇷</span>
-                    <span class="lang-flag-btn" id="flag-nav-de" onclick="window.changeParentLanguage('de')" style="font-size: 16px;">🇩🇪</span>
+                <div class="lang-switch-container" style="margin-bottom: 0; padding: 4px 6px; gap: 4px; flex-wrap: nowrap; overflow-x: auto; max-width: 180px;">
+                    <span class="lang-flag-btn active" id="flag-nav-ar" onclick="window.changeParentLanguage('ar')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">عربي 🇸🇦</span>
+                    <span class="lang-flag-btn" id="flag-nav-en" onclick="window.changeParentLanguage('en')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">انجليزي 🇬🇧</span>
+                    <span class="lang-flag-btn" id="flag-nav-fr" onclick="window.changeParentLanguage('fr')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">فرنساوي 🇫🇷</span>
+                    <span class="lang-flag-btn" id="flag-nav-de" onclick="window.changeParentLanguage('de')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">الماني 🇩🇪</span>
                 </div>
 
                 <div class="header-actions">
@@ -250,6 +250,17 @@
                 <div id="kids" class="tab-content">
                     <h3 class="section-title"><span data-i18n="kids_title">ألعاب المناهج التفاعلية 🎮</span></h3>
                     
+                    <!-- تسجيل اسم الطفل -->
+                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: #f0fdf4 !important; border: 1.5px solid #bbf7d0;">
+                        <h4 style="font-size: 14px; margin-bottom: 8px; color: #166534; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-graduation-cap"></i> <span data-i18n="kid_name_label">اسم طفلي الموهوب:</span>
+                        </h4>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="kid-name-input" class="form-control" style="margin: 0; flex-grow: 1;" data-i18n-placeholder="kid_name_placeholder" placeholder="ادخل اسم طفلك هنا...">
+                            <button class="btn-primary" style="margin: 0; width: auto; background: #22c55e;" onclick="window.saveKidName()"><span data-i18n="save_btn">حفظ</span></button>
+                        </div>
+                    </div>
+                    
                     <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary-maroon);" data-i18n="assigned_hw"><i class="fa-solid fa-bell"></i> واجبات مرسلة من المستر:</h4>
                     <div id="assigned-homework-container">
                         <p style="font-size:12px; color:var(--text-gray);" data-i18n="no_hw">لا توجد واجبات معلقة حالياً.</p>
@@ -326,11 +337,37 @@
                             <span style="font-weight:bold; color:var(--primary-maroon);" id="total-now">0 ج.م</span>
                         </div>
                     </div>
-                    <div class="payment-method">
-                        <i class="fa-solid fa-money-bill-wave" style="color: #10b981;"></i>
-                        <span data-i18n="payment_method">الدفع كاش / محفظة الكترونية بالمقر</span>
+                    
+                    <!-- خيارات اختيار طرق الدفع المتعددة التفصيلية -->
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="font-size: 13px; font-weight: bold; margin-bottom: 8px;" data-i18n="choose_payment_lbl">اختر طريقة الدفع:</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
+                                <input type="radio" name="payment-type" value="Cash" checked onchange="window.onPaymentMethodChange()">
+                                <i class="fa-solid fa-money-bill-wave" style="color: #10b981; font-size: 16px;"></i>
+                                <span data-i18n="pay_cash">الدفع نقداً بالمقر</span>
+                            </label>
+                            <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
+                                <input type="radio" name="payment-type" value="Vodafone Cash" onchange="window.onPaymentMethodChange()">
+                                <i class="fa-solid fa-mobile-screen" style="color: #e60000; font-size: 16px;"></i>
+                                <span data-i18n="pay_voda">فودافون كاش (Vodafone Cash)</span>
+                            </label>
+                            <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
+                                <input type="radio" name="payment-type" value="InstaPay" onchange="window.onPaymentMethodChange()">
+                                <i class="fa-solid fa-building-columns" style="color: #6366f1; font-size: 16px;"></i>
+                                <span data-i18n="pay_insta">انستاباي (InstaPay)</span>
+                            </label>
+                        </div>
                     </div>
-                    <button class="btn-primary" onclick="window.confirmOrder()"><span data-i18n="confirm_order_btn">تأكيد وإرسال الطلب للتوصيل (AXON EXPRESS)</span></button>
+
+                    <!-- جزء تفاصيل التحويل وصورة إثبات الدفع -->
+                    <div id="transfer-details-area" style="display: none; background: #f8fafc; border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 15px;">
+                        <p id="transfer-instructions" style="font-size: 12px; color: var(--text-dark); font-weight: bold; margin-bottom: 10px;"></p>
+                        <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px;" data-i18n="upload_proof_lbl">رفع صورة إثبات التحويل:</label>
+                        <input type="file" id="payment-proof-file" class="form-control" accept="image/*" style="margin-bottom: 0;">
+                    </div>
+
+                    <button class="btn-primary" onclick="window.confirmOrder()"><span data-i18n="confirm_order_btn">تأكيد وإرسال الطلب لإدارة الحضانة 🚚</span></button>
                 </div>
             </div>
 
@@ -409,7 +446,18 @@
                 invoice_title: "مراجعة الفاتورة والطلب 🧾",
                 total_required: "إجمالي المطلوب سداده:",
                 payment_method: "الدفع كاش / محفظة الكترونية بالمقر 💳",
-                confirm_order_btn: "تأكيد وإرسال الطلب للتوصيل (AXON EXPRESS) 🚚",
+                confirm_order_btn: "تأكيد وإرسال الطلب لإدارة الحضانة 🚚",
+                choose_payment_lbl: "اختر طريقة الدفع:",
+                pay_cash: "الدفع نقداً بالمقر",
+                pay_voda: "فودافون كاش (Vodafone Cash)",
+                pay_insta: "انستاباي (InstaPay)",
+                upload_proof_lbl: "رفع صورة إثبات التحويل:",
+                voda_instr: "برجاء التحويل إلى رقم فودافون كاش: 01012345678",
+                insta_instr: "برجاء التحويل إلى عنوان انستاباي: nursery@instapay",
+                alert_proof_required: "برجاء رفع صورة إثبات التحويل لإتمام الطلب!",
+                kid_name_label: "اسم طفلي الموهوب:",
+                kid_name_placeholder: "ادخل اسم طفلك هنا...",
+                save_kid_success: "✅ تم تسجيل اسم طفلك بنجاح!",
                 nav_timeline: "التايم لاين",
                 nav_tutoring: "الدروس",
                 nav_cam: "الكاميرات",
@@ -422,7 +470,7 @@
                 empty_cart: "السلة فارغة!",
                 confirm_add_cart: "✅ تم إضافة المنتج إلى السلة بنجاح!",
                 connect_cam_alert: "جاري الاتصال بالسيرفر المحلي للكاميرات المباشرة... 📹",
-                axon_confirm: "🚀 ممتاز! تم تسجيل طلبك وإرساله لشركة الشحن المعتمدة AXON EXPRESS للمطابقة الفورية!",
+                axon_confirm: "🚀 ممتاز! تم تسجيل طلبك وإرساله لإدارة الحضانة للمطابقة والتحقق الفوري!",
                 notif_hw_alert: "الواجب المطلوب إنجازه",
                 notif_hw_btn: "إبدأ التحدي 🎮",
                 logout_alert: "تم تسجيل الخروج بنجاح.",
@@ -471,7 +519,18 @@
                 invoice_title: "Invoice & Order Review 🧾",
                 total_required: "Total Amount Due:",
                 payment_method: "Cash / E-Wallet payment at Nursery 💳",
-                confirm_order_btn: "Confirm & Ship Order (AXON EXPRESS) 🚚",
+                confirm_order_btn: "Confirm and Send Order to Nursery 🚚",
+                choose_payment_lbl: "Choose Payment Method:",
+                pay_cash: "Cash payment at Nursery",
+                pay_voda: "Vodafone Cash",
+                pay_insta: "InstaPay",
+                upload_proof_lbl: "Upload Proof of Transfer:",
+                voda_instr: "Please transfer to Vodafone Cash number: 01012345678",
+                insta_instr: "Please transfer to InstaPay address: nursery@instapay",
+                alert_proof_required: "Please upload the proof of transfer to complete your order!",
+                kid_name_label: "My Gifted Kid's Name:",
+                kid_name_placeholder: "Enter kid's name here...",
+                save_kid_success: "✅ Kid's name saved successfully!",
                 nav_timeline: "Timeline",
                 nav_tutoring: "Lessons",
                 nav_cam: "Cameras",
@@ -484,7 +543,7 @@
                 empty_cart: "Your cart is empty!",
                 confirm_add_cart: "✅ Item added to cart successfully!",
                 connect_cam_alert: "Connecting to secure local classroom camera server... 📹",
-                axon_confirm: "🚀 Success! Your order has been registered and dispatched to AXON EXPRESS for instant delivery!",
+                axon_confirm: "🚀 Success! Your order has been registered and sent to Nursery Management!",
                 notif_hw_alert: "Assigned Homework Task",
                 notif_hw_btn: "Start Game 🎮",
                 logout_alert: "Successfully logged out.",
@@ -855,7 +914,9 @@
             const currency = currentLang === 'ar' ? ' ج.م' : ' EGP';
 
             const grid = document.getElementById('live-products');
-            grid.innerHTML = `
+            
+            // Start with pre-configured static items as defaults
+            let htmlContent = `
                 <div class="product-card">
                     <h4 style="font-weight: 800; font-size: 14px;">${dict.book_interactive}</h4>
                     <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 85${currency}</p>
@@ -866,6 +927,25 @@
                     <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 120${currency}</p>
                     <button class="btn-primary" onclick="window.addToCart('${dict.blocks_interactive}', 120)">${dict.add_to_cart_btn}</button>
                 </div>`;
+            
+            try {
+                // Fetch dynamic products uploaded via Super Admin
+                const snap = await getDocs(collection(db, "products"));
+                snap.forEach(docSnap => {
+                    const prod = docSnap.data();
+                    htmlContent += `
+                        <div class="product-card">
+                            ${prod.image ? `<img src="${prod.image}" style="width:100%; height:100px; object-fit:cover; border-radius:8px; margin-bottom:8px;" alt="${prod.title}">` : ''}
+                            <h4 style="font-weight: 800; font-size: 14px;">${prod.title}</h4>
+                            <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} ${prod.price}${currency}</p>
+                            <button class="btn-primary" onclick="window.addToCart('${prod.title}', ${prod.price})">${dict.add_to_cart_btn}</button>
+                        </div>`;
+                });
+            } catch (err) {
+                console.error("Error loading marketplace products:", err);
+            }
+            
+            grid.innerHTML = htmlContent;
         };
 
         window.addToCart = (name, price) => {
@@ -890,27 +970,89 @@
                 list.innerHTML += `<div class="cart-item"><span>${item.name}</span><strong>${item.price}${currency}</strong></div>`;
             });
             document.getElementById('total-now').innerText = total + currency;
+            
+            // Reset payment method choice to Cash
+            const cashRadio = document.querySelector('input[name="payment-type"][value="Cash"]');
+            if (cashRadio) {
+                cashRadio.checked = true;
+                window.onPaymentMethodChange();
+            }
         };
 
         window.closeCart = () => { document.getElementById('cartModal').style.display = 'none'; };
 
+        window.onPaymentMethodChange = () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+            
+            const selectedRadio = document.querySelector('input[name="payment-type"]:checked');
+            const selectedVal = selectedRadio ? selectedRadio.value : 'Cash';
+            const detailsArea = document.getElementById('transfer-details-area');
+            const instructions = document.getElementById('transfer-instructions');
+            
+            if (selectedVal === 'Cash') {
+                detailsArea.style.display = 'none';
+            } else {
+                detailsArea.style.display = 'block';
+                if (selectedVal === 'Vodafone Cash') {
+                    instructions.innerText = dict.voda_instr;
+                } else if (selectedVal === 'InstaPay') {
+                    instructions.innerText = dict.insta_instr;
+                }
+            }
+        };
+
+        let isConfirming = false;
         window.confirmOrder = async () => {
+            if (isConfirming) return;
+            
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
 
             if(cart.length === 0) { alert(dict.empty_cart); return; }
-            await addDoc(collection(db, "orders"), {
-                parentId: myParentId,
-                parentName: myParentName,
-                nurseryId: myNurseryId,
-                items: cart,
-                status: "pending",
-                timestamp: new Date()
-            });
-            cart = [];
-            document.getElementById('cart-count').innerText = '0';
-            closeCart();
-            alert(dict.axon_confirm);
+            
+            const selectedRadio = document.querySelector('input[name="payment-type"]:checked');
+            const paymentMethod = selectedRadio ? selectedRadio.value : 'Cash';
+            
+            let proofBase64 = "";
+            if (paymentMethod !== 'Cash') {
+                const fileInput = document.getElementById('payment-proof-file');
+                const file = fileInput ? fileInput.files[0] : null;
+                if (!file) {
+                    alert(dict.alert_proof_required);
+                    return;
+                }
+                proofBase64 = await toBase64(file);
+            }
+            
+            isConfirming = true;
+            const btn = document.querySelector('#cartModal .btn-primary');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = currentLang === 'ar' ? 'جاري إرسال الطلب...' : 'Sending order...';
+            
+            try {
+                await addDoc(collection(db, "orders"), {
+                    parentId: myParentId,
+                    parentName: myParentName,
+                    nurseryId: myNurseryId,
+                    items: cart,
+                    status: "pending",
+                    paymentMethod: paymentMethod,
+                    paymentProof: proofBase64,
+                    timestamp: new Date()
+                });
+                cart = [];
+                document.getElementById('cart-count').innerText = '0';
+                closeCart();
+                alert(dict.axon_confirm);
+            } catch (err) {
+                console.error("Error confirming order:", err);
+            } finally {
+                isConfirming = false;
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
         };
 
         // ================== 5. تشغيل ألعاب Vercel الـ الستة الحقيقية بنجاح ==================
@@ -984,16 +1126,54 @@
             el.classList.add('active');
         };
 
-        window.uploadProfilePic = () => { 
+        window.uploadProfilePic = async (input) => { 
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
-            alert(dict.avatar_update); 
+            
+            const file = input.files[0];
+            if (!file) return;
+            
+            try {
+                const base64 = await toBase64(file);
+                // Save avatar to localStorage to persist after page refresh
+                localStorage.setItem('parent_avatar_data_url', base64);
+                
+                // Show in header
+                document.getElementById('user-avatar').src = base64;
+                
+                alert(dict.avatar_update); 
+            } catch (err) {
+                console.error("Error saving profile picture:", err);
+            }
+        };
+
+        window.saveKidName = () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+            
+            const val = document.getElementById('kid-name-input').value.trim();
+            localStorage.setItem('my_kid_name', val);
+            
+            alert(dict.save_kid_success || "✅ تم تسجيل اسم طفلك بنجاح!");
         };
 
         // تهيئة وحمل اللغة المفضلة عند التشغيل
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
+            
+            // Load saved avatar
+            const savedAvatar = localStorage.getItem('parent_avatar_data_url');
+            if (savedAvatar) {
+                document.getElementById('user-avatar').src = savedAvatar;
+            }
+            
+            // Load saved kid name
+            const savedKidName = localStorage.getItem('my_kid_name');
+            if (savedKidName) {
+                const input = document.getElementById('kid-name-input');
+                if (input) input.value = savedKidName;
+            }
         });
     </script>
 </body>
