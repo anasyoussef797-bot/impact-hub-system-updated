@@ -9,23 +9,24 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-indigo: #4f46e5;
-            --primary-violet: #8b5cf6;
-            --kid-pink: #f43f5e;
-            --kid-blue: #0ea5e9;
-            --kid-yellow: #eab308;
+            --primary-navy: #002f6c; /* US Dept of Education Navy */
+            --primary-indigo: #002f6c; /* Remapped */
+            --primary-violet: #005ea2; /* Remapped */
+            --kid-pink: #dc2626;       /* Remapped to Corporate Accent Red */
+            --kid-blue: #005ea2;       /* Remapped to Federal Blue */
+            --kid-yellow: #f59e0b;     /* Remapped to Gold Amber */
             --kid-green: #10b981;
-            --kid-purple: #6366f1;
-            --bg-light: #fafbfd;
+            --kid-purple: #1e3a8a;     /* Deep Blue Accent */
+            --bg-light: #f8fafc;       /* Clear Light grey-blue */
             --white: #ffffff;
-            --text-dark: #0f172a;
-            --text-gray: #475569;
-            --border-color: #f1f5f9;
-            --gold-star: #fbbf24;
-            --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
-            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.1);
+            --text-dark: #1b1b1b;      /* High contrast dark neutral */
+            --text-gray: #4b5563;
+            --border-color: #d1d5db;   /* Visible, clean dividers */
+            --gold-star: #fdb813;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 24px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         /* Base Styles */
@@ -54,6 +55,7 @@
 
         /* Orbiting floating elements for emotion & playroom vibe */
         .deco-emoji {
+            display: none !important;
             position: absolute;
             font-size: 2.5rem;
             pointer-events: none;
@@ -825,6 +827,13 @@
 </head>
 <body>
 
+    <!-- Top Official Banner (like ed.gov) -->
+    <div class="official-banner" style="background: #eef2f6; border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
+        <span class="flag-icon" style="font-size: 14px;">🇪🇬</span>
+        <span data-i18n="official_banner_text">البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة</span>
+        <span style="color: var(--primary-violet); text-decoration: underline; cursor: help; margin-right: auto; font-size: 11px;" data-i18n="official_banner_how">كيف تعمل هذه المنصة؟</span>
+    </div>
+
     <!-- Orb-emojis floating in backgrounds for high sensory immersion & joy -->
     <div class="deco-emoji" style="top: 15%; right: 10%;">🧸</div>
     <div class="deco-emoji" style="top: 30%; left: 8%; animation-delay: 1.5s;">🎨</div>
@@ -834,7 +843,7 @@
     <nav class="navbar">
         <div class="navbar-header-mobile" style="display: flex; justify-content: space-between; align-items: center; width: auto; flex-grow: 1;">
             <a href="index.html" class="logo" id="pub-main-logo">
-                <i class="fa-solid fa-shapes"></i> 
+                <i class="fa-solid fa-building-columns"></i> 
                 <span>Impact Hub Egypt</span>
             </a>
             <!-- Mobile Menu Toggle Button -->
@@ -1055,6 +1064,8 @@
     <script>
         const translations = {
             ar: {
+                official_banner_text: "البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة",
+                official_banner_how: "كيف تعمل هذه المنصة؟",
                 nav_home: "الرئيسية",
                 nav_explore: 'أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "اللغة",
@@ -1116,6 +1127,8 @@
                 footer_copyright: "جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)"
             },
             en: {
+                official_banner_text: "Official Portal of the Accredited Impact Hub Egypt Educational Network",
+                official_banner_how: "How does it work?",
                 nav_home: "Home",
                 nav_explore: 'Playrooms & Curricula <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Language",
@@ -1177,6 +1190,8 @@
                 footer_copyright: "All rights reserved &copy; 2026 - Developed by Impact Hub Egypt (ESAIA)"
             },
             fr: {
+                official_banner_text: "Portail officiel du réseau éducatif accrédité Impact Hub Égypte",
+                official_banner_how: "Comment ça marche?",
                 nav_home: "Accueil",
                 nav_explore: 'Programmes <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Langue",
@@ -1238,6 +1253,8 @@
                 footer_copyright: "Tous droits réservés &copy; 2026 - Développé par Impact Hub Egypt (ESAIA)"
             },
             de: {
+                official_banner_text: "Offizielles Portal des akkreditierten Bildungsnetzwerks Impact Hub Ägypten",
+                official_banner_how: "Wie funktioniert es?",
                 nav_home: "Startseite",
                 nav_explore: 'Spielräume & Pläne <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Sprache",
