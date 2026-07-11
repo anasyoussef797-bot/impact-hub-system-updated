@@ -209,14 +209,226 @@
             color: var(--white) !important; 
             padding: 10px 24px !important; 
             border-radius: 9999px !important; 
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); 
+            box-shadow: 0 4px 14px rgba(0, 47, 108, 0.25); 
             font-weight: 800 !important;
-            transition: all 0.2s ease !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
             white-space: nowrap; 
         }
         .login-btn:hover {
             transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45) !important;
+            box-shadow: 0 6px 20px rgba(0, 47, 108, 0.35) !important;
+        }
+
+        /* High-End Motion & Scroll Reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Premium Floating Dashboard Stats Grid */
+        .stats-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 40px auto 0;
+            position: relative;
+            z-index: 10;
+        }
+        @media (max-width: 900px) {
+            .stats-overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stat-badge-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .stat-badge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-violet);
+        }
+        .stat-num {
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 900;
+            color: var(--primary-navy);
+            line-height: 1;
+            margin-bottom: 8px;
+            font-family: 'Outfit', 'Tajawal', sans-serif;
+        }
+        .stat-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-gray);
+        }
+
+        /* Interactive Audience Solution Suite */
+        .solutions-suite-section {
+            background: linear-gradient(180deg, var(--white) 0%, var(--bg-light) 100%);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 90px 6%;
+            position: relative;
+        }
+        .solutions-tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .solution-tab-btn {
+            background: var(--white);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 28px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+        }
+        .solution-tab-btn:hover {
+            border-color: var(--primary-violet);
+            color: var(--primary-navy);
+            transform: translateY(-2px);
+        }
+        .solution-tab-btn.active {
+            background: var(--primary-navy);
+            color: var(--white);
+            border-color: var(--primary-navy);
+            box-shadow: 0 10px 20px rgba(0, 47, 108, 0.25);
+        }
+        .solution-content-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 400px;
+        }
+        .solution-pane {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            animation: paneEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .solution-pane.active {
+            display: grid;
+        }
+        @media (max-width: 768px) {
+            .solution-pane {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+        }
+        @keyframes paneEntrance {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .solution-text-col {
+            text-align: right;
+        }
+        html[dir="ltr"] .solution-text-col {
+            text-align: left;
+        }
+        .solution-tag {
+            display: inline-block;
+            background: rgba(0, 94, 162, 0.08);
+            color: var(--primary-violet);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .solution-pane h3 {
+            font-size: clamp(24px, 4vw, 32px);
+            font-weight: 900;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        .solution-pane p {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        .solution-bullets {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .solution-bullet-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .solution-bullet-item i {
+            color: var(--kid-green);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        .solution-visual-col {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .mock-portal-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mock-portal-card:hover {
+            transform: scale(1.02) rotate(1deg);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(0, 94, 162, 0.2);
+        }
+        .mock-portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+        }
+        .mock-portal-dot {
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px;
         }
 
         /* Floating Assets Container */
@@ -894,23 +1106,300 @@
     </div>
 
     <!-- Hero Area -->
-    <section class="hero" id="hero-section">
+    <section class="hero scroll-reveal active" id="hero-section" style="padding-bottom: 80px;">
+        <div style="display: inline-block; background: rgba(0, 47, 108, 0.06); border: 1px solid rgba(0, 47, 108, 0.15); padding: 8px 18px; border-radius: 9999px; font-weight: 800; font-size: 13px; color: var(--primary-navy); margin-bottom: 24px;">
+            <i class="fa-solid fa-circle-check" style="color: var(--kid-green);"></i> <span data-i18n="hero_badge_text">البوابة الرسمية والشبكة التعليمية المعتمدة رقم 1 بمصر</span>
+        </div>
         <h1 id="pub-hero-title" data-i18n="hero_title">مرحباً بك في عالم Impact Hub التفاعلي 🌟</h1>
         <p id="pub-hero-subtitle" data-i18n="hero_subtitle">نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸</p>
         <p id="pub-about-text" style="font-size: 16px; color: var(--text-gray); max-width: 700px; margin: 0 auto 30px; opacity: 0.95; font-weight: 500;"></p>
+        
+        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; position: relative; z-index: 10;">
+            <a href="parent-app.html" class="login-btn" style="padding: 14px 32px !important; font-size: 15px;"><i class="fa-solid fa-rocket"></i> <span data-i18n="hero_cta_start">ابدأ الرحلة الآن مجاناً</span></a>
+            <a href="#solutions-suite" class="solution-tab-btn" style="border-width: 2px; padding: 12px 28px; background: var(--white);"><i class="fa-solid fa-circle-info"></i> <span data-i18n="hero_cta_learn">كيف نعمل؟</span></a>
+        </div>
+
         <div class="video-container" id="pub-video-container" style="display:none;"></div>
+
+        <!-- Premium Real-time Stats Grid Dashboard -->
+        <div class="stats-overview-grid scroll-reveal">
+            <div class="stat-badge-card">
+                <div class="stat-num" id="stat-kids">10K+</div>
+                <div class="stat-label" data-i18n="stat_students_label">طفل مستفيد ونشط 🧒</div>
+            </div>
+            <div class="stat-badge-card">
+                <div class="stat-num" id="stat-nurseries">150+</div>
+                <div class="stat-label" data-i18n="stat_nurseries_label">حضانة معتمدة بمصر 🏫</div>
+            </div>
+            <div class="stat-badge-card">
+                <div class="stat-num" id="stat-lessons">24/7</div>
+                <div class="stat-label" data-i18n="stat_lessons_label">بث آمن ومتابعة لايف 🎥</div>
+            </div>
+            <div class="stat-badge-card">
+                <div class="stat-num" id="stat-satisfaction">99.4%</div>
+                <div class="stat-label" data-i18n="stat_sat_label">نسبة رضا أولياء الأمور ⭐</div>
+            </div>
+        </div>
     </section>
 
     <!-- YouTube video Smart Blocks inject hook -->
     <div id="video-after-hero"></div>
 
+    <!-- HIGH-END INTERACTIVE SOLUTION SUITE (EDUCATION PERFECT STYLE) -->
+    <section class="solutions-suite-section scroll-reveal" id="solutions-suite">
+        <div class="section-header">
+            <span class="solution-tag" style="background: rgba(220, 38, 38, 0.08); color: var(--kid-pink);" data-i18n="suite_badge">منصة ذكية موحدة</span>
+            <h2 class="section-title" data-i18n="suite_title">حلول مبتكرة مصممة لكل دور في المنظومة ⚙️</h2>
+            <p class="section-subtitle" data-i18n="suite_subtitle">بفضل التقنيات المتقدمة، نربط جميع الأطراف في بيئة تعليمية ذكية ومترابطة بسلاسة فائقة.</p>
+        </div>
+
+        <!-- Navigation Tabs Selector -->
+        <div class="solutions-tabs-nav">
+            <button class="solution-tab-btn active" onclick="switchSolutionTab('nurseries', this)">
+                <i class="fa-solid fa-school"></i> <span data-i18n="tab_nursery_title">الحضانات والمدارس</span>
+            </button>
+            <button class="solution-tab-btn" onclick="switchSolutionTab('parents', this)">
+                <i class="fa-solid fa-children"></i> <span data-i18n="tab_parents_title">أولياء الأمور</span>
+            </button>
+            <button class="solution-tab-btn" onclick="switchSolutionTab('teachers', this)">
+                <i class="fa-solid fa-chalkboard-user"></i> <span data-i18n="tab_teachers_title">المعلمون والمدربون</span>
+            </button>
+            <button class="solution-tab-btn" onclick="switchSolutionTab('students', this)">
+                <i class="fa-solid fa-gamepad"></i> <span data-i18n="tab_students_title">الأطفال والطلاب</span>
+            </button>
+        </div>
+
+        <!-- Solutions Content Container -->
+        <div class="solution-content-wrapper">
+            
+            <!-- NURSERIES PANEL -->
+            <div class="solution-pane active" id="pane-nurseries">
+                <div class="solution-text-col">
+                    <span class="solution-tag" data-i18n="pane_nursery_tag">شريك الإدارة والريادة</span>
+                    <h3 data-i18n="pane_nursery_h3">نظام إداري سحابي ذكي يضمن ريادة حضانتك 🏆</h3>
+                    <p data-i18n="pane_nursery_p">ندعم مديري الحضانات والمدارس بأقوى لوحة تحكم سحابية لإدارة الحسابات، وتلقي رسوم الاشتراكات، ومراقبة الحضور والانصراف، مع ميزة الإشراف التلقائي على كاميرات الفصول وحقائب المناهج UV التفاعلية.</p>
+                    <div class="solution-bullets">
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_nursery_bullet_1">إدارة مالية إلكترونية متطورة للمصروفات والرسوم.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_nursery_bullet_2">بث حي آمن ومراقب بشكل كامل لحماية أطفالنا.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_nursery_bullet_3">إصدار تقارير تقدم يومية وشهادات تقدير معتمدة ومطبوعة.</span>
+                        </div>
+                    </div>
+                    <a href="parent-app.html" class="book-btn" style="background: var(--primary-navy); width: auto; padding: 12px 30px;"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="pane_nursery_cta">تفعيل حضانتك الآن</span></a>
+                </div>
+                <div class="solution-visual-col">
+                    <div class="mock-portal-card">
+                        <div class="mock-portal-header">
+                            <div>
+                                <span class="mock-portal-dot" style="background:#ef4444;"></span>
+                                <span class="mock-portal-dot" style="background:#f59e0b;"></span>
+                                <span class="mock-portal-dot" style="background:#10b981;"></span>
+                            </div>
+                            <span style="font-size:11px; font-weight:800; color:var(--text-gray);"><i class="fa-solid fa-lock"></i> لوحة تحكم الإدارة</span>
+                        </div>
+                        <div style="text-align: right; direction: rtl;">
+                            <div style="font-size:12px; color:var(--text-gray); margin-bottom: 4px;">الحالة العامة للمنشأة</div>
+                            <div style="font-size:20px; font-weight:900; color:var(--primary-navy); margin-bottom:16px;">مكتملة الأركان والنشاط 🟢</div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:16px;">
+                                <div style="background:#f0f4f8; padding:12px; border-radius:12px; text-align:center;">
+                                    <div style="font-size:11px; color:var(--text-gray);">الأطفال النشطون</div>
+                                    <div style="font-size:16px; font-weight:900; color:var(--primary-navy);">124 طفل</div>
+                                </div>
+                                <div style="background:#f0f4f8; padding:12px; border-radius:12px; text-align:center;">
+                                    <div style="font-size:11px; color:var(--text-gray);">الحصص الافتراضية</div>
+                                    <div style="font-size:16px; font-weight:900; color:var(--primary-navy);">8 غرف لايف</div>
+                                </div>
+                            </div>
+                            <div style="border-top:1px solid var(--border-color); padding-top:12px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-gray); margin-bottom:8px;">إشعارات فورية من السيستم</div>
+                                <div style="font-size:11.5px; padding:8px; background:rgba(16, 185, 129, 0.08); color:#065f46; border-radius:8px; margin-bottom:6px;"><i class="fa-solid fa-bell"></i> تم دفع قسط الحضانة لحقيبة "المستكشف الصغير" بنجاح.</div>
+                                <div style="font-size:11.5px; padding:8px; background:rgba(0, 94, 162, 0.08); color:#0f4c81; border-radius:8px;"><i class="fa-solid fa-camera"></i> بث حي ذكي نشط الآن في فصل (الزهور أ).</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PARENTS PANEL -->
+            <div class="solution-pane" id="pane-parents">
+                <div class="solution-text-col">
+                    <span class="solution-tag" style="background:rgba(220, 38, 38, 0.08); color:var(--kid-pink);" data-i18n="pane_parents_tag">شريك العائلة الأمين</span>
+                    <h3 data-i18n="pane_parents_h3">تواصل متكامل وشفافية مطلقة تمنحك الطمأنينة 👪</h3>
+                    <p data-i18n="pane_parents_p">نوفر لولي الأمر تطبيقاً هاتفياً متقدماً على مدار الـ 24 ساعة للتحقق من أمان ابنه، ومراقبة البث المباشر لفصله، والاطلاع على التحديثات الطبية والصحية الفورية، ومعرفة قائمة الأنشطة المنجزة يومياً.</p>
+                    <div class="solution-bullets">
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_parents_bullet_1">بث مباشر آمن 100% ومشفر وخاص بالآباء المعنيين فقط.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_parents_bullet_2">تحديثات صحية دورية ومراقبة الوجبات والحرارة يومياً.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_parents_bullet_3">سلة دفع موحدة وسهلة لحقائب الكتب والزي والمصاريف.</span>
+                        </div>
+                    </div>
+                    <a href="parent-app.html" class="book-btn" style="background: var(--primary-navy); width: auto; padding: 12px 30px;"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="pane_parents_cta">دخول بوابة ولي الأمر</span></a>
+                </div>
+                <div class="solution-visual-col">
+                    <div class="mock-portal-card" style="border-color: var(--kid-pink);">
+                        <div class="mock-portal-header">
+                            <span style="font-size:11px; font-weight:800; color:var(--kid-pink);"><i class="fa-solid fa-heart"></i> تطبيق ولي الأمر الذكي</span>
+                            <span style="font-size:11px; font-weight:800; color:var(--text-gray);">مؤمن بالكامل <i class="fa-solid fa-circle-check" style="color:var(--kid-green);"></i></span>
+                        </div>
+                        <div style="text-align: right; direction: rtl;">
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                                <img src="https://ui-avatars.com/api/?name=Anas&background=dc2626&color=fff&rounded=true" style="width:40px; height:40px;">
+                                <div>
+                                    <div style="font-size:14px; font-weight:900; color:var(--text-dark);">الطفل: أنس يوسف 🧒</div>
+                                    <div style="font-size:11px; color:var(--text-gray);">حضانة إمباكت المتميزة - فصل الرواد</div>
+                                </div>
+                            </div>
+                            <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:12px; padding:12px; margin-bottom:12px;">
+                                <div style="font-size:12px; font-weight:900; color:#b45309; margin-bottom:4px;"><i class="fa-solid fa-camera"></i> كاميرا الفصل لايف</div>
+                                <div style="height:120px; background:#e5e7eb; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--text-gray); font-size:11px; font-weight:bold; position:relative; overflow:hidden;">
+                                    <span style="position:absolute; top:8px; right:8px; background:red; color:white; padding:2px 6px; border-radius:4px; font-size:9px; animation:pulse 1s infinite;">بث مباشر</span>
+                                    <i class="fa-solid fa-video" style="font-size:24px; margin-bottom:4px;"></i>
+                                </div>
+                            </div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                                <div style="background:#f0fdf4; border:1px solid #dcfce7; padding:10px; border-radius:10px; text-align:center;">
+                                    <div style="font-size:10px; color:#15803d;">الوجبة الغذائية</div>
+                                    <div style="font-size:12px; font-weight:900; color:#166534;">تم تناول الغذاء 🥦</div>
+                                </div>
+                                <div style="background:#fef2f2; border:1px solid #fee2e2; padding:10px; border-radius:10px; text-align:center;">
+                                    <div style="font-size:10px; color:#b91c1c;">درجة الحرارة</div>
+                                    <div style="font-size:12px; font-weight:900; color:#991b1b;">36.7 درجة طبيعي ✅</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEACHERS PANEL -->
+            <div class="solution-pane" id="pane-teachers">
+                <div class="solution-text-col">
+                    <span class="solution-tag" style="background:rgba(16, 185, 129, 0.08); color:var(--kid-green);" data-i18n="pane_teachers_tag">تمكين كفاءات التدريس</span>
+                    <h3 data-i18n="pane_teachers_h3">أدوات تعليمية متطورة وفصول تأسيس رقمية 👩‍🏫</h3>
+                    <p data-i18n="pane_teachers_p">نسلّح المعلمين والمعلمات بأحدث بيئة تحضير دروس تفاعلية، مع غرف جيتسي متطورة لإطلاق حصص التقوية أونلاين، وتسجيل مهارات الطلاب، وإرسال التقارير لولي الأمر بلمسة زر لتأسيس صحيح منذ البداية.</p>
+                    <div class="solution-bullets">
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_teachers_bullet_1">فصول ذكية مدمجة عالية الجودة متكاملة مع جدول الحصص.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_teachers_bullet_2">بنوك أسئلة وتدريبات تفاعلية لتنمية مهارات الحساب واللغات.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_teachers_bullet_3">أرباح إضافية وحجز حصص استكشافية لايف من الآباء.</span>
+                        </div>
+                    </div>
+                    <a href="parent-app.html" class="book-btn" style="background: var(--primary-navy); width: auto; padding: 12px 30px;"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="pane_teachers_cta">بوابة المعلمين</span></a>
+                </div>
+                <div class="solution-visual-col">
+                    <div class="mock-portal-card" style="border-color: var(--kid-green);">
+                        <div class="mock-portal-header">
+                            <span style="font-size:11px; font-weight:800; color:var(--kid-green);"><i class="fa-solid fa-chalkboard-user"></i> لوحة المعلم المعتمد</span>
+                            <span style="font-size:11px; font-weight:800; color:var(--text-gray);">نشط الآن 🟢</span>
+                        </div>
+                        <div style="text-align: right; direction: rtl;">
+                            <div style="font-size:12px; color:var(--text-gray); margin-bottom: 4px;">جدول الحصص المباشرة اليوم</div>
+                            <div style="font-size:16px; font-weight:900; color:var(--text-dark); margin-bottom:12px;">حصة تأسيس اللغة العربية 📖</div>
+                            <div style="background:#f4fbf7; border:1px solid #d1fae5; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-size:12px; font-weight:900; color:var(--primary-navy);">الفصل الافتراضي نشط</div>
+                                    <div style="font-size:10px; color:var(--text-gray);">عدد الأطفال الحاضرين: 14 طفل</div>
+                                </div>
+                                <button style="background:var(--kid-green); border:none; color:white; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-phone"></i> دخول</button>
+                            </div>
+                            <div style="border-top:1px solid var(--border-color); padding-top:10px;">
+                                <div style="font-size:11px; font-weight:700; color:var(--text-gray); margin-bottom:6px;">الواجبات المرسلة لولي الأمر</div>
+                                <div style="display:flex; justify-content:space-between; font-size:11px; padding:6px; background:#f9fafb; border-radius:6px; margin-bottom:4px;">
+                                    <span>كتابة الحروف الهجائية ✍️</span>
+                                    <span style="color:var(--kid-green); font-weight:bold;">تم الإرسال</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENTS PANEL -->
+            <div class="solution-pane" id="pane-students">
+                <div class="solution-text-col">
+                    <span class="solution-tag" style="background:rgba(245, 158, 11, 0.08); color:var(--kid-yellow);" data-i18n="pane_students_tag">عالم المرح والذكاء</span>
+                    <h3 data-i18n="pane_students_h3">مناهج ساحرة ومسابقات تفاعلية تحبب الطفل بالتعليم 🚀</h3>
+                    <p data-i18n="pane_students_p">ندمج اللعب والواقع بالتعليم الفعلي من خلال ألعاب الذكاء في الموقع، نظام مستويات الحصص التفاعلية، وشخصيات كارتونية ودودة ومكافآت رقمية ممتازة تحفّز الطفل لحب الحساب، العلوم، وتطوير المهارات الرياضية واللغوية.</p>
+                    <div class="solution-bullets">
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_students_bullet_1">شخصيات كارتونية ومؤثرات صوتية مبهجة ومرحة بالسيستم.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_students_bullet_2">حقائب مناهج ملموسة ومطبوعة UV تتطابق مع التطبيق.</span>
+                        </div>
+                        <div class="solution-bullet-item">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span data-i18n="pane_students_bullet_3">أوسمة وكؤوس رقمية لتكريم الأبطال الصغار أسبوعياً.</span>
+                        </div>
+                    </div>
+                    <a href="parent-app.html" class="book-btn" style="background: var(--primary-navy); width: auto; padding: 12px 30px;"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="pane_students_cta">دخول ركن الألعاب والمناهج</span></a>
+                </div>
+                <div class="solution-visual-col">
+                    <div class="mock-portal-card" style="border-color: var(--kid-yellow);">
+                        <div class="mock-portal-header">
+                            <span style="font-size:11px; font-weight:800; color:var(--kid-yellow);"><i class="fa-solid fa-trophy"></i> أوسمة وإنجازات طفلك</span>
+                            <span style="font-size:11px; font-weight:800; color:var(--text-gray);">المستوى 4 ⭐</span>
+                        </div>
+                        <div style="text-align: right; direction: rtl;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <div style="font-size:14px; font-weight:900; color:var(--text-dark);">النقاط المجمعة: 1540 نقطة</div>
+                                <span style="background:rgba(245, 158, 11, 0.1); color:#b45309; font-size:10px; padding:4px 8px; border-radius:6px; font-weight:bold;">البطل الذهبي</span>
+                            </div>
+                            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
+                                <div style="background:#fef3c7; border:1px solid #fde68a; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#b45309;">
+                                    <i class="fa-solid fa-graduation-cap" style="font-size:18px; margin-bottom:2px;"></i>
+                                    <span>النابغ 🧠</span>
+                                </div>
+                                <div style="background:#e0f2fe; border:1px solid #bae6fd; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#0369a1;">
+                                    <i class="fa-solid fa-bolt" style="font-size:18px; margin-bottom:2px;"></i>
+                                    <span>المبادر ⚡</span>
+                                </div>
+                                <div style="background:#dcfce7; border:1px solid #bbf7d0; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#15803d;">
+                                    <i class="fa-solid fa-palette" style="font-size:18px; margin-bottom:2px;"></i>
+                                    <span>الفنان 🎨</span>
+                                </div>
+                            </div>
+                            <div style="background:#f9fafb; padding:10px; border-radius:10px; text-align:center; font-size:11.5px; font-weight:800; color:var(--text-dark);">
+                                <i class="fa-solid fa-gift" style="color:var(--kid-pink);"></i> الهدية القادمة: حقيبة الأنشطة الإبداعية بعد 60 نقطة!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <!-- Dynamic Interactive Playrooms content -->
-    <div id="dynamic-content-wrapper">
+    <div id="dynamic-content-wrapper" class="scroll-reveal">
         <p style="text-align:center; padding: 60px; color: var(--text-gray); font-weight: bold;"><i class="fa-solid fa-spinner fa-spin"></i> جاري إعداد ركن الأنشطة والمرح...</p>
     </div>
 
     <!-- Features Bento Grid Section -->
-    <section class="marketing-section" id="features-section">
+    <section class="marketing-section scroll-reveal" id="features-section">
         <div class="section-header">
             <h2 class="section-title" data-i18n="features_title">لماذا تختار منصة Impact Hub؟ 🤔</h2>
             <p class="section-subtitle" data-i18n="features_subtitle">نظام ذكي متكامل بمواصفات عالمية وتكامل مباشر لتوفير أفضل تجربة للطفل 🚀</p>
@@ -955,7 +1444,7 @@
     <div id="video-after-features"></div>
 
     <!-- Live Lessons Teachers Section -->
-    <section class="teachers-section" id="teachers-section">
+    <section class="teachers-section scroll-reveal" id="teachers-section">
         <div class="section-header">
             <h2 class="section-title" data-i18n="teachers_title">خبراء التعليم المباشر 🌟</h2>
             <p class="section-subtitle" data-i18n="teachers_subtitle">احجز حصتك الفردية أو الجماعية الآن واضمن تأسيس طفلك صح 🎓</p>
@@ -969,7 +1458,7 @@
     <div id="video-after-teachers"></div>
 
     <!-- Store Section Teaser -->
-    <section class="marketing-section" id="store-teaser-section">
+    <section class="marketing-section scroll-reveal" id="store-teaser-section">
         <div class="section-header">
             <h2 class="section-title" data-i18n="store_title">المتجر التعليمي المتميز 🎒</h2>
             <p class="section-subtitle" data-i18n="store_subtitle">تصفح عينات من حقائب المناهج التفاعلية والكتب المطبوعة المتاحة لأطفالنا 📖</p>
@@ -980,7 +1469,7 @@
     </section>
 
     <!-- Certified Nurseries network Section -->
-    <section class="nurseries-section marketing-section" id="nurseries-section">
+    <section class="nurseries-section marketing-section scroll-reveal" id="nurseries-section">
         <div class="section-header">
             <h2 class="section-title" data-i18n="nurseries_title">شبكة الحضانات المعتمدة بالشرق الأوسط 🏫</h2>
             <p class="section-subtitle" data-i18n="nurseries_subtitle">الحضانات التي تطبق معايير ومناهج Impact Hub المتطورة 🎓</p>
@@ -991,7 +1480,7 @@
     </section>
 
     <!-- Parents Reviews / Testimonials -->
-    <section class="marketing-section" id="testimonials-section" style="background: #ffffff; border-top: 1px solid var(--border-color);">
+    <section class="marketing-section scroll-reveal" id="testimonials-section" style="background: #ffffff; border-top: 1px solid var(--border-color);">
         <div class="section-header">
             <h2 class="section-title" data-i18n="testimonials_title">قالوا عن تجربتهم معنا ❤️</h2>
             <p class="section-subtitle" data-i18n="testimonials_subtitle">سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم 🌟</p>
@@ -1014,7 +1503,7 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="marketing-section" id="faq-section">
+    <section class="marketing-section scroll-reveal" id="faq-section">
         <div class="section-header">
             <h2 class="section-title" data-i18n="faq_title">الأسئلة الشائعة (FAQ) ❓</h2>
             <p class="section-subtitle" data-i18n="faq_subtitle">إجابات سريعة على أهم الاستفسارات التي تهم أولياء الأمور والمديرين 💡</p>
@@ -1124,7 +1613,50 @@
                 chat_reply: "يا أهلاً بك يا فندم! لتسجيل طفلك أو طلب حقيبة المناهج والكتب التفاعلية، يرجى التوجه لزر \"دخول المنصة\" لتسجيل الدخول، أو التواصل مباشرة مع إدارة المبيعات عبر الواتساب على رقمنا الموحد <b>01030013810</b> وسنقوم بخدمتك فوراً! ✨",
                 
                 footer_slogan: "بيئة تعليمية مبهجة وآمنة لأجل مستقبل أطفالنا ❤️",
-                footer_copyright: "جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)"
+                footer_copyright: "جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)",
+
+                hero_badge_text: "البوابة الرسمية والشبكة التعليمية المعتمدة رقم 1 بمصر",
+                hero_cta_start: "ابدأ الرحلة الآن مجاناً",
+                hero_cta_learn: "كيف نعمل؟",
+                stat_students_label: "طفل مستفيد ونشط 🧒",
+                stat_nurseries_label: "حضانة معتمدة بمصر 🏫",
+                stat_lessons_label: "بث آمن ومتابعة لايف 🎥",
+                stat_sat_label: "نسبة رضا أولياء الأمور ⭐",
+                suite_badge: "منصة ذكية موحدة",
+                suite_title: "حلول مبتكرة مصممة لكل دور في المنظومة ⚙️",
+                suite_subtitle: "بفضل التقنيات المتقدمة، نربط جميع الأطراف في بيئة تعليمية ذكية ومترابطة بسلاسة فائقة.",
+                tab_nursery_title: "الحضانات والمدارس",
+                tab_parents_title: "أولياء الأمور",
+                tab_teachers_title: "المعلمون والمدربون",
+                tab_students_title: "الأطفال والطلاب",
+                pane_nursery_tag: "شريك الإدارة والريادة",
+                pane_nursery_h3: "نظام إداري سحابي ذكي يضمن ريادة حضانتك 🏆",
+                pane_nursery_p: "ندعم مديري الحضانات والمدارس بأقوى لوحة تحكم سحابية لإدارة الحسابات، وتلقي رسوم الاشتراكات، ومراقبة الحضور والانصراف، مع ميزة الإشراف التلقائي على كاميرات الفصول وحقائب المناهج UV التفاعلية.",
+                pane_nursery_bullet_1: "إدارة مالية إلكترونية متطورة للمصروفات والرسوم.",
+                pane_nursery_bullet_2: "بث حي آمن ومراقب بشكل كامل لحماية أطفالنا.",
+                pane_nursery_bullet_3: "إصدار تقارير تقدم يومية وشهادات تقدير معتمدة ومطبوعة.",
+                pane_nursery_cta: "تفعيل حضانتك الآن",
+                pane_parents_tag: "شريك العائلة الأمين",
+                pane_parents_h3: "تواصل متكامل وشفافية مطلقة تمنحك الطمأنينة 👪",
+                pane_parents_p: "نوفر لولي الأمر تطبيقاً هاتفياً متقدماً على مدار الـ 24 ساعة للتحقق من أمان ابنه، ومراقبة البث المباشر لفصله، والاطلاع على التحديثات الطبية والصحية الفورية، ومعرفة قائمة الأنشطة المنجزة يومياً.",
+                pane_parents_bullet_1: "بث مباشر آمن 100% ومشفر وخاص بالآباء المعنيين فقط.",
+                pane_parents_bullet_2: "تحديثات صحية دورية ومراقبة الوجبات والحرارة يومياً.",
+                pane_parents_bullet_3: "سلة دفع موحدة وسهلة لحقائب الكتب والزي والمصاريف.",
+                pane_parents_cta: "دخول بوابة ولي الأمر",
+                pane_teachers_tag: "تمكين كفاءات التدريس",
+                pane_teachers_h3: "أدوات تعليمية متطورة وفصول تأسيس رقمية 👩‍🏫",
+                pane_teachers_p: "نسلّح المعلمين والمعلمات بأحدث بيئة تحضير دروس تفاعلية، مع غرف جيتسي متطورة لإطلاق حصص التقوية أونلاين، وتسجيل مهارات الطلاب، وإرسال التقارير لولي الأمر بلمسة زر لتأسيس صحيح منذ البداية.",
+                pane_teachers_bullet_1: "فصول ذكية مدمجة عالية الجودة متكاملة مع جدول الحصص.",
+                pane_teachers_bullet_2: "بنوك أسئلة وتدريبات تفاعلية لتنمية مهارات الحساب واللغات.",
+                pane_teachers_bullet_3: "أرباح إضافية وحجز حصص استكشافية لايف من الآباء.",
+                pane_teachers_cta: "بوابة المعلمين",
+                pane_students_tag: "عالم المرح والذكاء",
+                pane_students_h3: "مناهج ساحرة ومسابقات تفاعلية تحبب الطفل بالتعليم 🚀",
+                pane_students_p: "ندمج اللعب والواقع بالتعليم الفعلي من خلال ألعاب الذكاء في الموقع، نظام مستويات الحصص التفاعلية، وشخصيات كارتونية ودودة ومكافآت رقمية ممتازة تحفّز الطفل لحب الحساب، العلوم، وتطوير المهارات الرياضية واللغوية.",
+                pane_students_bullet_1: "شخصيات كارتونية ومؤثرات صوتية مبهجة ومرحة بالسيستم.",
+                pane_students_bullet_2: "حقائب مناهج ملموسة ومطبوعة UV تتطابق مع التطبيق.",
+                pane_students_bullet_3: "أوسمة وكؤوس رقمية لتكريم الأبطال الصغار أسبوعياً.",
+                pane_students_cta: "دخول ركن الألعاب والمناهج"
             },
             en: {
                 official_banner_text: "Official Portal of the Accredited Impact Hub Egypt Educational Network",
@@ -1187,7 +1719,50 @@
                 chat_reply: "Greetings! To sign up or order our interactive learning kits, please click the \"Login Platform\" button to log in, or chat with our sales team directly on WhatsApp at <b>01030013810</b> for immediate booking! ✨",
                 
                 footer_slogan: "A joyful and secure learning environment for our children's future ❤️",
-                footer_copyright: "All rights reserved &copy; 2026 - Developed by Impact Hub Egypt (ESAIA)"
+                footer_copyright: "All rights reserved &copy; 2026 - Developed by Impact Hub Egypt (ESAIA)",
+
+                hero_badge_text: "Official Portal & #1 Accredited Educational Network in Egypt",
+                hero_cta_start: "Start Journey Free",
+                hero_cta_learn: "How it works?",
+                stat_students_label: "Benefited active children 🧒",
+                stat_nurseries_label: "Accredited Nurseries in Egypt 🏫",
+                stat_lessons_label: "Safe Streaming & Live Cam 🎥",
+                stat_sat_label: "Parent Satisfaction Rate ⭐",
+                suite_badge: "Unified Smart Platform",
+                suite_title: "Innovative Solutions Tailored for Every Role ⚙️",
+                suite_subtitle: "With advanced technology, we seamlessly connect all stakeholders in a smart, integrated learning environment.",
+                tab_nursery_title: "Nurseries & Schools",
+                tab_parents_title: "Parents",
+                tab_teachers_title: "Teachers & Trainers",
+                tab_students_title: "Kids & Students",
+                pane_nursery_tag: "Management & Leadership Partner",
+                pane_nursery_h3: "A smart cloud management system ensuring leadership for your nursery 🏆",
+                pane_nursery_p: "We support nursery and school managers with a powerful cloud control panel to manage finances, collect fees, monitor attendance, along with secure classroom live streams and UV-printed interactive learning packs.",
+                pane_nursery_bullet_1: "Advanced electronic financial management for expenses and fees.",
+                pane_nursery_bullet_2: "Secure and fully monitored live stream to protect our kids.",
+                pane_nursery_bullet_3: "Generate daily progress reports and certified printed awards.",
+                pane_nursery_cta: "Activate Your Nursery Now",
+                pane_parents_tag: "The Trusted Family Companion",
+                pane_parents_h3: "Integrated communication and absolute transparency 👪",
+                pane_parents_p: "We provide parents with a mobile application accessible 24/7 to verify their child's safety, watch active live streams of their classroom, review immediate medical/health updates, and track completed activities.",
+                pane_parents_bullet_1: "100% secure, encrypted streaming restricted to verified parents.",
+                pane_parents_bullet_2: "Daily health logs, meal consumption and body temperature checks.",
+                pane_parents_bullet_3: "A unified payment cart for uniform, books, and tuition.",
+                pane_parents_cta: "Enter Parent Portal",
+                pane_teachers_tag: "Empowering Educators",
+                pane_teachers_h3: "Cutting-edge teaching tools & virtual lessons 👩‍🏫",
+                pane_teachers_p: "We arm teachers with an easy-to-use lesson prep interface, integrated Jitsi rooms for launching live interactive tutoring, student performance evaluation grids, and direct progress reporting to parents.",
+                pane_teachers_bullet_1: "Integrated high-quality video rooms syncing with school schedules.",
+                pane_teachers_bullet_2: "Comprehensive math, logic, and grammar quizzes to track progress.",
+                pane_teachers_bullet_3: "Supplementary revenue streams from private live discovery sessions.",
+                pane_teachers_cta: "Teachers Dashboard",
+                pane_students_tag: "World of Fun & Mindplay",
+                pane_students_h3: "Captivating games and tasks making learning delightful 🚀",
+                pane_students_p: "We merge play and reality with interactive puzzles, responsive sound effects, cheerful animations, and progress levels. Coupled with our printed UV-active sets, it keeps kids excited to learn math, languages, and core skills.",
+                pane_students_bullet_1: "Lovely cartoon mascots and responsive high-quality audio cues.",
+                pane_students_bullet_2: "Tactile, physical UV-printed books mapping to our virtual app.",
+                pane_students_bullet_3: "Virtual badges and trophies rewarding young heroes weekly.",
+                pane_students_cta: "Enter Fun & Games Zone"
             },
             fr: {
                 official_banner_text: "Portail officiel du réseau éducatif accrédité Impact Hub Égypte",
@@ -1250,7 +1825,50 @@
                 chat_reply: "Bonjour ! Pour inscrire votre enfant ou acheter des trousses d'activités, cliquez sur \"Connexion\" ou contactez notre équipe via WhatsApp au <b>01030013810</b> ! ✨",
                 
                 footer_slogan: "Un environnement d'apprentissage sécurisé et mémorable ❤️",
-                footer_copyright: "Tous droits réservés &copy; 2026 - Développé par Impact Hub Egypt (ESAIA)"
+                footer_copyright: "Tous droits réservés &copy; 2026 - Développé par Impact Hub Egypt (ESAIA)",
+
+                hero_badge_text: "Portail officiel et réseau éducatif agréé n°1 en Égypte",
+                hero_cta_start: "Commencer Maintenant",
+                hero_cta_learn: "Comment ça marche?",
+                stat_students_label: "Enfants actifs bénéficiaires 🧒",
+                stat_nurseries_label: "Crèches accréditées en Égypte 🏫",
+                stat_lessons_label: "Streaming sécurisé & Live Cam 🎥",
+                stat_sat_label: "Taux de satisfaction des parents ⭐",
+                suite_badge: "Plateforme Intelligente Unique",
+                suite_title: "Solutions Innovantes pour chaque rôle ⚙️",
+                suite_subtitle: "Grâce aux technologies avancées, nous connectons tous les acteurs dans un environnement d'apprentissage intelligent.",
+                tab_nursery_title: "Crèches & Écoles",
+                tab_parents_title: "Parents",
+                tab_teachers_title: "Enseignants & Formateurs",
+                tab_students_title: "Enfants & Émules",
+                pane_nursery_tag: "Partenaire de Gestion & Leadership",
+                pane_nursery_h3: "Un système de gestion cloud intelligent garantissant le leadership de votre crèche 🏆",
+                pane_nursery_p: "Nous soutenons les gestionnaires de crèches avec un panneau de contrôle puissant pour gérer la comptabilité, les frais scolaires, les présences, ainsi que le streaming sécurisé des classes et les kits interactifs d'apprentissage.",
+                pane_nursery_bullet_1: "Gestion financière électronique avancée des dépenses et des frais.",
+                pane_nursery_bullet_2: "Streaming en direct sécurisé et entièrement surveillé pour la sécurité.",
+                pane_nursery_bullet_3: "Génération de rapports quotidiens et de certificats imprimés.",
+                pane_nursery_cta: "Activer Votre Crèche",
+                pane_parents_tag: "Le Compagnon Familial de Confiance",
+                pane_parents_h3: "Communication intégrée et transparence absolue 👪",
+                pane_parents_p: "Nous fournissons aux parents une application mobile accessible 24h/24 et 7j/7 pour vérifier la sécurité de leur enfant, regarder les flux en direct de leur classe, consulter les mises à jour médicales/sanitaires immédiates et suivre les activités complétées.",
+                pane_parents_bullet_1: "Streaming 100% sécurisé et crypté réservé aux parents vérifiés.",
+                pane_parents_bullet_2: "Journaux de santé quotidiens, consommation des repas et vérifications de température.",
+                pane_parents_bullet_3: "Un panier de paiement unique pour l'uniforme, les livres et les frais de scolarité.",
+                pane_parents_cta: "Entrer sur le Portail des Parents",
+                pane_teachers_tag: "Autonomiser les Éducateurs",
+                pane_teachers_h3: "Outils pédagogiques de pointe & cours virtuels 👩‍🏫",
+                pane_teachers_p: "Nous armons les enseignants d'une interface de préparation de cours facile à utiliser, de salles Jitsi intégrées pour lancer des tutorats interactifs en direct, de grilles d'évaluation des performances des élèves et de rapports de progrès directs aux parents.",
+                pane_teachers_bullet_1: "Salles vidéo de haute qualité intégrées synchronisées avec les horaires scolaires.",
+                pane_teachers_bullet_2: "Quizz complets de mathématiques, logique et grammaire pour suivre les progrès.",
+                pane_teachers_bullet_3: "Revenus supplémentaires grâce à des séances de découverte privées en direct.",
+                pane_teachers_cta: "Tableau de Bord des Enseignants",
+                pane_students_tag: "Monde de plaisir & d'esprit d'équipe",
+                pane_students_h3: "Des jeux captivants et des tâches rendant l'apprentissage agréable 🚀",
+                pane_students_p: "Nous fusionnons jeu et réalité avec des puzzles interactifs, des effets sonores réactifs, des animations joyeuses et des niveaux de progression. Associés à nos ensembles imprimés UV-actifs, cela maintient l'excitation d'apprendre des enfants.",
+                pane_students_bullet_1: "Mascottes de dessins animés adorables et indices audio de haute qualité réactifs.",
+                pane_students_bullet_2: "Livres tactiles imprimés en UV correspondant à notre application virtuelle.",
+                pane_students_bullet_3: "Badges virtuels et trophées récompensant chaque semaine les jeunes héros.",
+                pane_students_cta: "Entrer dans la Zone de Jeux & Loisirs"
             },
             de: {
                 official_banner_text: "Offizielles Portal des akkreditierten Bildungsnetzwerks Impact Hub Ägypten",
@@ -1313,9 +1931,110 @@
                 chat_reply: "Herzlich willkommen! Um Ihr Kind anzumelden oder Lernsets zu bestellen, klicken Sie bitte auf \"Einloggen\" oder kontaktieren Sie uns direkt über WhatsApp unter <b>01030013810</b>! ✨",
                 
                 footer_slogan: "Eine glückliche und sichere Lernumgebung für die Zukunft unserer Kinder ❤️",
-                footer_copyright: "Alle Rechte vorbehalten &copy; 2026 - Entwickelt von Impact Hub Egypt (ESAIA)"
+                footer_copyright: "Alle Rechte vorbehalten &copy; 2026 - Entwickelt von Impact Hub Egypt (ESAIA)",
+
+                hero_badge_text: "Offizielles Portal & das akkreditierte Bildungsnetzwerk Nr. 1 in Ägypten",
+                hero_cta_start: "Jetzt kostenlos starten",
+                hero_cta_learn: "Wie funktioniert es?",
+                stat_students_label: "Aktive begünstigte Kinder 🧒",
+                stat_nurseries_label: "Akkreditierte Kitas in Ägypten 🏫",
+                stat_lessons_label: "Sicheres Live-Streaming & Kamera 🎥",
+                stat_sat_label: "Zufriedenheitsrate der Eltern ⭐",
+                suite_badge: "Einheitliche Intelligente Plattform",
+                suite_title: "Innovative Lösungen für jede Rolle ⚙️",
+                suite_subtitle: "Mit modernster Technologie verbinden wir alle Beteiligten nahtlos in einer intelligenten Lernumgebung.",
+                tab_nursery_title: "Kitas & Schulen",
+                tab_parents_title: "Eltern",
+                tab_teachers_title: "Lehrer & Trainer",
+                tab_students_title: "Kinder & Schüler",
+                pane_nursery_tag: "Partner für Management & Führung",
+                pane_nursery_h3: "Ein intelligentes Cloud-System, das die Führung Ihrer Kita sichert 🏆",
+                pane_nursery_p: "Wir unterstützen Kita-Leiter mit einem leistungsstarken Cloud-Dashboard für Finanzen, Gebühreneinzug, Anwesenheit und sichere Klassen-Streams sowie interaktive UV-Lernsets.",
+                pane_nursery_bullet_1: "Fortgeschrittenes elektronisches Finanzmanagement für Gebühren.",
+                pane_nursery_bullet_2: "Sicheres und vollständig überwachtes Live-Streaming zum Schutz.",
+                pane_nursery_bullet_3: "Tägliche Berichte und gedruckte Zertifikate erstellen.",
+                pane_nursery_cta: "Jetzt Ihre Kita aktivieren",
+                pane_parents_tag: "Der treue Familienbegleiter",
+                pane_parents_h3: "Integrierte Kommunikation und absolute Transparenz 👪",
+                pane_parents_p: "Wir bieten Eltern eine mobile App, die rund um die Uhr zugänglich ist, um die Sicherheit ihrer Kinder zu überprüfen, Live-Streams zu sehen und tägliche Berichte zu erhalten.",
+                pane_parents_bullet_1: "100% verschlüsselter Stream nur für verifizierte Eltern.",
+                pane_parents_bullet_2: "Tägliche Protokolle zu Mahlzeiten, Schlaf und Temperatur.",
+                pane_parents_bullet_3: "Zentraler Warenkorb für Bücher, Kleidung und Gebühren.",
+                pane_parents_cta: "Zum Elternportal",
+                pane_teachers_tag: "Lehrkräfte befähigen",
+                pane_teachers_h3: "Modernste Werkzeuge & virtueller Unterricht 👩‍🏫",
+                pane_teachers_p: "Wir rüsten Lehrer mit einem System zur Unterrichtsvorbereitung, integrierten Jitsi-Video-Klassenzimmern und Leistungsbewertungstabellen aus.",
+                pane_teachers_bullet_1: "Integrierte hochwertige Videoräume synchronisiert mit dem Stundenplan.",
+                pane_teachers_bullet_2: "Mathe-, Logik- und Sprachquizze zur Lernkontrolle.",
+                pane_teachers_bullet_3: "Zusätzliche Einnahmen durch private Probestunden.",
+                pane_teachers_cta: "Lehrer-Dashboard",
+                pane_students_tag: "Welt des Spiels & Lernens",
+                pane_students_h3: "Fesselnde Spiele und interaktive Aufgaben 🚀",
+                pane_students_p: "Wir verbinden Spiel und Realität durch interaktive Rätsel, Soundeffekte und Levels, abgestimmt auf unsere UV-gedruckten Lernsets.",
+                pane_students_bullet_1: "Liebevolle Cartoon-Maskottchen und reaktive Soundeffekte.",
+                pane_students_bullet_2: "Kombination aus echten Büchern und interaktiver App.",
+                pane_students_bullet_3: "Virtuelle Abzeichen und Trophäen für die wöchentlichen Gewinner.",
+                pane_students_cta: "Zum Spiele- & Lernbereich"
             }
         };
+
+        // ================== Interactive Suite & Motion Scripts ==================
+        window.switchSolutionTab = function(tabId, buttonEl) {
+            // Hide all panes
+            document.querySelectorAll('.solution-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            // Show selected pane
+            const targetPane = document.getElementById(`pane-${tabId}`);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+            // Deactivate all tab buttons
+            document.querySelectorAll('.solutions-tabs-nav .solution-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Activate clicked button
+            if (buttonEl) {
+                buttonEl.classList.add('active');
+            }
+        };
+
+        function animateCounters() {
+            if (window.countersAnimated) return;
+            window.countersAnimated = true;
+
+            const stats = [
+                { id: 'stat-kids', target: 10000, suffix: '+', isInt: true },
+                { id: 'stat-nurseries', target: 150, suffix: '+', isInt: true },
+                { id: 'stat-satisfaction', target: 99.4, suffix: '%', isInt: false }
+            ];
+
+            stats.forEach(s => {
+                const el = document.getElementById(s.id);
+                if (!el) return;
+                
+                let start = 0;
+                const duration = 1600; // 1.6s duration
+                const steps = 40;
+                const stepValue = s.target / steps;
+                const stepTime = duration / steps;
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += stepValue;
+                    if (current >= s.target) {
+                        el.innerText = s.target + s.suffix;
+                        clearInterval(timer);
+                    } else {
+                        if (s.isInt) {
+                            el.innerText = Math.floor(current).toLocaleString() + s.suffix;
+                        } else {
+                            el.innerText = current.toFixed(1) + s.suffix;
+                        }
+                    }
+                }, stepTime);
+            });
+        }
 
         function changeAppLanguage(lang, e) {
             if (e) e.preventDefault();
@@ -1382,6 +2101,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             const saved = localStorage.getItem('selected_language') || 'ar';
             applyLanguageTranslations(saved);
+
+            // Setup Scroll Reveals with IntersectionObserver
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // If it is the stats section, also trigger counters animation
+                        if (entry.target.classList.contains('stats-overview-grid') || entry.target.querySelector('.stats-overview-grid')) {
+                            animateCounters();
+                        }
+                    }
+                });
+            }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                revealObserver.observe(el);
+            });
+
+            // Fallback to trigger counters if observer is slow
+            setTimeout(animateCounters, 1500);
         });
     </script>
 
