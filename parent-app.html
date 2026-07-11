@@ -110,11 +110,11 @@
         .product-card { background: var(--white) !important; border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; box-shadow: var(--shadow-sm); transition: var(--transition); }
         .product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 
-        .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 2px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); z-index: 999; border-top: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px 24px 0 0; }
-        .nav-item { text-align: center; color: var(--text-gray); font-size: 10px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 700; transition: var(--transition); }
-        .nav-item i { font-size: 19px; transition: var(--transition); color: var(--text-gray); }
+        .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 2px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); z-index: 999; border-top: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px 24px 0 0; }
+        .nav-item { text-align: center; color: var(--text-gray); font-size: 9px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 700; transition: var(--transition); white-space: nowrap; }
+        .nav-item i { font-size: 17px; transition: var(--transition); color: var(--text-gray); }
         .nav-item.active { color: var(--primary-maroon); }
-        .nav-item.active i { transform: translateY(-4px) scale(1.1); color: var(--primary-maroon); }
+        .nav-item.active i { transform: translateY(-3px) scale(1.08); color: var(--primary-maroon); }
         
         .app-footer-credit { text-align: center; font-size: 11px; color: var(--text-gray); padding: 24px 10px; opacity: 0.8; font-weight: 500; }
 
@@ -162,17 +162,18 @@
         <div id="main-app" style="display: none; height: 100%; flex-direction: column;">
             
             <header class="app-header">
-                <div class="header-profile">
+                <div class="header-profile" onclick="window.goToProfileTab()" style="cursor: pointer;" title="تعديل الملف الشخصي">
                     <img id="user-avatar" src="https://via.placeholder.com/40" alt="Profile">
-                    <input type="file" accept="image/*" onchange="window.uploadProfilePic(this)">
                 </div>
                 
-                <!-- أزرار تبديل اللغة السريعة في هيدر التطبيق -->
-                <div class="lang-switch-container" style="margin-bottom: 0; padding: 4px 6px; gap: 4px; flex-wrap: nowrap; overflow-x: auto; max-width: 180px;">
-                    <span class="lang-flag-btn active" id="flag-nav-ar" onclick="window.changeParentLanguage('ar')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">عربي 🇸🇦</span>
-                    <span class="lang-flag-btn" id="flag-nav-en" onclick="window.changeParentLanguage('en')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">انجليزي 🇬🇧</span>
-                    <span class="lang-flag-btn" id="flag-nav-fr" onclick="window.changeParentLanguage('fr')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">فرنساوي 🇫🇷</span>
-                    <span class="lang-flag-btn" id="flag-nav-de" onclick="window.changeParentLanguage('de')" style="font-size: 11px; font-weight: bold; white-space: nowrap;">الماني 🇩🇪</span>
+                <!-- اختيار اللغة كقائمة منسدلة أنيقة لمنع تداخل العناصر -->
+                <div class="lang-dropdown-container" style="margin-bottom: 0;">
+                    <select id="header-lang-select" onchange="window.changeParentLanguage(this.value)" style="padding: 5px 8px; border-radius: 10px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 11px; font-weight: 800; color: var(--text-dark); cursor: pointer; outline: none; box-shadow: var(--shadow-sm);">
+                        <option value="ar">عربي 🇸🇦</option>
+                        <option value="en">English 🇬🇧</option>
+                        <option value="fr">Français 🇫🇷</option>
+                        <option value="de">Deutsch 🇩🇪</option>
+                    </select>
                 </div>
 
                 <div class="header-actions">
@@ -295,6 +296,36 @@
                     </div>
                 </div>
 
+                <!-- 6. تعديل الملف الشخصي -->
+                <div id="profile" class="tab-content">
+                    <h3 class="section-title"><span data-i18n="profile_title">الملف الشخصي وإعدادات الحساب ⚙️</span></h3>
+                    
+                    <div class="card" style="text-align: center; padding: 25px 20px;">
+                        <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-md); overflow: hidden; background: #f1f5f9;">
+                            <img id="profile-tab-avatar" src="https://via.placeholder.com/100" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
+                            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); padding: 4px 0; color: white; font-size: 10px; cursor: pointer;">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                            <input type="file" accept="image/*" onchange="window.uploadProfilePic(this)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;">
+                        </div>
+                        
+                        <h4 id="profile-tab-name" style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 5px;">ياسين محمود</h4>
+                        <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 20px;" data-i18n="parent_account_label">حساب ولي الأمر المشترك</p>
+                        
+                        <div style="border-top: 1px solid var(--border-color); padding-top: 15px; text-align: right;">
+                            <div style="margin-bottom: 12px;">
+                                <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);" data-i18n="edit_parent_name_label">اسم ولي الأمر:</label>
+                                <input type="text" id="parent-name-input" class="form-control" style="margin: 0;" placeholder="ادخل اسمك هنا...">
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);" data-i18n="edit_parent_phone_label">رقم الهاتف / الواتساب:</label>
+                                <input type="text" id="parent-phone-input" class="form-control" style="margin: 0;" placeholder="01xxxxxxxxx">
+                            </div>
+                            <button class="btn-primary" style="margin: 0;" onclick="window.saveParentProfile()"><i class="fa-solid fa-save"></i> <span data-i18n="save_profile_btn">حفظ التغييرات 💾</span></button>
+                        </div>
+                    </div>
+                </div>
+
             </div> 
 
             <!-- شاشة تشغيل الألعاب للطفل في iframe -->
@@ -373,11 +404,12 @@
 
             <!-- القائمة السفلية للتنقل -->
             <nav class="bottom-nav">
-                <div class="nav-item active" onclick="window.switchTab('home', this)"><i class="fa-solid fa-house"></i><span data-i18n="nav_timeline">الرئيسية</span></div>
-                <div class="nav-item" onclick="window.switchTab('tutoring', this)"><i class="fa-solid fa-chalkboard-user"></i><span data-i18n="nav_tutoring">دروس</span></div>
-                <div class="nav-item" onclick="window.switchTab('cameras', this)"><i class="fa-solid fa-video"></i><span data-i18n="nav_cam">كاميرات</span></div>
-                <div class="nav-item" onclick="window.switchTab('marketplace', this)"><i class="fa-solid fa-store"></i><span data-i18n="nav_store">المتجر</span></div>
-                <div class="nav-item" onclick="window.switchTab('kids', this)"><i class="fa-solid fa-gamepad"></i><span data-i18n="nav_kids">الطفل</span></div>
+                <div class="nav-item active" id="nav-item-home" onclick="window.switchTab('home', this)"><i class="fa-solid fa-house"></i><span data-i18n="nav_timeline">الرئيسية</span></div>
+                <div class="nav-item" id="nav-item-tutoring" onclick="window.switchTab('tutoring', this)"><i class="fa-solid fa-chalkboard-user"></i><span data-i18n="nav_tutoring">دروس</span></div>
+                <div class="nav-item" id="nav-item-cameras" onclick="window.switchTab('cameras', this)"><i class="fa-solid fa-video"></i><span data-i18n="nav_cam">كاميرات</span></div>
+                <div class="nav-item" id="nav-item-marketplace" onclick="window.switchTab('marketplace', this)"><i class="fa-solid fa-store"></i><span data-i18n="nav_store">المتجر</span></div>
+                <div class="nav-item" id="nav-item-kids" onclick="window.switchTab('kids', this)"><i class="fa-solid fa-gamepad"></i><span data-i18n="nav_kids">الطفل</span></div>
+                <div class="nav-item" id="nav-item-profile" onclick="window.switchTab('profile', this)"><i class="fa-solid fa-user-gear"></i><span data-i18n="nav_profile">الملف الشخصي</span></div>
             </nav>
 
         </div> 
@@ -401,7 +433,7 @@
 
         const myNurseryId = "Ajyal_AlGhad_ID_001";
         const myParentId = "parent_yassin";
-        const myParentName = "ياسين محمود (ولي أمر)";
+        let myParentName = localStorage.getItem('parent_display_name') || "ياسين محمود (ولي أمر)";
 
         let jitsiApi = null;
         let cart = [];
@@ -480,7 +512,14 @@
                 price_lbl: "السعر:",
                 add_to_cart_btn: "إضافة للسلة",
                 blocks_interactive: "مكعبات الحروف الذكية",
-                avatar_update: "تم رفع وتحديث الصورة الشخصية بنجاح! 📸"
+                avatar_update: "تم رفع وتحديث الصورة الشخصية بنجاح! 📸",
+                nav_profile: "الملف الشخصي",
+                profile_title: "تعديل الملف الشخصي ⚙️",
+                parent_account_label: "حساب ولي الأمر المشترك",
+                edit_parent_name_label: "اسم ولي الأمر:",
+                edit_parent_phone_label: "رقم الهاتف / الواتساب:",
+                save_profile_btn: "حفظ التغييرات 💾",
+                save_profile_success: "✅ تم تحديث بيانات الملف الشخصي بنجاح!"
             },
             en: {
                 login_title: "Welcome to the Nursery 🏡",
@@ -553,7 +592,14 @@
                 price_lbl: "Price:",
                 add_to_cart_btn: "Add to Cart",
                 blocks_interactive: "Smart Letter Blocks",
-                avatar_update: "Profile avatar updated successfully! 📸"
+                avatar_update: "Profile avatar updated successfully! 📸",
+                nav_profile: "Profile",
+                profile_title: "Edit Profile ⚙️",
+                parent_account_label: "Parent Account Details",
+                edit_parent_name_label: "Parent Name:",
+                edit_parent_phone_label: "Phone / WhatsApp:",
+                save_profile_btn: "Save Changes 💾",
+                save_profile_success: "✅ Profile information updated successfully!"
             },
             fr: {
                 login_title: "Bienvenue à la Crèche 🏡",
@@ -615,7 +661,14 @@
                 price_lbl: "Prix:",
                 add_to_cart_btn: "Ajouter au Panier",
                 blocks_interactive: "Blocs de Lettres Intelligents",
-                avatar_update: "Avatar de profil mis à jour avec succès! 📸"
+                avatar_update: "Avatar de profil mis à jour avec succès! 📸",
+                nav_profile: "Profil",
+                profile_title: "Modifier le profil ⚙️",
+                parent_account_label: "Détails du compte parent",
+                edit_parent_name_label: "Nom du parent:",
+                edit_parent_phone_label: "Téléphone / WhatsApp:",
+                save_profile_btn: "Enregistrer 💾",
+                save_profile_success: "✅ Informations de profil mises à jour avec succès!"
             },
             de: {
                 login_title: "Willkommen in der Kita 🏡",
@@ -677,7 +730,14 @@
                 price_lbl: "Preis:",
                 add_to_cart_btn: "In den Warenkorb",
                 blocks_interactive: "Smarte Buchstabenblöcke",
-                avatar_update: "Profilbild erfolgreich aktualisiert! 📸"
+                avatar_update: "Profilbild erfolgreich aktualisiert! 📸",
+                nav_profile: "Profil",
+                profile_title: "Profil bearbeiten ⚙️",
+                parent_account_label: "Elternkonto-Details",
+                edit_parent_name_label: "Elternname:",
+                edit_parent_phone_label: "Telefon / WhatsApp:",
+                save_profile_btn: "Änderungen speichern 💾",
+                save_profile_success: "✅ Profilinformationen erfolgreich aktualisiert!"
             }
         };
 
@@ -691,8 +751,9 @@
             const flagLoginBtn = document.getElementById(`flag-login-${lang}`);
             if (flagLoginBtn) flagLoginBtn.classList.add('active');
 
-            const flagNavBtn = document.getElementById(`flag-nav-${lang}`);
-            if (flagNavBtn) flagNavBtn.classList.add('active');
+            // تحديث قيمة القائمة المنسدلة في الهيدر
+            const langSelect = document.getElementById('header-lang-select');
+            if (langSelect) langSelect.value = lang;
 
             const dict = parentTranslations[lang] || parentTranslations.ar;
 
@@ -1123,7 +1184,17 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
+            if (el) {
+                el.classList.add('active');
+            } else {
+                const targetNav = document.getElementById(`nav-item-${tabId}`);
+                if (targetNav) targetNav.classList.add('active');
+            }
+        };
+
+        window.goToProfileTab = () => {
+            const profileNavBtn = document.getElementById('nav-item-profile');
+            window.switchTab('profile', profileNavBtn);
         };
 
         window.uploadProfilePic = async (input) => { 
@@ -1138,13 +1209,38 @@
                 // Save avatar to localStorage to persist after page refresh
                 localStorage.setItem('parent_avatar_data_url', base64);
                 
-                // Show in header
+                // Show in header and tab
                 document.getElementById('user-avatar').src = base64;
+                const tabAvatar = document.getElementById('profile-tab-avatar');
+                if (tabAvatar) tabAvatar.src = base64;
                 
                 alert(dict.avatar_update); 
             } catch (err) {
                 console.error("Error saving profile picture:", err);
             }
+        };
+
+        window.saveParentProfile = () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
+            const newName = document.getElementById('parent-name-input').value.trim();
+            const newPhone = document.getElementById('parent-phone-input').value.trim();
+
+            if (!newName) {
+                alert(currentLang === 'ar' ? 'الرجاء إدخال الاسم!' : 'Please enter parent name!');
+                return;
+            }
+
+            localStorage.setItem('parent_display_name', newName);
+            localStorage.setItem('parent_phone_number', newPhone);
+
+            myParentName = newName;
+            
+            const displayTabName = document.getElementById('profile-tab-name');
+            if (displayTabName) displayTabName.innerText = newName;
+
+            alert(dict.save_profile_success || "✅ تم حفظ التعديلات بنجاح!");
         };
 
         window.saveKidName = () => {
@@ -1166,8 +1262,27 @@
             const savedAvatar = localStorage.getItem('parent_avatar_data_url');
             if (savedAvatar) {
                 document.getElementById('user-avatar').src = savedAvatar;
+                const tabAvatar = document.getElementById('profile-tab-avatar');
+                if (tabAvatar) tabAvatar.src = savedAvatar;
+            } else {
+                // Default avatar
+                const tabAvatar = document.getElementById('profile-tab-avatar');
+                if (tabAvatar) tabAvatar.src = "https://via.placeholder.com/100?text=Parent";
             }
             
+            // Load saved parent details
+            const savedParentName = localStorage.getItem('parent_display_name') || "ياسين محمود (ولي أمر)";
+            const savedParentPhone = localStorage.getItem('parent_phone_number') || "";
+            
+            const nameInput = document.getElementById('parent-name-input');
+            if (nameInput) nameInput.value = savedParentName;
+            
+            const phoneInput = document.getElementById('parent-phone-input');
+            if (phoneInput) phoneInput.value = savedParentPhone;
+
+            const displayTabName = document.getElementById('profile-tab-name');
+            if (displayTabName) displayTabName.innerText = savedParentName;
+
             // Load saved kid name
             const savedKidName = localStorage.getItem('my_kid_name');
             if (savedKidName) {
