@@ -710,11 +710,13 @@
             </nav>
 
             <!-- اختيار اللغة المزدوج -->
-            <div class="language-picker-sidebar">
-                <button class="lang-flag-btn active" id="flag-ar" onclick="changeTeacherLanguage('ar')">عربي</button>
-                <button class="lang-flag-btn" id="flag-en" onclick="changeTeacherLanguage('en')">EN</button>
-                <button class="lang-flag-btn" id="flag-fr" onclick="changeTeacherLanguage('fr')">FR</button>
-                <button class="lang-flag-btn" id="flag-de" onclick="changeTeacherLanguage('de')">DE</button>
+            <div class="language-picker-sidebar" style="padding: 10px 15px; margin-top: auto;">
+                <select id="teacher-lang-select" onchange="window.changeTeacherLanguage(this.value)" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--white); font-weight: 800; font-size: 13px; color: var(--text-dark); cursor: pointer; outline: none; box-shadow: var(--shadow-sm);">
+                    <option value="ar">عربي 🇸🇦</option>
+                    <option value="en">English 🇬🇧</option>
+                    <option value="fr">Français 🇫🇷</option>
+                    <option value="de">Deutsch 🇩🇪</option>
+                </select>
             </div>
         </aside>
 
@@ -992,7 +994,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -1295,6 +1297,9 @@
             const activeBtn = document.getElementById(`flag-${lang}`);
             if (activeBtn) activeBtn.classList.add('active');
 
+            const selectEl = document.getElementById('teacher-lang-select');
+            if (selectEl) selectEl.value = lang;
+
             const dict = teacherTranslations[lang] || teacherTranslations.ar;
 
             // تغيير الاتجاه وقواعد الخطوط
@@ -1514,9 +1519,16 @@
             const mediaBase64 = await toBase64(fileFile);
 
             await addDoc(collection(db, "nursery_posts"), {
-                nurseryId: myNurseryId, authorName: myName, title: title, body: body, image: mediaBase64,
+                nurseryId: myNurseryId,
+                authorName: myName,
+                authorId: myTeacherId,
+                title: title,
+                body: body,
+                image: mediaBase64,
                 youtubeUrl: document.getElementById('post-youtube').value || "",
-                timestamp: new Date().getTime(), likes: [], comments: []
+                timestamp: new Date().getTime(),
+                likes: [],
+                comments: []
             });
 
             alert(dict.alert_post_success);
@@ -1540,9 +1552,14 @@
                     return; 
                 }
 
+                let posts = [];
                 snap.forEach(docData => {
-                    const postId = docData.id;
-                    const post = docData.data();
+                    posts.push({ id: docData.id, ...docData.data() });
+                });
+                posts.sort((a, b) => b.timestamp - a.timestamp);
+
+                posts.forEach(post => {
+                    const postId = post.id;
                     
                     const likesList = post.likes || [];
                     const commentsList = post.comments || [];
@@ -1565,9 +1582,20 @@
 
                     container.innerHTML += `
                         <div class="feed-post" id="post-${postId}">
-                            <div class="feed-header">
-                                <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
-                                <div><strong style="font-weight:900;">${post.authorName || 'إدارة الحضانة'}</strong></div>
+                            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
+                                    <div><strong style="font-weight:900;">${post.authorName || 'إدارة الحضانة'}</strong></div>
+                                </div>
+                                ${post.authorId === myTeacherId ? `
+                                <div style="display: flex; gap: 8px;">
+                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                    </button>
+                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                    </button>
+                                </div>` : ''}
                             </div>
                             <h3>${post.title}</h3>
                             <p class="feed-body">${post.body}</p>
@@ -1596,6 +1624,31 @@
                     `;
                 });
             });
+        };
+
+        window.editPost = async (postId, currentTitle, currentBody) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            let newTitle = currentTitle;
+            if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
+                newTitle = prompt(currentLang === 'ar' ? 'تعديل عنوان المنشور:' : 'Edit post title:', currentTitle);
+                if (newTitle === null) return;
+            }
+            const newBody = prompt(currentLang === 'ar' ? 'تعديل محتوى المنشور:' : 'Edit post body:', currentBody);
+            if (newBody === null) return;
+
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, {
+                title: newTitle || "",
+                body: newBody
+            });
+        };
+
+        window.deletePost = async (postId) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const confirmMsg = currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المنشور نهائياً؟' : 'Are you sure you want to delete this post permanently?';
+            if (confirm(confirmMsg)) {
+                await deleteDoc(doc(db, "nursery_posts", postId));
+            }
         };
 
         window.likePost = async (postId, isLiked) => {

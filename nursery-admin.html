@@ -461,14 +461,20 @@
                     <i class="fa-solid fa-users-gear"></i> 
                     <span data-i18n="nav_accounts">إنشاء حسابات الشبكة</span>
                 </div>
+                <div class="nav-item" onclick="switchTab('timeline-tab', this)">
+                    <i class="fa-solid fa-layer-group"></i> 
+                    <span data-i18n="nav_timeline">التايم لاين والأنشطة</span>
+                </div>
             </nav>
 
             <!-- المترجم الأربعة للغات الحضانة -->
-            <div class="language-picker-sidebar">
-                <button class="lang-flag-btn active" id="flag-ar" onclick="changeManagerLanguage('ar')">عربي</button>
-                <button class="lang-flag-btn" id="flag-en" onclick="changeManagerLanguage('en')">EN</button>
-                <button class="lang-flag-btn" id="flag-fr" onclick="changeManagerLanguage('fr')">FR</button>
-                <button class="lang-flag-btn" id="flag-de" onclick="changeManagerLanguage('de')">DE</button>
+            <div class="language-picker-sidebar" style="padding: 10px 15px; margin-top: auto;">
+                <select id="manager-lang-select" onchange="window.changeManagerLanguage(this.value)" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--white); font-weight: 800; font-size: 13px; color: var(--text-dark); cursor: pointer; outline: none; box-shadow: var(--shadow-sm);">
+                    <option value="ar">عربي 🇸🇦</option>
+                    <option value="en">English 🇬🇧</option>
+                    <option value="fr">Français 🇫🇷</option>
+                    <option value="de">Deutsch 🇩🇪</option>
+                </select>
             </div>
         </aside>
 
@@ -538,6 +544,41 @@
                 </div>
             </div>
 
+            <!-- تابة التايم لاين والأنشطة المشتركة -->
+            <div id="timeline-tab" class="tab-content">
+                <div class="panel" style="margin-bottom: 25px;">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-pen-to-square"></i> 
+                        <span data-i18n="panel_share_title">شارك الفعاليات اليومية مع حضانتك 📸</span>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="post_title_lbl">عنوان المنشور</label>
+                        <input type="text" id="post-title" class="form-control" data-i18n-placeholder="post_title_placeholder" placeholder="اكتب عنوان النشاط...">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="post_body_lbl">ماذا حدث اليوم في الحضانة؟</label>
+                        <textarea id="post-body" class="form-control" rows="3" data-i18n-placeholder="post_body_placeholder" placeholder="شارك أولياء الأمور والمدرسين تفاصيل اليوم والأنشطة المتنوعة..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="post_img_lbl">إرفاق صورة النشاط</label>
+                        <input type="file" id="post-file" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="post_yt_lbl">رابط فيديو يوتيوب (اختياري)</label>
+                        <input type="text" id="post-youtube" class="form-control" data-i18n-placeholder="post_yt_placeholder" placeholder="https://www.youtube.com/...">
+                    </div>
+                    <button class="btn-primary" onclick="window.publishManagerPost()" style="background: linear-gradient(135deg, var(--primary-maroon), #500000);">
+                        <i class="fa-solid fa-paper-plane"></i> 
+                        <span data-i18n="publish_timeline_btn">نشر على التايم لاين ✨</span>
+                    </button>
+                </div>
+
+                <h2 style="margin-bottom: 25px; font-weight: 900; font-size: 20px; color: var(--primary-maroon);" data-i18n="feed_title">حائط أنشطة الحضانة والفعاليات المشتركة 📰</h2>
+                <div id="timeline-feed">
+                    <p style="text-align:center; color: var(--text-gray); font-size:12px;" data-i18n="loading_posts">جاري تحميل الأنشطة والمنشورات...</p>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -548,7 +589,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -562,6 +603,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const myNurseryId = "Ajyal_AlGhad_ID_001";
+        const myManagerId = "nursery_manager_001";
+        const myName = "مديرة الحضانة";
 
         // معجم اللغات الأربعة لمديرة الحضانة
         const managerTranslations = {
@@ -600,7 +643,27 @@
                 alert_success_create: "🎉 تم إنشاء حساب جديد للمستخدم بنجاح!",
                 alert_err_create: "حدث خطأ أثناء إنشاء الحساب.",
                 price_lbl: "الإجمالي:",
-                egp_lbl: " ج.م"
+                egp_lbl: " ج.م",
+                nav_timeline: "التايم لاين والأنشطة",
+                panel_share_title: "شارك الفعاليات اليومية مع حضانتك 📸",
+                post_title_lbl: "عنوان المنشور",
+                post_title_placeholder: "اكتب عنوان النشاط...",
+                post_body_lbl: "ماذا حدث اليوم في الحضانة؟",
+                post_body_placeholder: "شارك أولياء الأمور والمدرسين تفاصيل اليوم والأنشطة المتنوعة...",
+                post_img_lbl: "إرفاق صورة النشاط",
+                post_yt_lbl: "رابط فيديو يوتيوب (اختياري)",
+                post_yt_placeholder: "https://www.youtube.com/...",
+                publish_timeline_btn: "نشر على التايم لاين ✨",
+                feed_title: "حائط أنشطة الحضانة والفعاليات المشتركة 📰",
+                loading_posts: "جاري تحميل الأنشطة والمنشورات...",
+                no_posts: "لا توجد منشورات على التايم لاين حتى الآن.",
+                like_btn: "إعجاب",
+                comments_title: "التعليقات",
+                no_comments: "لا توجد تعليقات بعد، كن أول من يعلق!",
+                write_comment_placeholder: "اكتب تعليقاً...",
+                send_comment_btn: "إرسال",
+                alert_fill_post: "برجاء كتابة عنوان المنشور وتفاصيله!",
+                alert_post_success: "📢 تم نشر المشاركة بنجاح على التايم لاين!"
             },
             en: {
                 app_title: "Impact Hub - Manager Dashboard",
@@ -637,7 +700,27 @@
                 alert_success_create: "🎉 Account created successfully for user!",
                 alert_err_create: "Error occurred during account creation.",
                 price_lbl: "Total Price:",
-                egp_lbl: " EGP"
+                egp_lbl: " EGP",
+                nav_timeline: "Timeline & Activities",
+                panel_share_title: "Share daily updates with your nursery 📸",
+                post_title_lbl: "Post Title",
+                post_title_placeholder: "Write activity title...",
+                post_body_lbl: "What happened today at nursery?",
+                post_body_placeholder: "Share details and activities with parents and teachers...",
+                post_img_lbl: "Attach Activity Image",
+                post_yt_lbl: "YouTube Video Link (Optional)",
+                post_yt_placeholder: "https://www.youtube.com/...",
+                publish_timeline_btn: "Publish to Timeline ✨",
+                feed_title: "Nursery Activities & Shared Timeline 📰",
+                loading_posts: "Loading activities and posts...",
+                no_posts: "No posts on timeline yet.",
+                like_btn: "Like",
+                comments_title: "Comments",
+                no_comments: "No comments yet. Be the first to comment!",
+                write_comment_placeholder: "Write a comment...",
+                send_comment_btn: "Send",
+                alert_fill_post: "Please fill in post title and body!",
+                alert_post_success: "📢 Post published successfully to timeline!"
             },
             fr: {
                 app_title: "Impact Hub - Tableau de Bord Directrice",
@@ -674,7 +757,27 @@
                 alert_success_create: "🎉 Compte créé avec succès pour l'utilisateur!",
                 alert_err_create: "Erreur lors de la création du compte.",
                 price_lbl: "Prix total:",
-                egp_lbl: " EGP"
+                egp_lbl: " EGP",
+                nav_timeline: "Timeline & Activités",
+                panel_share_title: "Partager les mises à jour quotidiennes de la crèche 📸",
+                post_title_lbl: "Titre du Message",
+                post_title_placeholder: "Écrire le titre de l'activité...",
+                post_body_lbl: "Que s'est-il passé aujourd'hui ?",
+                post_body_placeholder: "Partager les détails avec les parents et enseignants...",
+                post_img_lbl: "Joindre Image",
+                post_yt_lbl: "Lien Vidéo YouTube (Optionnel)",
+                post_yt_placeholder: "https://www.youtube.com/...",
+                publish_timeline_btn: "Publier sur la Timeline ✨",
+                feed_title: "Activités de Crèche & Timeline Partagée 📰",
+                loading_posts: "Chargement des activités...",
+                no_posts: "Aucun message sur la timeline.",
+                like_btn: "J'aime",
+                comments_title: "Commentaires",
+                no_comments: "Aucun commentaire. Soyez le premier !",
+                write_comment_placeholder: "Écrire un commentaire...",
+                send_comment_btn: "Envoyer",
+                alert_fill_post: "Veuillez remplir le titre et le contenu !",
+                alert_post_success: "📢 Message publié avec succès sur la timeline !"
             },
             de: {
                 app_title: "Impact Hub - Kita-Leitung Dashboard",
@@ -711,7 +814,27 @@
                 alert_success_create: "🎉 Konto erfolgreich für den Benutzer erstellt!",
                 alert_err_create: "Fehler bei der Kontoerstellung.",
                 price_lbl: "Gesamtpreis:",
-                egp_lbl: " EGP"
+                egp_lbl: " EGP",
+                nav_timeline: "Timeline & Aktivitäten",
+                panel_share_title: "Teilen Sie tägliche Updates mit Ihrer Kita 📸",
+                post_title_lbl: "Beitragstitel",
+                post_title_placeholder: "Aktivitätstitel schreiben...",
+                post_body_lbl: "Was ist heute in der Kita passiert?",
+                post_body_placeholder: "Teilen Sie Details und Aktivitäten mit Eltern und Lehrern...",
+                post_img_lbl: "Aktivitätsbild anhängen",
+                post_yt_lbl: "YouTube-Videolink (Optional)",
+                post_yt_placeholder: "https://www.youtube.com/...",
+                publish_timeline_btn: "Auf Timeline veröffentlichen ✨",
+                feed_title: "Kita-Aktivitäten & Gemeinsame Timeline 📰",
+                loading_posts: "Aktivitäten und Beiträge werden geladen...",
+                no_posts: "Noch keine Beiträge auf der Timeline.",
+                like_btn: "Gefällt mir",
+                comments_title: "Kommentare",
+                no_comments: "Noch keine Kommentare. Schreiben Sie den ersten!",
+                write_comment_placeholder: "Kommentar schreiben...",
+                send_comment_btn: "Senden",
+                alert_fill_post: "Bitte Titel und Inhalt des Beitrags ausfüllen!",
+                alert_post_success: "📢 Beitrag erfolgreich auf der Timeline veröffentlicht!"
             }
         };
 
@@ -723,6 +846,9 @@
             document.querySelectorAll('.lang-flag-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`flag-${lang}`);
             if (activeBtn) activeBtn.classList.add('active');
+
+            const selectEl = document.getElementById('manager-lang-select');
+            if (selectEl) selectEl.value = lang;
 
             const dict = managerTranslations[lang] || managerTranslations.ar;
 
@@ -916,6 +1042,187 @@
             }
         };
 
+        // ================= 4. التايم لاين والأنشطة =================
+        const toBase64 = file => new Promise((resolve, reject) => {
+            if(!file) resolve("");
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        window.publishManagerPost = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
+            const title = document.getElementById('post-title').value;
+            const body = document.getElementById('post-body').value;
+            if(!title || !body) { alert(dict.alert_fill_post); return; }
+
+            const fileFile = document.getElementById('post-file').files[0];
+            const mediaBase64 = await toBase64(fileFile);
+
+            await addDoc(collection(db, "nursery_posts"), {
+                nurseryId: myNurseryId,
+                authorName: myName,
+                authorId: myManagerId,
+                title: title,
+                body: body,
+                image: mediaBase64,
+                youtubeUrl: document.getElementById('post-youtube').value || "",
+                timestamp: new Date().getTime(),
+                likes: [],
+                comments: []
+            });
+
+            alert(dict.alert_post_success);
+            document.getElementById('post-title').value = ''; 
+            document.getElementById('post-body').value = ''; 
+            document.getElementById('post-youtube').value = ''; 
+            document.getElementById('post-file').value = '';
+            
+            window.fetchTimelineFeed();
+        };
+
+        window.fetchTimelineFeed = () => {
+            const container = document.getElementById('timeline-feed');
+            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
+            onSnapshot(q, (snap) => {
+                container.innerHTML = '';
+                if(snap.empty) { 
+                    container.innerHTML = `<p style="text-align:center; color:var(--text-gray); font-size:12px; font-weight:800;">${dict.no_posts}</p>`; 
+                    return; 
+                }
+
+                let posts = [];
+                snap.forEach(docData => {
+                    posts.push({ id: docData.id, ...docData.data() });
+                });
+                posts.sort((a, b) => b.timestamp - a.timestamp);
+
+                posts.forEach(post => {
+                    const postId = post.id;
+                    
+                    const likesList = post.likes || [];
+                    const commentsList = post.comments || [];
+                    const isLiked = likesList.includes(myManagerId);
+
+                    let ytIframe = '';
+                    if(post.youtubeUrl) {
+                        const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
+                        ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
+                    }
+
+                    let commentsHtml = '';
+                    commentsList.forEach(c => {
+                        commentsHtml += `
+                            <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
+                                <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
+                            </div>
+                        `;
+                    });
+
+                    // لمديرة الحضانة كامل صلاحية الإدارة (تعديل وحذف) لجميع منشورات حضانتها
+                    container.innerHTML += `
+                        <div class="feed-post" id="post-${postId}" style="background:var(--white); padding:20px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+                            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
+                                    <div><strong style="font-weight:900;">${post.authorName || 'عضو المنصة'}</strong></div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                    </button>
+                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <h3 style="font-weight:900; color:var(--text-dark); font-size:16px; margin-bottom:8px;">${post.title}</h3>
+                            <p class="feed-body" style="color:var(--text-dark); line-height:1.6; margin-bottom:12px; font-size:14px;">${post.body}</p>
+                            ${post.image ? `<div class="feed-media"><img src="${post.image}" style="max-width:100%; border-radius:12px; margin-top:10px;"></div>` : ''}
+                            ${ytIframe}
+                            
+                            <div class="post-actions" style="display:flex; gap:15px; margin-top:15px; border-top:1px solid var(--border-color); padding-top:10px;">
+                                <button class="action-btn" onclick="window.likePost('${postId}', ${isLiked})" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color: ${isLiked ? 'var(--primary-maroon)' : 'var(--text-gray)'};">
+                                    <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${likesList.length})
+                                </button>
+                                <button class="action-btn" onclick="document.getElementById('comment-input-${postId}').focus()" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color:var(--text-gray);">
+                                    <i class="fa-solid fa-comment"></i> ${dict.comments_title} (${commentsList.length})
+                                </button>
+                            </div>
+
+                            <div id="comments-box-${postId}" class="comments-section" style="margin-top:15px; background:rgba(0,0,0,0.02); padding:15px; border-radius:12px;">
+                                <div class="comments-list" style="margin-bottom:10px;">
+                                    ${commentsHtml || `<p style="color:var(--text-gray); font-size:12px; text-align:center; font-weight:800;">${dict.no_comments}</p>`}
+                                </div>
+                                <div style="display:flex; gap:10px;">
+                                    <input type="text" id="comment-input-${postId}" class="form-control" placeholder="${dict.write_comment_placeholder}" style="margin-bottom:0; padding:8px; flex:1;">
+                                    <button class="btn-primary" style="padding:8px 20px; width:auto; margin:0;" onclick="window.addCommentToPost('${postId}')">${dict.send_comment_btn}</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        };
+
+        window.editPost = async (postId, currentTitle, currentBody) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            let newTitle = currentTitle;
+            if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
+                newTitle = prompt(currentLang === 'ar' ? 'تعديل عنوان المنشور:' : 'Edit post title:', currentTitle);
+                if (newTitle === null) return;
+            }
+            const newBody = prompt(currentLang === 'ar' ? 'تعديل محتوى المنشور:' : 'Edit post body:', currentBody);
+            if (newBody === null) return;
+
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, {
+                title: newTitle || "",
+                body: newBody
+            });
+        };
+
+        window.deletePost = async (postId) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const confirmMsg = currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المنشور نهائياً من ساحة الحضانة؟' : 'Are you sure you want to delete this post permanently from the nursery timeline?';
+            if (confirm(confirmMsg)) {
+                await deleteDoc(doc(db, "nursery_posts", postId));
+            }
+        };
+
+        window.likePost = async (postId, isLiked) => {
+            const postRef = doc(db, "nursery_posts", postId);
+            if(isLiked) {
+                await updateDoc(postRef, { likes: arrayRemove(myManagerId) });
+            } else {
+                await updateDoc(postRef, { likes: arrayUnion(myManagerId) });
+            }
+        };
+
+        window.addCommentToPost = async (postId) => {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const commentText = input.value.trim();
+            if(!commentText) return;
+
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, {
+                comments: arrayUnion({
+                    authorId: myManagerId,
+                    authorName: myName,
+                    text: commentText,
+                    timestamp: new Date().getTime()
+                })
+            });
+            input.value = '';
+        };
+
         // تبديل التابات
         window.switchTab = (tabId, element) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -925,6 +1232,10 @@
             
             // إغلاق الشريط الجانبي على الجوال
             document.getElementById('appSidebar').classList.remove('open');
+
+            if (tabId === 'timeline-tab') {
+                window.fetchTimelineFeed();
+            }
         };
 
         // تبديل قائمة الموبايل

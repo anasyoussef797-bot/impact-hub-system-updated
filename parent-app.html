@@ -417,7 +417,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -821,6 +821,7 @@
             await addDoc(collection(db, "nursery_posts"), {
                 nurseryId: myNurseryId,
                 authorName: myParentName,
+                authorId: myParentId,
                 body: body,
                 image: base64,
                 timestamp: new Date().getTime(),
@@ -846,11 +847,18 @@
 
             if(snap.empty) {
                 container.innerHTML = `<p style="text-align:center; color: var(--text-gray); font-size:12px;">${dict.loading_posts}</p>`;
+                return;
             }
 
+            let posts = [];
             snap.forEach(docData => {
-                const postId = docData.id;
-                const post = docData.data();
+                posts.push({ id: docData.id, ...docData.data() });
+            });
+            // ترتيب المنشورات من الأحدث للأقدم
+            posts.sort((a, b) => b.timestamp - a.timestamp);
+
+            posts.forEach(post => {
+                const postId = post.id;
                 let isLiked = post.likes && post.likes.includes(myParentId);
                 let likeStyle = isLiked ? 'color: var(--primary-maroon); font-weight: 900;' : '';
 
@@ -863,7 +871,19 @@
 
                 container.innerHTML += `
                     <div class="feed-post">
-                        <div class="feed-header"><strong>${post.authorName}</strong></div>
+                        <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <strong>${post.authorName}</strong>
+                            ${post.authorId === myParentId ? `
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                </button>
+                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                </button>
+                            </div>` : ''}
+                        </div>
+                        ${post.title ? `<h4 style="font-weight:900; margin-bottom:8px; color: var(--text-dark);">${post.title}</h4>` : ''}
                         <p>${post.body}</p>
                         ${post.image ? `<div class="feed-media"><img src="${post.image}"></div>` : ''}
                         <div class="post-actions">
@@ -882,6 +902,33 @@
                         </div>
                     </div>`;
             });
+        };
+
+        window.editPost = async (postId, currentTitle, currentBody) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            let newTitle = currentTitle;
+            if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
+                newTitle = prompt(currentLang === 'ar' ? 'تعديل عنوان المنشور:' : 'Edit post title:', currentTitle);
+                if (newTitle === null) return;
+            }
+            const newBody = prompt(currentLang === 'ar' ? 'تعديل محتوى المنشور:' : 'Edit post body:', currentBody);
+            if (newBody === null) return;
+
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, {
+                title: newTitle || "",
+                body: newBody
+            });
+            fetchTimelineFeed();
+        };
+
+        window.deletePost = async (postId) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const confirmMsg = currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المنشور نهائياً؟' : 'Are you sure you want to delete this post permanently?';
+            if (confirm(confirmMsg)) {
+                await deleteDoc(doc(db, "nursery_posts", postId));
+                fetchTimelineFeed();
+            }
         };
 
         window.likePost = async (postId, isLiked) => {

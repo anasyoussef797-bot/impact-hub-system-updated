@@ -568,11 +568,13 @@
             </nav>
 
             <!-- المترجم الأربعة للسوبر أدمن الموحد -->
-            <div class="language-picker-sidebar">
-                <button class="lang-flag-btn active" id="flag-ar" onclick="changeSuperLanguage('ar')">عربي</button>
-                <button class="lang-flag-btn" id="flag-en" onclick="changeSuperLanguage('en')">EN</button>
-                <button class="lang-flag-btn" id="flag-fr" onclick="changeSuperLanguage('fr')">FR</button>
-                <button class="lang-flag-btn" id="flag-de" onclick="changeSuperLanguage('de')">DE</button>
+            <div class="language-picker-sidebar" style="padding: 10px 15px; margin-top: auto;">
+                <select id="super-lang-select" onchange="window.changeSuperLanguage(this.value)" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--white); font-weight: 800; font-size: 13px; color: var(--text-dark); cursor: pointer; outline: none; box-shadow: var(--shadow-sm);">
+                    <option value="ar">عربي 🇸🇦</option>
+                    <option value="en">English 🇬🇧</option>
+                    <option value="fr">Français 🇫🇷</option>
+                    <option value="de">Deutsch 🇩🇪</option>
+                </select>
             </div>
         </aside>
 
@@ -1474,6 +1476,9 @@
             const activeBtn = document.getElementById(`flag-${lang}`);
             if (activeBtn) activeBtn.classList.add('active');
 
+            const selectEl = document.getElementById('super-lang-select');
+            if (selectEl) selectEl.value = lang;
+
             const dict = superTranslations[lang] || superTranslations.ar;
 
             // تطبيق الاتجاه
@@ -1660,10 +1665,21 @@
             container.innerHTML = '';
             if(snap.empty) { container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">لا يوجد منشورات لهذه الحضانة حالياً.</p>'; return; }
             snap.forEach(docData => {
+                const postId = docData.id;
                 const post = docData.data();
                 container.innerHTML += `
-                    <div class="feed-post">
-                        <strong style="color:var(--primary-maroon);">${post.authorName}</strong>
+                    <div class="feed-post" style="position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color:var(--primary-maroon);">${post.authorName}</strong>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="window.editNurseryPost('${postId}', '${post.title || ''}', '${post.body || ''}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                </button>
+                                <button onclick="window.deleteNurseryPost('${postId}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                </button>
+                            </div>
+                        </div>
                         <h4 style="margin-top:5px; font-weight:800;">${post.title}</h4>
                         <p style="margin-top:5px; font-size:13px; color:var(--text-dark);">${post.body}</p>
                     </div>
@@ -1752,6 +1768,30 @@
             }
         };
 
+        window.editNurseryPost = async (postId, currentTitle, currentBody, callback) => {
+            let newTitle = currentTitle;
+            if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
+                newTitle = prompt('تعديل عنوان المنشور:', currentTitle);
+                if (newTitle === null) return;
+            }
+            const newBody = prompt('تعديل محتوى المنشور:', currentBody);
+            if (newBody === null) return;
+
+            const postRef = doc(db, "nursery_posts", postId);
+            await updateDoc(postRef, {
+                title: newTitle || "",
+                body: newBody
+            });
+            if (callback) callback();
+        };
+
+        window.deleteNurseryPost = async (postId, callback) => {
+            if (confirm('هل أنت متأكد من حذف هذا المنشور نهائياً من الشبكة بالكامل بصفتك مسؤول رئيسي؟')) {
+                await deleteDoc(doc(db, "nursery_posts", postId));
+                if (callback) callback();
+            }
+        };
+
         window.fetchGlobalNetworkFeed = async () => {
             const filterValue = document.getElementById('network-feed-filter').value;
             let q = query(collection(db, "nursery_posts"));
@@ -1770,9 +1810,19 @@
                 let nurseryBadge = post.nurseryName ? `<span class="feed-badge"><i class="fa-solid fa-school"></i> حضانة: ${post.nurseryName}</span>` : '';
                 container.innerHTML += `
                     <div class="feed-post">
-                        <div class="feed-header">
-                            <div class="feed-author"><i class="fa-solid fa-circle-user" style="font-size:24px;"></i> ${post.authorName || 'عضو الحضانة'}</div>
-                            ${nurseryBadge}
+                        <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="feed-author"><i class="fa-solid fa-circle-user" style="font-size:24px;"></i> ${post.authorName || 'عضو الحضانة'}</div>
+                                ${nurseryBadge}
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="window.editNurseryPost('${post.id}', '${post.title || ''}', '${post.body || ''}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                </button>
+                                <button onclick="window.deleteNurseryPost('${post.id}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                </button>
+                            </div>
                         </div>
                         <h3 style="margin-bottom:10px;">${post.title || ''}</h3>
                         <div class="feed-body">${post.body}</div>
