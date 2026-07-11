@@ -1018,14 +1018,14 @@
             container.style.display = 'block';
             document.getElementById('btn-leave-class').style.display = 'inline-flex';
 
-            const domain = 'meet.jit.si';
+            const domain = 'meet.ffmuc.net';
             const options = {
                 roomName: activeRoomName,
                 width: '100%',
                 height: 350,
                 parentNode: container,
                 userInfo: { displayName: myParentName },
-                configOverwrite: { startWithAudioMuted: true, prejoinPageEnabled: false }
+                configOverwrite: { startWithAudioMuted: true, startWithVideoMuted: true, prejoinPageEnabled: false }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
 
