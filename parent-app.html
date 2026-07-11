@@ -239,6 +239,17 @@
                         </div>
                         <button class="btn-primary" style="background:#22c55e;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
                         <button class="btn-danger" style="display:none;" id="btn-leave-class" onclick="window.leaveLiveClass()"><i class="fa-solid fa-phone-slash"></i> <span data-i18n="leave_live_btn">مغادرة الحصة</span></button>
+                        
+                        <div class="simulation-link-box" id="parent-live-simulation-box" style="display: none; background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 15px; text-align: center; gap: 8px; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                            <div>
+                                <i class="fa-solid fa-link" style="color: #0284c7;"></i> 
+                                <span style="color: #0369a1;">هل تواجه شاشة بيضاء أو سوداء؟ أو جهازك لا يحتوي على كاميرا؟</span>
+                            </div>
+                            <a id="parent-simulation-direct-link" href="#" target="_blank" class="btn-primary" style="margin: 0; padding: 8px 16px; background: #0284c7; color: white; border-radius: 8px; font-size: 11px; text-decoration: none; width: auto; font-weight: 900; box-shadow: none; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> افتح البث المباشر في نافذة مستقلة فورا 🚀
+                            </a>
+                        </div>
+
                         <div id="jitsi-student-container"></div>
                     </div>
                 </div>
@@ -1018,6 +1029,13 @@
             container.style.display = 'block';
             document.getElementById('btn-leave-class').style.display = 'inline-flex';
 
+            const simBox = document.getElementById('parent-live-simulation-box');
+            const simLink = document.getElementById('parent-simulation-direct-link');
+            if (simBox && simLink) {
+                simBox.style.display = 'flex';
+                simLink.href = `https://meet.ffmuc.net/${activeRoomName}`;
+            }
+
             const domain = 'meet.ffmuc.net';
             const options = {
                 roomName: activeRoomName,
@@ -1053,6 +1071,8 @@
             if(activeRoomListener) { activeRoomListener(); activeRoomListener = null; }
             document.getElementById('jitsi-student-container').style.display = 'none';
             document.getElementById('btn-leave-class').style.display = 'none';
+            const simBox = document.getElementById('parent-live-simulation-box');
+            if (simBox) simBox.style.display = 'none';
         };
 
         // ================== 3. المراسلة الفورية المزامنة بالـ Real-time ==================
