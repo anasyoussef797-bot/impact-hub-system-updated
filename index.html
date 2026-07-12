@@ -960,6 +960,97 @@
         .close-modal:hover { color: var(--kid-pink); transform: rotate(90deg); }
         .video-modal iframe { width: 100%; height: 480px; border: none; border-radius: 32px; border: 4px solid var(--white); }
 
+        /* Premium Teacher Booking Modals styling */
+        .custom-booking-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2100;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .custom-booking-modal-content {
+            background: var(--white);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            padding: 32px 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            direction: rtl;
+            text-align: right;
+        }
+        .custom-modal-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-gray);
+            transition: color 0.2s;
+        }
+        .custom-modal-close:hover {
+            color: var(--kid-pink);
+        }
+        .weekly-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .calendar-day-column {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .calendar-day-header {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary-indigo);
+            margin-bottom: 8px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+        }
+        .calendar-slot-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 6px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .calendar-slot-btn.available {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .calendar-slot-btn.available:hover {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+        .calendar-slot-btn.booked {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
         /* Premium Modern Footer */
         .footer { 
             background: var(--text-dark); 
@@ -1406,36 +1497,56 @@
         </div>
         
         <div class="features-container">
-            <div class="feature-card">
-                <div class="feature-icon-wrapper" style="background: rgba(244, 63, 94, 0.08); color: var(--kid-pink);">
-                    <i class="fa-solid fa-video"></i>
+            <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Live Monitoring">
+                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-pink);">
+                        <i class="fa-solid fa-video" style="font-size: 18px;"></i>
+                    </div>
                 </div>
-                <h3 data-i18n="feat_cameras_title">كاميرات ومتابعة لايف 🎥</h3>
-                <p data-i18n="feat_cameras_desc">تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
+                <div style="padding: 24px 20px 28px;">
+                    <h3 data-i18n="feat_cameras_title">كاميرات ومتابعة لايف 🎥</h3>
+                    <p data-i18n="feat_cameras_desc">تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon-wrapper" style="background: rgba(14, 165, 233, 0.08); color: var(--kid-blue);">
-                    <i class="fa-solid fa-book-open-reader"></i>
+            <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Interactive Curricula">
+                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-blue);">
+                        <i class="fa-solid fa-book-open-reader" style="font-size: 18px;"></i>
+                    </div>
                 </div>
-                <h3 data-i18n="feat_curricula_title">مناهج تفاعلية حديثة 📚</h3>
-                <p data-i18n="feat_curricula_desc">مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
+                <div style="padding: 24px 20px 28px;">
+                    <h3 data-i18n="feat_curricula_title">مناهج تفاعلية حديثة 📚</h3>
+                    <p data-i18n="feat_curricula_desc">مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon-wrapper" style="background: rgba(16, 185, 129, 0.08); color: var(--kid-green);">
-                    <i class="fa-solid fa-chalkboard-user"></i>
+            <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Online Classes">
+                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-green);">
+                        <i class="fa-solid fa-chalkboard-user" style="font-size: 18px;"></i>
+                    </div>
                 </div>
-                <h3 data-i18n="feat_classes_title">حصص تأسيس مباشرة 👩‍🏫</h3>
-                <p data-i18n="feat_classes_desc">فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
+                <div style="padding: 24px 20px 28px;">
+                    <h3 data-i18n="feat_classes_title">حصص تأسيس مباشرة 👩‍🏫</h3>
+                    <p data-i18n="feat_classes_desc">فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
+                </div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon-wrapper" style="background: rgba(99, 102, 241, 0.08); color: var(--kid-purple);">
-                    <i class="fa-solid fa-wallet"></i>
+            <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Smart Shop">
+                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-purple);">
+                        <i class="fa-solid fa-wallet" style="font-size: 18px;"></i>
+                    </div>
                 </div>
-                <h3 data-i18n="feat_wallet_title">متجر ومدفوعات ذكية 💳</h3>
-                <p data-i18n="feat_wallet_desc">سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
+                <div style="padding: 24px 20px 28px;">
+                    <h3 data-i18n="feat_wallet_title">متجر ومدفوعات ذكية 💳</h3>
+                    <p data-i18n="feat_wallet_desc">سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1529,6 +1640,74 @@
         <div class="chat-footer">
             <input type="text" id="public-chat-input" placeholder="اكتب سؤالك هنا..." data-i18n-placeholder="chat_placeholder">
             <button onclick="sendPublicChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- MODAL 1: Teacher Schedule Calendar Modal -->
+    <div class="custom-booking-modal" id="teacherScheduleModal">
+        <div class="custom-booking-modal-content">
+            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeTeacherSchedule()"></i>
+            <h3 style="font-size: 22px; font-weight: 900; color: var(--primary-indigo); margin-bottom: 4px;" id="schedModalTeacherName">جدول مواعيد المدرس</h3>
+            <p style="font-size: 13.5px; color: var(--text-gray); margin-bottom: 20px;">اختر الموعد المتاح باللون الأخضر لحجز الحصة مباشرة (سعر الحصة: <strong style="color: var(--kid-pink);">120 ج.م</strong>)</p>
+            
+            <div id="schedModalLoading" style="text-align: center; padding: 40px 0;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 32px; color: var(--primary-indigo);"></i>
+                <p style="margin-top: 10px; font-weight: bold; color: var(--text-gray);">جاري تحميل جدول مواعيد المدرس... ⏳</p>
+            </div>
+            
+            <div id="schedModalContent" style="display: none;">
+                <!-- Calendar content populated dynamically -->
+                <div class="weekly-calendar-grid" id="weeklyCalendarGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Interactive Class Booking Form Modal -->
+    <div class="custom-booking-modal" id="bookingFormModal">
+        <div class="custom-booking-modal-content" style="max-width: 500px;">
+            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeBookingForm()"></i>
+            <h3 style="font-size: 20px; font-weight: 900; color: var(--primary-indigo); margin-bottom: 4px;">تأكيد حجز حصة أونلاين 🧑‍🏫</h3>
+            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;" id="bookingFormSlotDetails">المدرس: مستر محمد - الأحد (من 5 إلى 6 مساءً)</p>
+            
+            <div style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.1); padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 13px;">
+                <p style="margin-bottom: 4px; font-weight: 800; color: var(--primary-indigo);">💳 معلومات الدفع وتحويل الرسوم:</p>
+                <p style="margin-bottom: 4px;">• سعر الحصة الثابت: <strong>120 ج.م</strong></p>
+                <p style="margin-bottom: 4px;">• فودافون كاش: <strong>01023456789</strong></p>
+                <p>• حساب انستاباي: <strong>hub@instapay</strong></p>
+            </div>
+
+            <form id="landingBookingForm" onsubmit="submitLandingBooking(event)">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark);">اسم الطالب بالكامل <span style="color:red;">*</span></label>
+                    <input type="text" id="bookingStudentName" required class="form-control" style="width:100%;" placeholder="أدخل اسم طفلك">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark);">اسم ولي الأمر <span style="color:red;">*</span></label>
+                    <input type="text" id="bookingParentName" required class="form-control" style="width:100%;" placeholder="أدخل اسمك بالكامل">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark);">رقم هاتف ولي الأمر (واتساب) <span style="color:red;">*</span></label>
+                    <input type="tel" id="bookingParentPhone" required class="form-control" style="width:100%;" placeholder="01XXXXXXXXX">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark);">طريقة التحويل المستخدمة <span style="color:red;">*</span></label>
+                    <select id="bookingPaymentMethod" required class="form-control" style="width:100%;">
+                        <option value="vodafone_cash">فودافون كاش (Vodafone Cash)</option>
+                        <option value="instapay">انستاباي (Instapay)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 13px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark);">إرفاق صورة إثبات الدفع (التحويل) <span style="color:red;">*</span></label>
+                    <input type="file" id="bookingPaymentFile" required accept="image/*" class="form-control" style="width:100%; padding: 4px;">
+                    <small style="display:block; color:var(--text-gray); margin-top:4px;">يرجى التقاط لقطة شاشة (Screenshot) لعملية التحويل الناجحة وإرفاقها هنا لتفعيل الحجز.</small>
+                </div>
+                
+                <button type="submit" class="book-btn" style="width: 100%; display: block; border: none; font-size: 15px; font-weight: 800; padding: 14px; text-align: center; border-radius: 12px; background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">إرسال طلب الحجز وتأكيد الدفع ✨</button>
+            </form>
         </div>
     </div>
 
@@ -2127,7 +2306,7 @@
     <!-- Core Dynamic Data Fetching and Real-time listener Module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, query, where, limit, onSnapshot, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, query, where, limit, onSnapshot, setDoc, arrayUnion, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -2143,6 +2322,175 @@
 
         // Track global language state
         let activeLang = localStorage.getItem('selected_language') || 'ar';
+
+        const compressImage = (file, maxWidth, maxHeight) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width; let height = img.height;
+                        if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } } 
+                        else { if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; } }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/webp', 0.8)); 
+                    };
+                    img.onerror = (e) => reject(e);
+                };
+            });
+        };
+
+        // ================== Teacher Booking & Schedule Functions ==================
+        window.openTeacherSchedule = async (teacherId, teacherName) => {
+            document.getElementById('schedModalTeacherName').innerText = `جدول مواعيد المدرس: ${teacherName}`;
+            document.getElementById('teacherScheduleModal').style.display = 'flex';
+            document.getElementById('schedModalLoading').style.display = 'block';
+            document.getElementById('schedModalContent').style.display = 'none';
+
+            try {
+                // Fetch slots
+                const qSlots = query(collection(db, "teacher_availability"), where("teacherId", "==", teacherId));
+                const snapSlots = await getDocs(qSlots);
+
+                // Fetch bookings
+                const qBookings1 = query(collection(db, "booked_classes"), where("teacherId", "==", teacherId));
+                const qBookings2 = query(collection(db, "landing_bookings"), where("teacherId", "==", teacherId));
+                const [snapB1, snapB2] = await Promise.all([getDocs(qBookings1), getDocs(qBookings2)]);
+
+                const activeBookings = new Set();
+                snapB1.forEach(doc => {
+                    const data = doc.data();
+                    if (data.status !== 'cancelled') {
+                        activeBookings.add(`${data.date}_${data.time}`);
+                    }
+                });
+                snapB2.forEach(doc => {
+                    const data = doc.data();
+                    if (data.status !== 'cancelled' && data.status !== 'rejected') {
+                        activeBookings.add(`${data.day}_${data.time}`);
+                    }
+                });
+
+                const daysOrder = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+                const daySlots = {};
+                daysOrder.forEach(d => daySlots[d] = []);
+
+                snapSlots.forEach(doc => {
+                    const slot = doc.data();
+                    if (daySlots[slot.day]) {
+                        daySlots[slot.day].push({ id: doc.id, ...slot });
+                    }
+                });
+
+                let calendarHtml = '';
+                daysOrder.forEach(day => {
+                    const slots = daySlots[day];
+                    if (slots.length > 0) {
+                        let slotsHtml = '';
+                        slots.forEach(slot => {
+                            const isBooked = activeBookings.has(`${day}_${slot.time}`);
+                            if (isBooked) {
+                                slotsHtml += `<button class="calendar-slot-btn booked" disabled>محجوز ❌ (${slot.time})</button>`;
+                            } else {
+                                slotsHtml += `<button class="calendar-slot-btn available" onclick="window.openBookingForm('${teacherId}', '${teacherName.replace(/'/g, "\\'")}', '${day}', '${slot.time.replace(/'/g, "\\'")}')">${slot.time} 🟢</button>`;
+                            }
+                        });
+                        calendarHtml += `
+                            <div class="calendar-day-column">
+                                <div class="calendar-day-header">${day}</div>
+                                ${slotsHtml}
+                            </div>
+                        `;
+                    }
+                });
+
+                if (!calendarHtml) {
+                    calendarHtml = `<p style="text-align:center; width:100%; font-weight:bold; color:var(--text-gray); grid-column:1/-1;">لا يوجد مواعيد مسجلة ومتاحة لهذا المدرس حالياً.</p>`;
+                }
+
+                document.getElementById('weeklyCalendarGrid').innerHTML = calendarHtml;
+                document.getElementById('schedModalLoading').style.display = 'none';
+                document.getElementById('schedModalContent').style.display = 'block';
+            } catch (err) {
+                console.error("Error loading schedule:", err);
+                alert("حدث خطأ أثناء تحميل جدول المواعيد، يرجى المحاولة مرة أخرى.");
+                window.closeTeacherSchedule();
+            }
+        };
+
+        window.closeTeacherSchedule = () => {
+            document.getElementById('teacherScheduleModal').style.display = 'none';
+        };
+
+        window.openBookingForm = (teacherId, teacherName, day, time) => {
+            window.currentBookingDetails = { teacherId, teacherName, day, time };
+            document.getElementById('bookingFormSlotDetails').innerHTML = `المدرس: <strong>${teacherName}</strong><br>الموعد: <strong>${day} (${time})</strong>`;
+            document.getElementById('bookingFormModal').style.display = 'flex';
+            window.closeTeacherSchedule();
+        };
+
+        window.closeBookingForm = () => {
+            document.getElementById('bookingFormModal').style.display = 'none';
+        };
+
+        window.submitLandingBooking = async (event) => {
+            event.preventDefault();
+            const studentName = document.getElementById('bookingStudentName').value;
+            const parentName = document.getElementById('bookingParentName').value;
+            const parentPhone = document.getElementById('bookingParentPhone').value;
+            const paymentMethod = document.getElementById('bookingPaymentMethod').value;
+            const fileInput = document.getElementById('bookingPaymentFile');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('الرجاء إرفاق صورة إثبات الدفع!');
+                return;
+            }
+
+            try {
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerText;
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'جاري إرسال طلب الحجز... ⏳';
+
+                const file = fileInput.files[0];
+                const paymentProof = await compressImage(file, 600, 600);
+
+                const { teacherId, teacherName, day, time } = window.currentBookingDetails;
+                const bookingDoc = {
+                    teacherId,
+                    teacherName,
+                    studentName,
+                    parentName,
+                    parentPhone,
+                    day,
+                    time,
+                    paymentMethod,
+                    paymentProof,
+                    price: 120,
+                    currency: "EGP",
+                    status: "pending",
+                    createdAt: new Date().getTime()
+                };
+
+                await addDoc(collection(db, "landing_bookings"), bookingDoc);
+                alert('✅ تم إرسال طلب الحجز وإثبات الدفع بنجاح! سيتم مراجعة طلبك من قبل السوبر أدمن وتأكيد الموعد فوراً.');
+                
+                document.getElementById('landingBookingForm').reset();
+                window.closeBookingForm();
+            } catch (err) {
+                console.error("Error creating booking:", err);
+                alert("حدث خطأ أثناء إرسال طلب الحجز، حاول مرة أخرى.");
+            } finally {
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'إرسال طلب الحجز وتأكيد الدفع ✨';
+            }
+        };
         window.addEventListener('appLanguageChanged', (e) => {
             activeLang = e.detail.lang;
             fetchDynamicContent();
@@ -2279,10 +2627,11 @@
 
                     if(data.videoBlocks && data.videoBlocks.length > 0) {
                         data.videoBlocks.forEach(vid => {
+                            const cleanYtId = vid.youtubeId ? vid.youtubeId.split('?')[0].split('&')[0] : '';
                             const iframeHtml = `
                                 <div class="marketing-section" style="padding-top:20px; padding-bottom:20px;">
                                     <div class="video-container" style="border-color: var(--primary-indigo);">
-                                        <iframe src="https://www.youtube.com/embed/${vid.youtubeId}" allowfullscreen></iframe>
+                                        <iframe src="https://www.youtube.com/embed/${cleanYtId}" allowfullscreen></iframe>
                                     </div>
                                 </div>
                             `;
@@ -2421,6 +2770,17 @@
                     return; 
                 }
 
+                // Fetch real teacher profile avatars
+                const profilesSnap = await getDocs(collection(db, "teachers_profile"));
+                const teacherAvatars = {};
+                profilesSnap.forEach(pDoc => {
+                    const data = pDoc.data();
+                    const avatar = data.avatar || data.avatarUrl;
+                    if(avatar) {
+                        teacherAvatars[pDoc.id] = avatar;
+                    }
+                });
+
                 const teachersMap = {};
                 snap.forEach(doc => {
                     const slot = doc.data();
@@ -2432,15 +2792,15 @@
                 Object.keys(teachersMap).forEach(teacherId => {
                     const t = teachersMap[teacherId]; 
                     const slotsHtml = t.slots.map(s => `<span class="slot-badge">${s}</span>`).join('');
-                    const placeholderAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=4f46e5&color=fff&rounded=true&size=120`;
+                    const teacherPhoto = teacherAvatars[teacherId] || `https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=4f46e5&color=fff&rounded=true&size=120`;
                     
                     grid.innerHTML += `
                         <div class="teacher-card">
-                            <img src="${placeholderAvatar}" class="teacher-avatar">
+                            <img src="${teacherPhoto}" class="teacher-avatar" style="width:100px; height:100px; object-fit:cover; border-radius:50%; border:3px solid var(--primary-indigo);">
                             <div class="teacher-name">${t.name}</div>
                             <div class="teacher-subject"><i class="fa-solid fa-laptop-code"></i> ${dict.teachers_sub_badge}</div>
-                            <div class="teacher-slots">${slotsHtml}</div>
-                            <a href="parent-app.html" class="book-btn"><i class="fa-solid fa-calendar-check"></i> ${dict.teachers_book_btn}</a>
+                            <div class="teacher-slots" style="max-height:80px; overflow-y:auto; margin-bottom:12px;">${slotsHtml}</div>
+                            <button onclick="window.openTeacherSchedule('${teacherId}', '${t.name.replace(/'/g, "\\'")}')" class="book-btn" style="border:none; cursor:pointer;"><i class="fa-solid fa-calendar-check"></i> عرض الجدول والحجز (120 ج.م)</button>
                         </div>`;
                 });
             } catch(e) { console.error(e); }
@@ -2485,10 +2845,11 @@
                 snap.forEach(docData => {
                     const prod = docData.data();
                     const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
+                    const hasImage = !!prod.image;
                     container.innerHTML += `
                         <div class="product-card">
-                            <div class="product-icon-box">
-                                <i class="fa-solid fa-book-bookmark"></i>
+                            <div class="product-icon-box" style="${hasImage ? 'padding:0; overflow:hidden; background:none;' : ''}">
+                                ${hasImage ? `<img src="${prod.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${prod.title}">` : `<i class="fa-solid fa-book-bookmark"></i>`}
                             </div>
                             <h4 style="font-size:16.5px; font-weight:800; margin-bottom:12px; color: var(--text-dark);">${prod.title}</h4>
                             <div style="color:var(--kid-pink); font-weight:900; font-size:18px; margin-bottom: 16px;">${prod.price}${currency}</div>

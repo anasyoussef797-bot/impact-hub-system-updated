@@ -79,14 +79,15 @@ service cloud.firestore {
     
     match /global_posts/{postId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && isString(request.resource.data.authorName)
         && isString(request.resource.data.body);
+      allow delete: if true;
     }
     
     match /nursery_posts/{postId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && isValidNurseryId(request.resource.data.nurseryId)
         && isString(request.resource.data.authorName)
         && isString(request.resource.data.body)
@@ -94,6 +95,7 @@ service cloud.firestore {
         && (!('image' in request.resource.data) || isString(request.resource.data.image)) // للصور المرفوعة كـ Base64
         && (!('likes' in request.resource.data) || isList(request.resource.data.likes))
         && (!('comments' in request.resource.data) || isList(request.resource.data.comments));
+      allow delete: if true;
     }
 
     // ==========================================
@@ -186,6 +188,10 @@ service cloud.firestore {
         && isString(request.resource.data.gameName)
         && isString(request.resource.data.status)
         && (request.resource.data.status == 'pending' || request.resource.data.status == 'completed');
+    }
+    
+    match /landing_bookings/{bookingId} {
+      allow read, write: if true;
     }
   }
 }

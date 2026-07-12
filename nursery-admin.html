@@ -1479,6 +1479,12 @@
                     updatedAt: new Date().getTime()
                 }, { merge: true });
 
+                // Also update the nurseries collection so it displays on index.html
+                await setDoc(doc(db, "nurseries", myNurseryId), {
+                    logo: base64Logo,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+
                 // Save to localStorage
                 localStorage.setItem(`nursery_logo_${myNurseryId}`, base64Logo);
                 alert(currentLang === 'ar' ? '✅ تم حفظ وتحديث لوجو الحضانة الرسمي بنجاح!' : '✅ Nursery logo was saved and updated successfully!');
