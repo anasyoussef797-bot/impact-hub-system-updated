@@ -140,7 +140,7 @@
 
         <!-- شاشة تسجيل الدخول -->
         <div id="login-screen">
-            <div class="login-logo"><i class="fa-solid fa-dove"></i></div>
+            <div class="login-logo" id="app-login-logo"><i class="fa-solid fa-dove"></i></div>
             <h2 data-i18n="login_title" style="color: var(--text-dark); margin-bottom: 5px;">مرحباً بك في الحضانة</h2>
             <p data-i18n="login_subtitle" style="color: var(--text-gray); font-size: 13px; margin-bottom: 25px;">برجاء تسجيل الدخول للمتابعة</p>
             
@@ -162,8 +162,13 @@
         <div id="main-app" style="display: none; height: 100%; flex-direction: column;">
             
             <header class="app-header">
-                <div class="header-profile" onclick="window.goToProfileTab()" style="cursor: pointer;" title="تعديل الملف الشخصي">
-                    <img id="user-avatar" src="https://via.placeholder.com/40" alt="Profile">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="header-profile" onclick="window.goToProfileTab()" style="cursor: pointer;" title="تعديل الملف الشخصي">
+                        <img id="user-avatar" src="https://via.placeholder.com/40" alt="Profile">
+                    </div>
+                    <div id="header-nursery-logo-container" style="display: none; align-items: center;">
+                        <img id="header-nursery-logo" src="" style="height: 32px; width: 32px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--primary-maroon);">
+                    </div>
                 </div>
                 
                 <!-- اختيار اللغة كقائمة منسدلة أنيقة لمنع تداخل العناصر -->
@@ -252,11 +257,7 @@
                                 <p style="font-size: 11px; color: var(--text-gray);" data-i18n="tutoring_subject">لغة إنجليزية</p>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <button class="btn-primary btn-outline" style="margin:0; font-size:11px;" onclick="window.addToCart('حصة مجموعة مع مستر أحمد', 50)"><span data-i18n="cart_group">+ سلة: مجموعة (50 ج)</span></button>
-                            <button class="btn-primary btn-outline" style="margin:0; font-size:11px;" onclick="window.addToCart('حصة خاصة مع مستر أحمد', 120)"><span data-i18n="cart_private">+ سلة: خاصة (120 ج)</span></button>
-                        </div>
-                        <button class="btn-primary" style="background:#22c55e;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
+                        <button class="btn-primary" style="background:#22c55e; margin-bottom: 10px;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
                         <button class="btn-danger" style="display:none;" id="btn-leave-class" onclick="window.leaveLiveClass()"><i class="fa-solid fa-phone-slash"></i> <span data-i18n="leave_live_btn">مغادرة الحصة</span></button>
                         
                         <div class="simulation-link-box" id="parent-live-simulation-box" style="display: none; background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 15px; text-align: center; gap: 8px; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
@@ -463,7 +464,12 @@
                     <div style="background: rgba(128,0,0,0.03); border: 1px solid rgba(128,0,0,0.08); padding: 12px; border-radius: 12px; margin-bottom: 15px;">
                         <p style="font-size: 13px; color: var(--text-dark); font-weight: bold; margin-bottom: 6px;">المدرس: <span id="booking-teacher-name">أ / أحمد علي</span></p>
                         <p style="font-size: 13px; color: var(--text-dark); font-weight: bold; margin-bottom: 6px;">اليوم: <span id="booking-slot-day" style="color: var(--primary-maroon);"></span></p>
-                        <p style="font-size: 13px; color: var(--text-dark); font-weight: bold;">الوقت: <span id="booking-slot-time" style="color: var(--primary-maroon);"></span></p>
+                        <p style="font-size: 13px; color: var(--text-dark); font-weight: bold;">الوقت العام للمدرس: <span id="booking-slot-time" style="color: var(--primary-maroon);"></span></p>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);">حدد ساعة الحصة (مثال: من 5:00 إلى 6:00 مساءً):</label>
+                        <input type="text" id="booking-specific-hour" class="form-control" placeholder="اكتب ساعة الحصة المفضلة لديك..." style="margin: 0; width: 100%;">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 15px;">
@@ -471,12 +477,9 @@
                         <input type="text" id="booking-student-name" class="form-control" placeholder="أدخل اسم الطالب رباعي..." style="margin: 0; width: 100%;">
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);">نوع الحصة:</label>
-                        <select id="booking-class-type" class="form-control" style="margin: 0; width: 100%;">
-                            <option value="خاصة">حصة خاصة - فردية (120 ج.م)</option>
-                            <option value="مجموعة">حصة مجموعة - مشتركة (50 ج.م)</option>
-                        </select>
+                    <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.15); padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: #166534; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>هذه الحصة فردية خاصة لطالب واحد، وسيتم تحديد سعرها والاتفاق على تفاصيلها مع المدرس وإدارة الحضانة.</span>
                     </div>
 
                     <button class="btn-primary" onclick="window.submitBooking()" style="background: linear-gradient(135deg, var(--primary-maroon), #991b1b); box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);">
@@ -964,42 +967,49 @@
             let tutoringHtml = '';
 
             slots.forEach(slot => {
-                const booking = bookings.find(b => b.date === slot.day && b.time === slot.time && b.status !== 'cancelled');
-                let isBooked = !!booking;
-                let cardStyle = '';
-                let contentHtml = '';
-
-                if (isBooked) {
-                    cardStyle = `background: #fee2e2; border: 1.5px solid #fecaca; color: #991b1b; padding: 10px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
-                    contentHtml = `
-                        <div>
-                            <div style="font-weight: 900; display: flex; align-items: center; gap: 4px;">
-                                <i class="fa-solid fa-circle-user" style="color:#ef4444;"></i> ${slot.day}
+                // Find all active bookings on this specific day
+                const slotBookings = bookings.filter(b => b.date === slot.day && b.status !== 'cancelled');
+                
+                let bookingsListHtml = '';
+                if (slotBookings.length > 0) {
+                    bookingsListHtml = `
+                        <div style="margin-top: 8px; border-top: 1px dashed rgba(128, 0, 0, 0.1); padding-top: 6px; width: 100%;">
+                            <span style="font-size: 10px; font-weight: 900; color: #991b1b; display: block; margin-bottom: 4px;">الحصص المحجوزة 🔴:</span>
+                            <div style="display: flex; flex-direction: column; gap: 3px;">
+                                ${slotBookings.map(b => `
+                                    <div style="font-size: 9px; background: rgba(239, 68, 68, 0.05); padding: 3px 6px; border-radius: 4px; color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                                        <span><i class="fa-solid fa-lock"></i> ${b.time}</span>
+                                        <strong>(${b.studentName})</strong>
+                                    </div>
+                                `).join('')}
                             </div>
-                            <div style="font-size: 10px; margin-top: 2px;">${slot.time}</div>
-                        </div>
-                        <div style="background: #f87171; color: white; padding: 3px 6px; border-radius: 6px; font-size: 9px; font-weight: 900; text-align: center; display: inline-block; align-self: start;">
-                            محجوز 🔴 (${booking.studentName})
                         </div>
                     `;
                 } else {
-                    cardStyle = `background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 10px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
-                    const escapedDay = slot.day.replace(/'/g, "\\'");
-                    const escapedTime = slot.time.replace(/'/g, "\\'");
-                    const escapedTeacherName = (slot.teacherName || "أ / أحمد علي").replace(/'/g, "\\'");
-
-                    contentHtml = `
-                        <div>
-                            <div style="font-weight: 900; display: flex; align-items: center; gap: 4px; color:#15803d;">
-                                <i class="fa-solid fa-calendar-day"></i> ${slot.day}
-                            </div>
-                            <div style="font-size: 10px; margin-top: 2px; color: #166534;">${slot.time}</div>
+                    bookingsListHtml = `
+                        <div style="font-size: 9px; color: #166534; margin-top: 6px; width: 100%;">
+                            <i class="fa-solid fa-circle-check"></i> اليوم متاح بالكامل للحجز الخارجي 🟢
                         </div>
-                        <button class="btn-primary" onclick="window.openBookingModal('${escapedDay}', '${escapedTime}', '${escapedTeacherName}')" style="margin: 0; padding: 4px 8px; font-size: 10px; width: auto; background: #22c55e; color: white; border-radius: 6px; font-weight: 900; align-self: stretch; text-align: center; box-shadow: none;">
-                            احجز الآن 📅
-                        </button>
                     `;
                 }
+
+                const cardStyle = `background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
+                const escapedDay = slot.day.replace(/'/g, "\\'");
+                const escapedTime = slot.time.replace(/'/g, "\\'");
+                const escapedTeacherName = (slot.teacherName || "أ / أحمد علي").replace(/'/g, "\\'");
+
+                const contentHtml = `
+                    <div style="width: 100%;">
+                        <div style="font-weight: 900; display: flex; align-items: center; gap: 4px; color:#15803d; font-size: 12px;">
+                            <i class="fa-solid fa-calendar-day"></i> ${slot.day}
+                        </div>
+                        <div style="font-size: 10px; margin-top: 2px; color: #166534; font-weight: bold;">المجال العام: ${slot.time}</div>
+                    </div>
+                    ${bookingsListHtml}
+                    <button class="btn-primary" onclick="window.openBookingModal('${escapedDay}', '${escapedTime}', '${escapedTeacherName}')" style="margin: 6px 0 0 0; padding: 5px 8px; font-size: 10px; width: 100%; background: #22c55e; color: white; border-radius: 8px; font-weight: 900; text-align: center; box-shadow: none; align-self: stretch;">
+                        احجز حصة 📅
+                    </button>
+                `;
 
                 const slotElement = `<div style="${cardStyle}">${contentHtml}</div>`;
                 homeHtml += slotElement;
@@ -1024,6 +1034,7 @@
             document.getElementById('booking-slot-time').innerText = time;
             document.getElementById('booking-teacher-name').innerText = teacherName;
             document.getElementById('booking-student-name').value = '';
+            document.getElementById('booking-specific-hour').value = '';
 
             document.getElementById('bookingModal').style.display = 'flex';
         };
@@ -1034,19 +1045,26 @@
 
         window.submitBooking = async () => {
             const studentName = document.getElementById('booking-student-name').value.trim();
-            const classType = document.getElementById('booking-class-type').value;
+            const specificHour = document.getElementById('booking-specific-hour').value.trim();
 
             const currentLang = localStorage.getItem('selected_language') || 'ar';
-            const dict = parentTranslations[currentLang] || parentTranslations.ar;
 
+            if (!specificHour) {
+                alert(currentLang === 'ar' ? 'الرجاء تحديد ساعة الحصة (مثال: من 5 إلى 6 مساءً)!' : 'Please specify the lesson hour (e.g. 5:00 - 6:00 PM)!');
+                return;
+            }
             if (!studentName) {
                 alert(currentLang === 'ar' ? 'الرجاء إدخال اسم الطالب بالكامل!' : 'Please enter the student\'s full name!');
                 return;
             }
 
             try {
-                // Check double booking again just in case (safe concurrency check)
-                const qB = query(collection(db, "booked_classes"), where("teacherId", "==", "teacher_ahmed_001"), where("date", "==", currentSelectedDay), where("time", "==", currentSelectedTime));
+                // Concurrency check for the specific hour
+                const qB = query(collection(db, "booked_classes"), 
+                    where("teacherId", "==", "teacher_ahmed_001"), 
+                    where("date", "==", currentSelectedDay), 
+                    where("time", "==", specificHour)
+                );
                 const snapB = await getDocs(qB);
                 let doubleBooked = false;
                 snapB.forEach(d => {
@@ -1056,9 +1074,7 @@
                 });
 
                 if (doubleBooked) {
-                    alert(currentLang === 'ar' ? 'عذراً، هذا الموعد تم حجزه للتو من طالب آخر!' : 'Sorry, this slot has just been booked by another student!');
-                    window.closeBookingModal();
-                    await window.fetchAvailabilityAndBookings();
+                    alert(currentLang === 'ar' ? 'عذراً، هذا الموعد المحدد محجوز بالفعل لطالب آخر!' : 'Sorry, this specific time slot is already booked by another student!');
                     return;
                 }
 
@@ -1069,20 +1085,20 @@
                     parentId: myParentId,
                     parentName: myParentName,
                     date: currentSelectedDay,
-                    time: currentSelectedTime,
-                    classType: classType,
+                    time: specificHour, // specific hour chosen
+                    generalTime: currentSelectedTime, // teacher's general availability range
+                    classType: "فردية (خاصة)",
                     status: "upcoming",
                     createdAt: new Date().getTime()
                 };
 
                 await addDoc(collection(db, "booked_classes"), bookingDoc);
 
-                // Add to Invoice / Cart
-                const price = classType === 'خاصة' ? 120 : 50;
-                const cartItemName = `حجز درس أونلاين (${classType}) مع مستر أحمد علي - يوم ${currentSelectedDay} (${currentSelectedTime}) طالب: ${studentName}`;
-                window.addToCart(cartItemName, price);
+                // Add to Invoice / Cart with 0 price (TBD later with nursery)
+                const cartItemName = `حجز درس أونلاين فردي مع مستر أحمد علي - يوم ${currentSelectedDay} (${specificHour}) طالب: ${studentName}`;
+                window.addToCart(cartItemName, 0);
 
-                alert(currentLang === 'ar' ? '✅ تم الحجز بنجاح وإضافة الحصة للفاتورة للمراجعة!' : '✅ Booking successful and added to invoice for review!');
+                alert(currentLang === 'ar' ? '✅ تم حجز الموعد بنجاح وتوثيقه في الفاتورة للمتابعة مع الإدارة والمدرس!' : '✅ Booking successful and added to invoice to follow up with the administration!');
                 window.closeBookingModal();
                 
                 await window.fetchAvailabilityAndBookings();
@@ -1652,10 +1668,50 @@
             alert(dict.save_kid_success || "✅ تم تسجيل اسم طفلك بنجاح!");
         };
 
+        window.loadNurseryLogo = async () => {
+            const cachedLogo = localStorage.getItem('nursery_logo_' + myNurseryId);
+            if (cachedLogo) {
+                const headerLogo = document.getElementById('header-nursery-logo');
+                if (headerLogo) headerLogo.src = cachedLogo;
+                
+                const headerLogoContainer = document.getElementById('header-nursery-logo-container');
+                if (headerLogoContainer) headerLogoContainer.style.display = 'flex';
+                
+                const loginLogoEl = document.getElementById('app-login-logo');
+                if (loginLogoEl) {
+                    loginLogoEl.innerHTML = `<img src="${cachedLogo}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                }
+            }
+
+            try {
+                const logoDoc = await getDoc(doc(db, "nursery_profile", myNurseryId));
+                if (logoDoc.exists() && logoDoc.data().logoUrl) {
+                    const logo = logoDoc.data().logoUrl;
+                    localStorage.setItem('nursery_logo_' + myNurseryId, logo);
+                    
+                    const headerLogo = document.getElementById('header-nursery-logo');
+                    if (headerLogo) headerLogo.src = logo;
+                    
+                    const headerLogoContainer = document.getElementById('header-nursery-logo-container');
+                    if (headerLogoContainer) headerLogoContainer.style.display = 'flex';
+                    
+                    const loginLogoEl = document.getElementById('app-login-logo');
+                    if (loginLogoEl) {
+                        loginLogoEl.innerHTML = `<img src="${logo}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading nursery logo in parent app:", err);
+            }
+        };
+
         // تهيئة وحمل اللغة المفضلة عند التشغيل
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
+            
+            // تحميل شعار الحضانة فوراً
+            window.loadNurseryLogo();
             
             // Load saved avatar
             const savedAvatar = localStorage.getItem('parent_avatar_data_url');

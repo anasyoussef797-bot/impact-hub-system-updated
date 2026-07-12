@@ -446,8 +446,9 @@
         <!-- الشريط الجانبي -->
         <aside class="sidebar" id="appSidebar">
             <div class="profile-section">
-                <div class="profile-img">
-                    <i class="fa-solid fa-user-tie"></i>
+                <div class="profile-img" style="overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--pastel-bg); border: 2.2px solid var(--primary-maroon);">
+                    <img id="nursery-sidebar-logo" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    <i id="nursery-sidebar-icon" class="fa-solid fa-user-tie" style="font-size: 20px; color: var(--primary-maroon);"></i>
                 </div>
                 <h3 data-i18n="manager_title">إدارة الحضانة</h3>
                 <span class="profile-badge" data-i18n="role_manager">مدير الحضانة 💼</span>
@@ -469,6 +470,10 @@
                 <div class="nav-item" onclick="switchTab('live-monitor-tab', this)">
                     <i class="fa-solid fa-desktop"></i> 
                     <span data-i18n="nav_live_monitor">مراقبة الحصص المباشرة</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('settings-tab', this)">
+                    <i class="fa-solid fa-gears"></i> 
+                    <span data-i18n="nav_settings">إعدادات الحضانة واللوجو</span>
                 </div>
             </nav>
 
@@ -614,6 +619,25 @@
                 </div>
             </div>
 
+            <!-- تابة إعدادات الحضانة واللوجو -->
+            <div id="settings-tab" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-image"></i> 
+                        <span data-i18n="nursery_logo_title">لوجو الحضانة الرسمي 🎨</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;" data-i18n="nursery_logo_desc">ارفع لوجو الحضانة الرسمي ليتم حفظه في حساب الحضانة وتحديثه في هيدر التطبيق لجميع المستخدمين.</p>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; background: rgba(128, 0, 0, 0.02); border: 1.5px dashed rgba(128, 0, 0, 0.15); padding: 30px; border-radius: 20px; max-width: 400px; margin: 0 auto;">
+                        <img id="nursery-logo-preview" src="https://via.placeholder.com/120?text=No+Logo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-md);">
+                        <input type="file" id="upload-logo-file" class="form-control" accept="image/*" style="width: 100%;">
+                        <button class="btn-primary" onclick="window.updateNurseryLogo()">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> حفظ وتحديث اللوجو 💾
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -624,7 +648,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -1392,6 +1416,78 @@
             }
         };
 
+        window.loadNurseryLogo = async () => {
+            // Load local logo first for instant display
+            const localLogo = localStorage.getItem(`nursery_logo_${myNurseryId}`);
+            if (localLogo) {
+                const previewImg = document.getElementById('nursery-logo-preview');
+                const sidebarImg = document.getElementById('nursery-sidebar-logo');
+                const sidebarIcon = document.getElementById('nursery-sidebar-icon');
+                if (previewImg) previewImg.src = localLogo;
+                if (sidebarImg) {
+                    sidebarImg.src = localLogo;
+                    sidebarImg.style.display = 'block';
+                }
+                if (sidebarIcon) sidebarIcon.style.display = 'none';
+            }
+
+            // Sync from Firestore
+            try {
+                const docSnap = await getDoc(doc(db, "nursery_profile", myNurseryId));
+                if (docSnap.exists() && docSnap.data().logoUrl) {
+                    const logoUrl = docSnap.data().logoUrl;
+                    const previewImg = document.getElementById('nursery-logo-preview');
+                    const sidebarImg = document.getElementById('nursery-sidebar-logo');
+                    const sidebarIcon = document.getElementById('nursery-sidebar-icon');
+                    if (previewImg) previewImg.src = logoUrl;
+                    if (sidebarImg) {
+                        sidebarImg.src = logoUrl;
+                        sidebarImg.style.display = 'block';
+                    }
+                    if (sidebarIcon) sidebarIcon.style.display = 'none';
+                    localStorage.setItem(`nursery_logo_${myNurseryId}`, logoUrl);
+                }
+            } catch (err) {
+                console.error("Error loading nursery logo:", err);
+            }
+        };
+
+        window.updateNurseryLogo = async () => {
+            const file = document.getElementById('upload-logo-file').files[0];
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            if (!file) {
+                alert(currentLang === 'ar' ? 'الرجاء اختيار ملف صورة أولاً!' : 'Please choose an image file first!');
+                return;
+            }
+
+            try {
+                const base64Logo = await toBase64(file);
+                const previewImg = document.getElementById('nursery-logo-preview');
+                const sidebarImg = document.getElementById('nursery-sidebar-logo');
+                const sidebarIcon = document.getElementById('nursery-sidebar-icon');
+                if (previewImg) previewImg.src = base64Logo;
+                if (sidebarImg) {
+                    sidebarImg.src = base64Logo;
+                    sidebarImg.style.display = 'block';
+                }
+                if (sidebarIcon) sidebarIcon.style.display = 'none';
+
+                // Save to Firestore permanently
+                await setDoc(doc(db, "nursery_profile", myNurseryId), {
+                    logoUrl: base64Logo,
+                    nurseryId: myNurseryId,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+
+                // Save to localStorage
+                localStorage.setItem(`nursery_logo_${myNurseryId}`, base64Logo);
+                alert(currentLang === 'ar' ? '✅ تم حفظ وتحديث لوجو الحضانة الرسمي بنجاح!' : '✅ Nursery logo was saved and updated successfully!');
+            } catch (err) {
+                console.error("Error saving nursery logo:", err);
+                alert(currentLang === 'ar' ? 'حدث خطأ أثناء حفظ اللوجو!' : 'Error saving logo!');
+            }
+        };
+
         window.switchTab = (tabId, element) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
@@ -1425,6 +1521,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeManagerLanguage(savedLang);
+            
+            // تحميل لوجو الحضانة الرسمي والاحتفاظ به
+            window.loadNurseryLogo();
         });
     </script>
 </body>
