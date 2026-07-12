@@ -994,7 +994,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -1346,6 +1346,25 @@
         // 1. التهيئة والملف الشخصي
         window.loadTeacherProfile = async () => {
             document.getElementById('my-name-display').innerText = myName;
+
+            // Load avatar from localStorage first for instant display
+            const localAvatar = localStorage.getItem(`teacher_avatar_${myTeacherId}`);
+            if (localAvatar) {
+                document.getElementById('my-profile-pic').src = localAvatar;
+            }
+
+            // Then fetch from Firestore to stay in sync
+            try {
+                const docSnap = await getDoc(doc(db, "teachers_profile", myTeacherId));
+                if (docSnap.exists() && docSnap.data().avatarUrl) {
+                    const avatarUrl = docSnap.data().avatarUrl;
+                    document.getElementById('my-profile-pic').src = avatarUrl;
+                    localStorage.setItem(`teacher_avatar_${myTeacherId}`, avatarUrl);
+                }
+            } catch (err) {
+                console.error("Error loading avatar:", err);
+            }
+
             fetchTeacherRatings();
         };
 
@@ -1354,6 +1373,19 @@
             if(!file) return;
             const base64Pic = await toBase64(file);
             document.getElementById('my-profile-pic').src = base64Pic;
+
+            // Save to Firestore so it persists!
+            try {
+                await setDoc(doc(db, "teachers_profile", myTeacherId), {
+                    avatarUrl: base64Pic,
+                    teacherId: myTeacherId,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+                // Also save to localStorage for instant load next time
+                localStorage.setItem(`teacher_avatar_${myTeacherId}`, base64Pic);
+            } catch (err) {
+                console.error("Error saving avatar:", err);
+            }
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;

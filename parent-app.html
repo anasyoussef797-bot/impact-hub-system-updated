@@ -205,6 +205,22 @@
                         </button>
                     </div>
 
+                    <!-- جدول مواعيد الحجز الفوري للأستاذ أحمد علي -->
+                    <div class="card" style="margin: 15px; border: 2px solid rgba(128, 0, 0, 0.1); background: #fffcfc;">
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed rgba(128, 0, 0, 0.1); padding-bottom: 8px;">
+                            <div style="width: 36px; height: 36px; background: rgba(128, 0, 0, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--primary-maroon);">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 800; color: var(--primary-maroon);">جدول حصص الأستاذ أحمد علي المتاحة للحجز ⏰</h4>
+                                <p style="font-size: 11px; color: var(--text-gray);">أختر اليوم والوقت المناسب لطفلك واحجز مباشرة</p>
+                            </div>
+                        </div>
+                        <div id="home-slots-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                            <p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل مواعيد المدرس المتوفرة...</p>
+                        </div>
+                    </div>
+
                     <h3 class="section-title"><span data-i18n="playground_title">ساحة الأنشطة (البلاي جراوند)</span></h3>
                     <div class="card create-post-area">
                         <textarea id="parent-post-body" rows="2" data-i18n-placeholder="post_placeholder" placeholder="شاركنا لحظات طفلك..."></textarea>
@@ -227,7 +243,10 @@
                     <h3 class="section-title"><span data-i18n="tutoring_title">حجز ومتابعة الدروس 📹</span></h3>
                     <div class="card">
                         <div style="display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px;">
-                            <div style="width: 40px; height: 40px; background: var(--pastel-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--primary-maroon);"><i class="fa-solid fa-chalkboard-user"></i></div>
+                            <div style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--pastel-bg); border: 2px solid var(--primary-maroon);">
+                                <img id="tutoring-teacher-avatar" src="https://via.placeholder.com/100" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                <i id="tutoring-teacher-icon" class="fa-solid fa-chalkboard-user" style="font-size: 18px; color: var(--primary-maroon);"></i>
+                            </div>
                             <div>
                                 <h4 style="font-size: 14px; color: var(--text-dark);" data-i18n="tutoring_teacher">أ / أحمد علي</h4>
                                 <p style="font-size: 11px; color: var(--text-gray);" data-i18n="tutoring_subject">لغة إنجليزية</p>
@@ -251,6 +270,16 @@
                         </div>
 
                         <div id="jitsi-student-container"></div>
+
+                        <!-- جدول المواعيد المتاحة للحجز الأونلاين -->
+                        <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                            <h4 style="font-size: 13px; font-weight: 800; color: var(--primary-maroon); margin-bottom: 10px;">
+                                <i class="fa-solid fa-calendar-days"></i> جدول الحجز والمواعيد المتاحة للدرس الأونلاين:
+                            </h4>
+                            <div id="tutoring-slots-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+                                <p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل المواعيد...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -424,6 +453,38 @@
                 </div>
             </div>
 
+            <!-- مودال حجز المواعيد التفصيلي -->
+            <div class="modal-overlay" id="bookingModal">
+                <div class="modal-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
+                        <h3 style="color: var(--text-dark); font-size:16px;"><i class="fa-solid fa-calendar-check" style="color: var(--primary-maroon);"></i> تأكيد حجز موعد الدرس 📅</h3>
+                        <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="window.closeBookingModal()"></i>
+                    </div>
+                    <div style="background: rgba(128,0,0,0.03); border: 1px solid rgba(128,0,0,0.08); padding: 12px; border-radius: 12px; margin-bottom: 15px;">
+                        <p style="font-size: 13px; color: var(--text-dark); font-weight: bold; margin-bottom: 6px;">المدرس: <span id="booking-teacher-name">أ / أحمد علي</span></p>
+                        <p style="font-size: 13px; color: var(--text-dark); font-weight: bold; margin-bottom: 6px;">اليوم: <span id="booking-slot-day" style="color: var(--primary-maroon);"></span></p>
+                        <p style="font-size: 13px; color: var(--text-dark); font-weight: bold;">الوقت: <span id="booking-slot-time" style="color: var(--primary-maroon);"></span></p>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);">اسم الطالب (بالكامل):</label>
+                        <input type="text" id="booking-student-name" class="form-control" placeholder="أدخل اسم الطالب رباعي..." style="margin: 0; width: 100%;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--text-dark);">نوع الحصة:</label>
+                        <select id="booking-class-type" class="form-control" style="margin: 0; width: 100%;">
+                            <option value="خاصة">حصة خاصة - فردية (120 ج.م)</option>
+                            <option value="مجموعة">حصة مجموعة - مشتركة (50 ج.م)</option>
+                        </select>
+                    </div>
+
+                    <button class="btn-primary" onclick="window.submitBooking()" style="background: linear-gradient(135deg, var(--primary-maroon), #991b1b); box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);">
+                        <i class="fa-solid fa-check"></i> تأكيد الحجز فوراً 🚀
+                    </button>
+                </div>
+            </div>
+
             <!-- القائمة السفلية للتنقل -->
             <nav class="bottom-nav">
                 <div class="nav-item active" id="nav-item-home" onclick="window.switchTab('home', this)"><i class="fa-solid fa-house"></i><span data-i18n="nav_timeline">الرئيسية</span></div>
@@ -439,7 +500,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, where, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC1wGqBJs_7t1xAz374GVRznSH4gBUqiaQ",
@@ -812,6 +873,7 @@
             if (document.getElementById('main-app').style.display !== 'none') {
                 fetchTimelineFeed();
                 loadMarketplace();
+                window.fetchAvailabilityAndBookings();
             }
         };
 
@@ -832,6 +894,203 @@
             reader.onload = () => resolve(reader.result);
             reader.onerror = error => reject(error);
         });
+
+        // ================== 0. حجز المواعيد والتوفر الفوري للمعلم ==================
+        window.fetchAvailabilityAndBookings = async () => {
+            const homeContainer = document.getElementById('home-slots-container');
+            const tutoringContainer = document.getElementById('tutoring-slots-container');
+            
+            if (homeContainer) homeContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل المواعيد...</p>';
+            if (tutoringContainer) tutoringContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل المواعيد...</p>';
+
+            const targetTeacherId = "teacher_ahmed_001";
+
+            // 1. Fetch teacher avatar
+            try {
+                const docSnap = await getDoc(doc(db, "teachers_profile", targetTeacherId));
+                if (docSnap.exists() && docSnap.data().avatarUrl) {
+                    const avatarUrl = docSnap.data().avatarUrl;
+                    const avatarImg = document.getElementById('tutoring-teacher-avatar');
+                    const avatarIcon = document.getElementById('tutoring-teacher-icon');
+                    if (avatarImg) {
+                        avatarImg.src = avatarUrl;
+                        avatarImg.style.display = 'block';
+                    }
+                    if (avatarIcon) {
+                        avatarIcon.style.display = 'none';
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching teacher avatar:", err);
+            }
+
+            // 2. Fetch availability slots
+            let slots = [];
+            try {
+                const qSlots = query(collection(db, "teacher_availability"), where("teacherId", "==", targetTeacherId));
+                const snapSlots = await getDocs(qSlots);
+                snapSlots.forEach(d => {
+                    slots.push({ id: d.id, ...d.data() });
+                });
+            } catch (err) {
+                console.error("Error fetching slots:", err);
+            }
+
+            // 3. Fetch booked classes
+            let bookings = [];
+            try {
+                const qBookings = query(collection(db, "booked_classes"), where("teacherId", "==", targetTeacherId));
+                const snapBookings = await getDocs(qBookings);
+                snapBookings.forEach(d => {
+                    bookings.push(d.data());
+                });
+            } catch (err) {
+                console.error("Error fetching bookings:", err);
+            }
+
+            if (slots.length === 0) {
+                const noSlotsHtml = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px; padding: 10px;">لا توجد مواعيد متاحة مسجلة حالياً من قبل المدرس ⏰</p>`;
+                if (homeContainer) homeContainer.innerHTML = noSlotsHtml;
+                if (tutoringContainer) tutoringContainer.innerHTML = noSlotsHtml;
+                return;
+            }
+
+            // Sort slots by day order
+            const daysOrder = { "الأحد": 1, "الإثنين": 2, "الثلاثاء": 3, "الأربعاء": 4, "الخميس": 5, "الجمعة": 6, "السبت": 7 };
+            slots.sort((a, b) => (daysOrder[a.day] || 9) - (daysOrder[b.day] || 9));
+
+            // Generate HTML
+            let homeHtml = '';
+            let tutoringHtml = '';
+
+            slots.forEach(slot => {
+                const booking = bookings.find(b => b.date === slot.day && b.time === slot.time && b.status !== 'cancelled');
+                let isBooked = !!booking;
+                let cardStyle = '';
+                let contentHtml = '';
+
+                if (isBooked) {
+                    cardStyle = `background: #fee2e2; border: 1.5px solid #fecaca; color: #991b1b; padding: 10px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
+                    contentHtml = `
+                        <div>
+                            <div style="font-weight: 900; display: flex; align-items: center; gap: 4px;">
+                                <i class="fa-solid fa-circle-user" style="color:#ef4444;"></i> ${slot.day}
+                            </div>
+                            <div style="font-size: 10px; margin-top: 2px;">${slot.time}</div>
+                        </div>
+                        <div style="background: #f87171; color: white; padding: 3px 6px; border-radius: 6px; font-size: 9px; font-weight: 900; text-align: center; display: inline-block; align-self: start;">
+                            محجوز 🔴 (${booking.studentName})
+                        </div>
+                    `;
+                } else {
+                    cardStyle = `background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 10px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
+                    const escapedDay = slot.day.replace(/'/g, "\\'");
+                    const escapedTime = slot.time.replace(/'/g, "\\'");
+                    const escapedTeacherName = (slot.teacherName || "أ / أحمد علي").replace(/'/g, "\\'");
+
+                    contentHtml = `
+                        <div>
+                            <div style="font-weight: 900; display: flex; align-items: center; gap: 4px; color:#15803d;">
+                                <i class="fa-solid fa-calendar-day"></i> ${slot.day}
+                            </div>
+                            <div style="font-size: 10px; margin-top: 2px; color: #166534;">${slot.time}</div>
+                        </div>
+                        <button class="btn-primary" onclick="window.openBookingModal('${escapedDay}', '${escapedTime}', '${escapedTeacherName}')" style="margin: 0; padding: 4px 8px; font-size: 10px; width: auto; background: #22c55e; color: white; border-radius: 6px; font-weight: 900; align-self: stretch; text-align: center; box-shadow: none;">
+                            احجز الآن 📅
+                        </button>
+                    `;
+                }
+
+                const slotElement = `<div style="${cardStyle}">${contentHtml}</div>`;
+                homeHtml += slotElement;
+                tutoringHtml += slotElement;
+            });
+
+            if (homeContainer) homeContainer.innerHTML = homeHtml;
+            if (tutoringContainer) tutoringContainer.innerHTML = tutoringHtml;
+        };
+
+        // Booking selection modal helpers
+        let currentSelectedDay = "";
+        let currentSelectedTime = "";
+        let currentSelectedTeacherName = "";
+
+        window.openBookingModal = (day, time, teacherName) => {
+            currentSelectedDay = day;
+            currentSelectedTime = time;
+            currentSelectedTeacherName = teacherName;
+
+            document.getElementById('booking-slot-day').innerText = day;
+            document.getElementById('booking-slot-time').innerText = time;
+            document.getElementById('booking-teacher-name').innerText = teacherName;
+            document.getElementById('booking-student-name').value = '';
+
+            document.getElementById('bookingModal').style.display = 'flex';
+        };
+
+        window.closeBookingModal = () => {
+            document.getElementById('bookingModal').style.display = 'none';
+        };
+
+        window.submitBooking = async () => {
+            const studentName = document.getElementById('booking-student-name').value.trim();
+            const classType = document.getElementById('booking-class-type').value;
+
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
+            if (!studentName) {
+                alert(currentLang === 'ar' ? 'الرجاء إدخال اسم الطالب بالكامل!' : 'Please enter the student\'s full name!');
+                return;
+            }
+
+            try {
+                // Check double booking again just in case (safe concurrency check)
+                const qB = query(collection(db, "booked_classes"), where("teacherId", "==", "teacher_ahmed_001"), where("date", "==", currentSelectedDay), where("time", "==", currentSelectedTime));
+                const snapB = await getDocs(qB);
+                let doubleBooked = false;
+                snapB.forEach(d => {
+                    if (d.data().status !== 'cancelled') {
+                        doubleBooked = true;
+                    }
+                });
+
+                if (doubleBooked) {
+                    alert(currentLang === 'ar' ? 'عذراً، هذا الموعد تم حجزه للتو من طالب آخر!' : 'Sorry, this slot has just been booked by another student!');
+                    window.closeBookingModal();
+                    await window.fetchAvailabilityAndBookings();
+                    return;
+                }
+
+                const bookingDoc = {
+                    teacherId: "teacher_ahmed_001",
+                    teacherName: currentSelectedTeacherName,
+                    studentName: studentName,
+                    parentId: myParentId,
+                    parentName: myParentName,
+                    date: currentSelectedDay,
+                    time: currentSelectedTime,
+                    classType: classType,
+                    status: "upcoming",
+                    createdAt: new Date().getTime()
+                };
+
+                await addDoc(collection(db, "booked_classes"), bookingDoc);
+
+                // Add to Invoice / Cart
+                const price = classType === 'خاصة' ? 120 : 50;
+                const cartItemName = `حجز درس أونلاين (${classType}) مع مستر أحمد علي - يوم ${currentSelectedDay} (${currentSelectedTime}) طالب: ${studentName}`;
+                window.addToCart(cartItemName, price);
+
+                alert(currentLang === 'ar' ? '✅ تم الحجز بنجاح وإضافة الحصة للفاتورة للمراجعة!' : '✅ Booking successful and added to invoice for review!');
+                window.closeBookingModal();
+                
+                await window.fetchAvailabilityAndBookings();
+            } catch (err) {
+                console.error("Error saving booking:", err);
+                alert(currentLang === 'ar' ? 'حدث خطأ أثناء الحجز، حاول مرة أخرى!' : 'Error occurred during booking, please try again!');
+            }
+        };
 
         // ================== 1. حائط الأنشطة والتفاعل الكامل ==================
         window.publishParentPost = async () => {
@@ -1429,6 +1688,9 @@
                 const input = document.getElementById('kid-name-input');
                 if (input) input.value = savedKidName;
             }
+
+            // Load availability slots and bookings
+            window.fetchAvailabilityAndBookings();
         });
     </script>
 </body>
