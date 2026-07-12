@@ -1706,7 +1706,7 @@
         };
 
         // تهيئة وحمل اللغة المفضلة عند التشغيل
-        window.addEventListener('DOMContentLoaded', () => {
+        const initParentApp = () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
             
@@ -1747,7 +1747,13 @@
 
             // Load availability slots and bookings
             window.fetchAvailabilityAndBookings();
-        });
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initParentApp();
+        } else {
+            window.addEventListener('DOMContentLoaded', initParentApp);
+        }
     </script>
 </body>
 </html>

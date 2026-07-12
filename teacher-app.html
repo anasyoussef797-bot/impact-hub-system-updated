@@ -1820,14 +1820,20 @@
         };
 
         // التشغيل المبدئي للغات
-        window.addEventListener('DOMContentLoaded', () => {
+        const initTeacherApp = () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeTeacherLanguage(savedLang);
 
             loadTeacherProfile();
             fetchAvailabilitySlots();
             fetchBookedClasses();
-        });
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initTeacherApp();
+        } else {
+            window.addEventListener('DOMContentLoaded', initTeacherApp);
+        }
     </script>
 </body>
 </html>

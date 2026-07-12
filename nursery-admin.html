@@ -1518,13 +1518,19 @@
         };
 
         // تحميل اللغة المفضلة تلقائياً
-        window.addEventListener('DOMContentLoaded', () => {
+        const initManagerApp = () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeManagerLanguage(savedLang);
             
             // تحميل لوجو الحضانة الرسمي والاحتفاظ به
             window.loadNurseryLogo();
-        });
+        };
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initManagerApp();
+        } else {
+            window.addEventListener('DOMContentLoaded', initManagerApp);
+        }
     </script>
 </body>
 </html>

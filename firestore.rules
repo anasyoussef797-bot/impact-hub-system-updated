@@ -171,6 +171,14 @@ service cloud.firestore {
         && request.resource.data.text.size() <= 1000; // منع الرسائل الضخمة العشوائية
     }
     
+    match /teachers_profile/{docId} {
+      allow read, write: if true;
+    }
+    
+    match /nursery_profile/{docId} {
+      allow read, write: if true;
+    }
+    
     match /homework_assignments/{hwId} {
       allow read: if true;
       allow write: if isMap(request.resource.data)
