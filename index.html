@@ -1538,7 +1538,7 @@
             
             <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
                 <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Smart Shop">
+                    <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover;" alt="Smart Shop">
                     <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-purple);">
                         <i class="fa-solid fa-wallet" style="font-size: 18px;"></i>
                     </div>
@@ -2868,13 +2868,164 @@
             document.getElementById('videoModal').style.display = 'none';
         };
 
-        // Initialize Firebase processes
-        fetchWebSettingsLive();
-        fetchLandingDataLive(); 
-        fetchDynamicContent(); 
-        fetchAvailableTeachers(); 
-        fetchTopNurseries(); 
-        fetchProductsTeaser();
+        // Automatic seeding function to guarantee data is present on new databases
+        async function initializeDatabaseIfNeeded() {
+            try {
+                const nurseriesSnap = await getDocs(collection(db, "nurseries"));
+                if (nurseriesSnap.empty) {
+                    console.log("Database is empty. Seeding initial beautiful data...");
+                    
+                    // 1. Seed nurseries
+                    const defaultNursery = {
+                        id: "Ajyal_AlGhad_ID_001",
+                        name: "حضانة أجيال الغد النموذجية",
+                        adminName: "أ / هند صبري",
+                        address: "القاهرة - المعادي - شارع 9",
+                        phone: "01099887766",
+                        logo: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=150&q=80",
+                        rating: 5,
+                        teachersCount: 8,
+                        studentsCount: 45,
+                        status: "active",
+                        updatedAt: Date.now()
+                    };
+                    await setDoc(doc(db, "nurseries", "Ajyal_AlGhad_ID_001"), defaultNursery);
+                    await setDoc(doc(db, "nursery_profile", "Ajyal_AlGhad_ID_001"), {
+                        nurseryId: "Ajyal_AlGhad_ID_001",
+                        logoUrl: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=150&q=80",
+                        updatedAt: Date.now()
+                    });
+
+                    // 2. Seed teacher_availability
+                    const teachers = [
+                        {
+                            slotId: "slot_ahmed_1",
+                            teacherId: "teacher_ahmed_001",
+                            teacherName: "الأستاذ أحمد محمد",
+                            subject: "تأسيس لغات وحساب",
+                            nurseryId: "Ajyal_AlGhad_ID_001",
+                            day: "الأحد",
+                            time: "04:00 م - 05:00 م",
+                            featured: true,
+                            booked: false
+                        },
+                        {
+                            slotId: "slot_mona_1",
+                            teacherId: "teacher_mona_002",
+                            teacherName: "الأستاذة منى أحمد",
+                            subject: "لغة عربية وتربية إسلامية",
+                            nurseryId: "Ajyal_AlGhad_ID_001",
+                            day: "الاثنين",
+                            time: "05:00 م - 06:00 م",
+                            featured: true,
+                            booked: false
+                        }
+                    ];
+                    for (const t of teachers) {
+                        await setDoc(doc(db, "teacher_availability", t.slotId), t);
+                    }
+
+                    // 3. Seed products
+                    const productsList = [
+                        {
+                            id: "prod_001",
+                            title: "حقيبة الحروف المغناطيسية والأرقام المجسمة",
+                            price: 180,
+                            image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=300&q=80",
+                            description: "ألعاب خشبية لتعليم تهجئة الكلمات العربية والإنجليزية والعد ببساطة ومرح."
+                        },
+                        {
+                            id: "prod_002",
+                            title: "كتاب الرسم التفاعلي بالألوان المائية الذكية",
+                            price: 120,
+                            image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=300&q=80",
+                            description: "مجموعات رسم مبتكرة تعيد تلوين الصفحات بالماء فقط دون أي فوضى."
+                        },
+                        {
+                            id: "prod_003",
+                            title: "مجموعة مكعبات البناء والذكاء الهندسي الملونة",
+                            price: 240,
+                            image: "https://images.unsplash.com/photo-1515462277126-270d878326e5?auto=format&fit=crop&w=300&q=80",
+                            description: "لتنمية مهارات التخيل والتخطيط الحركي للأعمار من سنتين إلى 6 سنوات."
+                        }
+                    ];
+                    for (const p of productsList) {
+                        await setDoc(doc(db, "products", p.id), p);
+                    }
+
+                    // 4. Seed web_settings
+                    const webSettings = {
+                        logo: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=150&q=80",
+                        videoBlocks: [
+                            { position: "after-features", youtubeId: "bZ_pT_kP1gA" }
+                        ],
+                        reviews: [
+                            { author: "أ / سارة أحمد (ولية أمر)", text: "المعلمون هنا في غاية الاحترافية والتطبيق ساعدني جداً في حجز المواعيد ومتابعة طفلي أونلاين.", stars: 5 },
+                            { author: "د / محمود خالد (ولي أمر)", text: "أفضل استثمار في تعليم أطفالي، المنهج رائع والتفاعل ممتاز.", stars: 5 }
+                        ],
+                        faqs: [
+                            { question: "كيف يمكنني حجز حصة أونلاين لطفلي؟", answer: "يمكنك بسهولة اختيار المدرس المناسب وتحديد الوقت الملائم والضغط على حجز وتأكيد الدفع أونلاين." },
+                            { question: "هل المناهج معتمدة دولياً ومحلياً؟", answer: "نعم، كافة الحضانات المشمولة بشبكتنا تعتمد مناهج تعليمية حديثة معترف بها عالمياً." }
+                        ],
+                        floatingAssets: []
+                    };
+                    await setDoc(doc(db, "web_settings", "landing_page"), webSettings);
+
+                    // 5. Seed public_site / landing_data
+                    const landingData = {
+                        heroTitle: "إمباكت هب مصر - Impact Hub Egypt",
+                        heroSubtitle: "الشبكة الأولى في مصر والشرق الأوسط لربط الحضانات الذكية والمعلمين المعتمدين بأولياء الأمور لتأسيس تفاعلي رائد.",
+                        aboutText: "تأسست إمباكت هب مصر لتكون المنصة الشاملة لكل أسرة تبحث عن تعليم نوعي، ترفيه ذكي، وخدمات أمان كاملة لأطفالهم عبر تقنيات البث المباشر والواجبات التفاعلية الفعالة.",
+                        promoVideoUrl: "https://www.youtube.com/watch?v=bZ_pT_kP1gA"
+                    };
+                    await setDoc(doc(db, "public_site", "landing_data"), landingData);
+
+                    // 6. Seed public_site_items
+                    const siteItems = [
+                        {
+                            id: "item_001",
+                            category: "الأنشطة الترفيهية والألعاب",
+                            title: "صناعة الصلصال المنزلي الصحي والمرح",
+                            image: "https://images.unsplash.com/photo-1515462277126-270d878326e5?auto=format&fit=crop&w=400&q=80",
+                            youtubeUrl: "https://www.youtube.com/watch?v=bZ_pT_kP1gA"
+                        },
+                        {
+                            id: "item_002",
+                            category: "الأنشطة الترفيهية والألعاب",
+                            title: "ألعاب الفك والتركيب وتنمية الذكاء الإبداعي",
+                            image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=400&q=80",
+                            youtubeUrl: "https://www.youtube.com/watch?v=bZ_pT_kP1gA"
+                        },
+                        {
+                            id: "item_003",
+                            category: "العلوم المبسطة والاستكشاف",
+                            title: "تجربة بركان الصودا والألوان الساحرة الممتعة",
+                            image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80",
+                            youtubeUrl: "https://www.youtube.com/watch?v=bZ_pT_kP1gA"
+                        }
+                    ];
+                    for (const item of siteItems) {
+                        await setDoc(doc(db, "public_site_items", item.id), item);
+                    }
+                    
+                    console.log("Database seeded successfully!");
+                }
+            } catch (e) {
+                console.error("Error checking or seeding database:", e);
+            }
+        }
+
+        // Initialize Firebase processes with auto seeding sequence
+        async function runInit() {
+            await initializeDatabaseIfNeeded();
+            fetchWebSettingsLive();
+            fetchLandingDataLive(); 
+            fetchDynamicContent(); 
+            fetchAvailableTeachers(); 
+            fetchTopNurseries(); 
+            fetchProductsTeaser();
+        }
+        runInit();
     </script>
 
     <script>
