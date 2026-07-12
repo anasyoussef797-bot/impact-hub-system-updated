@@ -560,8 +560,9 @@
                 <div class="nav-item" onclick="switchTab('orders-tab', this)">
                     <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="nav_orders">إدارة الطلبات</span></span>
                 </div>
-                <div class="nav-item" onclick="switchTab('landing-bookings-tab', this)">
+                <div class="nav-item" onclick="switchTab('landing-bookings-tab', this)" style="display: flex; justify-content: space-between; align-items: center;">
                     <span><i class="fa-solid fa-calendar-check"></i> <span style="font-weight: bold; color: var(--kid-pink);">حجوزات الحصص أونلاين</span></span>
+                    <span id="booking-notif-badge" style="background: #dc2626; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none;">0</span>
                 </div>
                 <hr style="border: 0; border-top: 1px solid rgba(128, 0, 0, 0.05); margin: 15px 10px;">
                 <div class="nav-item live-builder-btn" onclick="openLiveBuilder()">
@@ -751,23 +752,11 @@
             <!-- تابة المدرسين الأونلاين -->
             <div id="online-teachers-tab" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header" data-i18n="online_teachers_header"><i class="fa-solid fa-chalkboard-user"></i> المدرسين الأونلاين المتاحين للتعيين بالواجهة</div>
-                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px;" data-i18n="online_teachers_desc">المدرسين بالأسفل قاموا بكتابة مواعيدهم مسبقاً عبر حساباتهم. اختر منهم من يمثل "Impact Hub" لرفعه وعرضه على الواجهة الرئيسية العامة.</p>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-i18n="th_teacher_name">اسم المدرس</th>
-                                    <th data-i18n="th_subject">التخصص التعليمي</th>
-                                    <th data-i18n="th_availability">المواعيد المسجلة مسبقاً</th>
-                                    <th data-i18n="th_status_landing">الحالة على الرئيسية</th>
-                                    <th data-i18n="th_actions_landing">الإجراء والتحكم</th>
-                                </tr>
-                            </thead>
-                            <tbody id="online-teachers-tbody">
-                                <tr><td colspan="5" style="text-align: center; color: gray;" data-i18n="loading_teachers">جاري تحميل المدرسين المتاحين للتحكم...</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="panel-header" data-i18n="online_teachers_header"><i class="fa-solid fa-chalkboard-user"></i> حسابات المدرسين المتاحين للرفع والتقييم</div>
+                    <p style="font-size: 13.5px; color: var(--text-gray); margin-bottom: 20px;" data-i18n="online_teachers_desc">اضغط على صورة أي مدرس لفتحه والتحكم في تقييمه، عدد ساعاته، تخصصه، سعر الحصة، رقم هاتفه، أو تفعيل ظهوره في الواجهة الرئيسية العامة (Home).</p>
+                    
+                    <div id="online-teachers-grid-wrapper" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 20px; margin-top: 15px;">
+                        <p style="grid-column: 1/-1; text-align: center; color: gray;" data-i18n="loading_teachers">جاري تحميل المدرسين المتاحين للتحكم... ⏳</p>
                     </div>
                 </div>
             </div>
@@ -861,22 +850,55 @@
             <div id="marketplace-tab" class="tab-content">
                 <div class="panel">
                     <div class="panel-header" data-i18n="add_product_title">إضافة منتج مركزي للماركت بليس الموحد</div>
-                    <div class="form-group">
-                        <label data-i18n="p_lbl_title">اسم المنتج أو الباقة التعليمية / المنهج</label>
-                        <input type="text" id="prod-title" class="form-control">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label data-i18n="p_lbl_title">اسم المنتج أو الباقة التعليمية / المنهج</label>
+                            <input type="text" id="prod-title" class="form-control" style="margin:0;">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="p_lbl_price">السعر الثابت (ج.م)</label>
+                            <input type="number" id="prod-price" class="form-control" style="margin:0;">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label data-i18n="p_lbl_price">السعر الثابت (ج.م)</label>
-                        <input type="number" id="prod-price" class="form-control">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="form-group">
+                            <label style="font-weight: bold; font-size: 13px;">عدد المبيعات الافتراضي</label>
+                            <input type="number" id="prod-sales" class="form-control" value="0" style="margin:0;">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight: bold; font-size: 13px;">التقييم الافتراضي (1-5 نجوم)</label>
+                            <input type="number" id="prod-rating" class="form-control" min="1" max="5" value="5" style="margin:0;">
+                        </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 15px;">
                         <label data-i18n="p_lbl_image">صورة المنتج الحقيقية (ملف)</label>
-                        <input type="file" id="prod-image" class="form-control" accept="image/*">
+                        <input type="file" id="prod-image" class="form-control" accept="image/*" style="margin:0; padding:4px;">
                     </div>
-                    <button class="btn-primary" onclick="uploadMarketProduct()">
+                    <button class="btn-primary" style="margin-top: 15px;" onclick="uploadMarketProduct()">
                         <i class="fa-solid fa-cloud-arrow-up"></i> 
                         <span data-i18n="btn_publish_market">نشر بالماركت بليس الموحد</span>
                     </button>
+                </div>
+
+                <div class="panel" style="margin-top: 25px;">
+                    <div class="panel-header"><i class="fa-solid fa-store"></i> المنتجات الحالية بالمتجر المركزي</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>اسم المنتج</th>
+                                    <th>السعر (ج.م)</th>
+                                    <th>عدد المبيعات</th>
+                                    <th>التقييم</th>
+                                    <th>التحكم والإجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="central-products-tbody">
+                                <tr><td colspan="6" style="text-align: center; color: gray;">جاري تحميل المنتجات...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -938,6 +960,62 @@
                 </div>
             </div>
 
+            <!-- Modal for Teacher Profile Details & Admin Control -->
+            <div id="teacherAdminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px);">
+                <div style="background: white; border-radius: 20px; max-width: 500px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
+                    <div style="background: linear-gradient(135deg, var(--primary-maroon), #9c1c1c); color: white; padding: 20px; text-align: center; position: relative;">
+                        <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 22px; cursor: pointer;" onclick="document.getElementById('teacherAdminModal').style.display='none'"></i>
+                        <img id="m-teacher-pic" src="" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                        <h3 style="font-size: 18px; font-weight: 800; margin: 0;">لوحة تفاصيل المدرس ومستواه</h3>
+                    </div>
+                    <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                        <input type="hidden" id="m-teacher-id">
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">اسم المدرس</label>
+                            <input type="text" id="m-teacher-name" class="form-control" style="font-size: 14px; width: 100%;">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">اسم الحضانة / الأكاديمية التابع لها</label>
+                            <input type="text" id="m-teacher-nursery" class="form-control" style="font-size: 14px; width: 100%;">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">التقييم (1-5 نجوم)</label>
+                                <input type="number" id="m-teacher-rating" class="form-control" min="1" max="5" style="font-size: 14px; width: 100%;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">ساعات العمل السابقة</label>
+                                <input type="number" id="m-teacher-hours" class="form-control" style="font-size: 14px; width: 100%;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group">
+                                <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">سعر الحصة (ج.م)</label>
+                                <input type="number" id="m-teacher-price" class="form-control" style="font-size: 14px; width: 100%;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">رقم هاتف المدرس</label>
+                                <input type="text" id="m-teacher-phone" class="form-control" style="font-size: 14px; width: 100%;">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="font-weight: 800; font-size: 13px; color: var(--text-dark); display: block; margin-bottom: 5px;">المادة التعليمية والتخصص</label>
+                            <input type="text" id="m-teacher-subject" class="form-control" style="font-size: 14px; width: 100%;">
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button class="btn-primary" style="flex: 1; padding: 12px; font-weight: 800;" onclick="window.saveTeacherAdminDetails()">حفظ التعديلات والتقييم 💾</button>
+                            <button id="m-teacher-toggle-btn" class="btn-success" style="flex: 1; padding: 12px; font-weight: 800;">تحديث حالة المعروض</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -948,7 +1026,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, arrayUnion, arrayRemove, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, arrayUnion, arrayRemove, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBQf6KEsbBXnK9AZ3UnKNZGD4z4uIswAZk",
@@ -1894,48 +1972,174 @@
 
         // 3. المدرسين الأونلاين المتميزين
         window.fetchOnlineTeachers = async () => {
-            const tbody = document.getElementById('online-teachers-tbody');
-            const snap = await getDocs(collection(db, "teacher_availability"));
-            tbody.innerHTML = '';
-            let count = 0;
+            const gridContainer = document.getElementById('online-teachers-grid-wrapper');
+            if(!gridContainer) return;
+            
+            gridContainer.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:24px; color:var(--primary-maroon);"></i><p style="margin-top:10px; font-weight:bold; color:gray;">جاري جلب بيانات المدرسين الحالية... ⏳</p></div>';
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
-            snap.forEach(docData => {
-                count++;
-                const teacher = docData.data();
-                const id = docData.id;
-                const isFeatured = teacher.featured === true;
+            try {
+                // 1. Fetch teacher availabilities to find active teachers
+                const availSnap = await getDocs(collection(db, "teacher_availability"));
+                
+                // 2. Fetch profiles
+                const profilesSnap = await getDocs(collection(db, "teachers_profile"));
+                const teacherProfiles = {};
+                profilesSnap.forEach(pDoc => {
+                    teacherProfiles[pDoc.id] = { id: pDoc.id, ...pDoc.data() };
+                });
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${teacher.teacherName || 'مدرس متعاقد'}</strong></td>
-                        <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:4px; font-size:13px;">${currentLang === 'ar' ? 'منهج لغات تفاعلي' : 'Interactive Curriculum'}</span></td>
-                        <td><small style="color:gray;">${teacher.day} | ${teacher.time}</small></td>
-                        <td>
+                // Group by teacherId
+                const uniqueTeachers = {};
+                availSnap.forEach(docData => {
+                    const item = docData.data();
+                    const tid = item.teacherId;
+                    if(!tid) return;
+                    
+                    if(!uniqueTeachers[tid]) {
+                        // Fallback to availability fields if no profile doc exists yet
+                        const prof = teacherProfiles[tid] || {};
+                        uniqueTeachers[tid] = {
+                            teacherId: tid,
+                            teacherName: prof.name || item.teacherName || "مدرس متعاقد",
+                            nurseryName: prof.nurseryName || "أكاديمية إمباكت",
+                            rating: prof.rating !== undefined ? prof.rating : 5,
+                            hoursWorked: prof.hoursWorked !== undefined ? prof.hoursWorked : 0,
+                            price: prof.price !== undefined ? prof.price : 120,
+                            phone: prof.phone || "غير مسجل",
+                            subject: prof.subject || "منهج لغات تفاعلي",
+                            featured: prof.featured === true || item.featured === true,
+                            avatarUrl: prof.avatarUrl || prof.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.teacherName || 'T')}&background=002f6c&color=fff&rounded=true&size=100`,
+                            slotsCount: 0
+                        };
+                    }
+                    uniqueTeachers[tid].slotsCount++;
+                    if (item.featured === true) {
+                        uniqueTeachers[tid].featured = true;
+                    }
+                });
+
+                gridContainer.innerHTML = '';
+                const tKeys = Object.keys(uniqueTeachers);
+                if(tKeys.length === 0) {
+                    gridContainer.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:gray; font-weight:bold; padding:20px;">لا يوجد مدرسين مسجلين بالجدول حالياً.</p>`;
+                    return;
+                }
+
+                tKeys.forEach(tid => {
+                    const t = uniqueTeachers[tid];
+                    const isFeatured = t.featured === true;
+                    gridContainer.innerHTML += `
+                        <div class="teacher-account-card" style="background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:20px; text-align:center; position:relative; box-shadow:var(--card-shadow); cursor:pointer; transition: transform 0.2s;" onclick="window.openTeacherAdminDetails('${tid}')">
+                            <img src="${t.avatarUrl}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin:0 auto 12px; border:3px solid ${isFeatured ? 'var(--success-green)' : 'var(--border-color)'};">
+                            <h4 style="font-size:15px; font-weight:800; color:var(--text-dark); margin-bottom:4px;">${t.teacherName}</h4>
+                            <p style="font-size:11px; color:var(--text-gray); margin-bottom:12px; font-weight:bold;">${t.subject}</p>
                             ${isFeatured ? 
-                                `<span style="color:var(--success-green); font-weight:bold;"><i class="fa-solid fa-circle-check"></i> ${currentLang === 'ar' ? 'معروض بالرئيسية' : 'Featured'}</span>` : 
-                                `<span style="color:var(--text-gray);"><i class="fa-solid fa-circle-minus"></i> ${currentLang === 'ar' ? 'مخفي' : 'Hidden'}</span>`}
-                        </td>
-                        <td>
-                            ${isFeatured ? 
-                                `<button class="btn-danger" onclick="window.toggleTeacherFeatured('${id}', false)">إلغاء</button>` : 
-                                `<button class="btn-success" onclick="window.toggleTeacherFeatured('${id}', true)">تفعيل وعرض</button>`}
-                        </td>
-                    </tr>
-                `;
-            });
-            if(count === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:gray;">${dict.loading_teachers}</td></tr>`; }
+                                `<span style="background:rgba(16,185,129,0.1); color:var(--success-green); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-circle-check"></i> معروض بالرئيسية</span>` : 
+                                `<span style="background:#f1f5f9; color:var(--text-gray); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-circle-minus"></i> مخفي</span>`
+                            }
+                        </div>
+                    `;
+                    
+                    window.loadedTeachersData = window.loadedTeachersData || {};
+                    window.loadedTeachersData[tid] = t;
+                });
+            } catch (err) {
+                console.error("Error loading teachers accounts:", err);
+                gridContainer.innerHTML = `<p style="grid-column:1/-1; text-align:center; color:red; font-weight:bold;">حدث خطأ أثناء تحميل بيانات المدرسين.</p>`;
+            }
         };
 
-        window.toggleTeacherFeatured = async (id, status) => {
-            const currentLang = localStorage.getItem('selected_language') || 'ar';
-            const dict = superTranslations[currentLang] || superTranslations.ar;
+        window.openTeacherAdminDetails = (tid) => {
+            const t = window.loadedTeachersData[tid];
+            if(!t) return;
 
-            await updateDoc(doc(db, "teacher_availability", id), { featured: status });
-            alert(status ? dict.alert_featured_on : dict.alert_featured_off);
-            window.fetchOnlineTeachers();
+            document.getElementById('m-teacher-id').value = tid;
+            document.getElementById('m-teacher-pic').src = t.avatarUrl;
+            document.getElementById('m-teacher-name').value = t.teacherName;
+            document.getElementById('m-teacher-nursery').value = t.nurseryName;
+            document.getElementById('m-teacher-rating').value = t.rating;
+            document.getElementById('m-teacher-hours').value = t.hoursWorked;
+            document.getElementById('m-teacher-price').value = t.price;
+            document.getElementById('m-teacher-phone').value = t.phone;
+            document.getElementById('m-teacher-subject').value = t.subject;
+
+            const isFeatured = t.featured === true;
+            const toggleBtn = document.getElementById('m-teacher-toggle-btn');
+            if(isFeatured) {
+                toggleBtn.className = 'btn-danger';
+                toggleBtn.style.background = 'var(--danger-red)';
+                toggleBtn.innerHTML = '<i class="fa-solid fa-ban"></i> إيقاف من الرئيسية';
+                toggleBtn.onclick = () => window.updateTeacherFeaturedStatus(tid, false);
+            } else {
+                toggleBtn.className = 'btn-success';
+                toggleBtn.style.background = 'var(--success-green)';
+                toggleBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> رفع للرئيسية';
+                toggleBtn.onclick = () => window.updateTeacherFeaturedStatus(tid, true);
+            }
+
+            document.getElementById('teacherAdminModal').style.display = 'flex';
+        };
+
+        window.saveTeacherAdminDetails = async () => {
+            const tid = document.getElementById('m-teacher-id').value;
+            const name = document.getElementById('m-teacher-name').value;
+            const nurseryName = document.getElementById('m-teacher-nursery').value;
+            const rating = parseInt(document.getElementById('m-teacher-rating').value) || 5;
+            const hoursWorked = parseInt(document.getElementById('m-teacher-hours').value) || 0;
+            const price = parseFloat(document.getElementById('m-teacher-price').value) || 120;
+            const phone = document.getElementById('m-teacher-phone').value;
+            const subject = document.getElementById('m-teacher-subject').value;
+
+            try {
+                // Save to teachers_profile
+                await setDoc(doc(db, "teachers_profile", tid), {
+                    name,
+                    nurseryName,
+                    rating,
+                    hoursWorked,
+                    price,
+                    phone,
+                    subject
+                }, { merge: true });
+
+                // Also update availability documents teacherName
+                const availSnap = await getDocs(query(collection(db, "teacher_availability"), where("teacherId", "==", tid)));
+                const batchPromises = [];
+                availSnap.forEach(d => {
+                    batchPromises.push(updateDoc(doc(db, "teacher_availability", d.id), { teacherName: name }));
+                });
+                await Promise.all(batchPromises);
+
+                alert('✅ تم حفظ بيانات المدرس بنجاح والتحكم في تقييمه!');
+                document.getElementById('teacherAdminModal').style.display = 'none';
+                window.fetchOnlineTeachers();
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء حفظ التعديلات.');
+            }
+        };
+
+        window.updateTeacherFeaturedStatus = async (tid, status) => {
+            try {
+                await setDoc(doc(db, "teachers_profile", tid), { featured: status }, { merge: true });
+
+                const availSnap = await getDocs(query(collection(db, "teacher_availability"), where("teacherId", "==", tid)));
+                const batchPromises = [];
+                availSnap.forEach(d => {
+                    batchPromises.push(updateDoc(doc(db, "teacher_availability", d.id), { featured: status }));
+                });
+                await Promise.all(batchPromises);
+
+                alert(status ? '✅ تم رفع المدرس للرئيسية بنجاح!' : '❌ تم إيقاف عرض المدرس من الرئيسية');
+                document.getElementById('teacherAdminModal').style.display = 'none';
+                window.fetchOnlineTeachers();
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ أثناء تغيير حالة الظهور.');
+            }
         };
 
         // 4. إعدادات الهوية للواجهة
@@ -2111,13 +2315,94 @@
 
             const title = document.getElementById('prod-title').value; 
             const price = document.getElementById('prod-price').value; 
+            const salesCount = parseInt(document.getElementById('prod-sales').value) || 0;
+            const rating = parseInt(document.getElementById('prod-rating').value) || 5;
             const imgFile = document.getElementById('prod-image').files[0];
+            
             if(!title || !price || !imgFile) { alert(dict.alert_market_fill); return; }
             const compressedImg = await compressImage(imgFile, 600, 600);
             
-            await addDoc(collection(db, "products"), { title, price: parseFloat(price), image: compressedImg });
+            await addDoc(collection(db, "products"), { 
+                title, 
+                price: parseFloat(price), 
+                image: compressedImg,
+                salesCount: salesCount,
+                rating: rating
+            });
             alert(dict.alert_market_success); 
-            document.getElementById('prod-title').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-image').value = '';
+            document.getElementById('prod-title').value = ''; 
+            document.getElementById('prod-price').value = ''; 
+            document.getElementById('prod-image').value = '';
+            document.getElementById('prod-sales').value = '0';
+            document.getElementById('prod-rating').value = '5';
+            window.fetchCentralProducts();
+        };
+
+        window.fetchCentralProducts = async () => {
+            const tbody = document.getElementById('central-products-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: gray;">جاري جلب المنتجات... ⏳</td></tr>';
+            try {
+                const snap = await getDocs(collection(db, "products"));
+                tbody.innerHTML = '';
+                if(snap.empty) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: gray;">لا يوجد منتجات بالمتجر حالياً.</td></tr>';
+                    return;
+                }
+                snap.forEach(docSnap => {
+                    const item = docSnap.data();
+                    const id = docSnap.id;
+                    const rating = item.rating || 5;
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:11px; margin:0 1px;"></i>`).join('');
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><img src="${item.image || 'https://via.placeholder.com/50'}" width="50" style="border-radius:8px; height:50px; object-fit:cover;"></td>
+                            <td><strong>${item.title}</strong></td>
+                            <td>${item.price} ج.م</td>
+                            <td>${item.salesCount || 0}</td>
+                            <td>${stars} (${rating})</td>
+                            <td>
+                                <button class="btn-success" style="padding:4px 8px; font-size:11px;" onclick="window.editCentralProduct('${id}', '${item.title.replace(/'/g, "\\'")}', ${item.price}, ${item.salesCount || 0}, ${rating})"><i class="fa-solid fa-pen"></i> تعديل</button>
+                                <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="window.deleteCentralProduct('${id}')"><i class="fa-solid fa-trash"></i> حذف</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch(e) {
+                console.error(e);
+            }
+        };
+
+        window.deleteCentralProduct = async (id) => {
+            if(confirm('هل أنت متأكد من حذف هذا المنتج من المتجر المركزي نهائياً؟')) {
+                await deleteDoc(doc(db, "products", id));
+                window.fetchCentralProducts();
+            }
+        };
+
+        window.editCentralProduct = async (id, currentTitle, currentPrice, currentSales, currentRating) => {
+            const newTitle = prompt('تعديل اسم المنتج:', currentTitle);
+            if(newTitle === null) return;
+            const newPriceStr = prompt('تعديل السعر (ج.م):', currentPrice);
+            if(newPriceStr === null) return;
+            const newSalesStr = prompt('تعديل عدد المبيعات:', currentSales);
+            if(newSalesStr === null) return;
+            const newRatingStr = prompt('تعديل التقييم (1-5):', currentRating);
+            if(newRatingStr === null) return;
+
+            const priceVal = parseFloat(newPriceStr) || currentPrice;
+            const salesVal = parseInt(newSalesStr) || 0;
+            const ratingVal = parseInt(newRatingStr) || 5;
+
+            await updateDoc(doc(db, "products", id), {
+                title: newTitle,
+                price: priceVal,
+                salesCount: salesVal,
+                rating: ratingVal
+            });
+            alert('✅ تم تعديل المنتج بنجاح!');
+            window.fetchCentralProducts();
         };
 
         // 6. الشحن والخدمات اللوجستية مع Axon Express
@@ -2156,6 +2441,7 @@
             if(tabId === 'web-settings-tab') window.loadWebSettings();
             if(tabId === 'global-broadcast-tab') window.fetchGlobalNetworkFeed();
             if(tabId === 'landing-bookings-tab') window.fetchLandingBookings();
+            if(tabId === 'marketplace-tab') window.fetchCentralProducts();
             
             // إغلاق الشريط الجانبي على الجوال
             document.getElementById('appSidebar').classList.remove('open');
@@ -2324,10 +2610,95 @@
             document.getElementById('appSidebar').classList.toggle('open');
         };
 
+        window.playNotificationChime = () => {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                // Double-beep synth
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+                
+                gain1.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start();
+                osc1.stop(ctx.currentTime + 0.3);
+            } catch (err) {
+                console.error("Audio chime failed:", err);
+            }
+        };
+
+        let isInitialLoad = true;
+        window.setupRealtimeBookingNotifications = () => {
+            const q = query(collection(db, "landing_bookings"), where("status", "==", "pending"));
+            onSnapshot(q, (snapshot) => {
+                let pendingCount = snapshot.size;
+                const badge = document.getElementById('booking-notif-badge');
+                if (badge) {
+                    if (pendingCount > 0) {
+                        badge.innerText = pendingCount;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+
+                // If not initial load and a document was added, trigger the notification
+                let hasNewAdded = false;
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        hasNewAdded = true;
+                    }
+                });
+
+                if (!isInitialLoad && hasNewAdded) {
+                    window.playNotificationChime();
+                    window.showNotificationToast("🔔 إشعار جديد: قام ولي أمر بحجز حصة أونلاين ودفع الرسوم!");
+                }
+                isInitialLoad = false;
+            });
+        };
+
+        window.showNotificationToast = (message) => {
+            let toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.background = '#9c1c1c';
+            toast.style.color = 'white';
+            toast.style.padding = '16px 24px';
+            toast.style.borderRadius = '12px';
+            toast.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+            toast.style.fontSize = '14px';
+            toast.style.fontWeight = 'bold';
+            toast.style.zIndex = '9999';
+            toast.style.direction = 'rtl';
+            toast.style.display = 'flex';
+            toast.style.alignItems = 'center';
+            toast.style.gap = '10px';
+            toast.innerHTML = `<i class="fa-solid fa-bell fa-bounce"></i> <span>${message}</span>`;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = 'all 0.5s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 500);
+            }, 6000);
+        };
+
         // تحميل اللغة المفضلة تلقائياً
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeSuperLanguage(savedLang);
+            window.setupRealtimeBookingNotifications();
         });
     </script>
 </body>

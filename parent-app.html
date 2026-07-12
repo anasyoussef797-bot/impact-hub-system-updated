@@ -1133,29 +1133,25 @@
             fetchTimelineFeed();
         };
 
-        window.fetchTimelineFeed = async () => {
+        let parentNurseryPosts = [];
+        let parentGlobalPostsList = [];
+
+        function renderCombinedParentFeed() {
             const container = document.getElementById('timeline-feed');
             container.innerHTML = '';
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
 
-            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
-            const snap = await getDocs(q);
+            const combined = [...parentNurseryPosts, ...parentGlobalPostsList];
+            combined.sort((a, b) => b.timestamp - a.timestamp);
 
-            if(snap.empty) {
+            if(combined.length === 0) {
                 container.innerHTML = `<p style="text-align:center; color: var(--text-gray); font-size:12px;">${dict.loading_posts}</p>`;
                 return;
             }
 
-            let posts = [];
-            snap.forEach(docData => {
-                posts.push({ id: docData.id, ...docData.data() });
-            });
-            // ترتيب المنشورات من الأحدث للأقدم
-            posts.sort((a, b) => b.timestamp - a.timestamp);
-
-            posts.forEach(post => {
+            combined.forEach(post => {
                 const postId = post.id;
                 let isLiked = post.likes && post.likes.includes(myParentId);
                 let likeStyle = isLiked ? 'color: var(--primary-maroon); font-weight: 900;' : '';
@@ -1173,11 +1169,17 @@
                     });
                 }
 
+                const isGlobal = post.targetApp !== undefined;
+                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:#002f6c; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
+
                 container.innerHTML += `
                     <div class="feed-post">
                         <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                            <strong>${post.authorName}</strong>
-                            ${post.authorId === myParentId ? `
+                            <div>
+                                <strong style="font-weight:900;">${post.authorName}</strong> 
+                                ${authorBadge}
+                            </div>
+                            ${(!isGlobal && post.authorId === myParentId) ? `
                             <div style="display: flex; gap: 8px;">
                                 <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
@@ -1189,13 +1191,15 @@
                         </div>
                         ${post.title ? `<h4 style="font-weight:900; margin-bottom:8px; color: var(--text-dark);">${post.title}</h4>` : ''}
                         <p>${post.body}</p>
-                        ${post.image ? `<div class="feed-media"><img src="${post.image}"></div>` : ''}
+                        ${(post.image || post.media) ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px;"></div>` : ''}
                         ${ytIframe}
                         <div class="post-actions">
-                            <button class="action-btn" style="${likeStyle}" onclick="window.likePost('${postId}', ${isLiked})">
+                            <button class="action-btn" style="${likeStyle}" onclick="${isGlobal ? `alert('غير متاح التفاعل مع الإعلانات العامة')` : `window.likePost('${postId}', ${isLiked})`}">
                                 <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${post.likes ? post.likes.length : 0})
                             </button>
                         </div>
+                        
+                        ${isGlobal ? '' : `
                         <div class="comments-section">
                             <div id="comments-box-${postId}">${commentsHtml}</div>
                             <div class="comment-input-area" style="display:flex; gap:5px; margin-top:5px;">
@@ -1204,8 +1208,32 @@
                                     ${dict.reply_btn}
                                 </button>
                             </div>
-                        </div>
+                        </div>`}
                     </div>`;
+            });
+        }
+
+        window.fetchTimelineFeed = async () => {
+            const qNursery = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            const qGlobal = query(collection(db, "global_posts"));
+
+            onSnapshot(qNursery, (snap) => {
+                parentNurseryPosts = [];
+                snap.forEach(docData => {
+                    parentNurseryPosts.push({ id: docData.id, ...docData.data() });
+                });
+                renderCombinedParentFeed();
+            });
+
+            onSnapshot(qGlobal, (snap) => {
+                parentGlobalPostsList = [];
+                snap.forEach(docData => {
+                    const data = docData.data();
+                    if (data.targetApp === 'parents' || data.targetApp === 'all') {
+                        parentGlobalPostsList.push({ id: docData.id, ...data });
+                    }
+                });
+                renderCombinedParentFeed();
             });
         };
 
@@ -1395,11 +1423,27 @@
             let htmlContent = `
                 <div class="product-card">
                     <h4 style="font-weight: 800; font-size: 14px;">${dict.book_interactive}</h4>
+                    <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع 42 قطعة</div>
                     <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 85${currency}</p>
                     <button class="btn-primary" onclick="window.addToCart('${dict.book_interactive}', 85)">${dict.add_to_cart_btn}</button>
                 </div>
                 <div class="product-card">
                     <h4 style="font-weight: 800; font-size: 14px;">${dict.blocks_interactive}</h4>
+                    <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                    </div>
+                    <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع 89 قطعة</div>
                     <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 120${currency}</p>
                     <button class="btn-primary" onclick="window.addToCart('${dict.blocks_interactive}', 120)">${dict.add_to_cart_btn}</button>
                 </div>`;
@@ -1409,10 +1453,16 @@
                 const snap = await getDocs(collection(db, "products"));
                 snap.forEach(docSnap => {
                     const prod = docSnap.data();
+                    const rating = prod.rating || 5;
+                    const sales = prod.salesCount || 0;
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:11px;"></i>`).join('');
+                    
                     htmlContent += `
                         <div class="product-card">
                             ${prod.image ? `<img src="${prod.image}" style="width:100%; height:100px; object-fit:cover; border-radius:8px; margin-bottom:8px;" alt="${prod.title}">` : ''}
                             <h4 style="font-weight: 800; font-size: 14px;">${prod.title}</h4>
+                            <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">${stars}</div>
+                            <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع ${sales} قطعة</div>
                             <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} ${prod.price}${currency}</p>
                             <button class="btn-primary" onclick="window.addToCart('${prod.title}', ${prod.price})">${dict.add_to_cart_btn}</button>
                         </div>`;

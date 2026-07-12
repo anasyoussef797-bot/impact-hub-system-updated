@@ -1671,6 +1671,7 @@
             
             <div style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.1); padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 13px;">
                 <p style="margin-bottom: 4px; font-weight: 800; color: var(--primary-indigo);">💳 معلومات الدفع وتحويل الرسوم:</p>
+                <p style="margin-bottom: 4px; color: #dc2626; font-weight: 800;">⏰ الحصة الفردية مدتها ساعة كاملة (60 دقيقة) مخصصة لتأسيس طفلك بالكامل.</p>
                 <p style="margin-bottom: 4px;">• سعر الحصة الثابت: <strong>120 ج.م</strong></p>
                 <p style="margin-bottom: 4px;">• فودافون كاش: <strong>01023456789</strong></p>
                 <p>• حساب انستاباي: <strong>hub@instapay</strong></p>
@@ -2846,12 +2847,19 @@
                     const prod = docData.data();
                     const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
                     const hasImage = !!prod.image;
+                    const rating = prod.rating || 5;
+                    const sales = prod.salesCount || 0;
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:12px; margin: 0 1px;"></i>`).join('');
+                    const salesLabel = activeLang === 'ar' ? `تم بيع ${sales} قطعة` : `${sales} items sold`;
+
                     container.innerHTML += `
                         <div class="product-card">
                             <div class="product-icon-box" style="${hasImage ? 'padding:0; overflow:hidden; background:none;' : ''}">
                                 ${hasImage ? `<img src="${prod.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${prod.title}">` : `<i class="fa-solid fa-book-bookmark"></i>`}
                             </div>
-                            <h4 style="font-size:16.5px; font-weight:800; margin-bottom:12px; color: var(--text-dark);">${prod.title}</h4>
+                            <h4 style="font-size:16.5px; font-weight:800; margin-bottom:6px; color: var(--text-dark);">${prod.title}</h4>
+                            <div style="margin-bottom:6px; display:flex; justify-content:center; gap:2px;">${stars}</div>
+                            <div style="font-size:11px; color:var(--text-gray); margin-bottom:12px; font-weight:bold;">${salesLabel}</div>
                             <div style="color:var(--kid-pink); font-weight:900; font-size:18px; margin-bottom: 16px;">${prod.price}${currency}</div>
                             <a href="parent-app.html" class="book-btn" style="background:linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); font-size:13px;">${dict.store_order_btn}</a>
                         </div>`;

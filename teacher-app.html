@@ -1621,91 +1621,120 @@
             document.getElementById('post-file').value = '';
         };
 
-        window.fetchTimelineFeed = () => {
+        let teacherNurseryPosts = [];
+        let teacherGlobalPostsList = [];
+
+        function renderCombinedTeacherFeed() {
             const container = document.getElementById('timeline-feed');
-            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            container.innerHTML = '';
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
 
-            onSnapshot(q, (snap) => {
-                container.innerHTML = '';
-                if(snap.empty) { 
-                    container.innerHTML = `<p style="text-align:center; color:var(--text-gray); font-size:12px; font-weight:800;">${dict.no_posts}</p>`; 
-                    return; 
+            const combined = [...teacherNurseryPosts, ...teacherGlobalPostsList];
+            combined.sort((a, b) => b.timestamp - a.timestamp);
+
+            if(combined.length === 0) { 
+                container.innerHTML = `<p style="text-align:center; color:var(--text-gray); font-size:12px; font-weight:800;">${dict.no_posts}</p>`; 
+                return; 
+            }
+
+            combined.forEach(post => {
+                const postId = post.id;
+                
+                const likesList = post.likes || [];
+                const commentsList = post.comments || [];
+                const isLiked = likesList.includes(myTeacherId);
+
+                let ytIframe = '';
+                if(post.youtubeUrl) {
+                    const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
+                    ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
                 }
 
-                let posts = [];
-                snap.forEach(docData => {
-                    posts.push({ id: docData.id, ...docData.data() });
-                });
-                posts.sort((a, b) => b.timestamp - a.timestamp);
-
-                posts.forEach(post => {
-                    const postId = post.id;
-                    
-                    const likesList = post.likes || [];
-                    const commentsList = post.comments || [];
-                    const isLiked = likesList.includes(myTeacherId);
-
-                    let ytIframe = '';
-                    if(post.youtubeUrl) {
-                        const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
-                        ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
-                    }
-
-                    let commentsHtml = '';
-                    commentsList.forEach(c => {
-                        commentsHtml += `
-                            <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
-                                <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
-                            </div>
-                        `;
-                    });
-
-                    container.innerHTML += `
-                        <div class="feed-post" id="post-${postId}">
-                            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
-                                    <div><strong style="font-weight:900;">${post.authorName || 'إدارة الحضانة'}</strong></div>
-                                </div>
-                                ${post.authorId === myTeacherId ? `
-                                <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
-                                    </button>
-                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
-                                    </button>
-                                </div>` : ''}
-                            </div>
-                            <h3>${post.title}</h3>
-                            <p class="feed-body">${post.body}</p>
-                            ${post.image ? `<div class="feed-media"><img src="${post.image}" style="max-width:100%; border-radius:12px; margin-top:10px;"></div>` : ''}
-                            ${ytIframe}
-                            
-                            <div class="post-actions">
-                                <button class="action-btn" onclick="window.likePost('${postId}', ${isLiked})" style="color: ${isLiked ? 'var(--primary-maroon)' : 'var(--text-gray)'};">
-                                    <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${likesList.length})
-                                </button>
-                                <button class="action-btn" onclick="document.getElementById('comment-input-${postId}').focus()">
-                                    <i class="fa-solid fa-comment"></i> ${dict.comments_title} (${commentsList.length})
-                                </button>
-                            </div>
-
-                            <div id="comments-box-${postId}" class="comments-section">
-                                <div class="comments-list" style="margin-bottom:10px;">
-                                    ${commentsHtml || `<p style="color:var(--text-gray); font-size:12px; text-align:center; font-weight:800;">${dict.no_comments}</p>`}
-                                </div>
-                                <div style="display:flex; gap:10px;">
-                                    <input type="text" id="comment-input-${postId}" class="form-control" placeholder="${dict.write_comment_placeholder}" style="margin-bottom:0; padding:8px;">
-                                    <button class="btn-primary" style="padding:8px 20px;" onclick="window.addCommentToPost('${postId}')">${dict.send_comment_btn}</button>
-                                </div>
-                            </div>
+                let commentsHtml = '';
+                commentsList.forEach(c => {
+                    commentsHtml += `
+                        <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
+                            <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
                         </div>
                     `;
                 });
+
+                const isGlobal = post.targetApp !== undefined;
+                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:#002f6c; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
+
+                container.innerHTML += `
+                    <div class="feed-post" id="post-${postId}">
+                        <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
+                                <div>
+                                    <strong style="font-weight:900;">${post.authorName || 'إدارة الحضانة'}</strong>
+                                    ${authorBadge}
+                                </div>
+                            </div>
+                            {(!isGlobal && post.authorId === myTeacherId) ? `
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                </button>
+                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                </button>
+                            </div>` : ''}
+                        </div>
+                        <h3>${post.title || ''}</h3>
+                        <p class="feed-body">${post.body}</p>
+                        ${(post.image || post.media) ? `<div class="feed-media"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px; margin-top:10px;"></div>` : ''}
+                        ${ytIframe}
+                        
+                        <div class="post-actions">
+                            <button class="action-btn" onclick="${isGlobal ? `alert('غير متاح التفاعل مع الإعلانات العامة')` : `window.likePost('${postId}', ${isLiked})`}" style="color: ${isLiked ? 'var(--primary-maroon)' : 'var(--text-gray)'};">
+                                <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${likesList.length})
+                            </button>
+                            ${isGlobal ? '' : `
+                            <button class="action-btn" onclick="document.getElementById('comment-input-${postId}').focus()">
+                                <i class="fa-solid fa-comment"></i> ${dict.comments_title} (${commentsList.length})
+                            </button>`}
+                        </div>
+
+                        ${isGlobal ? '' : `
+                        <div id="comments-box-${postId}" class="comments-section">
+                            <div class="comments-list" style="margin-bottom:10px;">
+                                ${commentsHtml || `<p style="color:var(--text-gray); font-size:12px; text-align:center; font-weight:800;">${dict.no_comments}</p>`}
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="comment-input-${postId}" class="form-control" placeholder="${dict.write_comment_placeholder}" style="margin-bottom:0; padding:8px;">
+                                <button class="btn-primary" style="padding:8px 20px;" onclick="window.addCommentToPost('${postId}')">${dict.send_comment_btn}</button>
+                            </div>
+                        </div>`}
+                    </div>
+                `;
+            });
+        }
+
+        window.fetchTimelineFeed = () => {
+            const qNursery = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            const qGlobal = query(collection(db, "global_posts"));
+
+            onSnapshot(qNursery, (snap) => {
+                teacherNurseryPosts = [];
+                snap.forEach(docData => {
+                    teacherNurseryPosts.push({ id: docData.id, ...docData.data() });
+                });
+                renderCombinedTeacherFeed();
+            });
+
+            onSnapshot(qGlobal, (snap) => {
+                teacherGlobalPostsList = [];
+                snap.forEach(docData => {
+                    const data = docData.data();
+                    if (data.targetApp === 'teachers' || data.targetApp === 'all') {
+                        teacherGlobalPostsList.push({ id: docData.id, ...data });
+                    }
+                });
+                renderCombinedTeacherFeed();
             });
         };
 
