@@ -738,11 +738,17 @@
                     </div>
 
                     <div id="global-network-section" style="display: none;">
-                        <div style="background: #fafbfc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                            <label style="font-weight: bold; color: var(--primary-maroon);"><i class="fa-solid fa-filter"></i> <span data-i18n="filter_feed_lbl">تصفية وعرض حائط حضانة معينة:</span></label>
-                            <select id="network-feed-filter" class="form-control" style="width: auto; min-width: 250px;" onchange="window.fetchGlobalNetworkFeed()">
-                                <option value="all" data-i18n="opt_all_feeds">عرض منشورات جميع الحضانات المجمعة</option>
-                            </select>
+                        <div style="background: #fafbfc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; flex-grow: 1;">
+                                <label style="font-weight: bold; color: var(--primary-maroon);"><i class="fa-solid fa-filter"></i> <span data-i18n="filter_feed_lbl">تصفية وعرض حائط حضانة معينة:</span></label>
+                                <select id="network-feed-filter" class="form-control" style="width: auto; min-width: 250px;" onchange="window.fetchGlobalNetworkFeed()">
+                                    <option value="all" data-i18n="opt_all_feeds">عرض منشورات جميع الحضانات المجمعة</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" id="super-admin-monitor-cams-btn" onclick="window.openSuperAdminCameraModal()" style="margin: 0; background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon)); box-shadow: var(--shadow-md); width: auto; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-video"></i>
+                                <span data-i18n="btn_monitor_cams">مراقبة كاميرات الحضانة 📹</span>
+                            </button>
                         </div>
                         <div class="feed-container" id="network-feed-container"></div>
                     </div>
@@ -1016,6 +1022,50 @@
                 </div>
             </div>
 
+            <!-- Modal for Super Admin to wander through Nursery Live Cameras -->
+            <div id="superAdminCameraModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 4000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; padding: 25px; box-shadow: var(--shadow-2xl); border: 2px solid var(--primary-maroon);">
+                    <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeSuperAdminCameraModal()"></i>
+                    
+                    <h3 style="color: var(--primary-maroon); font-weight: 900; font-size: 20px; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-video"></i>
+                        <span>مراقبة الكاميرات المباشرة بالفصول والدراسة 📹</span>
+                    </h3>
+                    <p id="super-camera-nursery-title" style="color: var(--text-gray); font-size: 14px; margin-bottom: 20px; font-weight: bold;"></p>
+                    
+                    <div id="super-camera-modal-loading" style="text-align: center; padding: 40px;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 28px; color: var(--primary-maroon); margin-bottom: 10px;"></i>
+                        <p style="color: var(--text-gray); font-size: 13px;">جاري تشغيل نظام المراقبة الصامت لجميع الكاميرات بالفصول... 🔌</p>
+                    </div>
+                    
+                    <div id="super-camera-modal-content" style="display: none;">
+                        <div id="super-camera-tabs" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color);">
+                            <!-- Camera selector tabs -->
+                        </div>
+                        
+                        <div style="background: #000; border-radius: 12px; overflow: hidden; position: relative; width: 100%; padding-top: 56.25%;">
+                            <div style="position: absolute; top: 12px; left: 12px; background: rgba(220,38,38,0.85); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 6px; z-index: 10; letter-spacing: 0.5px;">
+                                <span style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> SUPER ADMIN LIVE FEED
+                            </div>
+                            <div id="super-camera-active-name" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; z-index: 10;">
+                                كاميرا 1
+                            </div>
+                            <div id="super-camera-time-overlay" style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-family: monospace; z-index: 10;">
+                                --:--:--
+                            </div>
+                            <iframe id="super-camera-player-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src=""></iframe>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding: 12px; background: #fdf2f2; border-radius: 10px; border: 1px solid #fee2e2; display: flex; gap: 10px; align-items: center;">
+                            <i class="fa-solid fa-eye-slash" style="color: #dc2626; font-size: 18px;"></i>
+                            <div style="font-size: 12px; color: #991b1b; line-height: 1.5;">
+                                <strong>صلاحية المراقبة الصامتة:</strong> بصفتك سوبر أدمن، لديك صلاحية كاملة لتصفح فصول جميع الحضانات التابعة للشبكة بدون إذن لضمان أعلى مستويات جودة التعليم والأمن والسلامة للأطفال.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -1100,6 +1150,7 @@
                 th_title: "العنوان",
                 th_control: "التحكم",
                 filter_feed_lbl: "تصفية وعرض حائط حضانة معينة:",
+                btn_monitor_cams: "مراقبة كاميرات الحضانة 📹",
                 opt_all_feeds: "عرض منشورات جميع الحضانات المجمعة",
                 online_teachers_header: "المدرسين الأونلاين المتاحين للتعيين بالواجهة",
                 online_teachers_desc: "المدرسين بالأسفل قاموا بكتابة مواعيدهم مسبقاً عبر حساباتهم. اختر منهم من يمثل \"Impact Hub\" لرفعه وعرضه على الواجهة الرئيسية العامة.",
@@ -1234,6 +1285,7 @@
                 th_title: "Title",
                 th_control: "Control",
                 filter_feed_lbl: "Filter combined feed by nursery:",
+                btn_monitor_cams: "Monitor Nursery Cameras 📹",
                 opt_all_feeds: "Display combined feed of all nurseries",
                 online_teachers_header: "Online Teachers Available for Landing Page",
                 online_teachers_desc: "The teachers below configured their availability. Choose which teacher represents Impact Hub to feature on the public landing page.",
@@ -1368,6 +1420,7 @@
                 th_title: "Titre",
                 th_control: "Contrôle",
                 filter_feed_lbl: "Filtrer le fil combiné par crèche:",
+                btn_monitor_cams: "Surveiller les caméras de la crèche 📹",
                 opt_all_feeds: "Afficher le fil combiné de toutes les crèches",
                 online_teachers_header: "Enseignants disponibles pour la page d'accueil",
                 online_teachers_desc: "Les enseignants ont configuré leurs heures. Sélectionnez les enseignants à mettre en vedette sur la page d'accueil.",
@@ -1502,6 +1555,7 @@
                 th_title: "Titel",
                 th_control: "Kontrolle",
                 filter_feed_lbl: "Kombinierten Feed nach Kita filtern:",
+                btn_monitor_cams: "Kita-Kameras überwachen 📹",
                 opt_all_feeds: "Kombinierten Feed aller Kitas anzeigen",
                 online_teachers_header: "Verfügbare Lehrer für die Landingpage",
                 online_teachers_desc: "Die unten stehenden Lehrer haben ihre Zeiten eingetragen. Wählen Sie Lehrer aus, die auf der Homepage angezeigt werden sollen.",
@@ -1968,6 +2022,136 @@
                         ${ytIframe}
                     </div>`;
             });
+        };
+        
+        // ================== 2.1 مراقبة كاميرات الحضانة بالكامل (Super Admin Camera Monitor) ==================
+        window.superAdminCameraClockInterval = null;
+
+        window.openSuperAdminCameraModal = async () => {
+            const modal = document.getElementById('superAdminCameraModal');
+            const loading = document.getElementById('super-camera-modal-loading');
+            const content = document.getElementById('super-camera-modal-content');
+            const nurseryTitle = document.getElementById('super-camera-nursery-title');
+            const tabsContainer = document.getElementById('super-camera-tabs');
+            
+            // Show modal and loading state
+            modal.style.display = 'flex';
+            loading.style.display = 'block';
+            content.style.display = 'none';
+            tabsContainer.innerHTML = '';
+            
+            // Determine active nursery filter name
+            const filterSelect = document.getElementById('network-feed-filter');
+            const activeNurseryId = filterSelect.value;
+            const activeNurseryName = filterSelect.options[filterSelect.selectedIndex]?.text || '';
+            
+            nurseryTitle.innerText = activeNurseryId === 'all' 
+                ? 'أنت تشاهد كاميرات فصول جميع حضانات الشبكة المركزية' 
+                : `أنت تشاهد كاميرات: ${activeNurseryName}`;
+
+            try {
+                // Fetch cameras from nursery_cameras collection
+                let q = collection(db, "nursery_cameras");
+                if (activeNurseryId !== 'all') {
+                    q = query(collection(db, "nursery_cameras"), where("nurseryId", "==", activeNurseryId));
+                }
+                const snap = await getDocs(q);
+                const camerasList = [];
+                snap.forEach(docSnap => {
+                    camerasList.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                // Clear loading state
+                loading.style.display = 'none';
+
+                if (camerasList.length === 0) {
+                    nurseryTitle.innerText = '';
+                    const noCamsHtml = `
+                        <div style="text-align: center; padding: 40px; width: 100%;">
+                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                            <h4 style="font-size: 16px; font-weight: bold; color: var(--text-dark); margin-bottom: 10px;">لا توجد كاميرات مسجلة حالياً</h4>
+                            <p style="font-size: 12px; color: var(--text-gray); max-width: 400px; margin: 0 auto; line-height: 1.6;">
+                                ${activeNurseryId === 'all' ? 'لم تقم أي حضانة بإضافة روابط كاميرات مراقبة تحت تابة الإعدادات بعد.' : 'لم تقم هذه الحضانة بإضافة أي كاميرا تحت إعدادات لوحة التحكم الخاصة بها.'}
+                            </p>
+                        </div>
+                    `;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.width = '100%';
+                    tempDiv.innerHTML = noCamsHtml;
+                    tabsContainer.appendChild(tempDiv);
+                    return;
+                }
+
+                // Show player content area
+                content.style.display = 'block';
+
+                const frame = document.getElementById('super-camera-player-frame');
+                const nameOverlay = document.getElementById('super-camera-active-name');
+                const timeOverlay = document.getElementById('super-camera-time-overlay');
+
+                // Update clock overlay every second
+                if (window.superAdminCameraClockInterval) clearInterval(window.superAdminCameraClockInterval);
+                window.superAdminCameraClockInterval = setInterval(() => {
+                    const now = new Date();
+                    timeOverlay.innerText = now.toLocaleString();
+                }, 1000);
+
+                const selectCamera = (cam) => {
+                    nameOverlay.innerText = `${cam.name} (${cam.nurseryId || 'حضانة عامة'})`;
+                    let url = cam.url || '';
+                    if (url.startsWith('http://') || url.startsWith('https://')) {
+                        frame.src = url;
+                    } else {
+                        // YouTube fallback for demo preview
+                        frame.src = "https://www.youtube.com/embed/5_X9T86fSxk?autoplay=1&mute=1&controls=0&loop=1";
+                    }
+                };
+
+                // Build tabs
+                camerasList.forEach((cam, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-secondary';
+                    btn.style.margin = '0';
+                    btn.style.flexShrink = '0';
+                    btn.style.padding = '6px 12px';
+                    btn.style.fontSize = '12px';
+                    btn.style.borderRadius = '20px';
+                    btn.style.fontWeight = 'bold';
+                    btn.innerHTML = `<i class="fa-solid fa-video"></i> ${cam.name} <small style="opacity: 0.7; font-size:9px;">(${cam.nurseryId?.substring(0, 8) || ''})</small>`;
+                    
+                    btn.onclick = () => {
+                        tabsContainer.querySelectorAll('button').forEach(b => {
+                            b.style.background = '#f1f5f9';
+                            b.style.color = '#334155';
+                            b.style.borderColor = '#e2e8f0';
+                        });
+                        btn.style.background = 'var(--primary-maroon)';
+                        btn.style.color = '#fff';
+                        btn.style.borderColor = 'var(--primary-maroon)';
+                        selectCamera(cam);
+                    };
+
+                    tabsContainer.appendChild(btn);
+
+                    if (index === 0) {
+                        btn.click();
+                    }
+                });
+
+            } catch (err) {
+                console.error("Error launching Super Admin camera monitor:", err);
+                loading.style.display = 'none';
+                tabsContainer.innerHTML = '<p style="color:red; text-align:center;">حدث خطأ أثناء تحميل الكاميرات المباشرة.</p>';
+            }
+        };
+
+        window.closeSuperAdminCameraModal = () => {
+            document.getElementById('superAdminCameraModal').style.display = 'none';
+            document.getElementById('super-camera-player-frame').src = '';
+            if (window.superAdminCameraClockInterval) {
+                clearInterval(window.superAdminCameraClockInterval);
+                window.superAdminCameraClockInterval = null;
+            }
         };
 
         // 3. المدرسين الأونلاين المتميزين

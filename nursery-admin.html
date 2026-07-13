@@ -547,6 +547,20 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- قسم اختيار كاميرات المراقبة المتاحة لولي الأمر -->
+                    <div id="parent-camera-permissions-section" style="display: none; margin-top: 20px; margin-bottom: 20px; padding: 15px; background: rgba(128, 0, 0, 0.02); border-radius: 12px; border: 1px solid var(--border-color);">
+                        <h4 style="font-size: 13px; font-weight: bold; color: var(--primary-maroon); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-shield-halved"></i> تحديد كاميرات المراقبة المتاحة لولي الأمر 🔒
+                        </h4>
+                        <p style="font-size: 11px; color: var(--text-gray); margin-bottom: 10px;">
+                            اختر الكاميرات التي يستطيع ولي الأمر تصفحها من داخل حسابه لمراقبة طفله بالفصل:
+                        </p>
+                        <div id="parent-camera-checkboxes-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px;">
+                            <!-- سيتم تعبئة الكاميرات ديناميكياً -->
+                        </div>
+                    </div>
+
                     <button class="btn-primary" style="background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon)); box-shadow: 0 8px 15px rgba(255, 183, 3, 0.15);" onclick="createNewUser()">
                         <i class="fa-solid fa-check"></i> 
                         <span data-i18n="confirm_create_btn">تأكيد إنشاء الحساب</span>
@@ -634,6 +648,51 @@
                         <button class="btn-primary" onclick="window.updateNurseryLogo()">
                             <i class="fa-solid fa-cloud-arrow-up"></i> حفظ وتحديث اللوجو 💾
                         </button>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 25px;">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-video"></i> 
+                        <span>ربط كاميرات المراقبة المباشرة 📹</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;">
+                        يمكنك إضافة وإدارة الكاميرات الخاصة بفصول وأروقة الحضانة. سيتمكن أولياء الأمور (الذين تمنحهم الإذن) من متابعة الكاميرات من حساباتهم.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+                        <!-- إضافة كاميرا جديدة -->
+                        <div style="background: rgba(128,0,0,0.02); border: 1.5px dashed rgba(128,0,0,0.15); padding: 20px; border-radius: 16px;">
+                            <h4 style="font-size: 14px; font-weight: bold; color: var(--primary-maroon); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-plus-circle"></i> إضافة كاميرا جديدة لربطها بالشبكة
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 12px; font-weight: bold;">اسم الكاميرا (اسم الفصل أو الرقم)</label>
+                                    <input type="text" id="new-camera-name" class="form-control" style="margin: 0;" placeholder="مثال: كاميرا 1 - فصل الفراشات">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 12px; font-weight: bold;">رابط الكاميرا البث المباشر (Stream / Embed Link)</label>
+                                    <input type="text" id="new-camera-url" class="form-control" style="margin: 0;" placeholder="https://youtube.com/embed/... أو رابط آخر">
+                                </div>
+                            </div>
+                            <button class="btn-primary" onclick="window.addNewCamera()" style="margin: 0; width: auto; background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon));">
+                                <i class="fa-solid fa-square-plus"></i> إضافة الكاميرا ➕
+                            </button>
+                        </div>
+                        
+                        <!-- قائمة الكاميرات الحالية -->
+                        <div style="background: white; border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; min-height: 150px;">
+                            <h4 style="font-size: 14px; font-weight: bold; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-list-ul"></i> الكاميرات المضافة حالياً
+                            </h4>
+                            <div id="admin-camera-tabs-list" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                <!-- سيتم التعبئة تلقائياً -->
+                            </div>
+                            <div id="admin-camera-editor-content" style="background: #fafafa; border-radius: 12px; padding: 15px; border: 1px dashed var(--border-color);">
+                                <p style="text-align: center; color: var(--text-gray); font-size: 13px;">اختر كاميرا لتعديلها أو حذفها، أو قم بإضافة كاميرا جديدة بالأعلى.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1121,7 +1180,54 @@
             }
         };
 
-        // ================= 3. إنشاء الحسابات =================
+        // ================= 3. إنشاء الحسابات والكاميرات =================
+        
+        // Listen for role select change
+        document.addEventListener('DOMContentLoaded', () => {
+            const roleSelect = document.getElementById('new-user-role');
+            if (roleSelect) {
+                roleSelect.addEventListener('change', (e) => {
+                    const section = document.getElementById('parent-camera-permissions-section');
+                    if (section) {
+                        if (e.target.value === 'parent') {
+                            section.style.display = 'block';
+                            window.renderParentCameraCheckboxes();
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    }
+                });
+            }
+        });
+
+        window.renderParentCameraCheckboxes = async () => {
+            const grid = document.getElementById('parent-camera-checkboxes-grid');
+            if (!grid) return;
+            grid.innerHTML = '<p style="font-size: 12px; color: var(--text-gray);">جاري تحميل الكاميرات... ⏳</p>';
+            try {
+                const q = query(collection(db, "nursery_cameras"), where("nurseryId", "==", myNurseryId));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    grid.innerHTML = '<p style="font-size: 11px; color: var(--text-gray);">⚠️ لا توجد كاميرات مضافة في إعدادات الحضانة حالياً.</p>';
+                    return;
+                }
+                grid.innerHTML = '';
+                snap.forEach(docSnap => {
+                    const cam = docSnap.data();
+                    const camId = docSnap.id;
+                    grid.innerHTML += `
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; background: white; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); user-select: none;">
+                            <input type="checkbox" name="parent-camera" value="${camId}" style="width: 16px; height: 16px; accent-color: var(--primary-maroon);">
+                            <span>${cam.name}</span>
+                        </label>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error loading checkboxes:", err);
+                grid.innerHTML = '<p style="font-size: 11px; color: red;">❌ فشل تحميل الكاميرات.</p>';
+            }
+        };
+
         window.createNewUser = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = managerTranslations[currentLang] || managerTranslations.ar;
@@ -1136,6 +1242,13 @@
                 return;
             }
 
+            // Get checked camera IDs if role is parent
+            const assignedCameras = [];
+            if (role === 'parent') {
+                const checked = document.querySelectorAll('input[name="parent-camera"]:checked');
+                checked.forEach(chk => assignedCameras.push(chk.value));
+            }
+
             try {
                 await addDoc(collection(db, "nursery_users"), {
                     nurseryId: myNurseryId,
@@ -1143,6 +1256,7 @@
                     phone: phone,
                     email: email,
                     role: role,
+                    assignedCameras: assignedCameras,
                     createdAt: new Date().getTime()
                 });
 
@@ -1150,9 +1264,182 @@
                 document.getElementById('new-user-name').value = '';
                 document.getElementById('new-user-phone').value = '';
                 document.getElementById('new-user-email').value = '';
+                
+                const roleSelect = document.getElementById('new-user-role');
+                if (roleSelect) {
+                    roleSelect.value = 'teacher';
+                    // Trigger change to hide permission section
+                    const event = new Event('change');
+                    roleSelect.dispatchEvent(event);
+                }
             } catch (error) {
                 console.error(error);
                 alert(dict.alert_err_create);
+            }
+        };
+
+        // ================= 3.1 إدارة الكاميرات (Nursery Cameras) =================
+        let adminCamerasList = [];
+        let activeAdminCamId = null;
+
+        window.fetchAdminCameras = () => {
+            const q = query(collection(db, "nursery_cameras"), where("nurseryId", "==", myNurseryId));
+            onSnapshot(q, (snap) => {
+                adminCamerasList = [];
+                snap.forEach(docSnap => {
+                    adminCamerasList.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                window.renderAdminCameras();
+                // Also update user checkboxes if currently parent role is selected
+                const roleSelect = document.getElementById('new-user-role');
+                if (roleSelect && roleSelect.value === 'parent') {
+                    window.renderParentCameraCheckboxes();
+                }
+            }, (err) => {
+                console.error("Error reading nursery cameras:", err);
+            });
+        };
+
+        window.renderAdminCameras = () => {
+            const tabsList = document.getElementById('admin-camera-tabs-list');
+            if (!tabsList) return;
+            tabsList.innerHTML = '';
+
+            if (adminCamerasList.length === 0) {
+                tabsList.innerHTML = '<span style="font-size: 12px; color: var(--text-gray);">لم تقم بإضافة أي كاميرات مراقبة بعد.</span>';
+                document.getElementById('admin-camera-editor-content').innerHTML = `
+                    <p style="text-align: center; color: var(--text-gray); font-size: 13px;">اختر كاميرا لتعديلها أو حذفها، أو قم بإضافة كاميرا جديدة بالأعلى.</p>
+                `;
+                return;
+            }
+
+            adminCamerasList.forEach(cam => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-secondary';
+                btn.style.margin = '0';
+                btn.style.padding = '6px 12px';
+                btn.style.borderRadius = '30px';
+                btn.style.fontSize = '12px';
+                btn.style.fontWeight = 'bold';
+                btn.style.display = 'inline-flex';
+                btn.style.alignItems = 'center';
+                btn.style.gap = '5px';
+                if (activeAdminCamId === cam.id) {
+                    btn.style.background = 'var(--primary-maroon)';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = 'var(--primary-maroon)';
+                }
+                btn.innerHTML = `<i class="fa-solid fa-video"></i> ${cam.name}`;
+                btn.onclick = () => {
+                    activeAdminCamId = cam.id;
+                    window.renderAdminCameras();
+                    window.showCameraEditor(cam);
+                };
+                tabsList.appendChild(btn);
+            });
+
+            // If there's an active selected camera, refresh its editor view. If not, don't show the form.
+            if (activeAdminCamId) {
+                const currentCam = adminCamerasList.find(c => c.id === activeAdminCamId);
+                if (currentCam) {
+                    window.showCameraEditor(currentCam);
+                } else {
+                    activeAdminCamId = null;
+                }
+            }
+        };
+
+        window.showCameraEditor = (cam) => {
+            const container = document.getElementById('admin-camera-editor-content');
+            if(!container) return;
+
+            container.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <h5 style="font-size: 13px; font-weight: bold; color: var(--primary-maroon); display: flex; align-items: center; gap: 6px; margin: 0;">
+                        <i class="fa-solid fa-pen"></i> تعديل بيانات الكاميرا: <span style="color:#000;">${cam.name}</span>
+                    </h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 11px; font-weight: bold;">اسم الكاميرا</label>
+                            <input type="text" id="edit-cam-name-${cam.id}" class="form-control" style="margin: 0;" value="${cam.name}">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-size: 11px; font-weight: bold;">رابط البث المباشر</label>
+                            <input type="text" id="edit-cam-url-${cam.id}" class="form-control" style="margin: 0;" value="${cam.url || ''}">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="btn-primary" onclick="window.updateCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; background: #10b981;">
+                            <i class="fa-solid fa-save"></i> حفظ التعديلات
+                        </button>
+                        <button class="btn-secondary" onclick="window.deleteCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; color: #ef4444; border-color: #fca5a5; background: #fff5f5;">
+                            <i class="fa-solid fa-trash-can"></i> حذف الكاميرا
+                        </button>
+                    </div>
+                </div>
+            `;
+        };
+
+        window.addNewCamera = async () => {
+            const name = document.getElementById('new-camera-name').value.trim();
+            const url = document.getElementById('new-camera-url').value.trim();
+
+            if (!name) {
+                alert("الرجاء إدخال اسم الكاميرا!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "nursery_cameras"), {
+                    nurseryId: myNurseryId,
+                    name: name,
+                    url: url,
+                    createdAt: new Date().getTime()
+                });
+
+                document.getElementById('new-camera-name').value = '';
+                document.getElementById('new-camera-url').value = '';
+                alert("✅ تم إضافة الكاميرا بنجاح وتفعيل ربطها!");
+            } catch (err) {
+                console.error("Error adding camera:", err);
+                alert("حدث خطأ أثناء إضافة الكاميرا!");
+            }
+        };
+
+        window.updateCamera = async (camId) => {
+            const name = document.getElementById(`edit-cam-name-${camId}`).value.trim();
+            const url = document.getElementById(`edit-cam-url-${camId}`).value.trim();
+
+            if (!name) {
+                alert("الرجاء إدخال اسم الكاميرا!");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "nursery_cameras", camId), {
+                    name: name,
+                    url: url,
+                    updatedAt: new Date().getTime()
+                });
+                alert("✅ تم حفظ تعديلات الكاميرا بنجاح!");
+            } catch (err) {
+                console.error("Error updating camera:", err);
+                alert("حدث خطأ أثناء التحديث!");
+            }
+        };
+
+        window.deleteCamera = async (camId) => {
+            if (!confirm("هل أنت متأكد من رغبتك في حذف هذه الكاميرا بالكامل وإلغاء صلاحيات الوصول إليها؟")) {
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, "nursery_cameras", camId));
+                activeAdminCamId = null;
+                alert("✅ تم حذف الكاميرا بنجاح.");
+            } catch (err) {
+                console.error("Error deleting camera:", err);
+                alert("حدث خطأ أثناء حذف الكاميرا!");
             }
         };
 
@@ -1571,6 +1858,9 @@
             
             // تحميل لوجو الحضانة الرسمي والاحتفاظ به
             window.loadNurseryLogo();
+
+            // تحميل الكاميرات المتاحة
+            window.fetchAdminCameras();
         };
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {

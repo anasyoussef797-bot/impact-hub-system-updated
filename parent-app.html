@@ -271,9 +271,8 @@
                 <!-- 3. كاميرات المتابعة المباشرة -->
                 <div id="cameras" class="tab-content">
                     <h3 class="section-title"><span data-i18n="cameras_title">المتابعة المباشرة 🎥</span></h3>
-                    <div class="card" style="text-align: center; padding: 30px 15px;">
-                        <i class="fa-solid fa-video" style="font-size: 40px; color: #cbd5e1; margin-bottom: 15px;"></i>
-                        <button class="btn-primary" onclick="alert('جاري الاتصال بالسيرفر المحلي للكاميرات...')"><i class="fa-solid fa-eye"></i> <span data-i18n="cameras_btn">متابعة البث الحي لفصل الطفل</span></button>
+                    <div id="parent-cameras-dynamic-container" style="display: flex; flex-direction: column; gap: 15px;">
+                        <!-- سيتم تحميل الكاميرات المخصصة لولي الأمر ديناميكياً هنا -->
                     </div>
                 </div>
 
@@ -1389,6 +1388,218 @@
             inp.value = '';
         };
 
+        // ================== 3.1 كاميرات المتابعة المباشرة (Live Cameras) ==================
+        window.loadParentCameras = async () => {
+            const container = document.getElementById('parent-cameras-dynamic-container');
+            if(!container) return;
+
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
+            // Clear container first and show a loading spinner
+            container.innerHTML = '';
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.style.textAlign = 'center';
+            loadingDiv.style.padding = '30px';
+            loadingDiv.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: var(--primary-maroon); margin-bottom: 10px;"></i>
+                <p style="font-size: 13px; color: var(--text-gray);">
+                    ${currentLang === 'ar' ? 'جاري تحميل الكاميرات المخصصة لك...' : 'Loading assigned cameras...'}
+                </p>
+            `;
+            container.appendChild(loadingDiv);
+
+            try {
+                // 1. Get the parent record to find assigned camera IDs
+                let assignedCameraIds = [];
+                const activeParentId = window.myParentId || localStorage.getItem('parent_id') || myParentId;
+                
+                if (activeParentId && activeParentId !== "parent_yassin") {
+                    const parentSnap = await getDoc(doc(db, "nursery_users", activeParentId));
+                    if (parentSnap.exists()) {
+                        assignedCameraIds = parentSnap.data().assignedCameras || [];
+                    }
+                }
+
+                // 2. Fetch all cameras for this nursery
+                const qCam = query(collection(db, "nursery_cameras"), where("nurseryId", "==", myNurseryId));
+                const camSnap = await getDocs(qCam);
+                const allCameras = [];
+                camSnap.forEach(d => {
+                    allCameras.push({ id: d.id, ...d.data() });
+                });
+
+                // Filter cameras
+                let parentCameras = [];
+                if (activeParentId !== "parent_yassin" && assignedCameraIds.length > 0) {
+                    parentCameras = allCameras.filter(c => assignedCameraIds.includes(c.id));
+                } else {
+                    // Fallback to all cameras for the demo account
+                    parentCameras = allCameras;
+                }
+
+                // Remove loading spinner
+                loadingDiv.remove();
+
+                if (parentCameras.length === 0) {
+                    container.innerHTML = `
+                        <div class="card" style="text-align: center; padding: 40px 15px; background: white;">
+                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                            <h4 style="font-size: 16px; font-weight: bold; color: var(--text-dark); margin-bottom: 10px;">
+                                ${currentLang === 'ar' ? 'لا توجد كاميرات نشطة مخصصة لك' : 'No active cameras assigned to you'}
+                            </h4>
+                            <p style="font-size: 12px; color: var(--text-gray); max-width: 300px; margin: 0 auto; line-height: 1.6;">
+                                ${currentLang === 'ar' ? 'برجاء التواصل مع إدارة الحضانة لربط الكاميرات الخاصة بفصل طفلك بحسابك.' : 'Please contact nursery administration to link your child\'s classroom camera to your account.'}
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render tabs for assigned cameras
+                const tabsContainer = document.createElement('div');
+                tabsContainer.style.display = 'flex';
+                tabsContainer.style.gap = '8px';
+                tabsContainer.style.marginBottom = '10px';
+                tabsContainer.style.overflowX = 'auto';
+                tabsContainer.style.paddingBottom = '8px';
+
+                const playerCard = document.createElement('div');
+                playerCard.className = 'card';
+                playerCard.style.padding = '0';
+                playerCard.style.overflow = 'hidden';
+                playerCard.style.display = 'flex';
+                playerCard.style.flexDirection = 'column';
+                playerCard.style.background = 'white';
+
+                const iframeContainer = document.createElement('div');
+                iframeContainer.style.position = 'relative';
+                iframeContainer.style.width = '100%';
+                iframeContainer.style.paddingTop = '56.25%'; // 16:9 Ratio
+                iframeContainer.style.background = '#000';
+
+                const streamOverlay = document.createElement('div');
+                streamOverlay.style.position = 'absolute';
+                streamOverlay.style.top = '10px';
+                streamOverlay.style.left = '10px';
+                streamOverlay.style.background = 'rgba(0,0,0,0.6)';
+                streamOverlay.style.color = '#22c55e';
+                streamOverlay.style.padding = '4px 8px';
+                streamOverlay.style.borderRadius = '4px';
+                streamOverlay.style.fontSize = '11px';
+                streamOverlay.style.fontWeight = 'bold';
+                streamOverlay.style.display = 'flex';
+                streamOverlay.style.alignItems = 'center';
+                streamOverlay.style.gap = '6px';
+                streamOverlay.style.zIndex = '10';
+                streamOverlay.innerHTML = `<span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> LIVE`;
+
+                const cameraNameOverlay = document.createElement('div');
+                cameraNameOverlay.style.position = 'absolute';
+                cameraNameOverlay.style.top = '10px';
+                cameraNameOverlay.style.right = '10px';
+                cameraNameOverlay.style.background = 'rgba(0,0,0,0.6)';
+                cameraNameOverlay.style.color = '#fff';
+                cameraNameOverlay.style.padding = '4px 8px';
+                cameraNameOverlay.style.borderRadius = '4px';
+                cameraNameOverlay.style.fontSize = '11px';
+                cameraNameOverlay.style.zIndex = '10';
+
+                const timeOverlay = document.createElement('div');
+                timeOverlay.style.position = 'absolute';
+                timeOverlay.style.bottom = '10px';
+                timeOverlay.style.left = '10px';
+                timeOverlay.style.background = 'rgba(0,0,0,0.6)';
+                timeOverlay.style.color = '#fff';
+                timeOverlay.style.padding = '4px 8px';
+                timeOverlay.style.borderRadius = '4px';
+                timeOverlay.style.fontSize = '10px';
+                timeOverlay.style.fontFamily = 'monospace';
+                timeOverlay.style.zIndex = '10';
+
+                // update time overlay every second
+                if (window.parentCameraClockInterval) clearInterval(window.parentCameraClockInterval);
+                window.parentCameraClockInterval = setInterval(() => {
+                    const now = new Date();
+                    timeOverlay.innerText = now.toLocaleString();
+                }, 1000);
+
+                const playerFrame = document.createElement('iframe');
+                playerFrame.style.position = 'absolute';
+                playerFrame.style.top = '0';
+                playerFrame.style.left = '0';
+                playerFrame.style.width = '100%';
+                playerFrame.style.height = '100%';
+                playerFrame.style.border = 'none';
+
+                iframeContainer.appendChild(streamOverlay);
+                iframeContainer.appendChild(cameraNameOverlay);
+                iframeContainer.appendChild(timeOverlay);
+                iframeContainer.appendChild(playerFrame);
+
+                const controlsArea = document.createElement('div');
+                controlsArea.style.padding = '12px 15px';
+                controlsArea.style.background = '#fafafa';
+                controlsArea.style.borderTop = '1px solid #eee';
+                controlsArea.style.fontSize = '12px';
+                controlsArea.style.color = '#64748b';
+
+                playerCard.appendChild(iframeContainer);
+                playerCard.appendChild(controlsArea);
+
+                container.appendChild(tabsContainer);
+                container.appendChild(playerCard);
+
+                const selectCamera = (cam) => {
+                    cameraNameOverlay.innerText = cam.name;
+                    controlsArea.innerHTML = `${currentLang === 'ar' ? 'متابعة حالية لـ:' : 'Currently monitoring:'} <strong>${cam.name}</strong><br><small style="font-size:10px;color:#94a3b8;word-break:break-all;">Link: ${cam.url || '-'}</small>`;
+                    
+                    let url = cam.url || '';
+                    if (url.startsWith('http://') || url.startsWith('https://')) {
+                        playerFrame.src = url;
+                    } else {
+                        // Demo live stream if URL is missing
+                        playerFrame.src = "https://www.youtube.com/embed/5_X9T86fSxk?autoplay=1&mute=1&controls=0&loop=1";
+                    }
+                };
+
+                parentCameras.forEach((cam, index) => {
+                    const tabBtn = document.createElement('button');
+                    tabBtn.className = 'btn-secondary';
+                    tabBtn.style.margin = '0';
+                    tabBtn.style.flexShrink = '0';
+                    tabBtn.style.padding = '8px 14px';
+                    tabBtn.style.borderRadius = '30px';
+                    tabBtn.style.fontSize = '12px';
+                    tabBtn.style.fontWeight = 'bold';
+                    tabBtn.innerHTML = `<i class="fa-solid fa-video"></i> ${cam.name}`;
+
+                    tabBtn.onclick = () => {
+                        tabsContainer.querySelectorAll('button').forEach(btn => {
+                            btn.style.background = '#f1f5f9';
+                            btn.style.color = '#334155';
+                            btn.style.borderColor = '#e2e8f0';
+                        });
+                        tabBtn.style.background = 'var(--primary-maroon)';
+                        tabBtn.style.color = '#fff';
+                        tabBtn.style.borderColor = 'var(--primary-maroon)';
+                        selectCamera(cam);
+                    };
+
+                    tabsContainer.appendChild(tabBtn);
+
+                    if (index === 0) {
+                        tabBtn.click();
+                    }
+                });
+
+            } catch (err) {
+                console.error("Error loading parent cameras:", err);
+                container.innerHTML = `<div class="card" style="text-align: center; color: red;">Error loading cameras.</div>`;
+            }
+        };
+
         // ================== 4. المتجر والسلة ==================
         window.loadMarketplace = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
@@ -1606,14 +1817,62 @@
             document.getElementById('game-player-iframe').src = "";
         };
 
-        // ================== 6. محاكاة الـ Auth والتابات ==================
-        window.doLogin = () => {
+        // ================== 6. Auth والتابات ودعم المزامنة للكاميرات ==================
+        window.doLogin = async () => {
+            const emailVal = document.getElementById('login-email').value.trim();
+            const passVal = document.getElementById('login-pass').value.trim();
+
+            if (emailVal) {
+                try {
+                    // البحث عن ولي أمر بنفس الإيميل أو الهاتف في قاعدة البيانات للربط التلقائي للكاميرات
+                    let q = query(collection(db, "nursery_users"), where("email", "==", emailVal), where("role", "==", "parent"));
+                    let snap = await getDocs(q);
+                    
+                    if (snap.empty) {
+                        q = query(collection(db, "nursery_users"), where("phone", "==", emailVal), where("role", "==", "parent"));
+                        snap = await getDocs(q);
+                    }
+                    
+                    if (!snap.empty) {
+                        const userDoc = snap.docs[0];
+                        const userData = userDoc.data();
+                        
+                        localStorage.setItem('parent_id', userDoc.id);
+                        localStorage.setItem('parent_display_name', userData.name || "ولي أمر");
+                        localStorage.setItem('parent_phone_number', userData.phone || "");
+                        
+                        window.myParentId = userDoc.id;
+                        myParentName = userData.name || "ولي أمر";
+                        
+                        // تحديث الاسم في واجهة التطبيق والملف الشخصي
+                        const headerProfileName = document.getElementById('profile-tab-name');
+                        if (headerProfileName) headerProfileName.innerText = myParentName;
+                        
+                        const parentNameInput = document.getElementById('parent-name-input');
+                        if (parentNameInput) parentNameInput.value = myParentName;
+
+                        const parentPhoneInput = document.getElementById('parent-phone-input');
+                        if (parentPhoneInput) parentPhoneInput.value = userData.phone || "";
+                    } else {
+                        localStorage.removeItem('parent_id');
+                        window.myParentId = "parent_yassin";
+                    }
+                } catch (err) {
+                    console.error("Error logging in:", err);
+                    window.myParentId = "parent_yassin";
+                }
+            } else {
+                window.myParentId = "parent_yassin";
+            }
+
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
+            
             fetchTimelineFeed();
             loadMarketplace();
             fetchHomeworkAssignments();
             window.listenToActiveLiveClasses();
+            window.loadParentCameras(); // تهيئة الكاميرات المناسبة فور الدخول
         };
 
         window.doLogout = () => {
@@ -1633,6 +1892,10 @@
             } else {
                 const targetNav = document.getElementById(`nav-item-${tabId}`);
                 if (targetNav) targetNav.classList.add('active');
+            }
+
+            if (tabId === 'cameras') {
+                window.loadParentCameras();
             }
         };
 
@@ -1736,6 +1999,7 @@
 
         // تهيئة وحمل اللغة المفضلة عند التشغيل
         const initParentApp = () => {
+            window.myParentId = localStorage.getItem('parent_id') || "parent_yassin";
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
             
