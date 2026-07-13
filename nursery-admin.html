@@ -979,10 +979,14 @@
                     
                     let itemsHtml = '';
                     let totalAmount = 0;
+                    let isLesson = false;
                     if(order.items && order.items.length > 0) {
                         order.items.forEach(item => {
                             itemsHtml += `<div>- ${item.name} (${item.price}${dict.egp_lbl})</div>`;
                             totalAmount += item.price;
+                            if (item.name && (item.name.includes("حجز درس") || item.name.includes("حصة") || item.name.includes("مستر أحمد") || item.name.includes("أونلاين"))) {
+                                isLesson = true;
+                            }
                         });
                     }
 
@@ -1001,9 +1005,17 @@
                             </button>
                         </div>` : '';
 
+                    const typeBadge = isLesson ? 
+                        `<span style="background: #fef3c7; color: #d97706; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📹 حجز حصة أونلاين</span>` : 
+                        `<span style="background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📚 شراء كتب من المتجر</span>`;
+
                     tbody.innerHTML += `
                         <tr>
-                            <td>${orderDate}</td>
+                            <td>
+                                ${orderDate}
+                                <br>
+                                ${typeBadge}
+                            </td>
                             <td>
                                 <strong>${order.parentName}</strong>
                                 <div style="font-size:12px; color:var(--text-gray); margin-top:4px;">${currentLang === 'ar' ? 'طريقة الدفع:' : 'Payment:'} ${methodDisplay}</div>
@@ -1015,7 +1027,7 @@
                             </td>
                             <td>
                                 <button class="btn-success" style="width:100%; padding:10px;" onclick="approveOrder('${orderId}', '${order.parentName}', '${chosenMethod}')">
-                                    <i class="fa-solid fa-circle-check"></i> ${currentLang === 'ar' ? 'موافقة وتأكيد الطلب' : 'Approve Order'}
+                                    <i class="fa-solid fa-circle-check"></i> ${isLesson ? (currentLang === 'ar' ? 'موافقة وتأكيد الحصة' : 'Approve Lesson') : (currentLang === 'ar' ? 'موافقة وتأكيد الشراء' : 'Approve Purchase')}
                                 </button>
                             </td>
                         </tr>
@@ -1056,22 +1068,51 @@
 
             isApproving = true;
             try {
+                // Fetch the order document first to inspect its items
+                const orderSnap = await getDoc(doc(db, "orders", orderId));
+                if (!orderSnap.exists()) {
+                    alert("الطلب غير موجود!");
+                    isApproving = false;
+                    return;
+                }
+                const orderData = orderSnap.data();
+
+                // Check if it's a lesson booking order
+                let isLesson = false;
+                if (orderData.items && orderData.items.length > 0) {
+                    isLesson = orderData.items.some(item => 
+                        item.name && (
+                            item.name.includes("حجز درس") || 
+                            item.name.includes("حصة") || 
+                            item.name.includes("مستر أحمد") || 
+                            item.name.includes("أونلاين")
+                        )
+                    );
+                }
+
                 await updateDoc(doc(db, "orders", orderId), { 
                     status: "approved",
                     paymentMethod: paymentMethod,
                     approvedAt: new Date().getTime()
                 });
 
-                await addDoc(collection(db, "booked_classes"), {
-                    teacherId: "teacher_ahmed_001",
-                    nurseryId: myNurseryId,
-                    studentName: parentName,
-                    date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US'),
-                    time: currentLang === 'ar' ? "بالتنسيق مع ولي الأمر" : "Coordinated with parent",
-                    status: "upcoming"
-                });
-
-                alert(dict.alert_success_approve);
+                if (isLesson) {
+                    await addDoc(collection(db, "booked_classes"), {
+                        teacherId: "teacher_ahmed_001",
+                        nurseryId: myNurseryId,
+                        studentName: parentName,
+                        date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US'),
+                        time: currentLang === 'ar' ? "بالتنسيق مع ولي الأمر" : "Coordinated with parent",
+                        status: "upcoming"
+                    });
+                    alert(dict.alert_success_approve);
+                } else {
+                    // It is a bookstore purchase!
+                    alert(currentLang === 'ar' ? 
+                        "✅ تم الموافقة على طلب الشراء بنجاح! تم إحالة الطلب إلى السوبر أدمن في إدارة الطلبات لشحنه وتوصيله." : 
+                        "✅ Purchase approved successfully! Sent to Super Admin for shipping and delivery."
+                    );
+                }
             } catch (error) {
                 console.error(error);
                 alert(dict.alert_err_approve);

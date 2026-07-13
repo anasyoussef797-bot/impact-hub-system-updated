@@ -2408,27 +2408,100 @@
         // 6. الشحن والخدمات اللوجستية مع Axon Express
         window.fetchCentralOrders = async () => {
             const tbody = document.getElementById('central-orders-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">جاري تحميل طلبات الشحن اللوجستية... ⏳</td></tr>';
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
-            tbody.innerHTML = `
-                <tr>
-                    <td><strong>${currentLang === 'ar' ? 'حضانة أجيال الغد' : 'Ajyal Al-Ghad'}</strong><br><small style="color:var(--text-gray);">${currentLang === 'ar' ? 'الإسكندرية - جليم' : 'Alexandria - Glim'}</small><br><small>01000000000</small></td>
-                    <td>ياسين محمود</td>
-                    <td>كتاب المناهج (150 EGP)</td>
-                    <td><span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-size:11px;">${currentLang === 'ar' ? 'جاهز للشحن' : 'Ready to Ship'}</span></td>
-                    <td><button class="btn-success" onclick="window.markOrderAsShipped()"><i class="fa-solid fa-truck-fast"></i> ${currentLang === 'ar' ? 'تأكيد الشحن والتسليم' : 'Confirm Dispatch'}</button></td>
-                </tr>
-            `;
+            try {
+                const snap = await getDocs(collection(db, "orders"));
+                let orders = [];
+                snap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    // Show only approved or shipped store purchases (no lessons)
+                    const isLesson = data.items && data.items.some(item => 
+                        item.name && (
+                            item.name.includes("حجز درس") || 
+                            item.name.includes("حصة") || 
+                            item.name.includes("مستر أحمد") || 
+                            item.name.includes("أونلاين")
+                        )
+                    );
+                    if (!isLesson && (data.status === 'approved' || data.status === 'shipped')) {
+                        orders.push({ id: docSnap.id, ...data });
+                    }
+                });
+
+                // Sort by timestamp
+                orders.sort((a, b) => (b.approvedAt || 0) - (a.approvedAt || 0));
+
+                if(orders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: gray; padding: 20px;">${currentLang === 'ar' ? 'لا توجد طلبات شحن حالياً.' : 'No shipping orders currently.'}</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                orders.forEach(order => {
+                    let itemsHtml = '';
+                    let totalAmount = 0;
+                    if(order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            itemsHtml += `<div>- ${item.name} (${item.price} EGP)</div>`;
+                            totalAmount += item.price;
+                        });
+                    }
+
+                    // Map nursery ID to details for shipping
+                    let nurseryDetails = `<strong>${currentLang === 'ar' ? 'حضانة أجيال الغد' : 'Ajyal Al-Ghad'}</strong><br><small style="color:var(--text-gray);">${currentLang === 'ar' ? 'الإسكندرية - جليم' : 'Alexandria - Glim'}</small><br><small>01000000000</small>`;
+                    if (order.nurseryId && order.nurseryId !== "Ajyal_AlGhad_ID_001") {
+                        nurseryDetails = `<strong>${order.nurseryId}</strong>`;
+                    }
+
+                    const statusBadge = order.status === 'shipped' ? 
+                        `<span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${currentLang === 'ar' ? 'تم الشحن والتوصيل 🚚' : 'Shipped & Delivered 🚚'}</span>` : 
+                        `<span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${currentLang === 'ar' ? 'جاهز للشحن 📦' : 'Ready to Ship 📦'}</span>`;
+
+                    const actionButton = order.status === 'shipped' ? 
+                        `<span style="color:var(--text-gray); font-size:12px;">${currentLang === 'ar' ? 'مكتمل' : 'Completed'}</span>` : 
+                        `<button class="btn-success" onclick="window.markOrderAsShipped('${order.id}')"><i class="fa-solid fa-truck-fast"></i> ${currentLang === 'ar' ? 'تأكيد الشحن والتسليم' : 'Confirm Dispatch'}</button>`;
+
+                    tbody.innerHTML += `
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td>${nurseryDetails}</td>
+                            <td><strong>${order.parentName || 'ولي أمر'}</strong></td>
+                            <td>
+                                ${itemsHtml}
+                                <div style="margin-top:4px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount} EGP</div>
+                            </td>
+                            <td>${statusBadge}</td>
+                            <td>${actionButton}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error fetching central orders:", err);
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
+            }
         };
 
-        window.markOrderAsShipped = () => {
+        window.markOrderAsShipped = async (orderId) => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
-            if(!confirm(dict.alert_shipped_warn)) return;
-            alert(dict.alert_shipped_success);
+            if(!confirm(dict.alert_shipped_warn || "هل أنت متأكد من تغيير حالة الطلب إلى تم الشحن والتسليم؟")) return;
+
+            try {
+                await updateDoc(doc(db, "orders", orderId), {
+                    status: "shipped",
+                    shippedAt: new Date().getTime()
+                });
+                alert(dict.alert_shipped_success || "✅ تم تأكيد الشحن بنجاح!");
+                window.fetchCentralOrders();
+            } catch (err) {
+                console.error("Error shipping order:", err);
+                alert("حدث خطأ أثناء تحديث حالة الطلب.");
+            }
         };
 
         window.switchTab = (tabId, element) => {
@@ -2442,6 +2515,7 @@
             if(tabId === 'global-broadcast-tab') window.fetchGlobalNetworkFeed();
             if(tabId === 'landing-bookings-tab') window.fetchLandingBookings();
             if(tabId === 'marketplace-tab') window.fetchCentralProducts();
+            if(tabId === 'orders-tab') window.fetchCentralOrders();
             
             // إغلاق الشريط الجانبي على الجوال
             document.getElementById('appSidebar').classList.remove('open');
@@ -2652,15 +2726,22 @@
 
                 // If not initial load and a document was added, trigger the notification
                 let hasNewAdded = false;
+                let newBookingData = null;
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
                         hasNewAdded = true;
+                        newBookingData = change.doc.data();
                     }
                 });
 
-                if (!isInitialLoad && hasNewAdded) {
+                if (!isInitialLoad && hasNewAdded && newBookingData) {
                     window.playNotificationChime();
-                    window.showNotificationToast("🔔 إشعار جديد: قام ولي أمر بحجز حصة أونلاين ودفع الرسوم!");
+                    const toastMsg = `طلب حجز جديد من الرئيسية:<br>
+                                      👤 الطالب: <strong>${newBookingData.studentName || 'غير معروف'}</strong><br>
+                                      👨‍👦 ولي الأمر: <strong>${newBookingData.parentName || 'غير معروف'}</strong> (📞 ${newBookingData.parentPhone || ''})<br>
+                                      👨‍🏫 المدرس: <strong>${newBookingData.teacherName || 'غير معروف'}</strong><br>
+                                      📅 الموعد: <strong>${newBookingData.day || ''} (${newBookingData.time || ''})</strong>`;
+                    window.showNotificationToast(toastMsg);
                 }
                 isInitialLoad = false;
             });

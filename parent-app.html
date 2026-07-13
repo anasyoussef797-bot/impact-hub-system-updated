@@ -210,22 +210,6 @@
                         </button>
                     </div>
 
-                    <!-- جدول مواعيد الحجز الفوري للأستاذ أحمد علي -->
-                    <div class="card" style="margin: 15px; border: 2px solid rgba(128, 0, 0, 0.1); background: #fffcfc;">
-                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed rgba(128, 0, 0, 0.1); padding-bottom: 8px;">
-                            <div style="width: 36px; height: 36px; background: rgba(128, 0, 0, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--primary-maroon);">
-                                <i class="fa-solid fa-calendar-check"></i>
-                            </div>
-                            <div>
-                                <h4 style="font-size: 13px; font-weight: 800; color: var(--primary-maroon);">جدول حصص الأستاذ أحمد علي المتاحة للحجز ⏰</h4>
-                                <p style="font-size: 11px; color: var(--text-gray);">أختر اليوم والوقت المناسب لطفلك واحجز مباشرة</p>
-                            </div>
-                        </div>
-                        <div id="home-slots-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
-                            <p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل مواعيد المدرس المتوفرة...</p>
-                        </div>
-                    </div>
-
                     <h3 class="section-title"><span data-i18n="playground_title">ساحة الأنشطة (البلاي جراوند)</span></h3>
                     <div class="card create-post-area">
                         <textarea id="parent-post-body" rows="2" data-i18n-placeholder="post_placeholder" placeholder="شاركنا لحظات طفلك..."></textarea>
@@ -900,10 +884,8 @@
 
         // ================== 0. حجز المواعيد والتوفر الفوري للمعلم ==================
         window.fetchAvailabilityAndBookings = async () => {
-            const homeContainer = document.getElementById('home-slots-container');
             const tutoringContainer = document.getElementById('tutoring-slots-container');
             
-            if (homeContainer) homeContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل المواعيد...</p>';
             if (tutoringContainer) tutoringContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px;">جاري تحميل المواعيد...</p>';
 
             const targetTeacherId = "teacher_ahmed_001";
@@ -953,7 +935,6 @@
 
             if (slots.length === 0) {
                 const noSlotsHtml = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-gray); font-size: 11px; padding: 10px;">لا توجد مواعيد متاحة مسجلة حالياً من قبل المدرس ⏰</p>`;
-                if (homeContainer) homeContainer.innerHTML = noSlotsHtml;
                 if (tutoringContainer) tutoringContainer.innerHTML = noSlotsHtml;
                 return;
             }
@@ -963,7 +944,6 @@
             slots.sort((a, b) => (daysOrder[a.day] || 9) - (daysOrder[b.day] || 9));
 
             // Generate HTML
-            let homeHtml = '';
             let tutoringHtml = '';
 
             slots.forEach(slot => {
@@ -1012,11 +992,9 @@
                 `;
 
                 const slotElement = `<div style="${cardStyle}">${contentHtml}</div>`;
-                homeHtml += slotElement;
                 tutoringHtml += slotElement;
             });
 
-            if (homeContainer) homeContainer.innerHTML = homeHtml;
             if (tutoringContainer) tutoringContainer.innerHTML = tutoringHtml;
         };
 

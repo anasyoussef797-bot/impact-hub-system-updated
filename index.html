@@ -2461,7 +2461,12 @@
                 const file = fileInput.files[0];
                 const paymentProof = await compressImage(file, 600, 600);
 
-                const { teacherId, teacherName, day, time } = window.currentBookingDetails;
+                const details = window.currentBookingDetails || {};
+                const teacherId = details.teacherId || "teacher_ahmed_001";
+                const teacherName = details.teacherName || "مستر أحمد علي";
+                const day = details.day || "الأحد";
+                const time = details.time || "بالتنسيق مع ولي الأمر";
+
                 const bookingDoc = {
                     teacherId,
                     teacherName,
