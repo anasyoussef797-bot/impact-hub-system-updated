@@ -6,7 +6,7 @@
     <title data-i18n="app_title">إمباكت هب مصر - تطبيق المعلم</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://meet.jit.si/external_api.js"></script>
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
     <style>
         :root {
             --primary-maroon: #002f6c; /* US Dept of Education Navy */
@@ -577,7 +577,7 @@
         }
 
         /* البث المباشر المحاكي */
-        #jitsi-class-container {
+        #daily-class-container {
             width: 100%;
             height: 500px;
             background: #0f172a;
@@ -930,9 +930,13 @@
                     </div>
                     <div class="form-group">
                         <label data-i18n="live_class_lbl">اختر الطالب أو الحصة المحجوزة الآن</label>
-                        <select id="live-student-select" class="form-control" style="width: auto; min-width: 250px;">
+                        <select id="live-student-select" class="form-control" style="width: auto; min-width: 250px;" onchange="window.showStudentAccessibilityProfile()">
                             <option value="" data-i18n="choose_class_opt">اختر الحصة للبدء...</option>
                         </select>
+                    </div>
+                    
+                    <!-- بطاقة ملف التكيف للطفل المعروضة للمعلم -->
+                    <div id="student-accessibility-container" style="display: none; margin-bottom: 20px; padding: 15px; border-radius: 12px; background: #f0f9ff; border: 1.5px solid #bae6fd; text-align: right;">
                     </div>
                     <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                         <button class="btn-primary" style="background: var(--success-green); box-shadow: 0 8px 15px rgba(16, 185, 129, 0.15);" onclick="window.startLiveClassSession()">
@@ -951,7 +955,7 @@
                         <a id="simulation-direct-link" href="#" target="_blank" style="color: #0284c7; text-decoration: underline; margin-right: 5px;" data-i18n="live_class_open_tab">اضغط هنا لفتح تابة البث المستقلة</a>
                     </div>
 
-                    <div id="jitsi-class-container"></div>
+                    <div id="daily-class-container"></div>
                 </div>
             </div>
 
@@ -1012,7 +1016,7 @@
         let myNurseryId = "Ajyal_AlGhad_ID_001";
         let myName = "أ / أحمد علي (لغة إنجليزية)";
 
-        let jitsiApi = null;
+        window.dailyCallFrame = null;
         let activeChatUserId = null;
         let chatUnsubscribe = null;
 
@@ -1419,7 +1423,9 @@
             });
         };
 
-        // 3. الحصص الأونلاين وربط غرف جيتسي الآمنة مع تطبيق ولي الأمر
+        // 3. الحصص الأونلاين وربط غرف غيتسي الآمنة مع تطبيق ولي الأمر
+        window.teacherBookedClassesMap = new Map();
+
         window.fetchBookedClasses = async () => {
             const select = document.getElementById('live-student-select');
             
@@ -1430,13 +1436,89 @@
             const q = query(collection(db, "booked_classes"), where("teacherId", "==", myTeacherId), where("status", "==", "upcoming"));
             const snap = await getDocs(q);
             
+            window.teacherBookedClassesMap.clear();
+
             if(snap.empty) {
                 select.innerHTML = `<option value="">${dict.no_booked}</option>`;
             } else {
                 snap.forEach(docData => {
                     const data = docData.data();
+                    window.teacherBookedClassesMap.set(docData.id, data);
                     select.innerHTML += `<option value="${docData.id}">${data.studentName} - ${data.date} (${data.time})</option>`;
                 });
+            }
+        };
+
+        window.showStudentAccessibilityProfile = async () => {
+            const select = document.getElementById('live-student-select');
+            const container = document.getElementById('student-accessibility-container');
+            
+            if (!select.value) {
+                container.style.display = 'none';
+                container.innerHTML = '';
+                return;
+            }
+
+            const classData = window.teacherBookedClassesMap.get(select.value);
+            if (!classData) {
+                container.style.display = 'none';
+                return;
+            }
+
+            const parentId = classData.parentId || "parent_yassin"; 
+            const studentName = classData.studentName || "الطفل";
+
+            container.style.display = 'block';
+            container.innerHTML = `
+                <p style="font-size: 11px; color: var(--text-gray); font-weight: 800; margin-bottom: 0;">
+                    <i class="fa-solid fa-spinner fa-spin"></i> جاري فحص ملف التكيف والدمج التعليمي للطفل (${studentName})...
+                </p>
+            `;
+
+            try {
+                const docSnap = await getDoc(doc(db, "kids_profiles", parentId));
+                if (docSnap.exists()) {
+                    const profile = docSnap.data().accessibility;
+                    if (profile && (profile.focusMode || profile.readingMode || profile.sensoryCalmMode)) {
+                        let modesHtml = [];
+                        if (profile.focusMode) modesHtml.push(`<span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-bullseye"></i> وضع التركيز (Focus Mode)</span>`);
+                        if (profile.readingMode) modesHtml.push(`<span style="background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-book-open"></i> وضع القراءة الميسرة (Reading Mode)</span>`);
+                        if (profile.sensoryCalmMode) modesHtml.push(`<span style="background: #f3e8ff; color: #6b21a8; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-spa"></i> وضع الهدوء الحسي (Sensory Calm)</span>`);
+
+                        container.innerHTML = `
+                            <h5 style="font-size: 13px; font-weight: 900; color: #1e3a8a; margin-top: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-universal-access"></i> الملف الطبي/التكيفي للطفل: ${studentName} 🧭
+                            </h5>
+                            <p style="font-size: 11px; color: #475569; margin-bottom: 10px; font-weight: 800; margin-top: 0;">
+                                الرجاء مراعاة الأوضاع والأساليب التعليمية التالية لدمج الطفل بشكل فعال أثناء البث المباشر:
+                            </p>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                ${modesHtml.join('')}
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <h5 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> ملف التكيف للطفل: ${studentName}
+                            </h5>
+                            <p style="font-size: 11px; color: var(--text-gray); font-weight: 800; margin: 0;">
+                                لا توجد متطلبات تكيفية خاصة مسجلة حالياً (الملف التعليمي العادي).
+                            </p>
+                        `;
+                    }
+                } else {
+                    container.innerHTML = `
+                        <h5 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-circle-info" style="color: #3b82f6;"></i> ملف التكيف للطفل: ${studentName}
+                        </h5>
+                        <p style="font-size: 11px; color: var(--text-gray); font-weight: 800; margin: 0;">
+                            لم يتم إعداد ملف الدمج التعليمي من قبل ولي الأمر بعد. سيتم استخدام النمط القياسي للحصة.
+                        </p>
+                    `;
+                }
+            } catch (err) {
+                console.error("Error loading student accessibility profile:", err);
+                container.style.display = 'none';
             }
         };
 
@@ -1451,7 +1533,7 @@
             if(!studentSelect.value) { alert(dict.alert_choose_class); return; }
             const studentName = studentSelect.options[studentSelect.selectedIndex].text;
             
-            const container = document.getElementById('jitsi-class-container');
+            const container = document.getElementById('daily-class-container');
             const simBox = document.getElementById('live-simulation-box');
             const simLink = document.getElementById('simulation-direct-link');
             
@@ -1471,16 +1553,30 @@
             simBox.style.display = 'block';
             document.getElementById('btn-end-class').style.display = 'inline-flex';
             
-            const roomName = `Room_${studentSelect.value}_Live`;
-            const directUrl = `https://meet.ffmuc.net/${roomName}`;
+            // Create Daily.co room securely via server API
+            let roomUrl = "";
+            let roomName = "";
             
-            simLink.href = directUrl;
+            try {
+                const apiRes = await fetch('/api/create-daily-room', { method: 'POST' });
+                const apiData = await apiRes.json();
+                if (apiData.error) throw new Error(apiData.error);
+                roomUrl = apiData.url;
+                roomName = apiData.name;
+            } catch (err) {
+                console.error("Failed to securely create Daily.co room via API. Falling back to dynamic placeholder room URL:", err);
+                // Safe fallback pattern to make sure it works even if offline or transitional
+                roomName = `Room_${studentSelect.value}_${Date.now()}`;
+                roomUrl = `https://impacthub.daily.co/${roomName}`;
+            }
+            
+            simLink.href = roomUrl;
 
             // 2. إضافة مستند الحصة الجديد كـ active
             const docRef = await addDoc(collection(db, "live_classes"), {
                 nurseryId: myNurseryId, 
                 roomName: roomName, 
-                roomUrl: directUrl, 
+                roomUrl: roomUrl, 
                 teacherName: myName, 
                 studentName: studentName, 
                 status: "active", 
@@ -1488,14 +1584,28 @@
             });
             activeClassDocId = docRef.id;
 
-            const domain = 'meet.ffmuc.net';
-            const options = {
-                roomName: roomName, width: '100%', height: 500, parentNode: container,
-                userInfo: { displayName: myName },
-                configOverwrite: { startWithAudioMuted: true, startWithVideoMuted: true, prejoinPageEnabled: false },
-                interfaceConfigOverwrite: { TOOLBAR_BUTTONS: ['microphone', 'camera', 'hangup', 'tileview', 'chat', 'raisehand'] }
-            };
-            jitsiApi = new JitsiMeetExternalAPI(domain, options);
+            // Integrate Daily.co Prebuilt inside the iframe container using the official daily-js SDK
+            try {
+                window.dailyCallFrame = window.DailyIframe.createFrame(container, {
+                    iframeStyle: {
+                        width: '100%',
+                        height: '500px',
+                        border: 'none',
+                        borderRadius: '20px'
+                    },
+                    showLeaveButton: true
+                });
+                
+                await window.dailyCallFrame.join({ 
+                    url: roomUrl,
+                    userName: myName
+                });
+            } catch (iframeErr) {
+                console.error("Error embedding Daily Prebuilt CallFrame. Creating direct iframe element as robust fallback:", iframeErr);
+                container.innerHTML = `
+                    <iframe src="${roomUrl}" allow="camera; microphone; display-capture" style="width:100%; height:500px; border:none; border-radius:20px;"></iframe>
+                `;
+            }
 
             // 3. مستمع التغييرات في الحصة المباشرة لإنهاءها فوراً من قبل المديرة
             if(teacherRoomListener) teacherRoomListener();
@@ -1522,8 +1632,19 @@
             }
             if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
 
-            if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
-            document.getElementById('jitsi-class-container').style.display = 'none';
+            if(window.dailyCallFrame) { 
+                try {
+                    await window.dailyCallFrame.leave(); 
+                    window.dailyCallFrame.destroy(); 
+                } catch(e) {}
+                window.dailyCallFrame = null; 
+            }
+            
+            const container = document.getElementById('daily-class-container');
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
             document.getElementById('live-simulation-box').style.display = 'none';
             document.getElementById('btn-end-class').style.display = 'none';
             alert(dict.alert_class_end);
@@ -1532,8 +1653,19 @@
         window.leaveLiveClassFromTeacherSide = () => {
             if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
             activeClassDocId = "";
-            if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
-            document.getElementById('jitsi-class-container').style.display = 'none';
+            if(window.dailyCallFrame) { 
+                try {
+                    window.dailyCallFrame.leave(); 
+                    window.dailyCallFrame.destroy(); 
+                } catch(e) {}
+                window.dailyCallFrame = null; 
+            }
+            
+            const container = document.getElementById('daily-class-container');
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
             document.getElementById('live-simulation-box').style.display = 'none';
             document.getElementById('btn-end-class').style.display = 'none';
         };

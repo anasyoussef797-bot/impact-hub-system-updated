@@ -7,7 +7,7 @@
     <title>Impact Hub - Parent App (Full System with Vercel Games)</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://meet.jit.si/external_api.js"></script>
+    <script src="https://unpkg.com/@daily-co/daily-js"></script>
     <style>
         :root {
             --primary-maroon: #002f6c; /* US Dept of Education Navy */
@@ -91,7 +91,7 @@
         .comment-item { background: var(--white); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 6px; font-size: 13px; line-height: 1.4; }
         .comment-input-area { display: flex; gap: 8px; margin-top: 10px; }
 
-        #jitsi-student-container { width: 100%; height: 350px; background: #000; border-radius: 16px; display: none; margin-top: 15px; overflow: hidden; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-lg); }
+        #daily-student-container { width: 100%; height: 350px; background: #000; border-radius: 16px; display: none; margin-top: 15px; overflow: hidden; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-lg); }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; justify-content: center; align-items: flex-end; backdrop-filter: blur(4px); }
         .modal-content { background: var(--pastel-bg); width: 100%; max-width: 430px; border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto; color: var(--text-dark); display: flex; flex-direction: column; box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.15); }
@@ -132,6 +132,95 @@
         #game-player-iframe { flex-grow: 1; width: 100%; border: none; }
         .close-game-btn { background: rgba(255,255,255,0.25); border: none; color: white; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 18px; transition: var(--transition); }
         .close-game-btn:hover { background: rgba(255,255,255,0.4); }
+
+        /* Switch styles */
+        .switch input:checked + .slider {
+            background-color: #2563eb !important;
+        }
+        .switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        .switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ================== Accessibility Classes ================== */
+        /* 1. Focus Mode - Minimize distractions, hide extra items */
+        body.accessibility-focus-mode .game-card {
+            transform: none !important;
+            box-shadow: none !important;
+            border: 2px solid var(--border-color) !important;
+        }
+        body.accessibility-focus-mode .floating-banner,
+        body.accessibility-focus-mode .confetti,
+        body.accessibility-focus-mode .sparkles,
+        body.accessibility-focus-mode .decorative-bg,
+        body.accessibility-focus-mode .alert-banner {
+            display: none !important;
+        }
+        body.accessibility-focus-mode .tab-content {
+            padding: 10px !important;
+        }
+        body.accessibility-focus-mode .card {
+            box-shadow: none !important;
+            border: 2px solid var(--border-color) !important;
+        }
+
+        /* 2. Accessible Reading Mode - Font sizes & line spacing */
+        body.accessibility-reading-mode {
+            font-size: 18px !important;
+            line-height: 1.9 !important;
+            word-spacing: 0.12em !important;
+            letter-spacing: 0.04em !important;
+        }
+        body.accessibility-reading-mode p, 
+        body.accessibility-reading-mode span, 
+        body.accessibility-reading-mode label, 
+        body.accessibility-reading-mode input, 
+        body.accessibility-reading-mode button {
+            font-size: 16px !important;
+            line-height: 1.8 !important;
+        }
+        body.accessibility-reading-mode h1,
+        body.accessibility-reading-mode h2,
+        body.accessibility-reading-mode h3,
+        body.accessibility-reading-mode h4,
+        body.accessibility-reading-mode h5 {
+            font-size: 22px !important;
+            font-weight: 900 !important;
+            line-height: 1.5 !important;
+            margin-bottom: 12px !important;
+        }
+
+        /* 3. Sensory Calm Mode - Muted colors & animations */
+        body.accessibility-sensory-calm {
+            filter: saturate(0.7) !important;
+        }
+        body.accessibility-sensory-calm * {
+            animation: none !important;
+            transition: none !important;
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
+        body.accessibility-sensory-calm :root,
+        body.accessibility-sensory-calm {
+            --primary-maroon: #1e293b !important; /* Muted Slate Gray */
+            --soft-maroon: #475569 !important;
+            --kid-pink: #94a3b8 !important;
+            --kid-blue: #64748b !important;
+            --kid-yellow: #cbd5e1 !important;
+            --kid-green: #94a3b8 !important;
+            --kid-purple: #334155 !important;
+            --pastel-bg: #f1f5f9 !important;
+        }
     </style>
 </head>
 <body>
@@ -254,7 +343,7 @@
                             </a>
                         </div>
 
-                        <div id="jitsi-student-container"></div>
+                        <div id="daily-student-container"></div>
 
                         <!-- جدول المواعيد المتاحة للحجز الأونلاين -->
                         <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
@@ -294,6 +383,60 @@
                         <div style="display: flex; gap: 8px;">
                             <input type="text" id="kid-name-input" class="form-control" style="margin: 0; flex-grow: 1;" data-i18n-placeholder="kid_name_placeholder" placeholder="ادخل اسم طفلك هنا...">
                             <button class="btn-primary" style="margin: 0; width: auto; background: #22c55e;" onclick="window.saveKidName()"><span data-i18n="save_btn">حفظ</span></button>
+                        </div>
+                    </div>
+
+                    <!-- إعدادات التكيف لملف تعريف الطفل -->
+                    <div class="card" style="margin-bottom: 20px; padding: 16px; border: 1.5px solid #dbeafe; background: #f0f9ff !important;">
+                        <h4 style="font-size: 14px; margin-bottom: 12px; color: #1e40af; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-universal-access"></i> <span data-i18n="accessibility_settings_title">الملف الشخصي للتكيف والدمج التعليمي ♿🧭</span>
+                        </h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 12px; text-align: right;">
+                            <!-- Focus Mode -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-bullseye"></i></span>
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="focus_mode_label">وضع التركيز (Focus Mode)</div>
+                                        <div style="font-size: 10px; color: var(--text-gray);" data-i18n="focus_mode_desc">لتقليل المشتتات والتحفيز البصري المفرط</div>
+                                    </div>
+                                </div>
+                                <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
+                                    <input type="checkbox" id="acc-focus-mode" onchange="window.toggleAccessibility('focusMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                </label>
+                            </div>
+                            
+                            <!-- Accessible Reading Mode -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-book-open"></i></span>
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="reading_mode_label">وضع القراءة الميسرة (Reading Mode)</div>
+                                        <div style="font-size: 10px; color: var(--text-gray);" data-i18n="reading_mode_desc">لتكبير الخطوط وزيادة مسافات الكلمات والأسطر</div>
+                                    </div>
+                                </div>
+                                <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
+                                    <input type="checkbox" id="acc-reading-mode" onchange="window.toggleAccessibility('readingMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                </label>
+                            </div>
+                            
+                            <!-- Sensory Calm Mode -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-spa"></i></span>
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="calm_mode_label">وضع الهدوء الحسي (Sensory Calm)</div>
+                                        <div style="font-size: 10px; color: var(--text-gray);" data-i18n="calm_mode_desc">لتقليل الألوان الصاخبة وإلغاء الحركة والتحفيز السمعي البصري</div>
+                                    </div>
+                                </div>
+                                <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
+                                    <input type="checkbox" id="acc-calm-mode" onchange="window.toggleAccessibility('sensoryCalmMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     
@@ -504,7 +647,7 @@
         const myParentId = "parent_yassin";
         let myParentName = localStorage.getItem('parent_display_name') || "ياسين محمود (ولي أمر)";
 
-        let jitsiApi = null;
+        window.dailyCallFrame = null;
         let cart = [];
         let chatUnsubscribe = null;
 
@@ -1290,7 +1433,7 @@
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
 
-            const container = document.getElementById('jitsi-student-container');
+            const container = document.getElementById('daily-student-container');
             const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
             const snap = await getDocs(q);
 
@@ -1299,10 +1442,10 @@
                 return;
             }
 
-            let activeRoomName = "";
+            let activeRoomUrl = "";
             let activeDocId = "";
             snap.forEach(d => { 
-                activeRoomName = d.data().roomName; 
+                activeRoomUrl = d.data().roomUrl || `https://impacthub.daily.co/${d.data().roomName}`; 
                 activeDocId = d.id;
             });
 
@@ -1314,19 +1457,31 @@
             const simLink = document.getElementById('parent-simulation-direct-link');
             if (simBox && simLink) {
                 simBox.style.display = 'flex';
-                simLink.href = `https://meet.ffmuc.net/${activeRoomName}`;
+                simLink.href = activeRoomUrl;
             }
 
-            const domain = 'meet.ffmuc.net';
-            const options = {
-                roomName: activeRoomName,
-                width: '100%',
-                height: 350,
-                parentNode: container,
-                userInfo: { displayName: myParentName },
-                configOverwrite: { startWithAudioMuted: true, startWithVideoMuted: true, prejoinPageEnabled: false }
-            };
-            jitsiApi = new JitsiMeetExternalAPI(domain, options);
+            // Integrate Daily.co Prebuilt inside the container
+            try {
+                window.dailyCallFrame = window.DailyIframe.createFrame(container, {
+                    iframeStyle: {
+                        width: '100%',
+                        height: '350px',
+                        border: 'none',
+                        borderRadius: '16px'
+                    },
+                    showLeaveButton: false
+                });
+                
+                await window.dailyCallFrame.join({ 
+                    url: activeRoomUrl,
+                    userName: myParentName
+                });
+            } catch (err) {
+                console.error("Error creating Daily Prebuilt CallFrame. Creating direct iframe fallback:", err);
+                container.innerHTML = `
+                    <iframe src="${activeRoomUrl}" allow="camera; microphone; display-capture" style="width:100%; height:350px; border:none; border-radius:16px;"></iframe>
+                `;
+            }
 
             // Listen to this specific room's status for remote termination
             if (activeRoomListener) activeRoomListener();
@@ -1348,9 +1503,19 @@
         };
 
         window.leaveLiveClass = () => {
-            if(jitsiApi) { jitsiApi.dispose(); jitsiApi = null; }
+            if(window.dailyCallFrame) { 
+                try {
+                    window.dailyCallFrame.leave(); 
+                    window.dailyCallFrame.destroy(); 
+                } catch(e) {}
+                window.dailyCallFrame = null; 
+            }
             if(activeRoomListener) { activeRoomListener(); activeRoomListener = null; }
-            document.getElementById('jitsi-student-container').style.display = 'none';
+            const container = document.getElementById('daily-student-container');
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
             document.getElementById('btn-leave-class').style.display = 'none';
             const simBox = document.getElementById('parent-live-simulation-box');
             if (simBox) simBox.style.display = 'none';
@@ -1950,14 +2115,123 @@
             alert(dict.save_profile_success || "✅ تم حفظ التعديلات بنجاح!");
         };
 
-        window.saveKidName = () => {
+        window.saveKidName = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
             
             const val = document.getElementById('kid-name-input').value.trim();
             localStorage.setItem('my_kid_name', val);
             
+            try {
+                if (!window.kidAccessibilityProfile) {
+                    window.kidAccessibilityProfile = {
+                        focusMode: false,
+                        readingMode: false,
+                        sensoryCalmMode: false
+                    };
+                }
+                await setDoc(doc(db, "kids_profiles", myParentId), {
+                    parentId: myParentId,
+                    kidName: val,
+                    accessibility: window.kidAccessibilityProfile,
+                    lastUpdated: new Date().getTime()
+                }, { merge: true });
+                console.log("Kid profile saved to Firestore.");
+            } catch(e) {
+                console.error("Error saving kid name to Firestore:", e);
+            }
+            
             alert(dict.save_kid_success || "✅ تم تسجيل اسم طفلك بنجاح!");
+        };
+
+        window.toggleAccessibility = async (field, value) => {
+            if (!window.kidAccessibilityProfile) {
+                window.kidAccessibilityProfile = {
+                    focusMode: false,
+                    readingMode: false,
+                    sensoryCalmMode: false
+                };
+            }
+            window.kidAccessibilityProfile[field] = value;
+            
+            localStorage.setItem('kid_accessibility_profile', JSON.stringify(window.kidAccessibilityProfile));
+            
+            window.applyAccessibilitySettings(window.kidAccessibilityProfile);
+            
+            try {
+                const kidName = localStorage.getItem('my_kid_name') || 'طفلي الموهوب';
+                await setDoc(doc(db, "kids_profiles", myParentId), {
+                    parentId: myParentId,
+                    kidName: kidName,
+                    accessibility: window.kidAccessibilityProfile,
+                    lastUpdated: new Date().getTime()
+                }, { merge: true });
+            } catch (err) {
+                console.error("Error saving kid accessibility profile to Firestore:", err);
+            }
+        };
+
+        window.loadKidAccessibilityProfile = async () => {
+            let cached = localStorage.getItem('kid_accessibility_profile');
+            if (cached) {
+                try {
+                    window.kidAccessibilityProfile = JSON.parse(cached);
+                    window.updateAccessibilityToggles(window.kidAccessibilityProfile);
+                    window.applyAccessibilitySettings(window.kidAccessibilityProfile);
+                } catch(e) { console.error(e); }
+            }
+            
+            try {
+                const dSnap = await getDoc(doc(db, "kids_profiles", myParentId));
+                if (dSnap.exists()) {
+                    const data = dSnap.data();
+                    if (data.accessibility) {
+                        window.kidAccessibilityProfile = data.accessibility;
+                        localStorage.setItem('kid_accessibility_profile', JSON.stringify(window.kidAccessibilityProfile));
+                        window.updateAccessibilityToggles(window.kidAccessibilityProfile);
+                        window.applyAccessibilitySettings(window.kidAccessibilityProfile);
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching kid accessibility profile from Firestore:", err);
+            }
+        };
+
+        window.updateAccessibilityToggles = (profile) => {
+            if (!profile) return;
+            const focusToggle = document.getElementById('acc-focus-mode');
+            const readingToggle = document.getElementById('acc-reading-mode');
+            const calmToggle = document.getElementById('acc-calm-mode');
+            
+            if (focusToggle) focusToggle.checked = !!profile.focusMode;
+            if (readingToggle) readingToggle.checked = !!profile.readingMode;
+            if (calmToggle) calmToggle.checked = !!profile.sensoryCalmMode;
+        };
+
+        window.applyAccessibilitySettings = (profile) => {
+            const body = document.body;
+            if (!profile) {
+                body.classList.remove('accessibility-focus-mode', 'accessibility-reading-mode', 'accessibility-sensory-calm');
+                return;
+            }
+            
+            if (profile.focusMode) {
+                body.classList.add('accessibility-focus-mode');
+            } else {
+                body.classList.remove('accessibility-focus-mode');
+            }
+            
+            if (profile.readingMode) {
+                body.classList.add('accessibility-reading-mode');
+            } else {
+                body.classList.remove('accessibility-reading-mode');
+            }
+            
+            if (profile.sensoryCalmMode) {
+                body.classList.add('accessibility-sensory-calm');
+            } else {
+                body.classList.remove('accessibility-sensory-calm');
+            }
         };
 
         window.loadNurseryLogo = async () => {
@@ -2040,6 +2314,9 @@
 
             // Load availability slots and bookings
             window.fetchAvailabilityAndBookings();
+
+            // Load child accessibility profile settings from Firestore
+            window.loadKidAccessibilityProfile();
         };
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
