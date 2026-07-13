@@ -1674,7 +1674,7 @@
                                     ${authorBadge}
                                 </div>
                             </div>
-                            {(!isGlobal && post.authorId === myTeacherId) ? `
+                            ${(!isGlobal && post.authorId === myTeacherId) ? `
                             <div style="display: flex; gap: 8px;">
                                 <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
