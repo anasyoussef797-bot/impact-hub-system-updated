@@ -110,7 +110,7 @@ service cloud.firestore {
         && isString(request.resource.data.parentName)
         && isList(request.resource.data.items)
         && isString(request.resource.data.status)
-        && (request.resource.data.status == 'pending' || request.resource.data.status == 'approved' || request.resource.data.status == 'rejected');
+        && (request.resource.data.status == 'pending' || request.resource.data.status == 'approved' || request.resource.data.status == 'rejected' || request.resource.data.status == 'shipped');
     }
 
     // ==========================================

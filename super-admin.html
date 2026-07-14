@@ -2676,15 +2676,146 @@
             if(!confirm(dict.alert_shipped_warn || "هل أنت متأكد من تغيير حالة الطلب إلى تم الشحن والتسليم؟")) return;
 
             try {
+                // Fetch full order data first to map details
+                const orderDoc = await getDoc(doc(db, "orders", orderId));
+                if (!orderDoc.exists()) {
+                    alert("الطلب غير موجود في قاعدة البيانات.");
+                    return;
+                }
+                const orderData = orderDoc.data();
+
+                // 1. Fetch Nursery Details for Mapping
+                let nurseryName = "حضانة أجيال الغد";
+                let nurseryAddress = "الإسكندرية - جليم";
+                let nurseryPhone = "01000000000";
+
+                if (orderData.nurseryId && orderData.nurseryId !== "Ajyal_AlGhad_ID_001") {
+                    try {
+                        const nurseryDoc = await getDoc(doc(db, "nurseries", orderData.nurseryId));
+                        if (nurseryDoc.exists()) {
+                            const nd = nurseryDoc.data();
+                            nurseryName = nd.name || orderData.nurseryId;
+                            nurseryAddress = nd.address || "غير محدد";
+                            nurseryPhone = nd.phone || "غير محدد";
+                        } else {
+                            nurseryName = orderData.nurseryId;
+                        }
+                    } catch (e) {
+                        console.error("Error fetching nursery details:", e);
+                        nurseryName = orderData.nurseryId;
+                    }
+                }
+
+                // 2. Map Items & Total
+                let totalAmount = 0;
+                const lineItems = (orderData.items || []).map((item, index) => {
+                    totalAmount += (item.price || 0);
+                    return {
+                        id: index + 1,
+                        title: item.name || "منتج",
+                        price: (item.price || 0).toFixed(2),
+                        quantity: 1,
+                        name: item.name || "منتج"
+                    };
+                });
+
+                // 3. Formulate Shopify standard webhook payload
+                const shopifyPayload = {
+                    id: orderId,
+                    name: `#${orderId}`,
+                    email: "nursery@example.com",
+                    phone: nurseryPhone,
+                    total_price: totalAmount.toFixed(2),
+                    subtotal_price: totalAmount.toFixed(2),
+                    total_tax: "0.00",
+                    currency: "EGP",
+                    financial_status: "pending",
+                    fulfillment_status: null,
+                    line_items: lineItems,
+                    shipping_address: {
+                        first_name: nurseryName,
+                        last_name: "Nursery",
+                        address1: nurseryAddress,
+                        phone: nurseryPhone,
+                        city: "Alexandria",
+                        province: "",
+                        zip: "",
+                        country: "Egypt"
+                    },
+                    billing_address: {
+                        first_name: nurseryName,
+                        last_name: "Nursery",
+                        address1: nurseryAddress,
+                        phone: nurseryPhone,
+                        city: "Alexandria",
+                        province: "",
+                        zip: "",
+                        country: "Egypt"
+                    },
+                    customer: {
+                        first_name: nurseryName,
+                        last_name: "Nursery",
+                        email: "nursery@example.com",
+                        phone: nurseryPhone
+                    }
+                };
+
+                const rawBody = JSON.stringify(shopifyPayload);
+
+                // 4. Calculate HMAC-SHA256 signature for X-Shopify-Hmac-Sha256
+                const apiKey = "AXN_SK27DMK6EVBKX0RG";
+                let hmacSignature = "";
+                try {
+                    const encoder = new TextEncoder();
+                    const keyData = encoder.encode(apiKey);
+                    const messageData = encoder.encode(rawBody);
+                    const cryptoKey = await window.crypto.subtle.importKey(
+                        "raw",
+                        keyData,
+                        { name: "HMAC", hash: { name: "SHA-256" } },
+                        false,
+                        ["sign"]
+                    );
+                    const signature = await window.crypto.subtle.sign(
+                        "HMAC",
+                        cryptoKey,
+                        messageData
+                    );
+                    hmacSignature = btoa(String.fromCharCode(...new Uint8Array(signature)));
+                } catch (cryptoErr) {
+                    console.error("Error computing HMAC signature:", cryptoErr);
+                }
+
+                // 5. Send POST request to AXON EXPRESS
+                const webhookUrl = "https://axon-express.vercel.app/api/shopify-webhook";
+                const response = await fetch(webhookUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-Key": apiKey,
+                        "X-Shopify-Access-Token": apiKey,
+                        "X-Shopify-Webhook-Secret": apiKey,
+                        "X-Shopify-Hmac-Sha256": hmacSignature,
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: rawBody
+                });
+
+                if (!response.ok) {
+                    throw new Error(`AXON EXPRESS returned status code: ${response.status}`);
+                }
+
+                // 6. On success, update status in Firestore
                 await updateDoc(doc(db, "orders", orderId), {
                     status: "shipped",
                     shippedAt: new Date().getTime()
                 });
+
                 alert(dict.alert_shipped_success || "✅ تم تأكيد الشحن بنجاح!");
                 window.fetchCentralOrders();
             } catch (err) {
                 console.error("Error shipping order:", err);
-                alert("حدث خطأ أثناء تحديث حالة الطلب.");
+                alert("حدث خطأ أثناء تحديث حالة الطلب وإرساله لـ Axon Express. يرجى المحاولة مرة أخرى.");
             }
         };
 
