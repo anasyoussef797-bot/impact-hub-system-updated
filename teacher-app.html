@@ -1567,7 +1567,7 @@
                 console.error("Failed to securely create Daily.co room via API. Falling back to dynamic Jitsi Meet room URL:", err);
                 // Safe fallback to public Jitsi Meet since it does not require account or configuration and works 100% of the time
                 roomName = `ImpactHub_${studentSelect.value}_${Date.now()}`;
-                roomUrl = `https://meet.jit.si/${roomName}`;
+                roomUrl = `https://meet.ffmuc.net/${roomName}`;
             }
             
             simLink.href = roomUrl;
