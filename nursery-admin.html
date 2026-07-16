@@ -1680,7 +1680,7 @@
             });
         };
 
-        window.startManagerMonitor = (roomUrl, roomName) => {
+         window.startManagerMonitor = (roomUrl, roomName) => {
             const monitorBox = document.getElementById('manager-daily-monitor-box');
             const jitsiContainer = document.getElementById('manager-daily-container');
             const directLink = document.getElementById('manager-direct-link');
@@ -1688,27 +1688,31 @@
             jitsiContainer.innerHTML = '';
             monitorBox.style.display = 'block';
 
-            const url = roomUrl || `https://impacthub.daily.co/${roomName}`;
+            const url = roomUrl || `https://meet.jit.si/${roomName}`;
 
             if (directLink) {
                 directLink.href = url;
             }
 
             try {
-                window.managerDailyCallFrame = window.DailyIframe.createFrame(jitsiContainer, {
-                    iframeStyle: {
-                        width: '100%',
-                        height: '450px',
-                        border: 'none',
-                        borderRadius: '12px'
-                    },
-                    showLeaveButton: true
-                });
-                
-                window.managerDailyCallFrame.join({ 
-                    url: url,
-                    userName: "مديرة الحضانة (رقابة عامة)"
-                });
+                if (url.includes('daily.co')) {
+                    window.managerDailyCallFrame = window.DailyIframe.createFrame(jitsiContainer, {
+                        iframeStyle: {
+                            width: '100%',
+                            height: '450px',
+                            border: 'none',
+                            borderRadius: '12px'
+                        },
+                        showLeaveButton: true
+                    });
+                    
+                    window.managerDailyCallFrame.join({ 
+                        url: url,
+                        userName: "مديرة الحضانة (رقابة عامة)"
+                    });
+                } else {
+                    throw new Error("Non-Daily room URL, using iframe fallback");
+                }
             } catch (err) {
                 console.error("Error creating Daily Prebuilt CallFrame in manager. Fallback to iframe element:", err);
                 jitsiContainer.innerHTML = `

@@ -1486,7 +1486,7 @@
             let activeRoomUrl = "";
             let activeDocId = "";
             snap.forEach(d => { 
-                activeRoomUrl = d.data().roomUrl || `https://impacthub.daily.co/${d.data().roomName}`; 
+                activeRoomUrl = d.data().roomUrl || `https://meet.jit.si/${d.data().roomName}`; 
                 activeDocId = d.id;
             });
 
@@ -1503,20 +1503,24 @@
 
             // Integrate Daily.co Prebuilt inside the container
             try {
-                window.dailyCallFrame = window.DailyIframe.createFrame(container, {
-                    iframeStyle: {
-                        width: '100%',
-                        height: '350px',
-                        border: 'none',
-                        borderRadius: '16px'
-                    },
-                    showLeaveButton: false
-                });
-                
-                await window.dailyCallFrame.join({ 
-                    url: activeRoomUrl,
-                    userName: myParentName
-                });
+                if (activeRoomUrl.includes('daily.co')) {
+                    window.dailyCallFrame = window.DailyIframe.createFrame(container, {
+                        iframeStyle: {
+                            width: '100%',
+                            height: '350px',
+                            border: 'none',
+                            borderRadius: '16px'
+                        },
+                        showLeaveButton: false
+                    });
+                    
+                    await window.dailyCallFrame.join({ 
+                        url: activeRoomUrl,
+                        userName: myParentName
+                    });
+                } else {
+                    throw new Error("Non-Daily room URL, using iframe fallback");
+                }
             } catch (err) {
                 console.error("Error creating Daily Prebuilt CallFrame. Creating direct iframe fallback:", err);
                 container.innerHTML = `
