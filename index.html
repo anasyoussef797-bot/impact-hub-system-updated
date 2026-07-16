@@ -713,6 +713,28 @@
             padding: 24px;
             text-align: center;
         }
+        .product-card-row {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 12px;
+            text-align: right;
+        }
+        .product-card-row:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-indigo);
+        }
         .product-icon-box {
             width: 72px;
             height: 72px;
@@ -1574,7 +1596,7 @@
             <h2 class="section-title" data-i18n="store_title">المتجر التعليمي المتميز 🎒</h2>
             <p class="section-subtitle" data-i18n="store_subtitle">تصفح عينات من حقائب المناهج التفاعلية والكتب المطبوعة المتاحة لأطفالنا 📖</p>
         </div>
-        <div class="cards-slider" id="live-products-teaser">
+        <div id="live-products-teaser" style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 600px; margin: 0 auto; padding: 0 15px;">
             <p style="text-align:center; width:100%; font-weight: bold; color: var(--text-gray);" data-i18n="store_loading">جاري تحميل المنتجات... ⏳</p>
         </div>
     </section>
@@ -1717,6 +1739,45 @@
         <div class="video-modal-content">
             <i class="fa-solid fa-xmark close-modal" onclick="closeVideo()"></i>
             <div id="modal-iframe-container"></div>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="video-modal" id="productDetailsModal" style="display: none; justify-content: center; align-items: center;">
+        <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: 'Tajawal', sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 id="pdm-title-header" style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;">تفاصيل المنتج وطرق الدفع 🧭</h3>
+                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="closeProductDetailsModal()"></i>
+            </div>
+            <div style="text-align: center; margin-bottom: 15px;">
+                <img id="pdm-image" src="" style="max-width: 100%; max-height: 200px; border-radius: 16px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
+                <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 16px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
+                    <i class="fa-solid fa-book-bookmark" style="color: var(--primary-indigo);"></i>
+                </div>
+            </div>
+            <h4 id="pdm-title" style="font-size: 19px; font-weight: 900; color: var(--text-dark); margin-bottom: 8px;"></h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 8px;">
+                <div id="pdm-stars" style="display: flex; gap: 2px;"></div>
+                <span id="pdm-sales" style="font-size: 11px; color: var(--text-gray); font-weight: bold;"></span>
+            </div>
+            <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 13.5px; color: var(--text-dark); font-weight: 800;">السعر الفردي:</span>
+                <div id="pdm-price" style="font-size: 20px; font-weight: 900; color: var(--kid-pink);"></div>
+            </div>
+
+            <!-- طرق الدفع المتاحة -->
+            <div style="border: 1.5px solid #bae6fd; background: #f0f9ff; border-radius: 16px; padding: 14px; margin-bottom: 15px;">
+                <h5 style="font-size: 13px; font-weight: bold; color: #0369a1; margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتسهيل الدورة المالية:</h5>
+                <ul style="font-size: 11px; color: #0369a1; padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
+                    <li><strong>الدفع نقداً في الحضانة:</strong> التفعيل والتسليم الفوري من الحضانة.</li>
+                    <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color:#dc2626; text-decoration: underline; font-weight: 900;">01012345678</span>.</li>
+                    <li><strong>إنستاباي:</strong> تحويل فوري ومباشر لـ <span style="color:#16a34a; text-decoration: underline; font-weight: 900;">nursery@instapay</span>.</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <a href="parent-app.html" class="book-btn" style="width: 100%; text-align: center; font-size: 14px; font-weight: 800; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">سجل دخول كولي أمر واطلب الآن 🚀</a>
+            </div>
         </div>
     </div>
 
@@ -2838,6 +2899,34 @@
         }
 
         // 6. Fetch products teaser limit 4
+        window.openProductDetailsModal = (title, price, image, rating, salesCount) => {
+            const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
+            document.getElementById('pdm-title').innerText = title;
+            document.getElementById('pdm-price').innerText = price + currency;
+            document.getElementById('pdm-sales').innerText = activeLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
+            
+            const starsContainer = document.getElementById('pdm-stars');
+            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:14px;"></i>`).join('');
+            
+            const imgEl = document.getElementById('pdm-image');
+            const placeholderEl = document.getElementById('pdm-image-placeholder');
+            
+            if (image) {
+                imgEl.src = image;
+                imgEl.style.display = 'block';
+                placeholderEl.style.display = 'none';
+            } else {
+                imgEl.style.display = 'none';
+                placeholderEl.style.display = 'flex';
+            }
+            
+            document.getElementById('productDetailsModal').style.display = 'flex';
+        };
+        
+        window.closeProductDetailsModal = () => {
+            document.getElementById('productDetailsModal').style.display = 'none';
+        };
+
         async function fetchProductsTeaser() {
             const container = document.getElementById('live-products-teaser');
             try {
@@ -2845,28 +2934,31 @@
                 const dict = translations[activeLang] || translations.ar;
 
                 if(snap.empty) { 
-                    container.innerHTML = `<p style="text-align:center; grid-column:1/-1; color:var(--text-gray);">${dict.store_loading}</p>`; 
+                    container.innerHTML = `<p style="text-align:center; color:var(--text-gray);">${dict.store_loading}</p>`; 
                     return; 
                 }
                 snap.forEach(docData => {
                     const prod = docData.data();
                     const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
-                    const hasImage = !!prod.image;
                     const rating = prod.rating || 5;
                     const sales = prod.salesCount || 0;
-                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:12px; margin: 0 1px;"></i>`).join('');
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:12px;"></i>`).join('');
                     const salesLabel = activeLang === 'ar' ? `تم بيع ${sales} قطعة` : `${sales} items sold`;
 
                     container.innerHTML += `
-                        <div class="product-card">
-                            <div class="product-icon-box" style="${hasImage ? 'padding:0; overflow:hidden; background:none;' : ''}">
-                                ${hasImage ? `<img src="${prod.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${prod.title}">` : `<i class="fa-solid fa-book-bookmark"></i>`}
+                        <div class="product-card-row" onclick="openProductDetailsModal('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales})">
+                            <div style="width: 60px; height: 60px; border-radius: 12px; flex-shrink: 0; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                ${prod.image ? `<img src="${prod.image}" style="width:100%; height:100%; object-fit:cover;">` : `<i class="fa-solid fa-book-bookmark" style="font-size: 20px; color: var(--primary-indigo);"></i>`}
                             </div>
-                            <h4 style="font-size:16.5px; font-weight:800; margin-bottom:6px; color: var(--text-dark);">${prod.title}</h4>
-                            <div style="margin-bottom:6px; display:flex; justify-content:center; gap:2px;">${stars}</div>
-                            <div style="font-size:11px; color:var(--text-gray); margin-bottom:12px; font-weight:bold;">${salesLabel}</div>
-                            <div style="color:var(--kid-pink); font-weight:900; font-size:18px; margin-bottom: 16px;">${prod.price}${currency}</div>
-                            <a href="parent-app.html" class="book-btn" style="background:linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); font-size:13px;">${dict.store_order_btn}</a>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+                                <h4 style="font-size:14px; font-weight:800; margin: 0; color: var(--text-dark);">${prod.title}</h4>
+                                <div style="display:flex; gap:2px; align-items: center;">${stars}</div>
+                                <div style="font-size:10px; color:var(--text-gray); font-weight:bold;">${salesLabel}</div>
+                            </div>
+                            <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <span style="color:var(--kid-pink); font-weight:900; font-size:16px;">${prod.price}${currency}</span>
+                                <span style="font-size: 10px; color: var(--primary-indigo); font-weight: bold; background: rgba(79, 70, 229, 0.08); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
+                            </div>
                         </div>`;
                 });
             } catch(e) { console.error(e); }

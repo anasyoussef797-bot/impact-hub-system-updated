@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,6 +49,51 @@ app.post('/api/create-daily-room', async (req, res) => {
     });
   } catch (error) {
     console.error('Error in /api/create-daily-room:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route to proxy shipping requests to AXON EXPRESS (bypassing CORS)
+app.post('/api/ship-order', async (req, res) => {
+  try {
+    const { shopifyPayload, apiKey } = req.body;
+    
+    if (!shopifyPayload || !apiKey) {
+      return res.status(400).json({ error: 'Missing shopifyPayload or apiKey' });
+    }
+    
+    const rawBody = JSON.stringify(shopifyPayload);
+    
+    // Calculate HMAC-SHA256 signature for X-Shopify-Hmac-Sha256
+    const hmacSignature = crypto
+      .createHmac('sha256', apiKey)
+      .update(rawBody)
+      .digest('base64');
+      
+    const webhookUrl = "https://axon-express.vercel.app/api/shopify-webhook";
+    
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": apiKey,
+        "X-Shopify-Access-Token": apiKey,
+        "X-Shopify-Webhook-Secret": apiKey,
+        "X-Shopify-Hmac-Sha256": hmacSignature,
+        "Authorization": `Bearer ${apiKey}`
+      },
+      body: rawBody
+    });
+    
+    if (!response.ok) {
+      const responseText = await response.text();
+      console.error(`AXON EXPRESS error response (${response.status}):`, responseText);
+      return res.status(response.status).json({ error: `AXON EXPRESS returned status code: ${response.status}`, details: responseText });
+    }
+    
+    res.json({ success: true, message: 'Order successfully shipped via AXON EXPRESS' });
+  } catch (error) {
+    console.error('Error in /api/ship-order proxy:', error);
     res.status(500).json({ error: error.message });
   }
 });

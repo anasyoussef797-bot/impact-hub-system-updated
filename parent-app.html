@@ -106,9 +106,11 @@
         .invoice-summary { background: var(--white); padding: 14px; border-radius: 12px; margin-bottom: 15px; border: 1.5px dashed var(--border-color); font-size: 13px; }
         .payment-method { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 12px; background: var(--white); display: flex; align-items: center; gap: 10px; font-size: 13px; }
 
-        .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .product-card { background: var(--white) !important; border-radius: 16px; padding: 14px; text-align: center; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; gap: 10px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .products-grid { display: flex; flex-direction: column; gap: 12px; }
+        .product-card { background: var(--white) !important; border-radius: 12px; padding: 10px; text-align: right; border: 1px solid var(--border-color); display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; box-shadow: var(--shadow-sm); transition: var(--transition); cursor: pointer; }
         .product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .product-img-compact { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-gray); }
+        .product-info-compact { flex-grow: 1; display: flex; flex-direction: column; gap: 3px; justify-content: center; }
 
         .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; width: 100%; background: rgba(255, 255, 255, 0.9) !important; backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px 2px; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); z-index: 999; border-top: 1px solid rgba(226, 232, 240, 0.8); border-radius: 24px 24px 0 0; }
         .nav-item { text-align: center; color: var(--text-gray); font-size: 9px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 700; transition: var(--transition); white-space: nowrap; }
@@ -577,6 +579,45 @@
                     </div>
 
                     <button class="btn-primary" onclick="window.confirmOrder()"><span data-i18n="confirm_order_btn">تأكيد وإرسال الطلب لإدارة الحضانة 🚚</span></button>
+                </div>
+            </div>
+
+            <!-- مودال تفاصيل المنتج وطرق الدفع -->
+            <div class="modal-overlay" id="productDetailsModal" style="display: none;">
+                <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px;">
+                        <h3 id="pdm-title-header" style="color: var(--text-dark); font-size:16px; font-weight: 900;">تفاصيل المنتج وطرق الدفع 🧭</h3>
+                        <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="window.closeProductDetailsModal()"></i>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img id="pdm-image" src="" style="max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
+                        <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 12px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                    </div>
+                    <h4 id="pdm-title" style="font-size: 18px; font-weight: 900; color: var(--primary-maroon); margin-bottom: 8px;"></h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                        <div id="pdm-stars" style="display: flex; gap: 2px;"></div>
+                        <span id="pdm-sales" style="font-size: 11px; color: var(--text-gray); font-weight: bold;"></span>
+                    </div>
+                    <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; color: var(--text-dark); font-weight: 800;">السعر الفردي:</span>
+                        <div id="pdm-price" style="font-size: 20px; font-weight: 900; color: var(--kid-pink);"></div>
+                    </div>
+
+                    <!-- تفاصيل طرق الدفع المتاحة -->
+                    <div style="border: 1.5px solid #bae6fd; background: #f0f9ff; border-radius: 12px; padding: 14px; margin-bottom: 15px; text-align: right;">
+                        <h5 style="font-size: 13px; font-weight: bold; color: #0369a1; margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتأكيد طلبك:</h5>
+                        <ul style="font-size: 11px; color: #0369a1; padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
+                            <li><strong>الدفع نقداً بالمقر:</strong> سداد قيمة المنتج مباشرةً بمقر الحضانة للتفعيل والتسليم الفوري.</li>
+                            <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color:#dc2626; text-decoration: underline; font-weight: 900;">01012345678</span> ورفع لقطة الشاشة في السلة.</li>
+                            <li><strong>إنستاباي:</strong> تحويل المبلغ لـ <span style="color:#16a34a; text-decoration: underline; font-weight: 900;">nursery@instapay</span> ورفع لقطة الشاشة في السلة.</li>
+                        </ul>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-primary" id="pdm-buy-btn" style="margin: 0; background: var(--success-green); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); width: 100%;">إضافة إلى السلة والشراء الآن 🛒</button>
+                    </div>
                 </div>
             </div>
 
@@ -1766,6 +1807,44 @@
         };
 
         // ================== 4. المتجر والسلة ==================
+        window.showProductDetails = (title, price, image, rating, salesCount) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const currency = currentLang === 'ar' ? ' ج.م' : ' EGP';
+            
+            document.getElementById('pdm-title').innerText = title;
+            document.getElementById('pdm-price').innerText = price + currency;
+            document.getElementById('pdm-sales').innerText = currentLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
+            
+            const starsContainer = document.getElementById('pdm-stars');
+            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:14px;"></i>`).join('');
+            
+            const imgEl = document.getElementById('pdm-image');
+            const placeholderEl = document.getElementById('pdm-image-placeholder');
+            
+            if (image) {
+                imgEl.src = image;
+                imgEl.style.display = 'block';
+                placeholderEl.style.display = 'none';
+            } else {
+                imgEl.style.display = 'none';
+                placeholderEl.style.display = 'flex';
+            }
+            
+            // Configure Buy/Cart Button
+            const buyBtn = document.getElementById('pdm-buy-btn');
+            buyBtn.onclick = () => {
+                window.addToCart(title, price);
+                window.closeProductDetailsModal();
+                window.openCart(); // Instantly open cart modal with payment methods as requested!
+            };
+            
+            document.getElementById('productDetailsModal').style.display = 'flex';
+        };
+        
+        window.closeProductDetailsModal = () => {
+            document.getElementById('productDetailsModal').style.display = 'none';
+        };
+
         window.loadMarketplace = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
@@ -1775,31 +1854,45 @@
             
             // Start with pre-configured static items as defaults
             let htmlContent = `
-                <div class="product-card">
-                    <h4 style="font-weight: 800; font-size: 14px;">${dict.book_interactive}</h4>
-                    <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                <div class="product-card" onclick="window.showProductDetails('${dict.book_interactive.replace(/'/g, "\\'")}', 85, '', 5, 42)">
+                    <div class="product-img-compact">
+                        <i class="fa-solid fa-book" style="color: var(--primary-maroon);"></i>
                     </div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع 42 قطعة</div>
-                    <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 85${currency}</p>
-                    <button class="btn-primary" onclick="window.addToCart('${dict.book_interactive}', 85)">${dict.add_to_cart_btn}</button>
+                    <div class="product-info-compact">
+                        <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">${dict.book_interactive}</h4>
+                        <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-gray);">تم بيع 42 قطعة</div>
+                    </div>
+                    <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                        <span style="color: var(--kid-pink); font-weight: 900; font-size: 14px;">85${currency}</span>
+                        <span style="font-size: 10px; color: var(--primary-maroon); font-weight: bold; background: rgba(0,47,108,0.06); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
+                    </div>
                 </div>
-                <div class="product-card">
-                    <h4 style="font-weight: 800; font-size: 14px;">${dict.blocks_interactive}</h4>
-                    <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                        <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                <div class="product-card" onclick="window.showProductDetails('${dict.blocks_interactive.replace(/'/g, "\\'")}', 120, '', 5, 89)">
+                    <div class="product-img-compact">
+                        <i class="fa-solid fa-cubes" style="color: var(--primary-maroon);"></i>
                     </div>
-                    <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع 89 قطعة</div>
-                    <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} 120${currency}</p>
-                    <button class="btn-primary" onclick="window.addToCart('${dict.blocks_interactive}', 120)">${dict.add_to_cart_btn}</button>
+                    <div class="product-info-compact">
+                        <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">${dict.blocks_interactive}</h4>
+                        <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-gray);">تم بيع 89 قطعة</div>
+                    </div>
+                    <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                        <span style="color: var(--kid-pink); font-weight: 900; font-size: 14px;">120${currency}</span>
+                        <span style="font-size: 10px; color: var(--primary-maroon); font-weight: bold; background: rgba(0,47,108,0.06); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
+                    </div>
                 </div>`;
             
             try {
@@ -1812,13 +1905,19 @@
                     const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:11px;"></i>`).join('');
                     
                     htmlContent += `
-                        <div class="product-card">
-                            ${prod.image ? `<img src="${prod.image}" style="width:100%; height:100px; object-fit:cover; border-radius:8px; margin-bottom:8px;" alt="${prod.title}">` : ''}
-                            <h4 style="font-weight: 800; font-size: 14px;">${prod.title}</h4>
-                            <div style="margin: 4px 0; display: flex; justify-content: center; gap: 2px;">${stars}</div>
-                            <div style="font-size: 10px; color: var(--text-gray); margin-bottom: 4px;">تم بيع ${sales} قطعة</div>
-                            <p style="color: var(--primary-maroon); font-weight: 900;">${dict.price_lbl} ${prod.price}${currency}</p>
-                            <button class="btn-primary" onclick="window.addToCart('${prod.title}', ${prod.price})">${dict.add_to_cart_btn}</button>
+                        <div class="product-card" onclick="window.showProductDetails('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales})">
+                            <div class="product-img-compact">
+                                ${prod.image ? `<img src="${prod.image}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">` : `<i class="fa-solid fa-book-bookmark" style="color: var(--primary-maroon);"></i>`}
+                            </div>
+                            <div class="product-info-compact">
+                                <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">${prod.title}</h4>
+                                <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">${stars}</div>
+                                <div style="font-size: 10px; color: var(--text-gray);">تم بيع ${sales} قطعة</div>
+                            </div>
+                            <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <span style="color: var(--kid-pink); font-weight: 900; font-size: 14px;">${prod.price}${currency}</span>
+                                <span style="font-size: 10px; color: var(--primary-maroon); font-weight: bold; background: rgba(0,47,108,0.06); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
+                            </div>
                         </div>`;
                 });
             } catch (err) {

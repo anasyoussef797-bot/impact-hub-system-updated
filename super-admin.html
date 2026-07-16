@@ -716,6 +716,10 @@
                             <label data-i18n="global_img_lbl">إرفاق صورة</label>
                             <input type="file" id="global-file" class="form-control" accept="image/*">
                         </div>
+                        <div class="form-group">
+                            <label data-i18n="global_youtube_lbl">رابط فيديو يوتيوب (اختياري)</label>
+                            <input type="text" id="global-youtube" class="form-control" placeholder="https://www.youtube.com/watch?v=...">
+                        </div>
                         <button class="btn-primary" onclick="publishGlobalPost()">
                             <i class="fa-solid fa-share-nodes"></i> 
                             <span data-i18n="btn_publish_all">نشر وتعميم فوراً</span>
@@ -1145,6 +1149,7 @@
                 global_title_lbl: "العنوان",
                 global_body_lbl: "تفاصيل الرسالة",
                 global_img_lbl: "إرفاق صورة",
+                global_youtube_lbl: "رابط فيديو يوتيوب (اختياري)",
                 btn_publish_all: "نشر وتعميم فوراً",
                 th_target: "الجهة",
                 th_title: "العنوان",
@@ -1280,6 +1285,7 @@
                 global_title_lbl: "Broadcast Title",
                 global_body_lbl: "Message Details",
                 global_img_lbl: "Attach Image",
+                global_youtube_lbl: "YouTube Video Link (Optional)",
                 btn_publish_all: "Publish & Broadcast Now",
                 th_target: "Target",
                 th_title: "Title",
@@ -1415,6 +1421,7 @@
                 global_title_lbl: "Titre de la diffusion",
                 global_body_lbl: "Détails du message",
                 global_img_lbl: "Attacher une image",
+                global_youtube_lbl: "Lien vidéo YouTube (Optionnel)",
                 btn_publish_all: "Publier & Diffuser maintenant",
                 th_target: "Cible",
                 th_title: "Titre",
@@ -1550,6 +1557,7 @@
                 global_title_lbl: "Rundschreibentitel",
                 global_body_lbl: "Nachrichtendetails",
                 global_img_lbl: "Bild anhängen",
+                global_youtube_lbl: "YouTube-Videolink (Optional)",
                 btn_publish_all: "Veröffentlichen & Rundsenden",
                 th_target: "Ziel",
                 th_title: "Titel",
@@ -1915,16 +1923,20 @@
             const title = document.getElementById('global-title').value;
             const body = document.getElementById('global-body').value;
             const fileInput = document.getElementById('global-file').files[0];
+            const youtubeUrl = document.getElementById('global-youtube').value || "";
 
             if(!title || !body) { alert(dict.alert_global_fill); return; }
             const mediaBase64 = fileInput ? await compressImage(fileInput, 800, 800) : "";
 
             await addDoc(collection(db, "global_posts"), {
                 authorName: "الإدارة العليا (Impact Hub)",
-                targetApp, title, body, media: mediaBase64, timestamp: new Date().getTime()
+                targetApp, title, body, media: mediaBase64, youtubeUrl, timestamp: new Date().getTime()
             });
             alert(dict.alert_global_success);
-            document.getElementById('global-title').value = ''; document.getElementById('global-body').value = ''; document.getElementById('global-file').value = '';
+            document.getElementById('global-title').value = ''; 
+            document.getElementById('global-body').value = ''; 
+            document.getElementById('global-file').value = '';
+            document.getElementById('global-youtube').value = '';
         };
 
         window.fetchGlobalPostsArchive = async () => {
@@ -2762,47 +2774,23 @@
 
                 const rawBody = JSON.stringify(shopifyPayload);
 
-                // 4. Calculate HMAC-SHA256 signature for X-Shopify-Hmac-Sha256
                 const apiKey = "AXN_SK27DMK6EVBKX0RG";
-                let hmacSignature = "";
-                try {
-                    const encoder = new TextEncoder();
-                    const keyData = encoder.encode(apiKey);
-                    const messageData = encoder.encode(rawBody);
-                    const cryptoKey = await window.crypto.subtle.importKey(
-                        "raw",
-                        keyData,
-                        { name: "HMAC", hash: { name: "SHA-256" } },
-                        false,
-                        ["sign"]
-                    );
-                    const signature = await window.crypto.subtle.sign(
-                        "HMAC",
-                        cryptoKey,
-                        messageData
-                    );
-                    hmacSignature = btoa(String.fromCharCode(...new Uint8Array(signature)));
-                } catch (cryptoErr) {
-                    console.error("Error computing HMAC signature:", cryptoErr);
-                }
 
-                // 5. Send POST request to AXON EXPRESS
-                const webhookUrl = "https://axon-express.vercel.app/api/shopify-webhook";
-                const response = await fetch(webhookUrl, {
+                // 5. Send POST request to our proxy endpoint to bypass CORS and ensure secure HMAC calculation
+                const response = await fetch("/api/ship-order", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "X-API-Key": apiKey,
-                        "X-Shopify-Access-Token": apiKey,
-                        "X-Shopify-Webhook-Secret": apiKey,
-                        "X-Shopify-Hmac-Sha256": hmacSignature,
-                        "Authorization": `Bearer ${apiKey}`
+                        "Content-Type": "application/json"
                     },
-                    body: rawBody
+                    body: JSON.stringify({
+                        shopifyPayload: shopifyPayload,
+                        apiKey: apiKey
+                    })
                 });
 
                 if (!response.ok) {
-                    throw new Error(`AXON EXPRESS returned status code: ${response.status}`);
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || `Proxy returned status code: ${response.status}`);
                 }
 
                 // 6. On success, update status in Firestore
@@ -2868,10 +2856,17 @@
                         rejected: 'مرفوض ❌'
                     };
 
-                    const statusStyle = statusColors[booking.status] || '';
-                    const statusLabel = statusText[booking.status] || booking.status;
+                    const statusStyle = statusColors[booking.status] || 'background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;';
+                    const statusLabel = statusText[booking.status] || booking.status || 'معلق';
 
-                    const dateStr = booking.createdAt ? new Date(booking.createdAt).toLocaleString('ar-EG') : 'غير محدد';
+                    let dateStr = 'غير محدد';
+                    try {
+                        if (booking.createdAt) {
+                            dateStr = new Date(booking.createdAt).toLocaleString('ar-EG');
+                        }
+                    } catch (dateErr) {
+                        console.error("Error formatting date:", dateErr);
+                    }
                     
                     let actionHtml = '';
                     if (booking.status === 'pending') {
@@ -2886,28 +2881,29 @@
                     }
 
                     const paymentLabel = booking.paymentMethod === 'vodafone_cash' ? 'فودافون كاش' : 'انستاباي';
+                    const safeProof = (booking.paymentProof && typeof booking.paymentProof === 'string') ? booking.paymentProof.replace(/'/g, "\\'") : '';
 
                     tbody.innerHTML += `
                         <tr style="border-bottom: 1px solid var(--border-color);">
                             <td>
-                                <div style="font-weight: 800; color: var(--primary-indigo);">${booking.studentName}</div>
-                                <div style="font-size: 12px; color: var(--text-gray);">ولي الأمر: ${booking.parentName}</div>
+                                <div style="font-weight: 800; color: var(--primary-indigo);">${booking.studentName || 'غير محدد'}</div>
+                                <div style="font-size: 12px; color: var(--text-gray);">ولي الأمر: ${booking.parentName || 'غير محدد'}</div>
                             </td>
                             <td>
-                                <div style="font-weight: bold;">${booking.parentPhone}</div>
+                                <div style="font-weight: bold;">${booking.parentPhone || 'غير محدد'}</div>
                                 <div style="font-size: 11px; color: var(--text-gray);">${dateStr}</div>
                             </td>
                             <td>
-                                <div style="font-weight: bold; color: var(--text-dark);">${booking.teacherName}</div>
-                                <div style="font-size: 12px; color: var(--kid-pink); font-weight: bold;">يوم ${booking.day} (${booking.time})</div>
+                                <div style="font-weight: bold; color: var(--text-dark);">${booking.teacherName || 'غير محدد'}</div>
+                                <div style="font-size: 12px; color: var(--kid-pink); font-weight: bold;">يوم ${booking.day || 'غير محدد'} (${booking.time || 'غير محدد'})</div>
                             </td>
                             <td>
                                 <div style="font-weight: bold;">${paymentLabel}</div>
                                 <div style="font-size: 14px; font-weight: 900; color: var(--primary-indigo);">${booking.price || 120} ج.م</div>
                             </td>
                             <td>
-                                ${booking.paymentProof ? `
-                                    <button class="btn-primary" style="padding: 4px 8px; font-size: 11px; border-radius: 6px; cursor: pointer;" onclick="window.viewReceipt('${booking.paymentProof.replace(/'/g, "\\'")}')">
+                                ${safeProof ? `
+                                    <button class="btn-primary" style="padding: 4px 8px; font-size: 11px; border-radius: 6px; cursor: pointer;" onclick="window.viewReceipt('${safeProof}')">
                                         <i class="fa-solid fa-image"></i> عرض الإثبات 🖼️
                                     </button>
                                 ` : '<span style="color: red; font-size: 11px;">بدون إثبات!</span>'}
