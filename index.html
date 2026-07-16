@@ -1200,6 +1200,7 @@
             <a href="#features-section" data-i18n="nav_features">مميزاتنا</a>
             <a href="#teachers-section" data-i18n="nav_lessons">دروس أونلاين</a>
             <a href="#nurseries-section" data-i18n="nav_nurseries">شبكة الحضانات</a>
+            <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn" style="background: linear-gradient(135deg, #dc2626, #991b1b); color: var(--white) !important; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥</a>
             <a href="parent-app.html" class="login-btn" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
         </div>
     </nav>
@@ -1781,6 +1782,31 @@
         </div>
     </div>
 
+    <!-- Live Class Quick Attendance Modal -->
+    <div class="video-modal" id="liveAttendanceModal" style="display: none; justify-content: center; align-items: center;">
+        <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: 'Tajawal', sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;"><i class="fa-solid fa-circle-play" style="color:#dc2626;"></i> بوابة الحضور السريع للحصص 🎥</h3>
+                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeLiveAttendanceModal()"></i>
+            </div>
+            
+            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 18px; line-height: 1.5; font-weight: 700;">
+                الرجاء إدخال رقم الهاتف المستخدم أثناء الحجز للتحقق من الموعد والانضمام للحصة المباشرة مع المعلم فوراً دون الحاجة لتسجيل حساب.
+            </p>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 13.5px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;">رقم هاتف ولي الأمر:</label>
+                <input type="text" id="attendance-phone-input" placeholder="مثال: 010XXXXXXXX" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 14px; font-weight: bold; outline: none; transition: 0.3s; color: var(--text-dark);" onkeypress="if(event.key === 'Enter') window.queryLiveAttendance()">
+            </div>
+
+            <button onclick="window.queryLiveAttendance()" class="book-btn" style="width: 100%; border: none; font-size: 14.5px; font-weight: 800; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(0,47,108,0.25); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: white;">
+                <i class="fa-solid fa-magnifying-glass"></i> استعلام عن الحصص المباشرة
+            </button>
+
+            <div id="attendance-results" style="margin-top: 20px; max-height: 250px; overflow-y: auto; padding-right: 4px; text-align: right;"></div>
+        </div>
+    </div>
+
     <!-- Main Footer -->
     <footer class="footer">
         <div id="pub-footer-logo" style="margin-bottom: 20px; background: var(--white); padding: 12px 28px; border-radius: 16px; display: inline-block; box-shadow: var(--shadow-sm);">
@@ -1803,6 +1829,7 @@
                 nav_lessons: "دروس أونلاين",
                 nav_nurseries: "شبكة الحضانات",
                 nav_login: '<i class="fa-solid fa-rocket"></i> دخول المنصة',
+                nav_live_attend: '<i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥',
                 
                 hero_title: "مرحباً بك في عالم Impact Hub التفاعلي 🌟",
                 hero_subtitle: "نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸",
@@ -1909,6 +1936,7 @@
                 nav_lessons: "Online Lessons",
                 nav_nurseries: "Nurseries Network",
                 nav_login: '<i class="fa-solid fa-rocket"></i> Login Platform',
+                nav_live_attend: '<i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> Attend Live Class 🎥',
                 
                 hero_title: "Welcome to Impact Hub Interactive World 🌟",
                 hero_subtitle: "An integrated smart ecosystem linking administration, teachers, and parents to provide the ultimate joyful learning journey. 🧸",
@@ -2015,6 +2043,7 @@
                 nav_lessons: "Cours en Ligne",
                 nav_nurseries: "Réseau Crèches",
                 nav_login: '<i class="fa-solid fa-rocket"></i> Connexion',
+                nav_live_attend: '<i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> Rejoindre le Live 🎥',
                 
                 hero_title: "Bienvenue dans l'Univers Interactif d'Impact Hub 🌟",
                 hero_subtitle: "Un écosystème intelligent complet reliant les directeurs, enseignants et parents pour un parcours éducatif joyeux. 🧸",
@@ -2121,6 +2150,7 @@
                 nav_lessons: "Online-Unterricht",
                 nav_nurseries: "Kita-Netzwerk",
                 nav_login: '<i class="fa-solid fa-rocket"></i> Einloggen',
+                nav_live_attend: '<i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> Live beitreten 🎥',
                 
                 hero_title: "Willkommen in der interaktiven Impact Hub Welt 🌟",
                 hero_subtitle: "Ein voll integriertes intelligentes System, das Kitas, Pädagogen und Eltern für eine optimale Lernreise verbindet. 🧸",
@@ -2558,6 +2588,162 @@
                 submitBtn.innerText = 'إرسال طلب الحجز وتأكيد الدفع ✨';
             }
         };
+
+        window.openLiveAttendanceModal = (e) => {
+            if (e) e.preventDefault();
+            document.getElementById('liveAttendanceModal').style.display = 'flex';
+            document.getElementById('attendance-phone-input').value = '';
+            document.getElementById('attendance-results').innerHTML = '';
+        };
+
+        window.closeLiveAttendanceModal = () => {
+            document.getElementById('liveAttendanceModal').style.display = 'none';
+        };
+
+        window.queryLiveAttendance = async () => {
+            const phone = document.getElementById('attendance-phone-input').value.trim();
+            const resultsDiv = document.getElementById('attendance-results');
+            if (!phone) {
+                alert('الرجاء إدخال رقم الهاتف أولاً.');
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: var(--primary-indigo);"></i> جاري البحث والتحقق من المواعيد...</div>';
+
+            try {
+                // 1. Get landing bookings (to check pending/rejected status)
+                const q1 = query(collection(db, "landing_bookings"), where("parentPhone", "==", phone));
+                const snap1 = await getDocs(q1);
+
+                // 2. Get confirmed classes from booked_classes
+                const q2 = query(collection(db, "booked_classes"), where("parentPhone", "==", phone));
+                const snap2 = await getDocs(q2);
+
+                // 3. Get all currently active live sessions for the online academy
+                const q3 = query(collection(db, "live_classes"), where("status", "==", "active"));
+                const snap3 = await getDocs(q3);
+                
+                // Map active live classes by teacherName or studentName
+                const activeLiveClasses = [];
+                snap3.forEach(docSnap => {
+                    const lData = docSnap.data();
+                    activeLiveClasses.push({ id: docSnap.id, ...lData });
+                });
+
+                let html = '';
+
+                if (snap1.empty && snap2.empty) {
+                    html = `
+                        <div style="text-align: center; padding: 30px; background: #fffbeb; border: 1.5px dashed #f59e0b; border-radius: 16px; direction: rtl;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 32px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <h4 style="font-weight: 800; color: #b45309; margin-bottom: 6px;">لم يتم العثور على حجوزات!</h4>
+                            <p style="font-size: 13px; color: #78350f; margin: 0;">لم نجد أي حجز مرتبط برقم الهاتف هذا (${phone}). يرجى التأكد من الرقم أو مراجعة الحجز.</p>
+                        </div>
+                    `;
+                    resultsDiv.innerHTML = html;
+                    return;
+                }
+
+                html += '<h4 style="font-weight: 800; color: var(--text-dark); margin-bottom: 12px; font-size: 15px; text-align: right;"><i class="fa-solid fa-list-check"></i> الحصص والطلبات المرتبطة برقمك:</h4>';
+
+                // We will collect and present all items
+                const processedBookingIds = new Set();
+
+                // 1. Show confirmed classes first as they are active or upcoming
+                if (!snap2.empty) {
+                    snap2.forEach(docSnap => {
+                        const b = docSnap.data();
+                        if (b.landingBookingId) {
+                            processedBookingIds.add(b.landingBookingId);
+                        }
+
+                        // Check if this class has an active live session
+                        // Match either by teacherName, or studentName
+                        const liveSession = activeLiveClasses.find(lc => 
+                            (lc.teacherName && b.teacherName && lc.teacherName.trim() === b.teacherName.trim()) ||
+                            (lc.studentName && b.studentName && lc.studentName.trim().includes(b.studentName.trim()))
+                        );
+
+                        let actionButtonHtml = '';
+                        if (liveSession) {
+                            actionButtonHtml = `
+                                <div style="margin-top: 12px; background: #ecfdf5; border: 1px solid #10b981; border-radius: 12px; padding: 12px; text-align: center;">
+                                    <div style="color: #065f46; font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">
+                                        <i class="fa-solid fa-circle-play fa-fade" style="color: #10b981;"></i> المعلم بدأ الحصة المباشرة الآن!
+                                    </div>
+                                    <a href="${liveSession.roomUrl}" target="_blank" class="book-btn" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                                        <i class="fa-solid fa-video"></i> انضمام للحصة المباشرة (فيديو) 💻🔴
+                                    </a>
+                                </div>
+                            `;
+                        } else {
+                            actionButtonHtml = `
+                                <div style="margin-top: 10px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--text-gray); font-weight: 700; text-align: center;">
+                                    <i class="fa-solid fa-clock"></i> الموعد: يوم ${b.date || 'غير محدد'} الساعة (${b.time || 'غير محدد'}) - البث المباشر يبدأ في موعد الحصة.
+                                </div>
+                            `;
+                        }
+
+                        html += `
+                            <div style="background: var(--white); border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 10px;">
+                                    <div>
+                                        <div style="font-weight: 900; color: var(--primary-indigo); font-size: 15px;">الطفل: ${b.studentName}</div>
+                                        <div style="font-size: 12px; color: var(--text-gray); font-weight: bold; margin-top: 2px;">المعلم: ${b.teacherName} | حصة ${b.classType || 'خاصة'}</div>
+                                    </div>
+                                    <span style="background: #ecfdf5; color: #047857; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ومفعل ✅</span>
+                                </div>
+                                ${actionButtonHtml}
+                            </div>
+                        `;
+                    });
+                }
+
+                // 2. Show remaining pending/rejected bookings
+                if (!snap1.empty) {
+                    snap1.forEach(docSnap => {
+                        const bId = docSnap.id;
+                        if (processedBookingIds.has(bId)) return; // Already shown under confirmed classes
+                        
+                        const b = docSnap.data();
+                        let statusBadge = '';
+                        let statusDesc = '';
+
+                        if (b.status === 'pending') {
+                            statusBadge = '<span style="background: #fffbeb; color: #d97706; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">قيد المراجعة ⏳</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: #b45309; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-info"></i> تلقينا إثبات الدفع وجاري التحقق وتأكيد جدول المدرس من الإدارة.</div>';
+                        } else if (b.status === 'rejected') {
+                            statusBadge = '<span style="background: #fef2f2; color: #dc2626; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مرفوض ❌</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: #dc2626; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-xmark"></i> تم رفض طلب الحجز. يرجى التواصل مع الدعم للتحقق.</div>';
+                        } else {
+                            // If somehow confirmed but not copied to booked_classes yet
+                            statusBadge = '<span style="background: #ecfdf5; color: #047857; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ✅</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: #047857; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-check"></i> الحجز مؤكد وسيبدأ في الموعد المحدد.</div>';
+                        }
+
+                        html += `
+                            <div style="background: var(--white); border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 10px;">
+                                    <div>
+                                        <div style="font-weight: 900; color: var(--primary-indigo); font-size: 15px;">الطفل: ${b.studentName}</div>
+                                        <div style="font-size: 12px; color: var(--text-gray); font-weight: bold; margin-top: 2px;">المعلم: ${b.teacherName} | الموعد: يوم ${b.day} (${b.time})</div>
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+                                ${statusDesc}
+                            </div>
+                        `;
+                    });
+                }
+
+                resultsDiv.innerHTML = html;
+
+            } catch (err) {
+                console.error("Error queryLiveAttendance:", err);
+                resultsDiv.innerHTML = '<div style="text-align: center; color: red; font-weight: bold; padding: 15px;">حدث خطأ أثناء الاتصال بالنظام. يرجى المحاولة لاحقاً.</div>';
+            }
+        };
+
         window.addEventListener('appLanguageChanged', (e) => {
             activeLang = e.detail.lang;
             fetchDynamicContent();
