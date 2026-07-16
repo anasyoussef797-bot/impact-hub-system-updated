@@ -664,6 +664,15 @@
                 right: 20px;
             }
         }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(-100%); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -957,6 +966,33 @@
 
                     <div id="daily-class-container"></div>
                 </div>
+
+                <!-- جدول الحصص المجدولة وجهات التحصيل -->
+                <div class="panel" style="margin-top: 25px;">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>جدول الحصص المحجوزة وجهات التحصيل المالي 📅</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px; line-height: 1.6;">يتم هنا تصنيف الحصص المجدولة لمساعدتك في تمييز جهات تحصيل المستحقات والتحويلات المالية لتسهيل الحساب المالي.</p>
+                    
+                    <div class="table-responsive">
+                        <table style="width: 100%; border-collapse: collapse; text-align: right;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border-color); background: #f8fafc;">
+                                    <th style="padding: 12px; font-weight: 800;">اسم الطالب</th>
+                                    <th style="padding: 12px; font-weight: 800;">موعد الحصة</th>
+                                    <th style="padding: 12px; font-weight: 800;">جهة التحصيل المالي</th>
+                                    <th style="padding: 12px; font-weight: 800;">حالة الحصة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacher-booked-classes-tbody">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري تحميل الحصص المجدولة وجهات التحصيل... ⏳</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- تابة مركز المراسلة الفورية -->
@@ -995,6 +1031,9 @@
 
         </main>
     </div>
+
+    <!-- Toast notifications container -->
+    <div id="teacher-toast-container" style="position: fixed; top: 20px; left: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; width: 100%;"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1426,27 +1465,190 @@
         // 3. الحصص الأونلاين وربط غرف غيتسي الآمنة مع تطبيق ولي الأمر
         window.teacherBookedClassesMap = new Map();
 
-        window.fetchBookedClasses = async () => {
+        let isInitialBookedClassesLoad = true;
+
+        window.playNotificationChime = () => {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                // Double-beep synth
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+                
+                gain1.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start();
+                osc1.stop(ctx.currentTime + 0.3);
+            } catch (err) {
+                console.error("Audio chime failed:", err);
+            }
+        };
+
+        window.showTeacherToast = (title, message, type) => {
+            const container = document.getElementById('teacher-toast-container');
+            if(!container) return;
+
+            window.playNotificationChime();
+
+            const toast = document.createElement('div');
+            const bgColor = type === "online_academy" ? "#ecfdf5" : "#fff7ed";
+            const borderColor = type === "online_academy" ? "#10b981" : "#f97316";
+            const iconColor = type === "online_academy" ? "#047857" : "#c2410c";
+            const icon = type === "online_academy" ? "fa-credit-card" : "fa-school";
+
+            toast.style.cssText = `
+                background: ${bgColor};
+                border-right: 5px solid ${borderColor};
+                border-left: 1px solid var(--border-color);
+                border-top: 1px solid var(--border-color);
+                border-bottom: 1px solid var(--border-color);
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+                animation: slideIn 0.3s ease-out forwards;
+                direction: rtl;
+                text-align: right;
+            `;
+
+            toast.innerHTML = `
+                <div style="font-size: 20px; color: ${iconColor}; margin-top: 2px;">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div style="flex-grow: 1;">
+                    <div style="font-weight: 800; font-size: 14px; color: var(--text-dark); margin-bottom: 4px;">${title}</div>
+                    <div style="font-size: 12px; color: var(--text-gray); line-height: 1.4;">${message}</div>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer; color: var(--text-gray); font-size: 14px; padding: 0 4px;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.animation = "slideOut 0.3s ease-in forwards";
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 8000);
+        };
+
+        window.renderBookedClassesList = (snapshot) => {
+            const tbody = document.getElementById('teacher-booked-classes-tbody');
+            if (!tbody) return;
+
+            if (snapshot.empty) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 30px; color: var(--text-gray); font-weight: bold;">
+                            لا يوجد حصص مجدولة قريباً 📅
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                
+                let paymentSourceBadge = '';
+                if (data.isLandingBooking || data.nurseryId === 'online_academy') {
+                    paymentSourceBadge = `
+                        <span style="background: #ecfdf5; color: #047857; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #a7f3d0;">
+                            <i class="fa-solid fa-credit-card"></i> 💳 أكاديمية أونلاين (الموقع الرئيسي)
+                        </span>
+                    `;
+                } else {
+                    paymentSourceBadge = `
+                        <span style="background: #fff7ed; color: #c2410c; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #ffedd5;">
+                            <i class="fa-solid fa-school"></i> 🏫 إدارة الحضانة المحلية
+                        </span>
+                    `;
+                }
+
+                const statusLabel = `
+                    <span style="background: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800;">
+                        قادمة ⏳
+                    </span>
+                `;
+
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 12px; font-weight: bold; color: var(--text-dark);">${data.studentName}</td>
+                        <td style="padding: 12px; color: var(--kid-pink); font-weight: bold;">
+                            ${data.date} <span style="font-size: 12px; color: var(--text-gray); font-weight: normal;">(${data.time})</span>
+                        </td>
+                        <td style="padding: 12px;">${paymentSourceBadge}</td>
+                        <td style="padding: 12px;">${statusLabel}</td>
+                    </tr>
+                `;
+            });
+        };
+
+        window.fetchBookedClasses = () => {
             const select = document.getElementById('live-student-select');
+            if(!select) return;
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
 
-            select.innerHTML = `<option value="">${dict.choose_class_opt}</option>`;
             const q = query(collection(db, "booked_classes"), where("teacherId", "==", myTeacherId), where("status", "==", "upcoming"));
-            const snap = await getDocs(q);
             
-            window.teacherBookedClassesMap.clear();
+            onSnapshot(q, (snap) => {
+                select.innerHTML = `<option value="">${dict.choose_class_opt}</option>`;
+                window.teacherBookedClassesMap.clear();
 
-            if(snap.empty) {
-                select.innerHTML = `<option value="">${dict.no_booked}</option>`;
-            } else {
-                snap.forEach(docData => {
-                    const data = docData.data();
-                    window.teacherBookedClassesMap.set(docData.id, data);
-                    select.innerHTML += `<option value="${docData.id}">${data.studentName} - ${data.date} (${data.time})</option>`;
+                if(snap.empty) {
+                    select.innerHTML = `<option value="">${dict.no_booked}</option>`;
+                } else {
+                    snap.forEach(docData => {
+                        const data = docData.data();
+                        window.teacherBookedClassesMap.set(docData.id, data);
+                        select.innerHTML += `<option value="${docData.id}">${data.studentName} - ${data.date} (${data.time})</option>`;
+                    });
+                }
+
+                // Render beautiful list showing payment/collection source!
+                window.renderBookedClassesList(snap);
+
+                // Handle real-time separate notifications for newly booked classes!
+                snap.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const data = change.doc.data();
+                        if (!isInitialBookedClassesLoad) {
+                            if (data.isLandingBooking || data.nurseryId === 'online_academy') {
+                                window.showTeacherToast(
+                                    "💳 حجز حصة أونلاين جديدة (الموقع الرئيسي)",
+                                    `تم حجز حصة للطالب: <b>${data.studentName || 'طفل'}</b> في موعد: <b>${data.date || ''} (${data.time || ''})</b>.<br>جهة التحصيل: <b>أكاديمية أونلاين</b>.`,
+                                    "online_academy"
+                                );
+                            } else {
+                                window.showTeacherToast(
+                                    "🏫 حجز حصة جديدة (إدارة الحضانة)",
+                                    `تم حجز حصة للطالب: <b>${data.studentName || 'طفل'}</b> في موعد: <b>${data.date || ''} (${data.time || ''})</b>.<br>جهة التحصيل: <b>إدارة الحضانة</b>.`,
+                                    "nursery"
+                                );
+                            }
+                        }
+                    }
                 });
-            }
+
+                isInitialBookedClassesLoad = false;
+            }, (error) => {
+                console.error("Error listening to booked classes:", error);
+            });
         };
 
         window.showStudentAccessibilityProfile = async () => {

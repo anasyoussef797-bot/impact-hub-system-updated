@@ -2398,7 +2398,7 @@
     <!-- Core Dynamic Data Fetching and Real-time listener Module -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, query, where, limit, onSnapshot, setDoc, arrayUnion, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, query, where, limit, onSnapshot, setDoc, arrayUnion, addDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBQf6KEsbBXnK9AZ3UnKNZGD4z4uIswAZk",
@@ -2810,51 +2810,158 @@
             window.handleLiveImageUpload = async (event) => {
                 const file = event.target.files[0];
                 if(!file) return;
-                const base64Img = await compressImage(file, 300, 300);
-
-                const wrapper = document.createElement('div');
-                wrapper.className = 'temp-draggable-wrapper';
-                wrapper.style.top = '50%';
-                wrapper.style.left = '50%';
-
-                const img = document.createElement('img');
-                img.src = base64Img;
-                img.style.width = '120px';
-
-                const saveBtn = document.createElement('button');
-                saveBtn.className = 'temp-save-btn';
-                saveBtn.innerText = 'حفظ المكان';
-
-                wrapper.appendChild(saveBtn);
-                wrapper.appendChild(img);
-                document.body.appendChild(wrapper);
-
-                let isDragging = false;
-                wrapper.addEventListener('mousedown', () => isDragging = true);
-                window.addEventListener('mousemove', (e) => {
-                    if(!isDragging) return;
-                    wrapper.style.left = (e.clientX - wrapper.offsetWidth/2) + 'px';
-                    wrapper.style.top = (e.clientY - wrapper.offsetHeight/2) + 'px';
-                });
-                window.addEventListener('mouseup', () => isDragging = false);
-
-                saveBtn.onclick = async () => {
-                    const leftPct = (parseInt(wrapper.style.left) / window.innerWidth) * 100;
-                    const absoluteTop = parseInt(wrapper.style.top) + window.scrollY;
-                    const topPctBody = (absoluteTop / document.body.scrollHeight) * 100;
-
+                try {
+                    const base64Img = await compressImage(file, 400, 400);
                     const newAsset = { 
                         image: base64Img, 
-                        top: topPctBody.toFixed(2) + '%', 
-                        left: leftPct.toFixed(2) + '%', 
-                        width: '10%', 
-                        id: Date.now() 
+                        top: '30%', 
+                        left: '40%', 
+                        width: '120px', 
+                        id: String(Date.now()) 
                     };
                     
-                    await setDoc(doc(db, "web_settings", "landing_page"), { floatingAssets: arrayUnion(newAsset) }, { merge: true });
-                    alert('🎈 تم حفظ الصورة العائمة بنجاح!');
-                    wrapper.remove();
+                    const docRef = doc(db, "web_settings", "landing_page");
+                    await setDoc(docRef, { floatingAssets: arrayUnion(newAsset) }, { merge: true });
+                    alert('🎈 تم رفع الصورة بنجاح! يمكنك الآن تحريكها وتغيير حجمها وحفظها مباشرة.');
+                } catch (err) {
+                    console.error("Error uploading live image:", err);
+                    alert('حدث خطأ أثناء رفع الصورة.');
+                }
+            };
+
+            window.resizeAsset = (id, val) => {
+                const el = document.getElementById(`asset-wrapper-${id}`);
+                if (el) {
+                    el.style.width = val + 'px';
+                }
+            };
+
+            window.saveAssetCoords = async (id) => {
+                const el = document.getElementById(`asset-wrapper-${id}`);
+                if (!el) return;
+                try {
+                    const docRef = doc(db, "web_settings", "landing_page");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        let assets = data.floatingAssets || [];
+                        
+                        const leftPct = (parseFloat(el.style.left) / 100) || (el.offsetLeft / window.innerWidth);
+                        const topPct = (parseFloat(el.style.top) / 100) || (el.offsetTop / document.body.scrollHeight);
+                        const updatedWidth = el.style.width;
+
+                        const assetIndex = assets.findIndex(a => (a.id && String(a.id) === String(id)) || String(assets.indexOf(a)) === String(id));
+                        if (assetIndex !== -1) {
+                            assets[assetIndex].top = (topPct * 100).toFixed(2) + '%';
+                            assets[assetIndex].left = (leftPct * 100).toFixed(2) + '%';
+                            assets[assetIndex].width = updatedWidth;
+                            
+                            await updateDoc(docRef, { floatingAssets: assets });
+                            alert('💾 تم حفظ موقع وحجم الصورة العائمة بنجاح!');
+                        } else {
+                            alert('تعذر العثور على الصورة لتحديثها.');
+                        }
+                    }
+                } catch (err) {
+                    console.error("Error saving asset coords:", err);
+                    alert('حدث خطأ أثناء الحفظ.');
+                }
+            };
+
+            window.deleteAsset = async (id) => {
+                if (!confirm('هل أنت متأكد من رغبتك في حذف هذه الصورة العائمة؟')) return;
+                try {
+                    const docRef = doc(db, "web_settings", "landing_page");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        let assets = data.floatingAssets || [];
+                        
+                        const updatedAssets = assets.filter(a => !((a.id && String(a.id) === String(id)) || String(assets.indexOf(a)) === String(id)));
+                        
+                        await updateDoc(docRef, { floatingAssets: updatedAssets });
+                        alert('🗑️ تم حذف الصورة بنجاح!');
+                    }
+                } catch (err) {
+                    console.error("Error deleting asset:", err);
+                    alert('حدث خطأ أثناء حذف الصورة.');
+                }
+            };
+
+            window.initAssetDrag = (elId) => {
+                const el = document.getElementById(elId);
+                if (!el) return;
+                let isDragging = false;
+                let startX, startY;
+                let origLeft, origTop;
+
+                const onMouseDown = (e) => {
+                    if (e.target.closest('.asset-controls')) return;
+                    isDragging = true;
+                    startX = e.pageX;
+                    startY = e.pageY;
+                    
+                    const rect = el.getBoundingClientRect();
+                    origLeft = rect.left + window.scrollX;
+                    origTop = rect.top + window.scrollY;
+                    e.preventDefault();
                 };
+
+                const onMouseMove = (e) => {
+                    if (!isDragging) return;
+                    const dx = e.pageX - startX;
+                    const dy = e.pageY - startY;
+                    
+                    el.style.left = (origLeft + dx) + 'px';
+                    el.style.top = (origTop + dy) + 'px';
+                };
+
+                const onMouseUp = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        const leftPct = (el.offsetLeft / window.innerWidth) * 100;
+                        const topPct = (el.offsetTop / document.body.scrollHeight) * 100;
+                        el.style.left = leftPct.toFixed(2) + '%';
+                        el.style.top = topPct.toFixed(2) + '%';
+                    }
+                };
+
+                el.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+                
+                // Touch support
+                const onTouchStart = (e) => {
+                    if (e.target.closest('.asset-controls')) return;
+                    isDragging = true;
+                    startX = e.touches[0].pageX;
+                    startY = e.touches[0].pageY;
+                    const rect = el.getBoundingClientRect();
+                    origLeft = rect.left + window.scrollX;
+                    origTop = rect.top + window.scrollY;
+                };
+
+                const onTouchMove = (e) => {
+                    if (!isDragging) return;
+                    const dx = e.touches[0].pageX - startX;
+                    const dy = e.touches[0].pageY - startY;
+                    el.style.left = (origLeft + dx) + 'px';
+                    el.style.top = (origTop + dy) + 'px';
+                };
+
+                const onTouchEnd = () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        const leftPct = (el.offsetLeft / window.innerWidth) * 100;
+                        const topPct = (el.offsetTop / document.body.scrollHeight) * 100;
+                        el.style.left = leftPct.toFixed(2) + '%';
+                        el.style.top = topPct.toFixed(2) + '%';
+                    }
+                };
+
+                el.addEventListener('touchstart', onTouchStart, { passive: true });
+                window.addEventListener('touchmove', onTouchMove, { passive: true });
+                window.addEventListener('touchend', onTouchEnd, { passive: true });
             };
         }
 
@@ -2925,9 +3032,28 @@
                     const floatContainer = document.getElementById('floating-assets-container');
                     floatContainer.innerHTML = ''; 
                     if(data.floatingAssets && data.floatingAssets.length > 0) {
-                        data.floatingAssets.forEach(asset => {
-                            let positionStyles = `top: ${asset.top}; left: ${asset.left}; width: ${asset.width};`;
-                            floatContainer.innerHTML += `<img src="${asset.image}" class="floating-asset" style="${positionStyles}">`;
+                        data.floatingAssets.forEach((asset, idx) => {
+                            const assetId = asset.id || `idx_${idx}`;
+                            if (isAdminMode) {
+                                let positionStyles = `top: ${asset.top}; left: ${asset.left}; width: ${asset.width || '120px'};`;
+                                floatContainer.innerHTML += `
+                                    <div class="admin-asset-wrapper" id="asset-wrapper-${assetId}" style="position: absolute; ${positionStyles} z-index: 9999; border: 2px dashed var(--kid-pink); padding: 4px; border-radius: 8px; background: rgba(255, 255, 255, 0.9); box-shadow: var(--shadow-md); cursor: move;" data-id="${assetId}">
+                                        <div class="asset-controls" style="position: absolute; top: -45px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; background: white; padding: 6px 10px; border-radius: 12px; border: 1.5px solid var(--border-color); box-shadow: var(--shadow-md); z-index: 10001; align-items: center; white-space: nowrap; direction: rtl;">
+                                            <span style="font-size: 11px; font-weight: 800; color: var(--text-dark);">الحجم:</span>
+                                            <input type="range" min="30" max="450" value="${parseInt(asset.width) || 120}" oninput="window.resizeAsset('${assetId}', this.value)" style="width: 70px; height: 5px; cursor: pointer; accent-color: var(--primary-indigo);">
+                                            <button onclick="window.saveAssetCoords('${assetId}')" style="background: var(--kid-green); color: white; border: none; border-radius: 6px; width: 28px; height: 28px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" title="حفظ"><i class="fa-solid fa-floppy-disk"></i></button>
+                                            <button onclick="window.deleteAsset('${assetId}')" style="background: var(--kid-pink); color: white; border: none; border-radius: 6px; width: 28px; height: 28px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                        <img src="${asset.image}" style="width: 100%; height: auto; pointer-events: none; display: block; border-radius: 6px;">
+                                    </div>
+                                `;
+                                setTimeout(() => {
+                                    window.initAssetDrag(`asset-wrapper-${assetId}`);
+                                }, 50);
+                            } else {
+                                let positionStyles = `top: ${asset.top}; left: ${asset.left}; width: ${asset.width || '10%'};`;
+                                floatContainer.innerHTML += `<img src="${asset.image}" class="floating-asset" style="${positionStyles}">`;
+                            }
                         });
                     }
                 }

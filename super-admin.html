@@ -2877,7 +2877,14 @@
                             </div>
                         `;
                     } else {
-                        actionHtml = `<span style="color: var(--text-gray); font-size: 12px;">تم الإجراء</span>`;
+                        actionHtml = `
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="color: var(--text-gray); font-size: 12px; font-weight: bold;">تم الإجراء</span>
+                                <button class="btn-danger" style="padding: 4px 8px; font-size: 11px; border: none; cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 3px; background-color: var(--kid-pink);" onclick="window.deleteLandingBooking('${booking.id}')">
+                                    <i class="fa-solid fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        `;
                     }
 
                     const paymentLabel = booking.paymentMethod === 'vodafone_cash' ? 'فودافون كاش' : 'انستاباي';
@@ -2975,6 +2982,32 @@
             } catch (err) {
                 console.error("Error rejecting booking:", err);
                 alert("حدث خطأ أثناء رفض الحجز.");
+            }
+        };
+
+        window.deleteLandingBooking = async (bookingId) => {
+            if(!confirm("هل أنت متأكد من حذف هذا الحجز نهائياً؟ سيتم إزالة الطلب وأي حصة مجدولة مرتبطة به.")) return;
+
+            try {
+                // 1. Delete landing_bookings document
+                await deleteDoc(doc(db, "landing_bookings", bookingId));
+
+                // 2. Query and delete corresponding booked_classes document if it exists
+                const q = query(collection(db, "booked_classes"), where("landingBookingId", "==", bookingId));
+                const snap = await getDocs(q);
+                const deletePromises = [];
+                snap.forEach(d => {
+                    deletePromises.push(deleteDoc(doc(db, "booked_classes", d.id)));
+                });
+                if (deletePromises.length > 0) {
+                    await Promise.all(deletePromises);
+                }
+
+                alert("🗑️ تم حذف الحجز والحصة المرتبطة به بنجاح!");
+                window.fetchLandingBookings();
+            } catch (err) {
+                console.error("Error deleting landing booking:", err);
+                alert("حدث خطأ أثناء حذف الحجز.");
             }
         };
 
