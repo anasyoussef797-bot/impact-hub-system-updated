@@ -356,14 +356,29 @@
                     </div>
 
                     <h3 class="section-title"><span data-i18n="playground_title">ساحة الأنشطة (البلاي جراوند)</span></h3>
-                    <div class="card create-post-area">
-                        <textarea id="parent-post-body" rows="2" data-i18n-placeholder="post_placeholder" placeholder="شاركنا لحظات طفلك..."></textarea>
-                        <div class="post-actions-row">
-                            <div class="file-upload-btn">
-                                <i class="fa-solid fa-camera"></i> <span data-i18n="attach_img">إرفاق صورة</span>
-                                <input type="file" id="parent-post-file" accept="image/*">
+                    <div class="card create-post-area" style="padding: 16px; border-radius: 16px; margin-bottom: 20px;">
+                        <textarea id="parent-post-body" rows="3" data-i18n-placeholder="post_placeholder" placeholder="شاركنا لحظات طفلك..." style="width: 100%; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; font-size: 14px; outline: none; resize: none; margin-bottom: 12px; font-family: inherit; background: var(--white); color: var(--text-dark);"></textarea>
+                        
+                        <!-- YouTube Video Link Input -->
+                        <div style="position: relative; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="color: #ff0000; font-size: 16px; display: flex; align-items: center;"><i class="fa-brands fa-youtube"></i></span>
+                            <input type="text" id="parent-post-youtube" placeholder="رابط فيديو يوتيوب (اختياري)..." style="width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; background: #faf9f6; color: var(--text-dark); font-family: inherit;">
+                        </div>
+
+                        <!-- Image Preview Area -->
+                        <div id="parent-post-img-preview-container" style="display: none; position: relative; margin-bottom: 12px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color);">
+                            <img id="parent-post-img-preview" src="" style="width: 100%; max-height: 200px; object-fit: cover;">
+                            <button onclick="window.clearParentSelectedPostImg()" style="position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 14px;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <div class="post-actions-row" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="file-upload-btn" style="position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; background: #f1f5f9; cursor: pointer; font-size: 13px; font-weight: bold; color: var(--text-dark); transition: all 0.2s;">
+                                <i class="fa-solid fa-camera" style="color: var(--primary-maroon);"></i> <span data-i18n="attach_img">إرفاق صورة</span>
+                                <input type="file" id="parent-post-file" accept="image/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" onchange="window.handleParentPostImgSelected(this)">
                             </div>
-                            <button class="btn-primary" style="width: auto; padding: 6px 15px; margin: 0;" onclick="window.publishParentPost()"><span data-i18n="publish_btn">نشر</span></button>
+                            <button class="btn-primary" style="width: auto; padding: 8px 24px; margin: 0; border-radius: 10px; background: var(--primary-maroon);" onclick="window.publishParentPost()"><span data-i18n="publish_btn">نشر</span></button>
                         </div>
                     </div>
                     <div id="timeline-feed">
@@ -739,7 +754,7 @@
         const db = getFirestore(app, "ai-studio-impacthubsystem-8d8e446d-b85a-48ae-a555-81773397809d");
 
         const myNurseryId = "Ajyal_AlGhad_ID_001";
-        const myParentId = "parent_yassin";
+        let myParentId = localStorage.getItem('parent_id') || "parent_yassin";
         let myParentName = localStorage.getItem('parent_display_name') || "ياسين محمود (ولي أمر)";
 
         window.dailyCallFrame = null;
@@ -1325,27 +1340,79 @@
         };
 
         // ================== 1. حائط الأنشطة والتفاعل الكامل ==================
-        window.publishParentPost = async () => {
-            const body = document.getElementById('parent-post-body').value;
-            if(!body) return;
-            const file = document.getElementById('parent-post-file').files[0];
-            const base64 = await toBase64(file);
+        window.handleParentPostImgSelected = (input) => {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const previewContainer = document.getElementById('parent-post-img-preview-container');
+                    const previewImg = document.getElementById('parent-post-img-preview');
+                    if (previewContainer && previewImg) {
+                        previewImg.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
 
-            await addDoc(collection(db, "nursery_posts"), {
-                nurseryId: myNurseryId,
-                authorName: myParentName,
-                authorId: myParentId,
-                body: body,
-                image: base64,
-                timestamp: new Date().getTime(),
-                likes: [],
-                comments: []
-            });
-            document.getElementById('parent-post-body').value = '';
-            const currentLang = localStorage.getItem('selected_language') || 'ar';
-            const dict = parentTranslations[currentLang] || parentTranslations.ar;
-            alert(dict.post_success);
-            fetchTimelineFeed();
+        window.clearParentSelectedPostImg = () => {
+            const input = document.getElementById('parent-post-file');
+            if (input) input.value = '';
+            const previewContainer = document.getElementById('parent-post-img-preview-container');
+            const previewImg = document.getElementById('parent-post-img-preview');
+            if (previewContainer && previewImg) {
+                previewImg.src = '';
+                previewContainer.style.display = 'none';
+            }
+        };
+
+        window.publishParentPost = async () => {
+            const body = document.getElementById('parent-post-body').value.trim();
+            const youtubeUrl = document.getElementById('parent-post-youtube') ? document.getElementById('parent-post-youtube').value.trim() : '';
+            const fileInput = document.getElementById('parent-post-file');
+            const file = fileInput ? fileInput.files[0] : null;
+
+            if(!body && !file && !youtubeUrl) {
+                alert(localStorage.getItem('selected_language') === 'ar' ? 'من فضلك اكتب نصاً للمنشور أو أرفق صورة/رابط يوتيوب!' : 'Please write something or attach an image/YouTube link!');
+                return;
+            }
+
+            try {
+                let base64 = '';
+                if (file) {
+                    base64 = await toBase64(file);
+                }
+
+                const activeParentId = window.myParentId || myParentId || localStorage.getItem('parent_id') || "parent_yassin";
+
+                await addDoc(collection(db, "nursery_posts"), {
+                    nurseryId: myNurseryId,
+                    authorName: myParentName,
+                    authorId: activeParentId,
+                    body: body,
+                    image: base64,
+                    youtubeUrl: youtubeUrl,
+                    timestamp: new Date().getTime(),
+                    likes: [],
+                    comments: []
+                });
+
+                document.getElementById('parent-post-body').value = '';
+                if (document.getElementById('parent-post-youtube')) document.getElementById('parent-post-youtube').value = '';
+                window.clearParentSelectedPostImg();
+
+                const currentLang = localStorage.getItem('selected_language') || 'ar';
+                const dict = parentTranslations[currentLang] || parentTranslations.ar;
+                alert(dict.post_success);
+                
+                if (typeof window.fetchTimelineFeed === 'function') {
+                    window.fetchTimelineFeed();
+                }
+            } catch (err) {
+                console.error("Error publishing post:", err);
+                alert(localStorage.getItem('selected_language') === 'ar' ? 'حدث خطأ أثناء النشر.' : 'Error publishing post.');
+            }
         };
 
         let parentNurseryPosts = [];
@@ -1353,10 +1420,13 @@
 
         function renderCombinedParentFeed() {
             const container = document.getElementById('timeline-feed');
+            if (!container) return;
             container.innerHTML = '';
             
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
+            const activeParentId = window.myParentId || myParentId || localStorage.getItem('parent_id') || "parent_yassin";
 
             const combined = [...parentNurseryPosts, ...parentGlobalPostsList];
             combined.sort((a, b) => b.timestamp - a.timestamp);
@@ -1368,13 +1438,13 @@
 
             combined.forEach(post => {
                 const postId = post.id;
-                let isLiked = post.likes && post.likes.includes(myParentId);
+                let isLiked = post.likes && post.likes.includes(activeParentId);
                 let likeStyle = isLiked ? 'color: var(--primary-maroon); font-weight: 900;' : '';
 
                 let ytIframe = '';
                 if(post.youtubeUrl) {
                     const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
-                    ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
+                    ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:250px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
                 }
 
                 let commentsHtml = '';
@@ -1388,38 +1458,38 @@
                 const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:#002f6c; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
 
                 container.innerHTML += `
-                    <div class="feed-post">
+                    <div class="feed-post" style="background: var(--white); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
                         <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <div>
                                 <strong style="font-weight:900;">${post.authorName}</strong> 
                                 ${authorBadge}
                             </div>
-                            ${(!isGlobal && post.authorId === myParentId) ? `
+                            ${(!isGlobal && post.authorId === activeParentId) ? `
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                <button onclick="window.editPost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i> تعديل
                                 </button>
-                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i> حذف
                                 </button>
                             </div>` : ''}
                         </div>
                         ${post.title ? `<h4 style="font-weight:900; margin-bottom:8px; color: var(--text-dark);">${post.title}</h4>` : ''}
-                        <p>${post.body}</p>
-                        ${(post.image || post.media) ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px;"></div>` : ''}
+                        <p style="font-size: 14px; line-height: 1.5; white-space: pre-wrap; color: var(--text-dark);">${post.body || ''}</p>
+                        ${(post.image || post.media) ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px; max-height: 350px; object-fit: cover; display: block; margin-left: auto; margin-right: auto;"></div>` : ''}
                         ${ytIframe}
-                        <div class="post-actions">
-                            <button class="action-btn" style="${likeStyle}" onclick="${isGlobal ? `alert('غير متاح التفاعل مع الإعلانات العامة')` : `window.likePost('${postId}', ${isLiked})`}">
+                        <div class="post-actions" style="margin-top: 12px; display: flex; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                            <button class="action-btn" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: bold; ${likeStyle}" onclick="${isGlobal ? `alert('غير متاح التفاعل مع الإعلانات العامة')` : `window.likePost('${postId}', ${isLiked})`}">
                                 <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${post.likes ? post.likes.length : 0})
                             </button>
                         </div>
                         
                         ${isGlobal ? '' : `
-                        <div class="comments-section">
+                        <div class="comments-section" style="margin-top: 12px; border-top: 1px solid var(--border-color); padding-top: 10px;">
                             <div id="comments-box-${postId}">${commentsHtml}</div>
-                            <div class="comment-input-area" style="display:flex; gap:5px; margin-top:5px;">
-                                <input type="text" id="input-${postId}" class="form-control" style="margin:0;" placeholder="${dict.comment_btn}">
-                                <button class="btn-primary" style="margin:0; width:auto; padding:5px 10px;" onclick="window.addComment('${postId}')">
+                            <div class="comment-input-area" style="display:flex; gap:5px; margin-top:10px;">
+                                <input type="text" id="input-${postId}" class="form-control" style="margin:0; flex-grow: 1; border-radius: 8px; padding: 6px 12px; font-size: 13px; border: 1px solid var(--border-color);" placeholder="${dict.comment_btn}">
+                                <button class="btn-primary" style="margin:0; width:auto; padding:6px 14px; border-radius: 8px; background: var(--primary-maroon);" onclick="window.addComment('${postId}')">
                                     ${dict.reply_btn}
                                 </button>
                             </div>
@@ -1452,44 +1522,64 @@
             });
         };
 
-        window.editPost = async (postId, currentTitle, currentBody) => {
+        window.editPost = async (postId) => {
+            const combined = [...parentNurseryPosts, ...parentGlobalPostsList];
+            const post = combined.find(p => p.id === postId);
+            if (!post) return;
+
             const currentLang = localStorage.getItem('selected_language') || 'ar';
-            let newTitle = currentTitle;
-            if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
-                newTitle = prompt(currentLang === 'ar' ? 'تعديل عنوان المنشور:' : 'Edit post title:', currentTitle);
-                if (newTitle === null) return;
-            }
-            const newBody = prompt(currentLang === 'ar' ? 'تعديل محتوى المنشور:' : 'Edit post body:', currentBody);
+            
+            const newBody = prompt(
+                currentLang === 'ar' ? 'تعديل محتوى المنشور:' : 'Edit post body:', 
+                post.body || ''
+            );
             if (newBody === null) return;
 
-            const postRef = doc(db, "nursery_posts", postId);
-            await updateDoc(postRef, {
-                title: newTitle || "",
-                body: newBody
-            });
-            fetchTimelineFeed();
+            const newYoutubeUrl = prompt(
+                currentLang === 'ar' ? 'تعديل رابط يوتيوب (اتركه فارغاً لإزالته):' : 'Edit YouTube URL (leave blank to remove):', 
+                post.youtubeUrl || ''
+            );
+            if (newYoutubeUrl === null) return;
+
+            try {
+                const postRef = doc(db, "nursery_posts", postId);
+                await updateDoc(postRef, {
+                    body: newBody,
+                    youtubeUrl: newYoutubeUrl || ""
+                });
+                fetchTimelineFeed();
+            } catch (err) {
+                console.error("Error editing post:", err);
+                alert(currentLang === 'ar' ? 'حدث خطأ أثناء تعديل المنشور.' : 'Error editing post.');
+            }
         };
 
         window.deletePost = async (postId) => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const confirmMsg = currentLang === 'ar' ? 'هل أنت متأكد من حذف هذا المنشور نهائياً؟' : 'Are you sure you want to delete this post permanently?';
             if (confirm(confirmMsg)) {
-                await deleteDoc(doc(db, "nursery_posts", postId));
-                fetchTimelineFeed();
+                try {
+                    await deleteDoc(doc(db, "nursery_posts", postId));
+                    fetchTimelineFeed();
+                } catch (err) {
+                    console.error("Error deleting post:", err);
+                }
             }
         };
 
         window.likePost = async (postId, isLiked) => {
+            const activeParentId = window.myParentId || myParentId || localStorage.getItem('parent_id') || "parent_yassin";
             const postRef = doc(db, "nursery_posts", postId);
-            await updateDoc(postRef, { likes: isLiked ? arrayRemove(myParentId) : arrayUnion(myParentId) });
+            await updateDoc(postRef, { likes: isLiked ? arrayRemove(activeParentId) : arrayUnion(activeParentId) });
             fetchTimelineFeed();
         };
 
         window.addComment = async (postId) => {
-            const val = document.getElementById(`input-${postId}`).value;
+            const val = document.getElementById(`input-${postId}`).value.trim();
             if(!val) return;
             const postRef = doc(db, "nursery_posts", postId);
             await updateDoc(postRef, { comments: arrayUnion({ authorName: myParentName, text: val, timestamp: new Date().getTime() }) });
+            document.getElementById(`input-${postId}`).value = '';
             fetchTimelineFeed();
         };
 
@@ -2187,6 +2277,8 @@
                 window.myParentId = "parent_yassin";
             }
 
+            myParentId = window.myParentId;
+
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
             
@@ -2431,6 +2523,7 @@
         // تهيئة وحمل اللغة المفضلة عند التشغيل
         const initParentApp = () => {
             window.myParentId = localStorage.getItem('parent_id') || "parent_yassin";
+            myParentId = window.myParentId;
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
             
