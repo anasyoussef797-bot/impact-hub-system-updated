@@ -1864,8 +1864,33 @@
             document.getElementById('appSidebar').classList.toggle('open');
         };
 
+        window.checkNurseryStatus = async () => {
+            try {
+                const docSnap = await getDoc(doc(db, "nurseries", myNurseryId));
+                if (docSnap.exists() && docSnap.data().status === "frozen") {
+                    document.body.innerHTML = `
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:'Tajawal', sans-serif; direction:rtl;">
+                            <div style="font-size:80px; color:#ef4444; margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
+                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:#ef4444;">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
+                            <p style="font-size:16px; line-height:1.6; color:#475569; max-width:400px; margin:0 auto;">
+                                لقد تم تجميد حساب هذه الحضانة مؤقتاً من قبل الإدارة المركزية للشبكة. يرجى التواصل مع إدارة الشبكة لمزيد من التفاصيل.
+                            </p>
+                        </div>
+                    `;
+                    document.body.style.overflow = "hidden";
+                    return true;
+                }
+            } catch (err) {
+                console.error("Error checking nursery status in nursery-admin:", err);
+            }
+            return false;
+        };
+
         // تحميل اللغة المفضلة تلقائياً
-        const initManagerApp = () => {
+        const initManagerApp = async () => {
+            const isFrozen = await window.checkNurseryStatus();
+            if (isFrozen) return;
+
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeManagerLanguage(savedLang);
             

@@ -1070,6 +1070,112 @@
                 </div>
             </div>
 
+            <!-- Modal for Editing Nursery Details -->
+            <div id="superAdminEditNurseryModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 4000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 650px; max-height: 90vh; overflow-y: auto; position: relative; padding: 25px; box-shadow: var(--shadow-2xl); border: 2px solid var(--primary-maroon); text-align: right; direction: rtl;">
+                    <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeEditNurseryModal()"></i>
+                    
+                    <h3 style="color: var(--primary-maroon); font-weight: 900; font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span>تعديل تفاصيل الحضانة 📝</span>
+                    </h3>
+                    
+                    <input type="hidden" id="edit-nursery-id">
+
+                    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-weight: bold; margin-bottom: 6px; display: block;">اسم الحضانة</label>
+                            <input type="text" id="edit-n-name" class="form-control" style="margin: 0; width: 100%;">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-weight: bold; margin-bottom: 6px; display: block;">اسم المدير / المديرة</label>
+                            <input type="text" id="edit-n-admin" class="form-control" style="margin: 0; width: 100%;">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-weight: bold; margin-bottom: 6px; display: block;">أرقام التواصل</label>
+                            <input type="text" id="edit-n-phone" class="form-control" placeholder="أرقام التواصل وهاتف الإدارة..." style="margin: 0; width: 100%;">
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label style="font-weight: bold; margin-bottom: 6px; display: block;">العنوان بالتفصيل</label>
+                            <input type="text" id="edit-n-address" class="form-control" style="margin: 0; width: 100%;">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block;">الفروع</label>
+                                <input type="text" id="edit-n-branches" class="form-control" placeholder="مثال: جليم، سموحة..." style="margin: 0; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block;">هواتف الفروع</label>
+                                <input type="text" id="edit-n-branch-phones" class="form-control" placeholder="مثال: 010..., 012..." style="margin: 0; width: 100%;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block;">عدد الطلبة</label>
+                                <input type="number" id="edit-n-students" class="form-control" style="margin: 0; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block;">عدد المدرسين</label>
+                                <input type="number" id="edit-n-teachers" class="form-control" style="margin: 0; width: 100%;">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #faf9f6; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: #1e3a8a;"><i class="fa-solid fa-wallet"></i> فودافون كاش (Vodafone Cash)</label>
+                                <input type="text" id="edit-n-vodafone" class="form-control" placeholder="رقم محفظة فودافون كاش..." style="margin: 0; width: 100%; border-color: #3b82f6;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: #047857;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي (InstaPay)</label>
+                                <input type="text" id="edit-n-instapay" class="form-control" placeholder="عنوان أو رقم انستاباي..." style="margin: 0; width: 100%; border-color: #10b981;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-start;">
+                        <button class="btn-primary" onclick="window.saveEditedNursery()" style="margin: 0; width: auto; padding: 10px 25px; background: var(--primary-maroon);">
+                            <i class="fa-solid fa-check"></i> حفظ التعديلات
+                        </button>
+                        <button class="btn-primary" onclick="window.closeEditNurseryModal()" style="margin: 0; width: auto; padding: 10px 20px; background: #64748b; border-color: #64748b;">
+                            إلغاء
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Delete/Freeze Options of Nursery -->
+            <div id="superAdminDeleteFreezeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 4000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 450px; position: relative; padding: 30px; box-shadow: var(--shadow-2xl); border: 2px solid #ef4444; text-align: center; direction: rtl; font-family: 'Tajawal', sans-serif;">
+                    <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeDeleteFreezeModal()"></i>
+                    
+                    <div style="width: 70px; height: 70px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #ef4444; font-size: 32px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <h3 style="color: #991b1b; font-weight: 900; font-size: 20px; margin-bottom: 10px;" id="df-nursery-name">إجراءات الحذف والتجميد</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 25px; line-height: 1.5;">برجاء تحديد الإجراء المطلوب تنفيذه على كيان هذه الحضانة من الخيارات أدناه:</p>
+                    
+                    <input type="hidden" id="df-nursery-id">
+                    <input type="hidden" id="df-nursery-status">
+
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                        <button id="freeze-btn-option" class="btn-primary" onclick="window.confirmFreezeNursery()" style="margin: 0; width: 100%; padding: 12px; background: #0284c7; border-color: #0284c7; border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa-solid fa-snowflake"></i> <span id="freeze-option-text">تجميد حساب الحضانة (إيقاف جميع التطبيقات)</span>
+                        </button>
+                        
+                        <button class="btn-primary" onclick="window.confirmDeleteNursery()" style="margin: 0; width: 100%; padding: 12px; background: #ef4444; border-color: #ef4444; border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fa-solid fa-trash-can"></i> حذف الحضانة نهائياً من السيستم
+                        </button>
+                    </div>
+
+                    <button class="btn-primary" onclick="window.closeDeleteFreezeModal()" style="margin: 0; width: 100%; padding: 10px; background: #64748b; border-color: #64748b; border-radius: 12px; font-weight: bold; font-size: 14px;">
+                        إلغاء التراجع
+                    </button>
+                </div>
+            </div>
+
             <!-- ذيل الصفحة -->
             <div style="text-align: center; margin-top: 40px; padding: 20px 0; font-size: 12px; color: var(--text-gray); font-weight: 800; border-top: 1px dashed rgba(128, 0, 0, 0.08);" data-i18n="dev_credit">
                 تم التطوير بواسطه impact hub egypt (esaia)
@@ -1765,19 +1871,53 @@
             snap.forEach((docData) => {
                 const item = docData.data();
                 const id = docData.id;
+                
                 const isInactive = item.status === "inactive";
+                const isFrozen = item.status === "frozen";
+
                 allNurseriesMap[id] = item.name;
                 filterDropdown.innerHTML += `<option value="${id}">${item.name}</option>`;
 
+                let rowStyle = '';
+                let statusBadge = '';
+                if (isInactive) {
+                    rowStyle = 'opacity:0.6; background:#ffe2e2;';
+                    statusBadge = '<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">غير نشط 🚫</span>';
+                } else if (isFrozen) {
+                    rowStyle = 'background:#e0f2fe; border-left: 4px solid #0284c7;';
+                    statusBadge = '<span style="background:#0284c7; color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">مجمدة ❄️</span>';
+                }
+
+                // Extra details
+                let extraDetailsHtml = '';
+                if (item.branches) {
+                    extraDetailsHtml += `<br><small style="color:#0284c7; font-weight:bold;"><i class="fa-solid fa-code-branch"></i> الفروع: ${item.branches}</small>`;
+                }
+                if (item.branchPhones) {
+                    extraDetailsHtml += `<br><small style="color:#475569;"><i class="fa-solid fa-phone-volume"></i> هواتف الفروع: ${item.branchPhones}</small>`;
+                }
+                if (item.vodafoneCash) {
+                    extraDetailsHtml += `<br><small style="color:#e11d48; font-weight:bold;"><i class="fa-solid fa-wallet"></i> فودافون كاش: ${item.vodafoneCash}</small>`;
+                }
+                if (item.instaPay) {
+                    extraDetailsHtml += `<br><small style="color:#059669; font-weight:bold;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي: ${item.instaPay}</small>`;
+                }
+
                 tbody.innerHTML += `
-                    <tr style="${isInactive ? 'opacity:0.4; background:#ffe2e2;' : ''}">
+                    <tr style="${rowStyle}">
                         <td><img src="${item.logo || 'https://via.placeholder.com/50'}" width="50" style="border-radius:8px; height:50px; object-fit:cover;"></td>
                         <td>
                             <a href="#" style="color:var(--primary-maroon); font-weight:bold; text-decoration:none;" onclick="window.openNurseryProfile('${id}', '${item.name}')">
                                 ${item.name} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
                             </a>
+                            ${statusBadge}
                         </td>
-                        <td>${item.admin}<br><small>${item.phone}</small><br><small style="color:gray;">${item.address}</small></td>
+                        <td>
+                            <strong>${item.admin}</strong>
+                            <br><small><i class="fa-solid fa-phone"></i> ${item.phone}</small>
+                            <br><small style="color:gray;"><i class="fa-solid fa-location-dot"></i> ${item.address}</small>
+                            ${extraDetailsHtml}
+                        </td>
                         <td>👨‍🏫 ${item.teachersCount || 0} | 👶 ${item.studentsCount || 0}</td>
                         <td>
                             <div class="star-rating" data-id="${id}">
@@ -1786,9 +1926,19 @@
                             <button style="display:block; font-size:10px; margin-top:4px; color:var(--primary-maroon); background:none; border:none; cursor:pointer; font-weight:bold;" onclick="window.saveRatingToDb('${id}', ${item.rating})">حفظ التقييم</button>
                         </td>
                         <td>
-                            <button class="btn-danger" style="background: ${isInactive ? '#10b981' : 'var(--danger-red)'}" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')">
-                                ${isInactive ? 'تفعيل' : 'إيقاف'}
-                            </button>
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: ${isInactive ? '#10b981' : (isFrozen ? '#cbd5e1' : 'var(--danger-red)')}; border-color: ${isInactive ? '#10b981' : (isFrozen ? '#cbd5e1' : 'var(--danger-red)')}; color: ${isFrozen ? '#64748b' : 'white'}; border-radius: 8px; cursor: ${isFrozen ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')" ${isFrozen ? 'disabled' : ''}>
+                                    <i class="fa-solid fa-power-off"></i> ${isInactive ? 'تفعيل العرض' : 'إيقاف العرض'}
+                                </button>
+                                
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: #e2e8f0; border-color: #cbd5e1; color: #1e293b; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showEditNurseryModal('${id}')">
+                                    <i class="fa-solid fa-pen-to-square"></i> تعديل التفاصيل
+                                </button>
+                                
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: #fee2e2; border-color: #fecaca; color: #991b1b; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showDeleteFreezeModal('${id}', '${item.name.replace(/'/g, "\\'")}', '${item.status}')">
+                                    <i class="fa-solid fa-trash-can"></i> حذف وتجميد
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -1824,6 +1974,145 @@
             if(nextStatus === "inactive" && !confirm(dict.alert_kill_warn)) return;
             await updateDoc(doc(db, "nurseries", id), { status: nextStatus }); 
             fetchNurseriesList();
+        };
+
+        window.showEditNurseryModal = async (id) => {
+            try {
+                const docSnap = await getDoc(doc(db, "nurseries", id));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('edit-nursery-id').value = id;
+                    document.getElementById('edit-n-name').value = data.name || '';
+                    document.getElementById('edit-n-admin').value = data.admin || '';
+                    document.getElementById('edit-n-phone').value = data.phone || '';
+                    document.getElementById('edit-n-address').value = data.address || '';
+                    document.getElementById('edit-n-branches').value = data.branches || '';
+                    document.getElementById('edit-n-branch-phones').value = data.branchPhones || '';
+                    document.getElementById('edit-n-students').value = data.studentsCount || 0;
+                    document.getElementById('edit-n-teachers').value = data.teachersCount || 0;
+                    document.getElementById('edit-n-vodafone').value = data.vodafoneCash || '';
+                    document.getElementById('edit-n-instapay').value = data.instaPay || '';
+                    
+                    document.getElementById('superAdminEditNurseryModal').style.display = 'flex';
+                } else {
+                    alert('خطأ: لم يتم العثور على بيانات الحضانة المطلوبة!');
+                }
+            } catch (err) {
+                console.error("Error opening edit nursery modal:", err);
+                alert('حدث خطأ أثناء تحميل بيانات الحضانة!');
+            }
+        };
+
+        window.closeEditNurseryModal = () => {
+            document.getElementById('superAdminEditNurseryModal').style.display = 'none';
+        };
+
+        window.saveEditedNursery = async () => {
+            const id = document.getElementById('edit-nursery-id').value;
+            if (!id) return;
+
+            const name = document.getElementById('edit-n-name').value.trim();
+            const admin = document.getElementById('edit-n-admin').value.trim();
+            const phone = document.getElementById('edit-n-phone').value.trim();
+            const address = document.getElementById('edit-n-address').value.trim();
+            const branches = document.getElementById('edit-n-branches').value.trim();
+            const branchPhones = document.getElementById('edit-n-branch-phones').value.trim();
+            const students = parseInt(document.getElementById('edit-n-students').value) || 0;
+            const teachers = parseInt(document.getElementById('edit-n-teachers').value) || 0;
+            const vodafoneCash = document.getElementById('edit-n-vodafone').value.trim();
+            const instaPay = document.getElementById('edit-n-instapay').value.trim();
+
+            if (!name || !admin || !phone || !address) {
+                alert('برجاء ملء جميع الحقول الأساسية: الاسم، المدير، أرقام التواصل، والعنوان!');
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "nurseries", id), {
+                    name, admin, address, phone,
+                    branches, branchPhones,
+                    studentsCount: students,
+                    teachersCount: teachers,
+                    vodafoneCash, instaPay,
+                    updatedAt: new Date().getTime()
+                });
+                alert('✅ تم تحديث تفاصيل الحضانة بنجاح!');
+                window.closeEditNurseryModal();
+                fetchNurseriesList();
+            } catch (err) {
+                console.error("Error saving edited nursery:", err);
+                alert('حدث خطأ أثناء حفظ التعديلات!');
+            }
+        };
+
+        window.showDeleteFreezeModal = (id, name, status) => {
+            document.getElementById('df-nursery-id').value = id;
+            document.getElementById('df-nursery-name').innerText = name;
+            document.getElementById('df-nursery-status').value = status;
+
+            const freezeBtn = document.getElementById('freeze-btn-option');
+            const freezeText = document.getElementById('freeze-option-text');
+
+            if (status === "frozen") {
+                freezeText.innerText = "إلغاء تجميد الحضانة (إعادة تشغيل التطبيقات)";
+                freezeBtn.style.background = "#10b981";
+                freezeBtn.style.borderColor = "#10b981";
+            } else {
+                freezeText.innerText = "تجميد حساب الحضانة (إيقاف جميع التطبيقات)";
+                freezeBtn.style.background = "#0284c7";
+                freezeBtn.style.borderColor = "#0284c7";
+            }
+
+            document.getElementById('superAdminDeleteFreezeModal').style.display = 'flex';
+        };
+
+        window.closeDeleteFreezeModal = () => {
+            document.getElementById('superAdminDeleteFreezeModal').style.display = 'none';
+        };
+
+        window.confirmFreezeNursery = async () => {
+            const id = document.getElementById('df-nursery-id').value;
+            const currentStatus = document.getElementById('df-nursery-status').value;
+            if (!id) return;
+
+            const isFrozen = currentStatus === "frozen";
+            const nextStatus = isFrozen ? "active" : "frozen";
+            const msg = isFrozen 
+                ? "هل أنت متأكد من إلغاء تجميد هذه الحضانة؟ سيؤدي ذلك إلى إعادة تشغيل جميع تطبيقاتها فوراً." 
+                : "هل أنت متأكد من تجميد هذه الحضانة؟ سيؤدي ذلك إلى إيقاف جميع تطبيقاتها (المدير، المدرسين، وأولياء الأمور) فوراً حتي تقوم بإعادة تشغيلها.";
+
+            if (!confirm(msg)) return;
+
+            try {
+                await updateDoc(doc(db, "nurseries", id), { status: nextStatus });
+                alert(isFrozen ? "✅ تم إلغاء تجميد الحضانة بنجاح!" : "❄️ تم تجميد الحضانة وإيقاف تطبيقاتها بنجاح!");
+                window.closeDeleteFreezeModal();
+                fetchNurseriesList();
+            } catch (err) {
+                console.error("Error freezing nursery:", err);
+                alert("حدث خطأ أثناء تجميد/إلغاء تجميد الحضانة!");
+            }
+        };
+
+        window.confirmDeleteNursery = async () => {
+            const id = document.getElementById('df-nursery-id').value;
+            const name = document.getElementById('df-nursery-name').innerText;
+            if (!id) return;
+
+            const msg1 = `⚠️ تحذير شديد: هل أنت متأكد من حذف حضانة "${name}" نهائياً من السيستم؟`;
+            const msg2 = `🚨 هذا الإجراء لا يمكن التراجع عنه مطلقاً! سيتم مسح الكيان بالكامل. هل تريد المتابعة بالحذف؟`;
+
+            if (confirm(msg1) && confirm(msg2)) {
+                try {
+                    await deleteDoc(doc(db, "nurseries", id));
+                    alert("🗑️ تم حذف الحضانة نهائياً من السيستم بنجاح.");
+                    window.closeDeleteFreezeModal();
+                    fetchNurseriesList();
+                } catch (err) {
+                    console.error("Error deleting nursery:", err);
+                    alert("حدث خطأ أثناء محاولة حذف الحضانة!");
+                }
+            }
         };
 
         window.openNurseryProfile = (id, name) => {
