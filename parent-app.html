@@ -774,8 +774,8 @@
         const db = getFirestore(app, "ai-studio-impacthubsystem-8d8e446d-b85a-48ae-a555-81773397809d");
 
         const myNurseryId = "Ajyal_AlGhad_ID_001";
-        let myParentId = localStorage.getItem('parent_id') || "parent_yassin";
-        let myParentName = localStorage.getItem('parent_display_name') || "ياسين محمود (ولي أمر)";
+        let myParentId = localStorage.getItem('parent_id') || "";
+        let myParentName = localStorage.getItem('parent_display_name') || "";
 
         window.dailyCallFrame = null;
         let cart = [];
@@ -2366,52 +2366,66 @@
 
         // ================== 6. Auth والتابات ودعم المزامنة للكاميرات ==================
         window.doLogin = async () => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
             const isFrozen = await window.checkNurseryStatus();
             if (isFrozen) return;
+
             const emailVal = document.getElementById('login-email').value.trim();
             const passVal = document.getElementById('login-pass').value.trim();
 
-            if (emailVal) {
-                try {
-                    // البحث عن ولي أمر بنفس الإيميل أو الهاتف في قاعدة البيانات للربط التلقائي للكاميرات
-                    let q = query(collection(db, "nursery_users"), where("email", "==", emailVal), where("role", "==", "parent"));
-                    let snap = await getDocs(q);
-                    
-                    if (snap.empty) {
-                        q = query(collection(db, "nursery_users"), where("phone", "==", emailVal), where("role", "==", "parent"));
-                        snap = await getDocs(q);
-                    }
-                    
-                    if (!snap.empty) {
-                        const userDoc = snap.docs[0];
-                        const userData = userDoc.data();
-                        
-                        localStorage.setItem('parent_id', userDoc.id);
-                        localStorage.setItem('parent_display_name', userData.name || "ولي أمر");
-                        localStorage.setItem('parent_phone_number', userData.phone || "");
-                        
-                        window.myParentId = userDoc.id;
-                        myParentName = userData.name || "ولي أمر";
-                        
-                        // تحديث الاسم في واجهة التطبيق والملف الشخصي
-                        const headerProfileName = document.getElementById('profile-tab-name');
-                        if (headerProfileName) headerProfileName.innerText = myParentName;
-                        
-                        const parentNameInput = document.getElementById('parent-name-input');
-                        if (parentNameInput) parentNameInput.value = myParentName;
+            if (!emailVal || !passVal) {
+                alert(currentLang === 'ar' ? 'يرجى إدخال البريد الإلكتروني أو الهاتف مع كلمة المرور!' : 'Please enter email/phone and password!');
+                return;
+            }
 
-                        const parentPhoneInput = document.getElementById('parent-phone-input');
-                        if (parentPhoneInput) parentPhoneInput.value = userData.phone || "";
-                    } else {
-                        localStorage.removeItem('parent_id');
-                        window.myParentId = "parent_yassin";
-                    }
-                } catch (err) {
-                    console.error("Error logging in:", err);
-                    window.myParentId = "parent_yassin";
+            try {
+                // البحث عن ولي أمر بنفس الإيميل أو الهاتف في قاعدة البيانات للربط التلقائي للكاميرات
+                let q = query(collection(db, "nursery_users"), where("email", "==", emailVal), where("role", "==", "parent"));
+                let snap = await getDocs(q);
+                
+                if (snap.empty) {
+                    q = query(collection(db, "nursery_users"), where("phone", "==", emailVal), where("role", "==", "parent"));
+                    snap = await getDocs(q);
                 }
-            } else {
-                window.myParentId = "parent_yassin";
+                
+                if (!snap.empty) {
+                    const userDoc = snap.docs[0];
+                    const userData = userDoc.data();
+                    
+                    // التحقق من كلمة المرور
+                    const storedPassword = userData.password || userData.phone;
+                    if (storedPassword !== passVal) {
+                        alert(currentLang === 'ar' ? '❌ كلمة المرور غير صحيحة!' : '❌ Password is incorrect!');
+                        return;
+                    }
+
+                    localStorage.setItem('parent_id', userDoc.id);
+                    localStorage.setItem('parent_display_name', userData.name || "ولي أمر");
+                    localStorage.setItem('parent_phone_number', userData.phone || "");
+                    localStorage.setItem('parent_nurseryId', userData.nurseryId || "");
+                    
+                    window.myParentId = userDoc.id;
+                    myParentName = userData.name || "ولي أمر";
+                    
+                    // تحديث الاسم في واجهة التطبيق والملف الشخصي
+                    const headerProfileName = document.getElementById('profile-tab-name');
+                    if (headerProfileName) headerProfileName.innerText = myParentName;
+                    
+                    const parentNameInput = document.getElementById('parent-name-input');
+                    if (parentNameInput) parentNameInput.value = myParentName;
+
+                    const parentPhoneInput = document.getElementById('parent-phone-input');
+                    if (parentPhoneInput) parentPhoneInput.value = userData.phone || "";
+                } else {
+                    alert(currentLang === 'ar' ? '❌ هذا الحساب غير مسجل بالمنصة كولي أمر!' : '❌ This account is not registered as a parent!');
+                    return;
+                }
+            } catch (err) {
+                console.error("Error logging in:", err);
+                alert(currentLang === 'ar' ? 'حدث خطأ أثناء تسجيل الدخول.' : 'An error occurred during login.');
+                return;
             }
 
             myParentId = window.myParentId;
@@ -2431,6 +2445,12 @@
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
             alert(dict.logout_alert);
+            localStorage.removeItem('parent_id');
+            localStorage.removeItem('parent_display_name');
+            localStorage.removeItem('parent_phone_number');
+            localStorage.removeItem('parent_nurseryId');
+            window.myParentId = "";
+            myParentId = "";
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('main-app').style.display = 'none';
         };
@@ -2684,8 +2704,24 @@
         const initParentApp = async () => {
             const isFrozen = await window.checkNurseryStatus();
             if (isFrozen) return;
-            window.myParentId = localStorage.getItem('parent_id') || "parent_yassin";
+
+            window.myParentId = localStorage.getItem('parent_id') || "";
             myParentId = window.myParentId;
+
+            if (!myParentId) {
+                // Show login screen, hide main-app
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('main-app').style.display = 'none';
+                
+                const savedLang = localStorage.getItem('selected_language') || 'ar';
+                window.changeParentLanguage(savedLang);
+                return;
+            }
+
+            // If logged in, hide login screen and show main-app
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeParentLanguage(savedLang);
             

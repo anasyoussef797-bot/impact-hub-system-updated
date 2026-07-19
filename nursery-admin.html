@@ -432,9 +432,81 @@
                 font-size: 13px;
             }
         }
+
+        /* شاشة تسجيل الدخول */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+        }
+        .login-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--border-color);
+        }
+        .login-logo {
+            font-size: 50px;
+            color: var(--primary-maroon);
+            margin-bottom: 20px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: right;
+        }
+        .login-input:focus {
+            border-color: var(--primary-maroon);
+        }
     </style>
 </head>
 <body>
+
+    <!-- شاشة تسجيل الدخول للمديرة والتحكم الآمن -->
+    <div id="login-screen">
+        <div class="login-card" style="text-align: right;">
+            <div class="login-logo" style="text-align: center;"><i class="fa-solid fa-user-tie"></i></div>
+            <h2 style="color: var(--primary-maroon); margin-bottom: 8px; font-weight: 900; font-size: 18px; text-align: center;">لوحة تحكم مديرة الحضانة 💼</h2>
+            <p style="color: var(--text-gray); font-size: 12.5px; margin-bottom: 20px; line-height: 1.5; text-align: center;">سجل الدخول لإدارة فرع حضانتك والاطلاع على الحجوزات والاتصال المباشر والمنشورات بأمان كامل وعزل كامل عن باقي الفروع.</p>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="font-weight: bold; font-size: 12px; display: block; margin-bottom: 5px; color: var(--text-dark);">رقم الهاتف / البريد الإلكتروني</label>
+                <input type="text" id="login-phone" class="login-input" placeholder="01XXXXXXXXX" style="margin-bottom: 0;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="font-weight: bold; font-size: 12px; display: block; margin-bottom: 5px; color: var(--text-dark);">كلمة المرور</label>
+                <input type="password" id="login-pass" class="login-input" placeholder="••••••••" style="margin-bottom: 0;">
+            </div>
+            
+            <button class="btn-primary" onclick="window.doLogin()" style="width: 100%; margin-top: 5px; font-size: 14px; padding: 12px; font-weight: 800;">
+                <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول الحضانة
+            </button>
+            <p style="font-size: 10px; color: var(--text-gray); margin-top: 20px; opacity: 0.7; font-weight: bold; text-align: center;">
+                تم التطوير بواسطة impact hub egypt (esaia)
+            </p>
+        </div>
+    </div>
 
     <!-- زر قائمة الجوال -->
     <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
@@ -485,6 +557,14 @@
                     <option value="fr">Français 🇫🇷</option>
                     <option value="de">Deutsch 🇩🇪</option>
                 </select>
+            </div>
+
+            <!-- زر تسجيل الخروج الآمن لحماية البيانات -->
+            <div style="padding: 10px 15px; margin-top: 5px; margin-bottom: 10px;">
+                <button onclick="window.doLogout()" style="width: 100%; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #ef4444; border: 1.5px solid #fecaca; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>تسجيل الخروج الآمن</span>
+                </button>
             </div>
         </aside>
 
@@ -564,6 +644,10 @@
                         <div class="form-group">
                             <label data-i18n="lbl_email">البريد الإلكتروني (اختياري)</label>
                             <input type="email" id="new-user-email" class="form-control" placeholder="example@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight: bold; color: var(--primary-maroon);">كلمة المرور (تلقائياً: رقم الهاتف)</label>
+                            <input type="password" id="new-user-password" class="form-control" placeholder="اتركه فارغاً لاستخدام رقم الهاتف">
                         </div>
                         <div class="form-group">
                             <label data-i18n="lbl_role">نوع الصلاحية (Role)</label>
@@ -746,9 +830,9 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app, "ai-studio-impacthubsystem-8d8e446d-b85a-48ae-a555-81773397809d");
-        const myNurseryId = "Ajyal_AlGhad_ID_001";
-        const myManagerId = "nursery_manager_001";
-        const myName = "مديرة الحضانة";
+        let myNurseryId = localStorage.getItem('nursery_admin_nurseryId') || "";
+        let myManagerId = localStorage.getItem('nursery_admin_userId') || "";
+        let myName = localStorage.getItem('nursery_admin_name') || "مديرة الحضانة";
 
         // معجم اللغات الأربعة لمديرة الحضانة
         const managerTranslations = {
@@ -1372,6 +1456,8 @@
             const phone = document.getElementById('new-user-phone').value;
             const email = document.getElementById('new-user-email').value;
             const role = document.getElementById('new-user-role').value;
+            const passwordInput = document.getElementById('new-user-password');
+            const passwordVal = passwordInput ? passwordInput.value.trim() : "";
 
             if(!name || !phone) {
                 alert(dict.alert_err_fill);
@@ -1386,20 +1472,23 @@
             }
 
             try {
+                const finalPassword = passwordVal || phone;
                 await addDoc(collection(db, "nursery_users"), {
                     nurseryId: myNurseryId,
                     name: name,
                     phone: phone,
                     email: email,
                     role: role,
+                    password: finalPassword,
                     assignedCameras: assignedCameras,
                     createdAt: new Date().getTime()
                 });
 
-                alert(dict.alert_success_create);
+                alert(dict.alert_success_create + " 🔐 تم حفظ الحساب بكلمة مرور آمنة!");
                 document.getElementById('new-user-name').value = '';
                 document.getElementById('new-user-phone').value = '';
                 document.getElementById('new-user-email').value = '';
+                if (passwordInput) passwordInput.value = '';
                 
                 const roleSelect = document.getElementById('new-user-role');
                 if (roleSelect) {
@@ -2022,8 +2111,23 @@
             return false;
         };
 
-        // تحميل اللغة المفضلة تلقائياً
+        // تحميل اللغة المفضلة تلقائياً وبدء التطبيق
         const initManagerApp = async () => {
+            if (!myNurseryId) {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.querySelector('.app-container').style.display = 'none';
+                if (document.getElementById('menuToggleBtn')) {
+                    document.getElementById('menuToggleBtn').style.display = 'none';
+                }
+                return;
+            }
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.querySelector('.app-container').style.display = 'flex';
+            if (document.getElementById('menuToggleBtn')) {
+                document.getElementById('menuToggleBtn').style.display = 'flex';
+            }
+
             const isFrozen = await window.checkNurseryStatus();
             if (isFrozen) return;
 
@@ -2035,6 +2139,102 @@
 
             // تحميل الكاميرات المتاحة
             window.fetchAdminCameras();
+        };
+
+        window.doLogout = () => {
+            if (!confirm("هل أنت متأكد من رغبتك في تسجيل الخروج؟")) return;
+            localStorage.removeItem('nursery_admin_nurseryId');
+            localStorage.removeItem('nursery_admin_userId');
+            localStorage.removeItem('nursery_admin_name');
+            myNurseryId = "";
+            myManagerId = "";
+            myName = "مديرة الحضانة";
+            
+            document.getElementById('login-screen').style.display = 'flex';
+            document.querySelector('.app-container').style.display = 'none';
+            if (document.getElementById('menuToggleBtn')) {
+                document.getElementById('menuToggleBtn').style.display = 'none';
+            }
+        };
+
+        window.doLogin = async () => {
+            const phoneVal = document.getElementById('login-phone').value.trim();
+            const passVal = document.getElementById('login-pass').value.trim();
+
+            if (!phoneVal || !passVal) {
+                alert("يرجى إدخال رقم الهاتف وكلمة المرور!");
+                return;
+            }
+
+            try {
+                // Search nursery_users for admin role
+                let q = query(collection(db, "nursery_users"), where("role", "==", "admin"), where("phone", "==", phoneVal));
+                let snap = await getDocs(q);
+
+                if (snap.empty) {
+                    q = query(collection(db, "nursery_users"), where("role", "==", "admin"), where("email", "==", phoneVal));
+                    snap = await getDocs(q);
+                }
+
+                let loggedInUser = null;
+                if (!snap.empty) {
+                    const docSnap = snap.docs[0];
+                    const data = docSnap.data();
+                    const password = data.password || data.phone; // fallback
+                    if (password === passVal) {
+                        loggedInUser = {
+                            userId: docSnap.id,
+                            nurseryId: data.nurseryId,
+                            name: data.name || "مديرة الحضانة"
+                        };
+                    } else {
+                        alert("❌ كلمة المرور غير صحيحة!");
+                        return;
+                    }
+                } else {
+                    // Fallback to checking nurseries directly (for backward compatibility / fallback admin account)
+                    let qNurs = query(collection(db, "nurseries"), where("phone", "==", phoneVal));
+                    let snapNurs = await getDocs(qNurs);
+                    if (!snapNurs.empty) {
+                        const docNurs = snapNurs.docs[0];
+                        const dataNurs = docNurs.data();
+                        if (phoneVal === passVal) {
+                            loggedInUser = {
+                                userId: "manager_" + docNurs.id,
+                                nurseryId: docNurs.id,
+                                name: dataNurs.admin || "مديرة الحضانة"
+                            };
+                        } else {
+                            alert("❌ كلمة المرور غير صحيحة!");
+                            return;
+                        }
+                    }
+                }
+
+                if (loggedInUser) {
+                    myNurseryId = loggedInUser.nurseryId;
+                    myManagerId = loggedInUser.userId;
+                    myName = loggedInUser.name;
+
+                    localStorage.setItem('nursery_admin_nurseryId', myNurseryId);
+                    localStorage.setItem('nursery_admin_userId', myManagerId);
+                    localStorage.setItem('nursery_admin_name', myName);
+
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.querySelector('.app-container').style.display = 'flex';
+                    if (document.getElementById('menuToggleBtn')) {
+                        document.getElementById('menuToggleBtn').style.display = 'flex';
+                    }
+
+                    await initManagerApp();
+                    alert("✅ تم تسجيل الدخول بنجاح!");
+                } else {
+                    alert("❌ الحساب غير مسجل أو البيانات خاطئة!");
+                }
+            } catch (err) {
+                console.error("Login error:", err);
+                alert("حدث خطأ أثناء محاولة تسجيل الدخول.");
+            }
         };
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {

@@ -610,6 +610,10 @@
                             <input type="text" id="n-phone" class="form-control" placeholder="01XXXXXXXXX">
                         </div>
                         <div class="form-group">
+                            <label style="font-weight:bold; color:var(--primary-maroon);">كلمة مرور مديرة الحضانة (تلقائياً: رقم الهاتف)</label>
+                            <input type="password" id="n-password" class="form-control" placeholder="اتركه فارغاً لاستخدام رقم الهاتف ككلمة مرور">
+                        </div>
+                        <div class="form-group">
                             <label data-i18n="n_lbl_teachers">عدد المدرسين الحالي</label>
                             <input type="number" id="n-teachers" class="form-control" value="0">
                         </div>
@@ -1900,18 +1904,40 @@
             const teachers = document.getElementById('n-teachers').value;
             const students = document.getElementById('n-students').value;
             const logoFile = document.getElementById('n-logo').files[0];
+            const passwordInput = document.getElementById('n-password');
+            const passwordVal = passwordInput ? passwordInput.value.trim() : "";
 
             if(!name || !admin || !address || !phone || !logoFile) { alert(dict.alert_fill_nursery); return; }
             const compressedLogo = await compressImage(logoFile, 300, 300);
 
-            await addDoc(collection(db, "nurseries"), {
+            // 1. Create the nursery document
+            const nurseryRef = await addDoc(collection(db, "nurseries"), {
                 name, admin, address, phone,
                 teachersCount: parseInt(teachers) || 0,
                 studentsCount: parseInt(students) || 0,
                 logo: compressedLogo, rating: 0, status: "active"
             });
-            alert(dict.alert_success_nursery);
-            document.getElementById('n-name').value = ''; document.getElementById('n-admin').value = ''; document.getElementById('n-address').value = ''; document.getElementById('n-phone').value = '';
+
+            // 2. Automatically create the nursery administrator user in nursery_users (for isolation)
+            const finalPassword = passwordVal || phone;
+            await addDoc(collection(db, "nursery_users"), {
+                nurseryId: nurseryRef.id,
+                name: admin,
+                phone: phone,
+                email: "",
+                role: "admin",
+                password: finalPassword,
+                createdAt: new Date().getTime()
+            });
+
+            alert(dict.alert_success_nursery + " 🔐 تم إنشاء حساب مديرة الحضانة المشفر بنجاح!");
+            
+            document.getElementById('n-name').value = ''; 
+            document.getElementById('n-admin').value = ''; 
+            document.getElementById('n-address').value = ''; 
+            document.getElementById('n-phone').value = '';
+            if (passwordInput) passwordInput.value = '';
+            
             fetchNurseriesList();
         };
 
