@@ -602,12 +602,20 @@
 
             <!-- مودال الشات المباشر -->
             <div class="modal-overlay" id="chatModal">
-                <div class="modal-content" style="height: 80vh;">
+                <div class="modal-content" style="height: 80vh; display: flex; flex-direction: column;">
                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                         <h3 style="color: var(--text-dark); font-size:16px;"><i class="fa-regular fa-comments" style="color: var(--primary-maroon);"></i> <span data-i18n="support_center">مركز الدعم والمراسلة</span></h3>
                         <i class="fa-solid fa-xmark" style="font-size: 20px; cursor: pointer;" onclick="window.closeChatModal()"></i>
                     </div>
-                    <div class="chat-messages" id="parent-chat-box"></div>
+                    <!-- اختيار جهة الاتصال والتواصل -->
+                    <div style="margin: 10px 0; display: flex; gap: 8px; align-items: center;">
+                        <label style="font-size: 12px; font-weight: bold; color: var(--text-gray);">جهة التواصل:</label>
+                        <select id="parent-chat-recipient" class="form-control" style="margin: 0; padding: 4px 8px; font-size: 12px; width: auto; border-radius: 8px;" onchange="window.switchParentChatChannel()">
+                            <option value="teacher_ahmed_001">معلم الفصل (مستر أحمد) 🧑‍🏫</option>
+                            <option value="super_admin">السوبر أدمن (الإدارة العليا والشكاوى) 👑</option>
+                        </select>
+                    </div>
+                    <div class="chat-messages" id="parent-chat-box" style="flex-grow: 1;"></div>
                     <div class="chat-input-area" style="display:flex; gap:10px;">
                         <input type="text" id="parent-chat-input" class="form-control" style="margin:0;" data-i18n-placeholder="chat_placeholder" placeholder="اكتب رسالتك...">
                         <button class="btn-primary" style="margin:0; width:auto;" onclick="window.sendParentMessage()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -1723,19 +1731,45 @@
         };
 
         // ================== 3. المراسلة الفورية المزامنة بالـ Real-time ==================
+        window.activeParentChatRecipient = "teacher_ahmed_001";
+
+        window.switchParentChatChannel = () => {
+            const selectEl = document.getElementById('parent-chat-recipient');
+            if(selectEl) {
+                window.activeParentChatRecipient = selectEl.value;
+            }
+            window.openChatModal();
+        };
+
         window.openChatModal = () => {
             document.getElementById('chatModal').style.display = 'flex';
             const box = document.getElementById('parent-chat-box');
             if(chatUnsubscribe) chatUnsubscribe();
 
+            const recipient = window.activeParentChatRecipient || "teacher_ahmed_001";
             const q = query(collection(db, "support_chats"), where("participants", "array-contains", myParentId));
             chatUnsubscribe = onSnapshot(q, (snapshot) => {
                 box.innerHTML = '';
+                const sortedMsgs = [];
                 snapshot.forEach(d => {
                     const msg = d.data();
-                    const msgClass = msg.senderId === myParentId ? 'sent' : 'received';
-                    box.innerHTML += `<div class="msg ${msgClass}">${msg.text}</div>`;
+                    if (msg.participants && msg.participants.includes(recipient)) {
+                        sortedMsgs.push(msg);
+                    }
                 });
+                
+                // Sort by timestamp ascending
+                sortedMsgs.sort((a,b) => a.timestamp - b.timestamp);
+
+                sortedMsgs.forEach(msg => {
+                    const msgClass = msg.senderId === myParentId ? 'sent' : 'received';
+                    const senderLabel = msg.senderId === myParentId ? '' : `<small style="display:block; font-size:9px; opacity:0.8; margin-bottom:2px; font-weight:bold;">${msg.senderName || 'المستقبل'}</small>`;
+                    box.innerHTML += `<div class="msg ${msgClass}">${senderLabel}<div>${msg.text}</div></div>`;
+                });
+
+                if (box.children.length === 0) {
+                    box.innerHTML = `<div style="text-align:center; color:var(--text-gray); margin-top:20px; font-size:12px;">أهلاً بك، يمكنك بدء المحادثة هنا للتواصل المباشر مع الطرف الآخر! 💬</div>`;
+                }
                 box.scrollTop = box.scrollHeight;
             });
         };
@@ -1745,9 +1779,11 @@
         window.sendParentMessage = async () => {
             const inp = document.getElementById('parent-chat-input');
             if(!inp.value.trim()) return;
+            const recipient = window.activeParentChatRecipient || "teacher_ahmed_001";
             await addDoc(collection(db, "support_chats"), {
                 senderId: myParentId,
-                participants: [myParentId, "teacher_ahmed_001"],
+                senderName: myParentName || "ولي أمر",
+                participants: [myParentId, recipient],
                 text: inp.value.trim(),
                 timestamp: new Date().getTime()
             });

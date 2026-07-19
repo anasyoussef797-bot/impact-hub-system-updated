@@ -1010,6 +1010,9 @@
                             <div class="user-item" onclick="window.loadChatWithUser('parent_yassin', 'ولي أمر: ياسين محمود')">
                                 👤 <span data-i18n="chat_sidebar_title_parent">ولي أمر: ياسين محمود</span>
                             </div>
+                            <div class="user-item" onclick="window.loadChatWithUser('super_admin', 'السوبر أدمن (الإدارة العليا والشكاوى) 👑')">
+                                👑 <span data-i18n="chat_sidebar_title_super">الدعم المركزي والسوبر أدمن</span>
+                            </div>
                         </div>
                         <div class="chat-main">
                             <div class="chat-messages" id="chat-messages-box">
@@ -1104,6 +1107,7 @@
                 chat_center_title: "مركز المراسلة الفورية 💬",
                 chat_sidebar_title_admin: "👩‍💼 إدارة الحضانة",
                 chat_sidebar_title_parent: "👤 ولي أمر: ياسين محمود",
+                chat_sidebar_title_super: "👑 الدعم المركزي والسوبر أدمن",
                 chat_start_prompt: "اختر محادثة للبدء",
                 chat_input_placeholder: "اكتب رسالتك هنا...",
                 dev_credit: "تم التطوير بواسطه impact hub egypt (esaia)",
@@ -1171,6 +1175,7 @@
                 chat_center_title: "Nursery Chat Room 💬",
                 chat_sidebar_title_admin: "👩‍💼 Nursery Admin",
                 chat_sidebar_title_parent: "👤 Parent: Yassin Mahmoud",
+                chat_sidebar_title_super: "👑 Central Support & Super Admin",
                 chat_start_prompt: "Select a conversation to start",
                 chat_input_placeholder: "Type your message here...",
                 dev_credit: "Developed by Impact Hub Egypt (ESAIA)",
@@ -1238,6 +1243,7 @@
                 chat_center_title: "Messagerie de la Crèche 💬",
                 chat_sidebar_title_admin: "👩‍💼 Admin Crèche",
                 chat_sidebar_title_parent: "👤 Parent: Yassin Mahmoud",
+                chat_sidebar_title_super: "👑 Support Central & Super Admin",
                 chat_start_prompt: "Sélectionnez une conversation pour commencer",
                 chat_input_placeholder: "Écrivez votre message ici...",
                 dev_credit: "Développé par Impact Hub Egypt (ESAIA)",
@@ -1305,6 +1311,7 @@
                 chat_center_title: "Kita-Chat-Zentrum 💬",
                 chat_sidebar_title_admin: "👩‍💼 Kita-Verwaltung",
                 chat_sidebar_title_parent: "👤 Eltern: Yassin Mahmoud",
+                chat_sidebar_title_super: "👑 Zentraler Support & Super Admin",
                 chat_start_prompt: "Wählen Sie einen Chat aus, um zu beginnen",
                 chat_input_placeholder: "Schreiben Sie Ihre Nachricht hier...",
                 dev_credit: "Entwickelt von Impact Hub Egypt (ESAIA)",
@@ -1876,56 +1883,66 @@
             document.getElementById('btn-end-class').style.display = 'none';
         };
 
-        // 4. نظام الشات الفوري المتزامن بالـ Real-time
-        window.loadChatWithUser = (userId, userName) => {
-            activeChatUserId = userId;
-            document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
-            if(event && event.currentTarget) event.currentTarget.classList.add('active');
-            
-            const msgBox = document.getElementById('chat-messages-box');
-            
-            const currentLang = localStorage.getItem('selected_language') || 'ar';
-            const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
+         // 4. نظام الشات الفوري المتزامن بالـ Real-time
+         window.loadChatWithUser = (userId, userName) => {
+             activeChatUserId = userId;
+             document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+             if(event && event.currentTarget) event.currentTarget.classList.add('active');
+             
+             const msgBox = document.getElementById('chat-messages-box');
+             
+             const currentLang = localStorage.getItem('selected_language') || 'ar';
+             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
+ 
+             msgBox.innerHTML = `<div style="text-align:center; color:var(--text-gray);">${dict.loading_messages}</div>`;
+ 
+             if(chatUnsubscribe) chatUnsubscribe();
+ 
+             const q = query(collection(db, "support_chats"), where("participants", "array-contains", myTeacherId));
+ 
+             chatUnsubscribe = onSnapshot(q, (snapshot) => {
+                 msgBox.innerHTML = '';
+                 let messagesFound = false;
+                 
+                 const sortedMsgs = [];
+                 snapshot.forEach(docData => {
+                     const msg = docData.data();
+                     if(msg.participants && msg.participants.includes(userId)) {
+                         sortedMsgs.push(msg);
+                     }
+                 });
 
-            msgBox.innerHTML = `<div style="text-align:center; color:var(--text-gray);">${dict.loading_messages}</div>`;
+                 // Sort chronologically
+                 sortedMsgs.sort((a, b) => a.timestamp - b.timestamp);
 
-            if(chatUnsubscribe) chatUnsubscribe();
-
-            const q = query(collection(db, "support_chats"), where("participants", "array-contains", myTeacherId));
-
-            chatUnsubscribe = onSnapshot(q, (snapshot) => {
-                msgBox.innerHTML = '';
-                let messagesFound = false;
-                
-                snapshot.forEach(docData => {
-                    const msg = docData.data();
-                    if(msg.participants.includes(userId)) {
-                        messagesFound = true;
-                        const msgClass = msg.senderId === myTeacherId ? 'sent' : 'received';
-                        msgBox.innerHTML += `<div class="msg ${msgClass}">${msg.text}</div>`;
-                    }
-                });
-                
-                if(!messagesFound) {
-                    msgBox.innerHTML = `<div class="msg received">${dict.welcome_chat}</div>`;
-                }
-                msgBox.scrollTop = msgBox.scrollHeight;
-            });
-        };
-
-        window.sendPrivateChatMessage = async () => {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if(!text || !activeChatUserId) return;
-
-            await addDoc(collection(db, "support_chats"), {
-                senderId: myTeacherId,
-                participants: [myTeacherId, activeChatUserId],
-                text: text,
-                timestamp: new Date().getTime()
-            });
-            input.value = '';
-        };
+                 sortedMsgs.forEach(msg => {
+                     messagesFound = true;
+                     const msgClass = msg.senderId === myTeacherId ? 'sent' : 'received';
+                     const label = msg.senderId === myTeacherId ? '' : `<small style="display:block; font-size:9px; opacity:0.8; margin-bottom:2px; font-weight:bold;">${msg.senderName || 'المرسل'}</small>`;
+                     msgBox.innerHTML += `<div class="msg ${msgClass}">${label}<div>${msg.text}</div></div>`;
+                 });
+                 
+                 if(!messagesFound) {
+                     msgBox.innerHTML = `<div class="msg received">${dict.welcome_chat}</div>`;
+                 }
+                 msgBox.scrollTop = msgBox.scrollHeight;
+             });
+         };
+ 
+         window.sendPrivateChatMessage = async () => {
+             const input = document.getElementById('chat-input');
+             const text = input.value.trim();
+             if(!text || !activeChatUserId) return;
+ 
+             await addDoc(collection(db, "support_chats"), {
+                 senderId: myTeacherId,
+                 senderName: myTeacherName || "معلم بالحضانة",
+                 participants: [myTeacherId, activeChatUserId],
+                 text: text,
+                 timestamp: new Date().getTime()
+             });
+             input.value = '';
+         };
 
         // 5. التايم لاين مع التفاعلات وصندوق التعليقات المباشر الكامل
         window.publishTeacherPost = async () => {
