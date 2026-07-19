@@ -1201,6 +1201,7 @@
         const db = getFirestore(app, "ai-studio-impacthubsystem-8d8e446d-b85a-48ae-a555-81773397809d");
         
         let allNurseriesMap = {};
+        let allNurseriesDataMap = {};
 
         // معجم اللغات الأربعة للوحة السوبر أدمن
         const superTranslations = {
@@ -1876,6 +1877,7 @@
                 const isFrozen = item.status === "frozen";
 
                 allNurseriesMap[id] = item.name;
+                allNurseriesDataMap[id] = item;
                 filterDropdown.innerHTML += `<option value="${id}">${item.name}</option>`;
 
                 let rowStyle = '';
@@ -2904,7 +2906,7 @@
                 let orders = [];
                 snap.forEach(docSnap => {
                     const data = docSnap.data();
-                    // Show only approved or shipped store purchases (no lessons)
+                    // Show bookstore purchases that have been approved or forwarded by nursery admin
                     const isLesson = data.items && data.items.some(item => 
                         item.name && (
                             item.name.includes("حجز درس") || 
@@ -2913,13 +2915,13 @@
                             item.name.includes("أونلاين")
                         )
                     );
-                    if (!isLesson && (data.status === 'approved' || data.status === 'shipped')) {
+                    if (!isLesson && data.status !== 'pending') {
                         orders.push({ id: docSnap.id, ...data });
                     }
                 });
 
-                // Sort by timestamp
-                orders.sort((a, b) => (b.approvedAt || 0) - (a.approvedAt || 0));
+                // Sort by approvedAt or timestamp
+                orders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || 0) - (a.approvedAt || a.timestamp?.seconds || 0));
 
                 if(orders.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: gray; padding: 20px;">${currentLang === 'ar' ? 'لا توجد طلبات شحن حالياً.' : 'No shipping orders currently.'}</td></tr>`;
@@ -2938,29 +2940,68 @@
                     }
 
                     // Map nursery ID to details for shipping
-                    let nurseryDetails = `<strong>${currentLang === 'ar' ? 'حضانة أجيال الغد' : 'Ajyal Al-Ghad'}</strong><br><small style="color:var(--text-gray);">${currentLang === 'ar' ? 'الإسكندرية - جليم' : 'Alexandria - Glim'}</small><br><small>01000000000</small>`;
-                    if (order.nurseryId && order.nurseryId !== "Ajyal_AlGhad_ID_001") {
-                        nurseryDetails = `<strong>${order.nurseryId}</strong>`;
+                    let nurseryDetails = `<strong>${currentLang === 'ar' ? 'حضانة مشتركة' : 'Nursery Partner'}</strong><br><small style="color:var(--text-gray);">${order.nurseryId || ''}</small>`;
+                    if (order.nurseryId) {
+                        const nurseryData = allNurseriesDataMap[order.nurseryId];
+                        if (nurseryData) {
+                            nurseryDetails = `
+                                <div style="line-height:1.4;">
+                                    <strong>${nurseryData.name}</strong><br>
+                                    <span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-map-marker-alt"></i> ${nurseryData.address || ''}</span><br>
+                                    <span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-phone"></i> ${nurseryData.phone || ''}</span>
+                                </div>
+                            `;
+                        } else {
+                            nurseryDetails = `<strong>${order.nurseryId}</strong>`;
+                        }
                     }
 
-                    const statusBadge = order.status === 'shipped' ? 
-                        `<span style="background:#d1fae5; color:#065f46; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${currentLang === 'ar' ? 'تم الشحن والتوصيل 🚚' : 'Shipped & Delivered 🚚'}</span>` : 
-                        `<span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${currentLang === 'ar' ? 'جاهز للشحن 📦' : 'Ready to Ship 📦'}</span>`;
+                    // Payment details
+                    const chosenMethod = order.paymentMethod || 'Cash';
+                    let methodDisplay = chosenMethod;
+                    if (chosenMethod === 'Cash') methodDisplay = 'نقداً بالمقر 💵';
+                    else if (chosenMethod === 'Vodafone Cash') methodDisplay = 'فودافون كاش 📱';
+                    else if (chosenMethod === 'InstaPay') methodDisplay = 'انستاباي 🏛️';
+                    else if (chosenMethod === 'cod') methodDisplay = 'الدفع عند الاستلام 🚚';
 
-                    const actionButton = order.status === 'shipped' ? 
-                        `<span style="color:var(--text-gray); font-size:12px;">${currentLang === 'ar' ? 'مكتمل' : 'Completed'}</span>` : 
-                        `<button class="btn-success" onclick="window.markOrderAsShipped('${order.id}')"><i class="fa-solid fa-truck-fast"></i> ${currentLang === 'ar' ? 'تأكيد الشحن والتسليم' : 'Confirm Dispatch'}</button>`;
+                    let proofBtnHtml = '';
+                    if (order.paymentProof) {
+                        proofBtnHtml = `
+                            <button class="btn-success" style="padding: 2px 6px; font-size: 10px; margin-top: 5px; display: inline-block; width: auto;" onclick="window.viewSuperPaymentProof('${order.id}', \`${order.paymentProof}\`)">
+                                <i class="fa-solid fa-image"></i> عرض سند الدفع 📸
+                            </button>
+                        `;
+                    }
+
+                    const statusDropdown = `
+                        <select onchange="window.updateOrderStatus('${order.id}', this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer; color: #1e293b;">
+                            <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم تلقي الطلب</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم شحن الطلب</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
+                        </select>
+                    `;
+
+                    const deleteBtn = `
+                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: #ef4444;" onclick="window.deleteCentralOrder('${order.id}')">
+                            <i class="fa-solid fa-trash-can"></i> حذف
+                        </button>
+                    `;
 
                     tbody.innerHTML += `
                         <tr style="border-bottom: 1px solid var(--border-color);">
                             <td>${nurseryDetails}</td>
-                            <td><strong>${order.parentName || 'ولي أمر'}</strong></td>
+                            <td>
+                                <strong>${order.parentName || 'ولي أمر'}</strong>
+                                <div style="font-size:11px; color:var(--text-gray); margin-top:4px;">الهاتف: ${order.parentPhone || 'غير مسجل'}</div>
+                            </td>
                             <td>
                                 ${itemsHtml}
                                 <div style="margin-top:4px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount} EGP</div>
+                                <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">الدفع: ${methodDisplay}</div>
+                                ${proofBtnHtml}
                             </td>
-                            <td>${statusBadge}</td>
-                            <td>${actionButton}</td>
+                            <td>${statusDropdown}</td>
+                            <td>${deleteBtn}</td>
                         </tr>
                     `;
                 });
@@ -2968,6 +3009,59 @@
                 console.error("Error fetching central orders:", err);
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
             }
+        };
+
+        window.updateOrderStatus = async (orderId, newStatus) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            try {
+                await updateDoc(doc(db, "orders", orderId), {
+                    status: newStatus,
+                    updatedAt: new Date().getTime()
+                });
+                alert(currentLang === 'ar' ? '✅ تم تحديث حالة الطلب بنجاح!' : '✅ Order status updated successfully!');
+                window.fetchCentralOrders();
+            } catch (err) {
+                console.error("Error updating order status:", err);
+                alert('حدث خطأ أثناء تحديث حالة الطلب.');
+            }
+        };
+
+        window.deleteCentralOrder = async (orderId) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const confirmMsg = currentLang === 'ar' ? 
+                'هل أنت متأكد من حذف هذا الطلب نهائياً من السيستم؟ لا يمكن التراجع عن هذا الإجراء.' : 
+                'Are you sure you want to permanently delete this order from the system? This action cannot be undone.';
+            
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                await deleteDoc(doc(db, "orders", orderId));
+                alert(currentLang === 'ar' ? '🗑️ تم حذف الطلب بنجاح!' : '🗑️ Order deleted successfully!');
+                window.fetchCentralOrders();
+            } catch (err) {
+                console.error("Error deleting order:", err);
+                alert('حدث خطأ أثناء حذف الطلب.');
+            }
+        };
+
+        window.viewSuperPaymentProof = (orderId, base64Data) => {
+            let modal = document.getElementById('super-payment-proof-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'super-payment-proof-modal';
+                modal.className = 'modal-overlay';
+                modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;';
+                modal.innerHTML = `
+                    <div style="max-width:90%; max-height:90%; position:relative; background:#fff; padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:#ef4444; cursor:pointer;" onclick="document.getElementById('super-payment-proof-modal').style.display='none'"></i>
+                        <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold; font-family:'Tajawal', sans-serif;">سند تحويل ولي الأمر 📸</h3>
+                        <img id="super-payment-proof-img" src="" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; border:2px solid var(--border-color);">
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            document.getElementById('super-payment-proof-img').src = base64Data;
+            modal.style.display = 'flex';
         };
 
         window.markOrderAsShipped = async (orderId) => {

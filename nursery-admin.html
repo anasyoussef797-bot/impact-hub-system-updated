@@ -517,6 +517,32 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- تتبع طلبات المتجر المحولة إلى السوبر أدمن -->
+                <div class="panel" style="margin-top: 25px;">
+                    <div class="panel-header" style="background: linear-gradient(135deg, var(--primary-maroon), #991b1b); color: white; display: flex; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="tracked_store_orders">متابعة طلبات المتجر المحولة (سجل الشحن) 📦</span></span>
+                        <small style="opacity: 0.9; font-weight: normal;"><i class="fa-solid fa-sync"></i> تحديث تلقائي</small>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>تاريخ الطلب</th>
+                                    <th>اسم ولي الأمر</th>
+                                    <th>المنتجات وقيمة الطلب</th>
+                                    <th>حالة الشحن والتسليم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forwarded-orders-body">
+                                <tr>
+                                    <td colspan="4" style="text-align: center; color: var(--text-gray);">جاري تحميل سجل طلبات المتجر...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- تابة إنشاء الحسابات -->
@@ -1014,6 +1040,7 @@
 
             // إعادة رسم جدول الطلبات بلغة العرض النشطة
             fetchPendingOrders();
+            fetchForwardedOrders();
         };
 
         // ================= 1. جلب الطلبات المعلقة =================
@@ -1095,6 +1122,92 @@
             });
         };
 
+        window.fetchForwardedOrders = () => {
+            const tbody = document.getElementById('forwarded-orders-body');
+            if(!tbody) return;
+
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = managerTranslations[currentLang] || managerTranslations.ar;
+
+            const q = query(collection(db, "orders"), where("nurseryId", "==", myNurseryId));
+            
+            onSnapshot(q, (snapshot) => {
+                tbody.innerHTML = '';
+                const forwardedOrders = [];
+                snapshot.forEach(docSnap => {
+                    const order = docSnap.data();
+                    if (order.status !== 'pending') {
+                        // Check if it's a lesson
+                        const isLesson = order.items && order.items.some(item => 
+                            item.name && (
+                                item.name.includes("حجز درس") || 
+                                item.name.includes("حصة") || 
+                                item.name.includes("مستر أحمد") || 
+                                item.name.includes("أونلاين")
+                            )
+                        );
+                        if (!isLesson) {
+                            forwardedOrders.push({ id: docSnap.id, ...order });
+                        }
+                    }
+                });
+
+                if(forwardedOrders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-gray); padding: 15px;">لا توجد طلبات متجر محولة حالياً.</td></tr>`;
+                    return;
+                }
+
+                // Sort by approvedAt or timestamp
+                forwardedOrders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || 0) - (a.approvedAt || a.timestamp?.seconds || 0));
+
+                forwardedOrders.forEach(order => {
+                    let itemsHtml = '';
+                    let totalAmount = 0;
+                    if(order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            itemsHtml += `<div>- ${item.name} (${item.price}${dict.egp_lbl || ' ج.م'})</div>`;
+                            totalAmount += item.price;
+                        });
+                    }
+
+                    const orderDate = order.timestamp && order.timestamp.toDate ? order.timestamp.toDate().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US') : 'Today';
+
+                    const chosenMethod = order.paymentMethod || 'Cash';
+                    let methodDisplay = chosenMethod;
+                    if (chosenMethod === 'Cash') methodDisplay = currentLang === 'ar' ? 'نقداً بالمقر 💵' : 'Cash 💵';
+                    else if (chosenMethod === 'Vodafone Cash') methodDisplay = currentLang === 'ar' ? 'فودافون كاش 📱' : 'Vodafone Cash 📱';
+                    else if (chosenMethod === 'InstaPay') methodDisplay = currentLang === 'ar' ? 'انستاباي 🏛️' : 'InstaPay 🏛️';
+                    else if (chosenMethod === 'cod') methodDisplay = currentLang === 'ar' ? 'الدفع عند الاستلام 🚚' : 'Cash on Delivery 🚚';
+
+                    let statusDisplay = '';
+                    if (order.status === 'approved') {
+                        statusDisplay = `<span style="background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-hourglass-half"></i> تم تلقي الطلب 📥</span>`;
+                    } else if (order.status === 'shipped') {
+                        statusDisplay = `<span style="background:#fef3c7; color:#d97706; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-truck-fast"></i> تم شحن الطلب 🚚</span>`;
+                    } else if (order.status === 'delivered') {
+                        statusDisplay = `<span style="background:#d1fae5; color:#065f46; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-circle-check"></i> تم التسليم 🎉</span>`;
+                    } else {
+                        statusDisplay = `<span style="background:#cbd5e1; color:#475569; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">${order.status}</span>`;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orderDate}</td>
+                            <td>
+                                <strong>${order.parentName}</strong>
+                                <div style="font-size:11px; color:var(--text-gray); margin-top:4px;">الدفع: ${methodDisplay}</div>
+                            </td>
+                            <td>
+                                ${itemsHtml}
+                                <div style="margin-top:5px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount}${dict.egp_lbl || ' ج.م'}</div>
+                            </td>
+                            <td>${statusDisplay}</td>
+                        </tr>
+                    `;
+                });
+            });
+        };
+
         window.viewPaymentProof = (orderId, base64Data) => {
             let modal = document.getElementById('payment-proof-modal');
             if (!modal) {
@@ -1123,8 +1236,6 @@
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = managerTranslations[currentLang] || managerTranslations.ar;
 
-            if(!confirm(`${dict.alert_confirm_prefix}${paymentMethod}${dict.alert_confirm_suffix}`)) return;
-
             isApproving = true;
             try {
                 // Fetch the order document first to inspect its items
@@ -1149,9 +1260,34 @@
                     );
                 }
 
+                let finalPaymentMethod = paymentMethod;
+                if (!isLesson) {
+                    const choice = confirm(currentLang === 'ar' ? 
+                        "هل تريد تحويل طلب الشراء إلى السوبر أدمن؟\n\n- اضغط OK (موافق) لتأكيد وتحويل الطلب بطريقة الدفع الحالية المرسلة من ولي الأمر.\n- اضغط Cancel (إلغاء) إذا كنت تريد تعديله ليكون الدفع عند الاستلام (COD)." :
+                        "Forward purchase order to Super Admin?\n\n- Click OK to forward using parent's current payment method.\n- Click Cancel to change payment method to Cash on Delivery (COD)."
+                    );
+                    if (!choice) {
+                        const codConfirm = confirm(currentLang === 'ar' ? 
+                            "هل تريد تأكيد تغيير طريقة الدفع وتحويله كـ 'الدفع عند الاستلام (COD)'؟" :
+                            "Change payment method and forward as Cash on Delivery (COD)?"
+                        );
+                        if (codConfirm) {
+                            finalPaymentMethod = 'cod';
+                        } else {
+                            isApproving = false;
+                            return; // cancel entirely
+                        }
+                    }
+                } else {
+                    if(!confirm(`${dict.alert_confirm_prefix}${paymentMethod}${dict.alert_confirm_suffix}`)) {
+                        isApproving = false;
+                        return;
+                    }
+                }
+
                 await updateDoc(doc(db, "orders", orderId), { 
                     status: "approved",
-                    paymentMethod: paymentMethod,
+                    paymentMethod: finalPaymentMethod,
                     approvedAt: new Date().getTime()
                 });
 

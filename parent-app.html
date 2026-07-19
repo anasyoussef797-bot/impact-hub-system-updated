@@ -439,6 +439,18 @@
                 <!-- 4. متجر الحضانة -->
                 <div id="marketplace" class="tab-content">
                     <h3 class="section-title" data-i18n="marketplace_title">متجر الحضانة والكتب</h3>
+                    
+                    <!-- طلبات الشراء الخاصة بولي الأمر -->
+                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: #fffcf0 !important; border: 1.5px solid #fef08a;">
+                        <h4 style="font-size: 14px; margin-bottom: 8px; color: #854d0e; font-weight: bold; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                            <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="my_orders_title">طلباتي وحالة الشحن والتوصيل 🚚</span></span>
+                            <small style="font-size: 11px; font-weight: normal; color: #a16207; cursor: pointer; background: #fef08a; padding: 2px 6px; border-radius: 4px;" onclick="window.fetchParentOrders()"><i class="fa-solid fa-sync"></i> تحديث</small>
+                        </h4>
+                        <div id="parent-orders-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
+                            <div style="font-size: 12px; color: var(--text-gray); text-align: center; padding: 10px;" data-i18n="no_orders_yet">لا توجد طلبات شراء حالية.</div>
+                        </div>
+                    </div>
+
                     <div class="products-grid" id="live-products"></div>
                 </div>
 
@@ -2210,6 +2222,93 @@
             });
         };
 
+        window.fetchParentOrders = () => {
+            const listEl = document.getElementById('parent-orders-list');
+            if(!listEl) return;
+
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
+            const q = query(collection(db, "orders"), where("parentId", "==", myParentId));
+
+            onSnapshot(q, (snapshot) => {
+                listEl.innerHTML = '';
+                if(snapshot.empty) {
+                    listEl.innerHTML = `<div style="font-size: 12px; color: var(--text-gray); text-align: center; padding: 10px;">${currentLang === 'ar' ? 'لا توجد طلبات شراء حالية.' : 'No active purchase orders.'}</div>`;
+                    return;
+                }
+
+                let orders = [];
+                snapshot.forEach(docSnap => {
+                    const order = docSnap.data();
+                    // exclude lesson orders
+                    const isLesson = order.items && order.items.some(item => 
+                        item.name && (
+                            item.name.includes("حجز درس") || 
+                            item.name.includes("حصة") || 
+                            item.name.includes("مستر أحمد") || 
+                            item.name.includes("أونلاين")
+                        )
+                    );
+                    if (!isLesson) {
+                        orders.push({ id: docSnap.id, ...order });
+                    }
+                });
+
+                if(orders.length === 0) {
+                    listEl.innerHTML = `<div style="font-size: 12px; color: var(--text-gray); text-align: center; padding: 10px;">${currentLang === 'ar' ? 'لا توجد طلبات شراء حالية.' : 'No active purchase orders.'}</div>`;
+                    return;
+                }
+
+                // Sort by approvedAt or timestamp
+                orders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || 0) - (a.approvedAt || a.timestamp?.seconds || 0));
+
+                orders.forEach(order => {
+                    let itemsNames = (order.items || []).map(i => i.name).join(', ');
+                    let totalVal = (order.items || []).reduce((acc, i) => acc + (i.price || 0), 0);
+
+                    let statusText = '';
+                    let statusBg = '';
+                    let statusColor = '';
+
+                    if (order.status === 'pending') {
+                        statusText = currentLang === 'ar' ? 'قيد مراجعة الحضانة ⏳' : 'Pending Nursery ⏳';
+                        statusBg = '#fef3c7';
+                        statusColor = '#b45309';
+                    } else if (order.status === 'approved') {
+                        statusText = currentLang === 'ar' ? 'تم تلقي الطلب 📥' : 'Order Received 📥';
+                        statusBg = '#e0f2fe';
+                        statusColor = '#0369a1';
+                    } else if (order.status === 'shipped') {
+                        statusText = currentLang === 'ar' ? 'تم شحن الطلب 🚚' : 'Order Shipped 🚚';
+                        statusBg = '#fef9c3';
+                        statusColor = '#a16207';
+                    } else if (order.status === 'delivered') {
+                        statusText = currentLang === 'ar' ? 'تم التسليم 🎉' : 'Delivered 🎉';
+                        statusBg = '#d1fae5';
+                        statusColor = '#065f46';
+                    } else {
+                        statusText = order.status;
+                        statusBg = '#cbd5e1';
+                        statusColor = '#475569';
+                    }
+
+                    listEl.innerHTML += `
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; box-shadow: var(--shadow-sm);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                                <strong style="font-size: 12px; color: var(--text-dark);">${itemsNames}</strong>
+                                <span style="font-size: 10px; font-weight: bold; background: ${statusBg}; color: ${statusColor}; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${statusText}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-gray);">
+                                <span>${currentLang === 'ar' ? 'القيمة:' : 'Price:'} <strong>${totalVal} ج.م</strong></span>
+                                <span>#${order.id.slice(0, 6)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        };
+
         window.playGame = async (gameTitle, assignmentId = null) => {
             document.getElementById('game-player-screen').style.display = 'flex';
             document.getElementById('game-player-title').innerText = gameTitle;
@@ -2287,6 +2386,7 @@
             fetchTimelineFeed();
             loadMarketplace();
             fetchHomeworkAssignments();
+            window.fetchParentOrders();
             window.listenToActiveLiveClasses();
             window.loadParentCameras(); // تهيئة الكاميرات المناسبة فور الدخول
         };
@@ -2593,6 +2693,9 @@
 
             // Load child accessibility profile settings from Firestore
             window.loadKidAccessibilityProfile();
+
+            // Load parent store orders
+            window.fetchParentOrders();
         };
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
