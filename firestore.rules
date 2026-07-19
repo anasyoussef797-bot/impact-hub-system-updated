@@ -177,6 +177,10 @@ service cloud.firestore {
       allow read, write: if true;
     }
     
+    match /independent_skills_videos/{docId} {
+      allow read, write: if true;
+    }
+    
     match /nursery_profile/{docId} {
       allow read, write: if true;
     }

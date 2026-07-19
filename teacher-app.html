@@ -884,6 +884,7 @@
 
             <!-- تابة الملف الشخصي وجدول المواعيد -->
             <div id="profile-tab" class="tab-content">
+                <!-- تحديث الصورة الشخصية -->
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fa-solid fa-camera"></i> 
@@ -895,6 +896,86 @@
                     </div>
                 </div>
 
+                <!-- لوحة تعديل البيانات الشخصية والمادة -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <span>تعديل البيانات الشخصية والمهنية ✏️</span>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 5px; color: var(--text-dark);">الاسم بالكامل</label>
+                        <input type="text" id="edit-profile-name" class="form-control" placeholder="مثال: أ / أحمد علي">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 5px; color: var(--text-dark);">المادة / التخصص الدراسي</label>
+                        <input type="text" id="edit-profile-subject" class="form-control" placeholder="مثال: معلم لغة إنجليزية وأخصائي مناهج">
+                    </div>
+                    <button class="btn-primary" onclick="window.saveTeacherInfo()">
+                        <i class="fa-solid fa-floppy-disk"></i> حفظ البيانات الشخصية
+                    </button>
+                </div>
+
+                <!-- لوحة التحويل إلى حساب مستقل وتأكيد المهارات -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-crown"></i>
+                        <span>تحويل الحساب إلى حساب مستقل (Freelance) 🌟</span>
+                    </div>
+                    <div id="independent-status-box" style="padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right;">
+                        <!-- يتم ملء هذا الجزء برمجياً بالاعتماد على حالة الحساب مستقل أم لا -->
+                    </div>
+                    
+                    <div id="independent-conversion-btn-area">
+                        <!-- زر تحويل الحساب يظهر هنا إذا لم يكن الحساب مستقلاً بعد -->
+                    </div>
+                </div>
+
+                <!-- لوحة متطلبات السيرة الذاتية وقياس المهارات (تظهر فقط عند تفعيل الحساب المستقل) -->
+                <div id="independent-skills-panel" class="panel" style="display: none;">
+                    <div class="panel-header">
+                        <i class="fa-solid fa-clipboard-question"></i>
+                        <span>سيرتك الذاتية وقياس مهارات التدريس (رفع 5 حصص تعليمية) 📋</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px; line-height: 1.6;">
+                        تشترط المؤسسة لقياس مهارات المعلمين المستقلين وتفعيل حسابهم المستقل بالكامل أن يقوم المعلم بتسجيل ورفع <strong>5 حصص تعليمية نموذجية</strong> على المنصة، على ألا تقل مدة كل حصة عن <strong>30 دقيقة</strong> لتكون جزءاً أساسياً من السيرة الذاتية الفنية المعروضة لأولياء الأمور.
+                    </p>
+
+                    <!-- شريط التقدم -->
+                    <div style="margin-bottom: 20px; background: #e2e8f0; border-radius: 10px; height: 24px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
+                        <div id="skills-progress-bar" style="background: linear-gradient(135deg, var(--kid-green), var(--primary-maroon)); height: 100%; position: absolute; left: 0; top: 0; width: 0%; transition: width 0.4s ease;"></div>
+                        <span id="skills-progress-text" style="position: relative; z-index: 2; font-weight: 800; font-size: 12px; color: var(--text-dark);">0 من 5 حصص مرفوعة</span>
+                    </div>
+
+                    <!-- استمارة إضافة حصة للسيرة الذاتية -->
+                    <div style="background: rgba(128,0,0,0.03); padding: 15px; border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 20px;">
+                        <h4 style="font-size: 13px; font-weight: 900; color: var(--primary-maroon); margin-bottom: 10px;">إضافة حصة مسجلة جديدة للسيرة الذاتية:</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; display: block; margin-bottom: 4px;">عنوان الحصة التعليمية</label>
+                                <input type="text" id="skill-video-title" class="form-control" placeholder="مثال: شرح الحروف الإنجليزية للمستوى الأول" style="padding: 8px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; display: block; margin-bottom: 4px;">رابط فيديو الحصة (أو ملف محاكي)</label>
+                                <input type="text" id="skill-video-url" class="form-control" placeholder="رابط يوتيوب أو فيديو الحصة..." style="padding: 8px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; font-weight: bold; display: block; margin-bottom: 4px;">مدة الحصة (بالدقائق)</label>
+                                <input type="number" id="skill-video-duration" class="form-control" placeholder="30 فأكثر" style="padding: 8px;" min="1">
+                            </div>
+                        </div>
+                        <button class="btn-primary" style="padding: 8px 16px; font-size: 12px; width: auto;" onclick="window.addSkillVideo()">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> رفع الحصة وحفظها بالملف
+                        </button>
+                    </div>
+
+                    <!-- قائمة الحصص المرفوعة حالياً -->
+                    <h4 style="font-size: 13px; font-weight: 900; color: var(--text-dark); margin-bottom: 10px;">الحصص المسجلة بملفك الحالي:</h4>
+                    <div id="skills-videos-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                        <!-- يتم تعبئتها ديناميكياً -->
+                    </div>
+                </div>
+
+                <!-- لوحة ساعات التوفر والـ Availability -->
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fa-solid fa-clock"></i> 
@@ -921,6 +1002,7 @@
                     <div class="slots-grid" id="slots-container"></div>
                 </div>
 
+                <!-- لوحة تقييمات أولياء الأمور -->
                 <div class="panel">
                     <div class="panel-header">
                         <i class="fa-solid fa-star"></i> 
@@ -983,11 +1065,12 @@
                                     <th style="padding: 12px; font-weight: 800;">موعد الحصة</th>
                                     <th style="padding: 12px; font-weight: 800;">جهة التحصيل المالي</th>
                                     <th style="padding: 12px; font-weight: 800;">حالة الحصة</th>
+                                    <th style="padding: 12px; font-weight: 800;">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="teacher-booked-classes-tbody">
                                 <tr>
-                                    <td colspan="4" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري تحميل الحصص المجدولة وجهات التحصيل... ⏳</td>
+                                    <td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري تحميل الحصص المجدولة وجهات التحصيل... ⏳</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1406,16 +1489,219 @@
             // Then fetch from Firestore to stay in sync
             try {
                 const docSnap = await getDoc(doc(db, "teachers_profile", myTeacherId));
-                if (docSnap.exists() && docSnap.data().avatarUrl) {
-                    const avatarUrl = docSnap.data().avatarUrl;
-                    document.getElementById('my-profile-pic').src = avatarUrl;
-                    localStorage.setItem(`teacher_avatar_${myTeacherId}`, avatarUrl);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.name) {
+                        myName = data.name;
+                        document.getElementById('my-name-display').innerText = myName;
+                        const inputName = document.getElementById('edit-profile-name');
+                        if (inputName) inputName.value = myName;
+                    }
+                    if (data.subject) {
+                        document.getElementById('my-role-display').innerText = data.subject;
+                        const inputSub = document.getElementById('edit-profile-subject');
+                        if (inputSub) inputSub.value = data.subject;
+                    }
+                    if (data.avatarUrl) {
+                        document.getElementById('my-profile-pic').src = data.avatarUrl;
+                        localStorage.setItem(`teacher_avatar_${myTeacherId}`, data.avatarUrl);
+                    }
+                    window.isIndependent = !!data.isIndependent;
+                } else {
+                    const inputName = document.getElementById('edit-profile-name');
+                    if (inputName) inputName.value = myName;
+                    const inputSub = document.getElementById('edit-profile-subject');
+                    if (inputSub) inputSub.value = "أخصائي المناهج والتعليم التفاعلي";
+                    window.isIndependent = false;
                 }
             } catch (err) {
-                console.error("Error loading avatar:", err);
+                console.error("Error loading profile:", err);
             }
 
+            window.renderIndependentProfileSection();
             fetchTeacherRatings();
+        };
+
+        window.saveTeacherInfo = async () => {
+            const nameInput = document.getElementById('edit-profile-name');
+            const subjectInput = document.getElementById('edit-profile-subject');
+            if (!nameInput || !subjectInput) return;
+
+            const name = nameInput.value.trim();
+            const subject = subjectInput.value.trim();
+
+            if (!name || !subject) {
+                alert("يرجى إدخال الاسم بالكامل والمادة التعليمية أولاً!");
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, "teachers_profile", myTeacherId), {
+                    name: name,
+                    subject: subject,
+                    teacherId: myTeacherId,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+
+                myName = name;
+                document.getElementById('my-name-display').innerText = myName;
+                document.getElementById('my-role-display').innerText = subject;
+
+                alert("✅ تم حفظ وتحديث بيانات ملفك الشخصي والمهني بنجاح!");
+            } catch (err) {
+                console.error("Error saving teacher info:", err);
+                alert("حدث خطأ أثناء حفظ البيانات.");
+            }
+        };
+
+        window.renderIndependentProfileSection = async () => {
+            const statusBox = document.getElementById('independent-status-box');
+            const btnArea = document.getElementById('independent-conversion-btn-area');
+            const skillsPanel = document.getElementById('independent-skills-panel');
+            
+            if (!statusBox || !btnArea || !skillsPanel) return;
+
+            if (window.isIndependent) {
+                // Fetch skill videos
+                const q = query(collection(db, "independent_skills_videos"), where("teacherId", "==", myTeacherId));
+                const snap = await getDocs(q);
+                const count = snap.size;
+                const progressPercent = Math.min((count / 5) * 100, 100);
+
+                const progressBar = document.getElementById('skills-progress-bar');
+                const progressText = document.getElementById('skills-progress-text');
+                if (progressBar) progressBar.style.width = `${progressPercent}%`;
+                if (progressText) progressText.innerText = `${count} من 5 حصص مرفوعة`;
+
+                const listContainer = document.getElementById('skills-videos-list');
+                if (listContainer) {
+                    listContainer.innerHTML = '';
+                    if (snap.empty) {
+                        listContainer.innerHTML = `<p style="text-align: center; font-size: 12px; color: var(--text-gray); padding: 10px;">لا توجد حصص مرفوعة بعد. ابدأ بإضافة حصة لمشاركتها بملفك الفني!</p>`;
+                    } else {
+                        snap.forEach(docSnap => {
+                            const v = docSnap.data();
+                            const vId = docSnap.id;
+                            listContainer.innerHTML += `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:white; padding:10px; border:1px solid var(--border-color); border-radius:8px; font-size:13px;">
+                                    <div>
+                                        <strong style="color:var(--text-dark);">${v.title}</strong>
+                                        <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">
+                                            <i class="fa-solid fa-clock"></i> المدة: ${v.duration} دقيقة | <a href="${v.videoUrl}" target="_blank" style="color:var(--soft-maroon); text-decoration:underline;">معاينة الفيديو</a>
+                                        </div>
+                                    </div>
+                                    <button onclick="window.deleteSkillVideo('${vId}')" class="btn-danger" style="padding:4px 8px; font-size:11px; margin:0; border-radius:6px; background:#fee2e2; color:#ef4444; border:none; box-shadow:none;">
+                                        <i class="fa-solid fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            `;
+                        });
+                    }
+                }
+
+                skillsPanel.style.display = 'block';
+
+                if (count >= 5) {
+                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #ecfdf5; border: 1.5px solid #10b981; color: #047857;';
+                    statusBox.innerHTML = `
+                        <div style="font-weight: 800; font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-circle-check"></i> حساب مستقل نشط بالكامل (Active & Verified) 👑</div>
+                        <p style="font-size:12.5px;">لقد قمت بإكمال متطلبات السيرة الذاتية (رفع ${count} حصص تعليمية نموذجية لا تقل عن 30 دقيقة). حسابك المستقل معتمد الآن من قبل السوبر أدمن وتظهر عليه الحصص المحجوزة بالكامل.</p>
+                    `;
+                    btnArea.innerHTML = '';
+                } else {
+                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #fffbeb; border: 1.5px solid #f59e0b; color: #b45309;';
+                    statusBox.innerHTML = `
+                        <div style="font-weight: 800; font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-circle-exclamation"></i> حساب مستقل نشط جزئياً (في انتظار تلبية الشروط) ⚠️</div>
+                        <p style="font-size:12.5px;">لقد قمت بتحويل حسابك إلى مستقل بنجاح! ولكن <strong>يشترط عليك تسجيل ورفع 5 حصص تعليمية نموذجية (المدة لا تقل عن 30 دقيقة لكل حصة)</strong> لتفعيل ملفك بالكامل لقياس المهارات من قبل المؤسسة والسوبر أدمن.</p>
+                    `;
+                    btnArea.innerHTML = '';
+                }
+            } else {
+                skillsPanel.style.display = 'none';
+                statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #f1f5f9; border: 1.5px solid var(--border-color); color: var(--text-gray);';
+                statusBox.innerHTML = `
+                    <div style="font-weight: 800; font-size: 15px; color: var(--text-dark); margin-bottom: 4px;"><i class="fa-solid fa-school"></i> حساب محلي تابع لحضانة معينة</div>
+                    <p style="font-size:12.5px; color: var(--text-gray);">حسابك حالياً مرتبط بحضانتك المحلية فقط. يمكنك تحويل حسابك إلى حساب مستقل لتقديم حصص فردية وإضافية أونلاين عبر كامل شبكة المنصة وتلقي حجوزات مباشرة من أولياء الأمور ومن السوبر أدمن.</p>
+                `;
+                btnArea.innerHTML = `
+                    <button class="btn-primary" style="background: linear-gradient(135deg, var(--kid-purple), var(--soft-maroon));" onclick="window.convertToIndependent()">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i> تحويل الحساب إلى حساب مستقل 🌟
+                    </button>
+                `;
+            }
+        };
+
+        window.convertToIndependent = async () => {
+            if (!confirm("هل أنت متأكد من تحويل حسابك إلى حساب مستقل (Freelance)؟ سيطلب منك رفع 5 حصص لملف السيرة الذاتية لقياس المهارات.")) return;
+            try {
+                await setDoc(doc(db, "teachers_profile", myTeacherId), {
+                    isIndependent: true,
+                    teacherId: myTeacherId,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+
+                window.isIndependent = true;
+                alert("🎉 مبارك! تم تحويل الحساب إلى مستقل بنجاح. يرجى البدء في تسجيل ورفع الـ 5 حصص المطلوبة لتفعيل الحساب بالكامل.");
+                window.renderIndependentProfileSection();
+            } catch (err) {
+                console.error("Error converting account:", err);
+                alert("حدث خطأ أثناء تحويل الحساب.");
+            }
+        };
+
+        window.addSkillVideo = async () => {
+            const titleInput = document.getElementById('skill-video-title');
+            const urlInput = document.getElementById('skill-video-url');
+            const durationInput = document.getElementById('skill-video-duration');
+
+            if (!titleInput || !urlInput || !durationInput) return;
+
+            const title = titleInput.value.trim();
+            const url = urlInput.value.trim();
+            const durationStr = durationInput.value.trim();
+
+            if (!title || !url || !durationStr) {
+                alert("يرجى ملء جميع الحقول المطلوبة لإضافة الحصة!");
+                return;
+            }
+
+            const duration = parseInt(durationStr, 10);
+            if (isNaN(duration) || duration < 30) {
+                alert("⚠️ تشترط المؤسسة ألا تقل مدة الحصة المسجلة عن 30 دقيقة كحد أدنى لقياس المهارات!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "independent_skills_videos"), {
+                    teacherId: myTeacherId,
+                    title: title,
+                    videoUrl: url,
+                    duration: duration,
+                    createdAt: new Date().getTime()
+                });
+
+                titleInput.value = '';
+                urlInput.value = '';
+                durationInput.value = '';
+
+                alert("✅ تم رفع وحفظ الحصة بنجاح في ملف قياس المهارات الخاص بك!");
+                window.renderIndependentProfileSection();
+            } catch (err) {
+                console.error("Error adding skill video:", err);
+                alert("حدث خطأ أثناء إضافة الفيديو.");
+            }
+        };
+
+        window.deleteSkillVideo = async (videoId) => {
+            if (!confirm("هل أنت متأكد من حذف هذه الحصة المسجلة من ملف السيرة الذاتية؟")) return;
+            try {
+                await deleteDoc(doc(db, "independent_skills_videos", videoId));
+                alert("❌ تم حذف الحصة بنجاح.");
+                window.renderIndependentProfileSection();
+            } catch (err) {
+                console.error("Error deleting skill video:", err);
+                alert("حدث خطأ أثناء حذف الفيديو.");
+            }
         };
 
         window.updateProfilePicture = async () => {
@@ -1463,10 +1749,56 @@
             container.innerHTML = '';
             const q = query(collection(db, "teacher_availability"), where("teacherId", "==", myTeacherId));
             const snap = await getDocs(q);
-            snap.forEach(docData => {
-                const data = docData.data();
-                container.innerHTML += `<div class="slot-card"><div>${data.day}</div><div style="font-size:12px; color:var(--text-gray); margin-top:4px;">${data.time}</div></div>`;
+            snap.forEach(docSnap => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                container.innerHTML += `
+                    <div class="slot-card" style="display:flex; flex-direction:column; justify-content:space-between; align-items:center; gap:8px;">
+                        <div>
+                            <strong style="color:var(--primary-maroon); font-size:14px;">${data.day}</strong>
+                        </div>
+                        <div style="font-size:12px; color:var(--text-gray); font-weight: bold;">
+                            ${data.time}
+                        </div>
+                        <div style="display:flex; gap:6px; margin-top:8px; width:100%;">
+                            <button onclick="window.editAvailabilitySlot('${id}', '${data.day}', '${data.time}')" class="btn-outline" style="padding:4px 8px; font-size:11px; flex:1; margin:0; border-width:1px;">
+                                <i class="fa-solid fa-edit"></i> تعديل
+                            </button>
+                            <button onclick="window.deleteAvailabilitySlot('${id}')" class="btn-danger" style="padding:4px 8px; font-size:11px; flex:1; margin:0; border-radius:10px; background:linear-gradient(135deg, #ef4444, #dc2626); box-shadow:none;">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    </div>
+                `;
             });
+        };
+
+        window.deleteAvailabilitySlot = async (slotId) => {
+            if (!confirm("هل أنت متأكد من حذف هذا الموعد؟")) return;
+            try {
+                await deleteDoc(doc(db, "teacher_availability", slotId));
+                fetchAvailabilitySlots();
+            } catch (err) {
+                console.error("Error deleting slot:", err);
+            }
+        };
+
+        window.editAvailabilitySlot = async (slotId, currentDay, currentTime) => {
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const newDay = prompt(currentLang === 'ar' ? 'تعديل اليوم (مثال: الإثنين):' : 'Edit day:', currentDay);
+            if (newDay === null) return;
+            const newTime = prompt(currentLang === 'ar' ? 'تعديل الوقت (مثال: من 4 إلى 6 مساءً):' : 'Edit time:', currentTime);
+            if (newTime === null || newTime.trim() === '') return;
+
+            try {
+                await updateDoc(doc(db, "teacher_availability", slotId), {
+                    day: newDay,
+                    time: newTime
+                });
+                fetchAvailabilitySlots();
+            } catch (err) {
+                console.error("Error updating slot:", err);
+            }
         };
 
         // 3. الحصص الأونلاين وربط غرف غيتسي الآمنة مع تطبيق ولي الأمر
@@ -1558,7 +1890,7 @@
             if (snapshot.empty) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="4" style="text-align: center; padding: 30px; color: var(--text-gray); font-weight: bold;">
+                        <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-gray); font-weight: bold;">
                             لا يوجد حصص مجدولة قريباً 📅
                         </td>
                     </tr>
@@ -1569,6 +1901,7 @@
             tbody.innerHTML = '';
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
+                const id = docSnap.id;
                 
                 let paymentSourceBadge = '';
                 if (data.isLandingBooking || data.nurseryId === 'online_academy') {
@@ -1585,11 +1918,37 @@
                     `;
                 }
 
-                const statusLabel = `
-                    <span style="background: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800;">
-                        قادمة ⏳
-                    </span>
-                `;
+                let statusLabel = '';
+                let actionsHtml = '';
+
+                if (data.status === 'completed') {
+                    statusLabel = `
+                        <span style="background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-check-double"></i> مكتملة ✅
+                        </span>
+                    `;
+                    actionsHtml = `
+                        <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:#fee2e2; color:#ef4444; border:none;">
+                            <i class="fa-solid fa-trash"></i> حذف الحصة
+                        </button>
+                    `;
+                } else {
+                    statusLabel = `
+                        <span style="background: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-hourglass-half"></i> قادمة ⏳
+                        </span>
+                    `;
+                    actionsHtml = `
+                        <div style="display:flex; gap:6px;">
+                            <button onclick="window.completeBookedClass('${id}')" class="btn-primary" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; background:linear-gradient(135deg, var(--kid-green), var(--kid-green)); box-shadow:none;">
+                                <i class="fa-solid fa-check"></i> اكتمال ✅
+                            </button>
+                            <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:#fee2e2; color:#ef4444; border:none;">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    `;
+                }
 
                 tbody.innerHTML += `
                     <tr style="border-bottom: 1px solid var(--border-color);">
@@ -1599,9 +1958,30 @@
                         </td>
                         <td style="padding: 12px;">${paymentSourceBadge}</td>
                         <td style="padding: 12px;">${statusLabel}</td>
+                        <td style="padding: 12px;">${actionsHtml}</td>
                     </tr>
                 `;
             });
+        };
+
+        window.completeBookedClass = async (classId) => {
+            if (!confirm("هل أنت متأكد من تغيير حالة هذه الحصة بعد الانتهاء منها إلى مكتملة؟")) return;
+            try {
+                await updateDoc(doc(db, "booked_classes", classId), { status: "completed" });
+                alert("✅ تم تحديث حالة الحصة بنجاح إلى مكتملة!");
+            } catch (err) {
+                console.error("Error completing class:", err);
+            }
+        };
+
+        window.deleteBookedClass = async (classId) => {
+            if (!confirm("هل أنت متأكد من حذف هذه الحصة نهائياً من السيستم؟")) return;
+            try {
+                await deleteDoc(doc(db, "booked_classes", classId));
+                alert("❌ تم حذف الحصة بنجاح من السيستم.");
+            } catch (err) {
+                console.error("Error deleting class:", err);
+            }
         };
 
         window.fetchBookedClasses = () => {
@@ -1611,20 +1991,24 @@
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
 
-            const q = query(collection(db, "booked_classes"), where("teacherId", "==", myTeacherId), where("status", "==", "upcoming"));
+            const q = query(collection(db, "booked_classes"), where("teacherId", "==", myTeacherId));
             
             onSnapshot(q, (snap) => {
                 select.innerHTML = `<option value="">${dict.choose_class_opt}</option>`;
                 window.teacherBookedClassesMap.clear();
 
-                if(snap.empty) {
-                    select.innerHTML = `<option value="">${dict.no_booked}</option>`;
-                } else {
-                    snap.forEach(docData => {
-                        const data = docData.data();
-                        window.teacherBookedClassesMap.set(docData.id, data);
+                let hasUpcoming = false;
+                snap.forEach(docData => {
+                    const data = docData.data();
+                    window.teacherBookedClassesMap.set(docData.id, data);
+                    if (data.status === 'upcoming') {
+                        hasUpcoming = true;
                         select.innerHTML += `<option value="${docData.id}">${data.studentName} - ${data.date} (${data.time})</option>`;
-                    });
+                    }
+                });
+
+                if(!hasUpcoming) {
+                    select.innerHTML = `<option value="">${dict.no_booked}</option>`;
                 }
 
                 // Render beautiful list showing payment/collection source!
@@ -1637,7 +2021,7 @@
                         if (!isInitialBookedClassesLoad) {
                             if (data.isLandingBooking || data.nurseryId === 'online_academy') {
                                 window.showTeacherToast(
-                                    "💳 حجز حصة أونلاين جديدة (الموقع الرئيسي)",
+                                     "💳 حجز حصة أونلاين جديدة (الموقع الرئيسي)",
                                     `تم حجز حصة للطالب: <b>${data.studentName || 'طفل'}</b> في موعد: <b>${data.date || ''} (${data.time || ''})</b>.<br>جهة التحصيل: <b>أكاديمية أونلاين</b>.`,
                                     "online_academy"
                                 );
