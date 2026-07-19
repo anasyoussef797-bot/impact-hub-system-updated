@@ -30,6 +30,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -39,6 +40,20 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            overscroll-behavior-y: contain;
+        }
+
+        input, textarea, p, span, h1, h2, h3, h4, h5, h6, th, td {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        button, .btn-primary, .btn-danger, .btn-outline, .nav-item, .lang-flag-btn, .game-card, .menu-toggle {
+            touch-action: manipulation;
+            cursor: pointer;
+            min-height: 44px;
         }
 
         /* حاوي التطبيق بالكامل */
@@ -46,6 +61,7 @@
             display: flex;
             width: 100%;
             min-height: 100vh;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* الشريط الجانبي */
