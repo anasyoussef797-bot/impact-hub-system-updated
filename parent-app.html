@@ -2,12 +2,28 @@
 <html lang="ar" dir="rtl" id="html-root">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
+    <meta name="description" content="Impact Hub - تطبيق ولي الأمر لمتابعة الطفل والأنشطة والبث المباشر.">
+    <meta name="theme-color" content="#002f6c">
     <title>Impact Hub - Parent App (Full System with Vercel Games)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/@daily-co/daily-js"></script>
+    <!-- Preconnect origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <!-- Non-blocking fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
+    </noscript>
+    <!-- Asynchronous FontAwesome Icons -->
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </noscript>
+    <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
             --primary-maroon: #002f6c; /* US Dept of Education Navy */
