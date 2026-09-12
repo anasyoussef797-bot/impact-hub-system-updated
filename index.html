@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Impact Hub Egypt - المنظومة التعليمية الرائدة لربط الحضانات، المعلمين المعتمدين، وأولياء الأمور بمصر والشرق الأوسط.">
+    <meta name="description" content="An interactive educational system connecting administration, teachers, and parents.">
+    <meta property="og:title" content="Impact Hub Egypt">
+    <meta property="og:description" content="An interactive educational system connecting administration, teachers, and parents.">
     <meta name="theme-color" content="#002f6c">
-    <title>Impact Hub Egypt - عالم التعليم التفاعلي</title>
+    <title>Impact Hub Egypt</title>
     <!-- Preconnect origins for critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1692,25 +1694,25 @@
     <div id="video-before-footer"></div>
 
     <!-- AI Chatbot Widget Button and Window -->
-    <div class="chat-widget-btn" onclick="toggleChatWindow()"><i class="fa-solid fa-comments"></i></div>
+    <div class="chat-widget-btn" onclick="toggleChatWindow()" aria-label="فتح نافذة المحادثة الفورية" role="button" tabindex="0"><i class="fa-solid fa-comments"></i></div>
     <div class="chat-window" id="publicChatWindow">
         <div class="chat-header">
             <span><i class="fa-solid fa-robot"></i> <span data-i18n="chat_header">مساعد ومستشار زوار منصتنا 🤖</span></span>
-            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleChatWindow()"></i>
+            <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="toggleChatWindow()" aria-label="إغلاق المحادثة" role="button" tabindex="0"></i>
         </div>
         <div class="chat-body" id="public-chat-messages">
             <div class="chat-msg bot" data-i18n="chat_welcome">مرحباً بك في Impact Hub Egypt! عساك بخير يا فندم؟ أنا هنا لمساعدتك في التعرف على السيستم أو حجز المناهج والحصص. تفضل بسؤالك!</div>
         </div>
         <div class="chat-footer">
-            <input type="text" id="public-chat-input" placeholder="اكتب سؤالك هنا..." data-i18n-placeholder="chat_placeholder">
-            <button onclick="sendPublicChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <input type="text" id="public-chat-input" placeholder="اكتب سؤالك هنا..." data-i18n-placeholder="chat_placeholder" aria-label="اكتب سؤالك هنا">
+            <button onclick="sendPublicChatMessage()" aria-label="إرسال الرسالة"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
     <!-- MODAL 1: Teacher Schedule Calendar Modal -->
     <div class="custom-booking-modal" id="teacherScheduleModal">
         <div class="custom-booking-modal-content">
-            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeTeacherSchedule()"></i>
+            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeTeacherSchedule()" aria-label="إغلاق جدول المواعيد" role="button" tabindex="0"></i>
             <h3 style="font-size: 22px; font-weight: 900; color: var(--primary-indigo); margin-bottom: 4px;" id="schedModalTeacherName">جدول مواعيد المدرس</h3>
             <p style="font-size: 13.5px; color: var(--text-gray); margin-bottom: 20px;">اختر الموعد المتاح باللون الأخضر لحجز الحصة مباشرة (سعر الحصة: <strong style="color: var(--kid-pink);">120 ج.م</strong>)</p>
             
@@ -1729,7 +1731,7 @@
     <!-- MODAL 2: Interactive Class Booking Form Modal -->
     <div class="custom-booking-modal" id="bookingFormModal">
         <div class="custom-booking-modal-content" style="max-width: 500px;">
-            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeBookingForm()"></i>
+            <i class="fa-solid fa-xmark custom-modal-close" onclick="closeBookingForm()" aria-label="إغلاق نموذج الحجز" role="button" tabindex="0"></i>
             <h3 style="font-size: 20px; font-weight: 900; color: var(--primary-indigo); margin-bottom: 4px;">تأكيد حجز حصة أونلاين 🧑‍🏫</h3>
             <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;" id="bookingFormSlotDetails">المدرس: مستر محمد - الأحد (من 5 إلى 6 مساءً)</p>
             
@@ -1779,7 +1781,7 @@
     <!-- Iframe Video Popup modal -->
     <div class="video-modal" id="videoModal">
         <div class="video-modal-content">
-            <i class="fa-solid fa-xmark close-modal" onclick="closeVideo()"></i>
+            <i class="fa-solid fa-xmark close-modal" onclick="closeVideo()" aria-label="إغلاق الفيديو" role="button" tabindex="0"></i>
             <div id="modal-iframe-container"></div>
         </div>
     </div>
@@ -1789,10 +1791,10 @@
         <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: 'Tajawal', sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
                 <h3 id="pdm-title-header" style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;">تفاصيل المنتج وطرق الدفع 🧭</h3>
-                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="closeProductDetailsModal()"></i>
+                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="closeProductDetailsModal()" aria-label="إغلاق تفاصيل المنتج" role="button" tabindex="0"></i>
             </div>
             <div style="text-align: center; margin-bottom: 15px;">
-                <img id="pdm-image" src="" style="max-width: 100%; max-height: 200px; border-radius: 16px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
+                <img id="pdm-image" src="" alt="صورة المنتج" width="200" height="200" loading="lazy" decoding="async" style="max-width: 100%; max-height: 200px; border-radius: 16px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
                 <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 16px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
                     <i class="fa-solid fa-book-bookmark" style="color: var(--primary-indigo);"></i>
                 </div>
@@ -1828,7 +1830,7 @@
         <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: 'Tajawal', sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
                 <h3 style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;"><i class="fa-solid fa-circle-play" style="color:#dc2626;"></i> بوابة الحضور السريع للحصص 🎥</h3>
-                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeLiveAttendanceModal()"></i>
+                <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeLiveAttendanceModal()" aria-label="إغلاق استعلام الحضور" role="button" tabindex="0"></i>
             </div>
             
             <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 18px; line-height: 1.5; font-weight: 700;">
