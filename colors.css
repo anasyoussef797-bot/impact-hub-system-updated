@@ -1,77 +1,125 @@
 /* ==========================================================================
-   IMPACT HUB EGYPT — GLOBAL MASTER COLOR SYSTEM
-   Standardized Modern EdTech / SaaS Architecture
-   Single Source of Truth for All 5 Interfaces:
-   1. Main Website
-   2. Parent App
-   3. Teacher App
-   4. Nursery Admin
-   5. Super Admin
+   IMPACT HUB EGYPT — GLOBAL MASTER DESIGN TOKENS & COLOR PALETTE
+   Color Hunt Palette: https://colorhunt.co/palette/b7e5cd8abeb9305669c1785a
+   
+   Palette Swatches:
+   - #305669: Deep Ocean Petrol (Brand Primary)
+   - #C1785A: Warm Terracotta / Burnt Sienna (Accent & Premium CTA)
+   - #8ABEB9: Muted Aqua Teal (Secondary / Interactive Tone)
+   - #B7E5CD: Soft Mint / Sage Green (Light Container & Highlight Tint)
+   - #F4F9F7: Soft Mint Alabaster (Main Application Background)
+   - #FFFFFF: Pure White (Surface, Card & Modal Background)
+   - #D5E5E2: Soft Sage Border & Divider
+   - #1F3845: Dark Petrol Charcoal (Primary Typography)
+   - #57727E: Muted Slate Teal (Secondary Typography)
    ========================================================================== */
 
 :root {
   /* ------------------------------------------------------------------------
-     1. MASTER COLOR PALETTE (Strict User Specification)
+     1. BRAND PRIMARY (Deep Ocean Petrol #305669)
      ------------------------------------------------------------------------ */
-  --color-brand-navy: #123B6D;       /* Main headings, brand elements, sidebar, major titles */
-  --color-primary: #2563EB;          /* Primary buttons, CTAs, active nav, interactive links */
-  --color-primary-dark: #1E40AF;     /* Button hover states, active/pressed states */
-  --color-primary-soft: #EFF6FF;     /* Light backgrounds, selected cards, subtle highlights */
-  --color-background: #F8FAFC;       /* Main page & application background */
-  --color-surface: #FFFFFF;          /* Cards, panels, modals, forms, nav surfaces */
-  --color-text-primary: #172033;     /* Body text, main content, primary labels */
-  --color-text-secondary: #64748B;   /* Descriptions, metadata, secondary labels */
-  --color-text-muted: #94A3B8;       /* Placeholders, disabled states, subtle notes */
-  --color-border: #E2E8F0;           /* Card borders, input borders, dividers, tables */
+  --color-brand-primary: #305669;       /* Deep Ocean Petrol: Core brand anchor */
+  --color-brand-primary-hover: #244252; /* Deep Ocean Dark: Hover & active states */
+  --color-brand-primary-light: #EAF3F2; /* Light Ocean Wash: Containers & selections */
+
+  /* Global Primary Aliases (Seamless integration across existing components) */
+  --color-brand-navy: var(--color-brand-primary);
+  --color-primary: var(--color-brand-primary);
+  --color-primary-dark: var(--color-brand-primary-hover);
+  --color-primary-hover: var(--color-brand-primary-hover);
+  --color-primary-light: var(--color-brand-primary-light);
+  --color-primary-soft: var(--color-brand-primary-light);
 
   /* ------------------------------------------------------------------------
-     2. SEMANTIC COLORS (Restricted strictly to status/meaning, never decorative)
+     2. ACCENT / PREMIUM CTA (Warm Terracotta #C1785A)
      ------------------------------------------------------------------------ */
-  --color-success: #16A34A;          /* Success messages, completed actions, positive status */
-  --color-success-soft: #F0FDF4;     /* Soft success container background */
-  --color-warning: #D97706;          /* Warnings, pending actions, attention states */
-  --color-warning-soft: #FFFBEB;     /* Soft warning container background */
-  --color-error: #DC2626;            /* Errors, failed actions, critical warnings, delete */
-  --color-error-soft: #FEF2F2;       /* Soft error container background */
+  --color-accent: #C1785A;             /* Warm Terracotta: Premium CTAs & Highlights */
+  --color-accent-hover: #A86348;       /* Terracotta Dark: Hover state */
+  --color-accent-soft: #F9ECE6;        /* Soft Terracotta Container Tint */
+  --color-accent-light: #F9ECE6;
 
   /* ------------------------------------------------------------------------
-     3. INTERACTIVE & FOCUS TOKENS
+     3. SECONDARY (Muted Aqua Teal #8ABEB9)
      ------------------------------------------------------------------------ */
-  --color-focus-ring: rgba(37, 99, 235, 0.2);
-  --color-shadow-subtle: rgba(18, 59, 109, 0.05);
-  --color-shadow-medium: rgba(18, 59, 109, 0.09);
+  --color-secondary: #8ABEB9;          /* Muted Aqua Teal */
+  --color-secondary-hover: #6EA39E;    /* Darker Muted Teal */
+  --color-secondary-dark: #4C827D;
+  --color-secondary-light: #EDF7F6;
 
   /* ------------------------------------------------------------------------
-     4. BACKWARD-COMPATIBILITY ALIASES (Guarantees zero regression across legacy styles)
+     4. MINT HIGHLIGHT & CONTAINER (#B7E5CD)
      ------------------------------------------------------------------------ */
-  --primary-navy: var(--color-brand-navy);
-  --primary-maroon: var(--color-brand-navy);
-  --primary-indigo: var(--color-brand-navy);
-  --primary-blue: var(--color-primary);
-  --soft-maroon: var(--color-primary);
-  --primary-violet: var(--color-primary);
+  --color-mint: #B7E5CD;               /* Soft Mint / Sage Green */
+  --color-mint-hover: #9FD6BA;
+  --color-mint-light: #EBF8F2;         /* Ultra-light mint background wash */
+
+  /* ------------------------------------------------------------------------
+     5. BACKGROUNDS & SURFACES (Light Beige / Warm Ivory Canvas)
+     ------------------------------------------------------------------------ */
+  --color-background: #FAF7F2;         /* Light Beige / Warm Ivory Canvas (بيج فاتح / عاجي) */
+  --color-background-soft: #F3EDE2;    /* Soft Warm Linen Tint */
+  --color-surface: #FFFFFF;            /* Surface: Pure White resting gracefully on Ivory */
+  --color-surface-warm: #FFFDF9;       /* Soft Milky Ivory Surface */
+  --color-border: #E6E0D4;             /* Warm Light Beige Border & Divider */
+
+  /* ------------------------------------------------------------------------
+     6. TYPOGRAPHY & ICONS
+     ------------------------------------------------------------------------ */
+  --color-text-primary: #1F3845;       /* Dark Petrol Charcoal: Headings & primary body */
+  --color-text-secondary: #57727E;     /* Muted Slate Teal: Secondary labels, metadata */
+  --color-text-muted: #758D98;         /* Placeholders, disabled states */
+
+  /* ------------------------------------------------------------------------
+     7. FEEDBACK & STATUS TOKENS
+     ------------------------------------------------------------------------ */
+  --color-success: #2E7D5C;            /* Harmonized Mint-Green */
+  --color-success-soft: #E5F5ED;       /* Light Mint Container */
+  --color-error: #C14B45;              /* Terracotta Red-Rust */
+  --color-error-soft: #FBECEB;         /* Light Terracotta Container */
+  --color-warning: #D48443;            /* Warm Amber */
+  --color-warning-soft: #FDF3EA;       /* Light Warning Container */
+  --color-info: #305669;               /* Deep Ocean Petrol */
+  --color-info-soft: #EAF3F2;          /* Light Ocean Container */
+
+  /* ------------------------------------------------------------------------
+     8. INTERACTIVE & FOCUS TOKENS
+     ------------------------------------------------------------------------ */
+  --color-focus-ring: rgba(193, 120, 90, 0.45); /* Terracotta Focus Glow */
+  --color-shadow-subtle: rgba(48, 86, 105, 0.05);
+  --color-shadow-medium: rgba(48, 86, 105, 0.10);
+  --color-shadow-elevated: rgba(48, 86, 105, 0.16);
+
+  /* ------------------------------------------------------------------------
+     9. BACKWARD-COMPATIBILITY ALIASES
+     ------------------------------------------------------------------------ */
+  --primary-navy: var(--color-brand-primary);
+  --primary-maroon: var(--color-brand-primary);
+  --primary-indigo: var(--color-brand-primary);
+  --primary-blue: var(--color-secondary);
+  --soft-maroon: var(--color-accent);
+  --primary-violet: var(--color-brand-primary);
   --bg-light: var(--color-background);
   --pastel-bg: var(--color-background);
   --white: var(--color-surface);
   --text-dark: var(--color-text-primary);
   --text-gray: var(--color-text-secondary);
   --border-color: var(--color-border);
-  --pastel-blue: var(--color-primary-soft);
+  --pastel-blue: var(--color-brand-primary-light);
   --danger-red: var(--color-error);
   --success-green: var(--color-success);
   --warning-yellow: var(--color-warning);
-  --gold-star: var(--color-warning);
+  --gold-star: var(--color-accent);
 
-  /* Remap legacy childish colors to refined SaaS tokens */
-  --kid-pink: var(--color-primary);
-  --kid-blue: var(--color-primary);
-  --kid-purple: var(--color-brand-navy);
+  /* Remap legacy tags */
+  --kid-pink: var(--color-accent);
+  --kid-blue: var(--color-secondary);
+  --kid-purple: var(--color-brand-primary);
   --kid-yellow: var(--color-warning);
   --kid-green: var(--color-success);
 }
 
 /* ==========================================================================
-   GLOBAL BASE ELEMENTS
+   GLOBAL BASE ELEMENTS & ACCESSIBLE CONTRAST
    ========================================================================== */
 
 body {
@@ -80,7 +128,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--color-brand-navy);
+  color: var(--color-brand-primary) !important;
 }
 
 p, span, li {
@@ -88,13 +136,13 @@ p, span, li {
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--color-brand-primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--color-primary-dark);
+  color: var(--color-accent);
 }
 
 hr, .divider {
@@ -102,24 +150,30 @@ hr, .divider {
   border-top: 1px solid var(--color-border);
 }
 
+/* Selection highlight */
+::selection {
+  background: var(--color-mint);
+  color: var(--color-brand-primary);
+}
+
 /* ==========================================================================
-   BUTTON SYSTEM (Standardized across all interfaces)
+   BUTTON ARCHITECTURE (Deep Ocean Primary, Terracotta Accent, Aqua Secondary)
    ========================================================================== */
 
-/* Primary Button */
+/* Primary Action Button (Deep Ocean Petrol with Pure White text - AAA Contrast 7.7:1) */
 .btn-primary, 
 button.btn-primary, 
 a.btn-primary, 
 .login-btn,
 .btn-submit-main {
-  background: var(--color-primary) !important;
+  background: var(--color-brand-primary) !important;
   color: #FFFFFF !important;
-  border: 1px solid transparent !important;
+  border: 1px solid var(--color-brand-primary) !important;
   border-radius: 10px;
   font-weight: 600;
-  box-shadow: 0 1px 2px var(--color-shadow-subtle) !important;
+  box-shadow: 0 1px 3px var(--color-shadow-subtle) !important;
   cursor: pointer;
-  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s ease, box-shadow 0.2s ease !important;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
 }
 
 .btn-primary:hover, 
@@ -127,9 +181,10 @@ button.btn-primary:hover,
 a.btn-primary:hover, 
 .login-btn:hover,
 .btn-submit-main:hover {
-  background: var(--color-primary-dark) !important;
+  background: var(--color-brand-primary-hover) !important;
+  border-color: var(--color-brand-primary-hover) !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 10px var(--color-shadow-medium) !important;
+  box-shadow: 0 4px 12px var(--color-shadow-medium) !important;
   transform: translateY(-1px);
 }
 
@@ -137,18 +192,67 @@ a.btn-primary:hover,
 button.btn-primary:active, 
 a.btn-primary:active, 
 .login-btn:active {
-  background: var(--color-primary-dark) !important;
+  background: var(--color-brand-primary-hover) !important;
   transform: translateY(0);
 }
 
-/* Secondary Button */
+.btn-primary:focus-visible,
+button.btn-primary:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px var(--color-focus-ring) !important;
+}
+
+/* Accent / Premium CTA Button (Warm Terracotta with Pure White text) */
+.btn-accent,
+.btn-gold,
+.cta-gold,
+.cta-btn,
+.btn-premium,
+.live-builder-btn,
+button.btn-accent {
+  background: var(--color-accent) !important;
+  color: #FFFFFF !important;
+  border: 1px solid var(--color-accent) !important;
+  border-radius: 10px;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 6px rgba(193, 120, 90, 0.25) !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+}
+
+.btn-accent:hover,
+.btn-gold:hover,
+.cta-gold:hover,
+.cta-btn:hover,
+.btn-premium:hover,
+.live-builder-btn:hover,
+button.btn-accent:hover {
+  background: var(--color-accent-hover) !important;
+  border-color: var(--color-accent-hover) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(168, 99, 72, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.btn-accent:active,
+button.btn-accent:active {
+  transform: translateY(0);
+}
+
+.btn-accent:focus-visible,
+button.btn-accent:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 3px var(--color-brand-primary) !important;
+}
+
+/* Secondary Button (Pure White surface, Deep Ocean text, Sage border) */
 .btn-secondary, 
 .btn-outline, 
 button.btn-outline, 
 a.btn-outline {
   background: var(--color-surface) !important;
-  color: var(--color-brand-navy) !important;
-  border: 1px solid var(--color-border) !important;
+  color: var(--color-brand-primary) !important;
+  border: 1.5px solid var(--color-border) !important;
   border-radius: 10px;
   font-weight: 600;
   box-shadow: none !important;
@@ -160,9 +264,32 @@ a.btn-outline {
 .btn-outline:hover, 
 button.btn-outline:hover, 
 a.btn-outline:hover {
-  background: var(--color-primary-soft) !important;
-  color: var(--color-primary-dark) !important;
-  border-color: var(--color-primary) !important;
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
+  border-color: var(--color-secondary) !important;
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active,
+.btn-outline:active {
+  transform: translateY(0);
+}
+
+/* Mint Highlight Button */
+.btn-mint {
+  background: var(--color-mint) !important;
+  color: var(--color-brand-primary) !important;
+  border: 1px solid var(--color-mint) !important;
+  border-radius: 10px;
+  font-weight: 700 !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+}
+
+.btn-mint:hover {
+  background: var(--color-mint-hover) !important;
+  border-color: var(--color-mint-hover) !important;
+  transform: translateY(-1px);
 }
 
 /* Destructive / Error Button */
@@ -171,10 +298,10 @@ button.btn-danger,
 a.btn-danger {
   background: var(--color-error) !important;
   color: #FFFFFF !important;
-  border: 1px solid transparent !important;
+  border: 1px solid var(--color-error) !important;
   border-radius: 10px;
   font-weight: 600;
-  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2) !important;
+  box-shadow: 0 1px 3px rgba(193, 75, 69, 0.2) !important;
   cursor: pointer;
   transition: all 0.2s ease !important;
 }
@@ -182,8 +309,10 @@ a.btn-danger {
 .btn-danger:hover, 
 button.btn-danger:hover, 
 a.btn-danger:hover {
-  background: #B91C1C !important;
-  box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3) !important;
+  background: #A63B36 !important;
+  border-color: #A63B36 !important;
+  box-shadow: 0 4px 10px rgba(166, 59, 54, 0.3) !important;
+  transform: translateY(-1px);
 }
 
 /* ==========================================================================
@@ -195,26 +324,28 @@ a.btn-danger:hover {
 .app-header {
   background: var(--color-surface) !important;
   border-bottom: 1px solid var(--color-border) !important;
-  box-shadow: 0 1px 3px var(--color-shadow-subtle);
+  box-shadow: 0 1px 4px var(--color-shadow-subtle);
 }
 
 .navbar .logo,
 .navbar .logo span {
-  color: var(--color-brand-navy) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 .nav-links a {
   color: var(--color-text-primary) !important;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: var(--color-primary) !important;
-  background: var(--color-primary-soft) !important;
+  color: var(--color-accent) !important;
+  background: var(--color-brand-primary-light) !important;
 }
 
 .nav-links a.active {
-  color: var(--color-primary) !important;
-  background: var(--color-primary-soft) !important;
+  color: var(--color-brand-primary) !important;
+  background: var(--color-brand-primary-light) !important;
+  border-bottom: 2px solid var(--color-accent);
 }
 
 /* Mobile Bottom Navigation (Parent App) */
@@ -235,27 +366,32 @@ a.btn-danger:hover {
 
 .bottom-nav .nav-item:hover,
 .bottom-nav .nav-item:hover i {
-  color: var(--color-primary) !important;
+  color: var(--color-brand-primary) !important;
 }
 
-.bottom-nav .nav-item.active,
+.bottom-nav .nav-item.active {
+  color: var(--color-brand-primary) !important;
+}
+
 .bottom-nav .nav-item.active i {
-  color: var(--color-primary) !important;
+  color: var(--color-accent) !important;
+  transform: translateY(-2px);
 }
 
 /* ==========================================================================
    SIDEBARS (Admin Dashboards & Teacher App)
+   Deep Ocean Petrol Canvas with Soft Mint / Warm Terracotta Accents
    ========================================================================== */
 
 .sidebar {
-  background: var(--color-brand-navy) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: var(--color-brand-primary) !important;
+  border-left: 1px solid rgba(213, 229, 226, 0.12) !important;
+  border-right: 1px solid rgba(213, 229, 226, 0.12) !important;
 }
 
 .sidebar .brand-area,
 .sidebar .profile-section {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(213, 229, 226, 0.15) !important;
 }
 
 .sidebar .brand-area h1,
@@ -266,72 +402,67 @@ a.btn-danger:hover {
 
 .sidebar .brand-area p,
 .sidebar .profile-section p {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: var(--color-secondary) !important;
 }
 
 .sidebar .profile-badge {
-  background: var(--color-primary) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3) !important;
+  background: var(--color-mint) !important;
+  color: var(--color-brand-primary) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 6px rgba(183, 229, 205, 0.3) !important;
 }
 
 .sidebar .nav-item {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: #EAF3F2 !important;
   background: transparent;
   transition: all 0.2s ease;
+  border-radius: 8px;
 }
 
 .sidebar .nav-item i {
-  color: rgba(255, 255, 255, 0.75) !important;
+  color: var(--color-secondary) !important;
 }
 
 .sidebar .nav-item:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(234, 243, 242, 0.12) !important;
   color: #FFFFFF !important;
 }
 
 .sidebar .nav-item:hover i {
-  color: #FFFFFF !important;
+  color: var(--color-mint) !important;
 }
 
 .sidebar .nav-item.active {
-  background: var(--color-primary) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+  background: var(--color-mint) !important;
+  color: var(--color-brand-primary) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 14px rgba(183, 229, 205, 0.35) !important;
 }
 
 .sidebar .nav-item.active i {
-  color: #FFFFFF !important;
-}
-
-.sidebar .live-builder-btn {
-  background: var(--color-primary) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
-}
-
-.sidebar .live-builder-btn:hover {
-  background: var(--color-primary-dark) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 .sidebar .language-picker-sidebar {
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top: 1px solid rgba(213, 229, 226, 0.15) !important;
 }
 
 .sidebar .lang-flag-btn {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(234, 243, 242, 0.12) !important;
+  border: 1px solid rgba(213, 229, 226, 0.2) !important;
   color: #FFFFFF !important;
 }
 
 .sidebar .lang-flag-btn:hover,
 .sidebar .lang-flag-btn.active {
-  background: rgba(255, 255, 255, 0.25) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+  background: var(--color-mint) !important;
+  border-color: var(--color-mint) !important;
+  color: var(--color-brand-primary) !important;
+  font-weight: 700;
 }
 
 /* ==========================================================================
-   CARDS & PANELS
+   CARDS & PANELS (Pure White Surfaces on Soft Mint Alabaster Background)
    ========================================================================== */
 
 .card, 
@@ -353,13 +484,13 @@ a.btn-danger:hover {
 .stat-badge-card:hover, 
 .mock-portal-card:hover,
 .feature-card:hover {
-  border-color: var(--color-primary) !important;
-  box-shadow: 0 4px 12px var(--color-shadow-medium);
+  border-color: var(--color-secondary) !important;
+  box-shadow: 0 6px 16px var(--color-shadow-medium);
 }
 
 .card h1, .card h2, .card h3, .card h4,
 .stat-badge-card h3, .section-title {
-  color: var(--color-brand-navy) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 .card p, 
@@ -370,11 +501,11 @@ a.btn-danger:hover {
 }
 
 .stat-num {
-  color: var(--color-brand-navy) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 /* ==========================================================================
-   FORMS & INPUTS
+   FORMS & INPUTS (Pure White Surfaces with Deep Ocean & Terracotta Focus)
    ========================================================================== */
 
 input[type="text"], 
@@ -398,7 +529,7 @@ textarea,
 input::placeholder, 
 textarea::placeholder,
 .login-input::placeholder {
-  color: var(--color-text-muted) !important;
+  color: var(--color-text-secondary) !important;
 }
 
 input:focus, 
@@ -406,7 +537,7 @@ select:focus,
 textarea:focus, 
 .form-control:focus, 
 .login-input:focus {
-  border-color: var(--color-primary) !important;
+  border-color: var(--color-brand-primary) !important;
   box-shadow: 0 0 0 3px var(--color-focus-ring) !important;
 }
 
@@ -433,9 +564,9 @@ table,
 table thead, 
 .data-table thead, 
 table th {
-  background: var(--color-background) !important;
-  color: var(--color-brand-navy) !important;
-  font-weight: 600 !important;
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
+  font-weight: 700 !important;
   border-bottom: 1px solid var(--color-border) !important;
   text-align: inherit;
   padding: 12px 16px;
@@ -447,7 +578,7 @@ table tbody tr {
 }
 
 table tbody tr:hover {
-  background: var(--color-primary-soft) !important;
+  background: var(--color-brand-primary-light) !important;
 }
 
 table td {
@@ -463,7 +594,6 @@ table td .secondary-info {
 
 /* ==========================================================================
    SEMANTIC BADGES & STATUS INDICATORS
-   (Only green, orange/yellow, red for meaningful state)
    ========================================================================== */
 
 .badge-success, 
@@ -474,7 +604,7 @@ table td .secondary-info {
 .status-success {
   background: var(--color-success-soft) !important;
   color: var(--color-success) !important;
-  border: 1px solid rgba(22, 163, 74, 0.25) !important;
+  border: 1px solid rgba(46, 125, 92, 0.3) !important;
   font-weight: 600;
   border-radius: 9999px;
   padding: 3px 10px;
@@ -486,7 +616,7 @@ table td .secondary-info {
 .status-warning {
   background: var(--color-warning-soft) !important;
   color: var(--color-warning) !important;
-  border: 1px solid rgba(217, 119, 6, 0.25) !important;
+  border: 1px solid rgba(212, 132, 67, 0.3) !important;
   font-weight: 600;
   border-radius: 9999px;
   padding: 3px 10px;
@@ -500,18 +630,27 @@ table td .secondary-info {
 .status-error {
   background: var(--color-error-soft) !important;
   color: var(--color-error) !important;
-  border: 1px solid rgba(220, 38, 38, 0.25) !important;
+  border: 1px solid rgba(193, 75, 69, 0.3) !important;
   font-weight: 600;
   border-radius: 9999px;
   padding: 3px 10px;
 }
 
 .badge-info, 
+.status-info {
+  background: var(--color-info-soft) !important;
+  color: var(--color-info) !important;
+  border: 1px solid rgba(48, 86, 105, 0.3) !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
 .badge-neutral, 
 .solution-tag {
-  background: var(--color-primary-soft) !important;
-  color: var(--color-primary) !important;
-  border: 1px solid rgba(37, 99, 235, 0.15) !important;
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
+  border: 1px solid rgba(48, 86, 105, 0.15) !important;
   font-weight: 600;
   border-radius: 9999px;
   padding: 3px 10px;
@@ -522,7 +661,7 @@ table td .secondary-info {
    ========================================================================== */
 
 .modal-overlay {
-  background: rgba(18, 59, 109, 0.45) !important;
+  background: rgba(48, 86, 105, 0.55) !important;
   backdrop-filter: blur(6px) !important;
   -webkit-backdrop-filter: blur(6px) !important;
 }
@@ -532,7 +671,7 @@ table td .secondary-info {
   background: var(--color-surface) !important;
   border: 1px solid var(--color-border) !important;
   color: var(--color-text-primary) !important;
-  box-shadow: 0 20px 25px -5px rgba(18, 59, 109, 0.15), 0 8px 10px -6px rgba(18, 59, 109, 0.1) !important;
+  box-shadow: 0 20px 25px -5px var(--color-shadow-medium), 0 8px 10px -6px var(--color-shadow-subtle) !important;
 }
 
 /* ==========================================================================
@@ -550,13 +689,13 @@ table td .secondary-info {
 }
 
 .dropdown-content a:hover {
-  background: var(--color-primary-soft) !important;
-  color: var(--color-primary) !important;
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 .dropdown-content a.active-lang {
-  background: var(--color-primary-soft) !important;
-  color: var(--color-primary) !important;
+  background: var(--color-brand-primary-light) !important;
+  color: var(--color-brand-primary) !important;
   font-weight: 700;
 }
 
@@ -569,13 +708,13 @@ table td .secondary-info {
 }
 
 .solution-tab-btn:hover {
-  border-color: var(--color-primary) !important;
-  color: var(--color-primary) !important;
+  border-color: var(--color-secondary) !important;
+  color: var(--color-brand-primary) !important;
 }
 
 .solution-tab-btn.active {
-  background: var(--color-brand-navy) !important;
+  background: var(--color-brand-primary) !important;
   color: #FFFFFF !important;
-  border-color: var(--color-brand-navy) !important;
-  box-shadow: 0 4px 12px rgba(18, 59, 109, 0.25) !important;
+  border-color: var(--color-brand-primary) !important;
+  box-shadow: 0 4px 12px var(--color-shadow-medium) !important;
 }

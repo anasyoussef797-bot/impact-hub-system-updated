@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="description" content="Impact Hub - تطبيق ولي الأمر لمتابعة الطفل والأنشطة والبث المباشر.">
-    <meta name="theme-color" content="#123B6D">
+    <meta name="theme-color" content="#305669">
     <title>Impact Hub - Parent App (Full System with Vercel Games)</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,19 +26,53 @@
     <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
-            --color-brand-navy: #123B6D;
-            --color-primary: #2563EB;
-            --color-primary-dark: #1E40AF;
-            --color-primary-soft: #EFF6FF;
-            --color-background: #F8FAFC;
+            /* Color Hunt Palette: b7e5cd8abeb9305669c1785a */
+            /* Brand Primary (Deep Ocean Petrol) */
+            --color-brand-primary: #305669;
+            --color-brand-primary-hover: #244252;
+            --color-brand-primary-light: #EAF3F2;
+
+            --color-brand-navy: #305669;
+            --color-primary: #305669;
+            --color-primary-dark: #244252;
+            --color-primary-hover: #244252;
+            --color-primary-soft: #EAF3F2;
+            --color-primary-light: #EAF3F2;
+
+            /* Accent / Premium CTA (Warm Terracotta) */
+            --color-accent: #C1785A;
+            --color-accent-hover: #A86348;
+            --color-accent-soft: #F9ECE6;
+
+            /* Secondary (Muted Aqua Teal) */
+            --color-secondary: #8ABEB9;
+            --color-secondary-hover: #6EA39E;
+            --color-secondary-light: #EDF7F6;
+
+            /* Mint Highlight Container */
+            --color-mint: #B7E5CD;
+            --color-mint-light: #EBF8F2;
+
+            /* Backgrounds & Surfaces (Light Beige / Warm Ivory) */
+            --color-background: #FAF7F2;
+            --color-background-soft: #F3EDE2;
             --color-surface: #FFFFFF;
-            --color-text-primary: #172033;
-            --color-text-secondary: #64748B;
-            --color-text-muted: #94A3B8;
-            --color-border: #E2E8F0;
-            --color-success: #16A34A;
-            --color-warning: #D97706;
-            --color-error: #DC2626;
+            --color-border: #E6E0D4;
+
+            /* Typography & Icons */
+            --color-text-primary: #1F3845;
+            --color-text-secondary: #57727E;
+            --color-text-muted: #758D98;
+
+            /* Feedback & Status */
+            --color-success: #2E7D5C;
+            --color-success-soft: #E5F5ED;
+            --color-error: #C14B45;
+            --color-error-soft: #FBECEB;
+            --color-warning: #D48443;
+            --color-warning-soft: #FDF3EA;
+            --color-info: #305669;
+            --color-info-soft: #EAF3F2;
 
             --primary-maroon: var(--color-brand-navy);
             --soft-maroon: var(--color-primary);
@@ -51,9 +85,9 @@
             --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --facebook-blue: var(--color-primary);
             --warning-yellow: var(--color-warning);
-            --shadow-sm: 0 1px 2px 0 rgba(18, 59, 109, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(18, 59, 109, 0.08), 0 2px 4px -1px rgba(18, 59, 109, 0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(18, 59, 109, 0.12), 0 4px 6px -2px rgba(18, 59, 109, 0.06);
+            --shadow-sm: 0 1px 2px 0 rgba(48, 86, 105, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(48, 86, 105, 0.08), 0 2px 4px -1px rgba(48, 86, 105, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(48, 86, 105, 0.12), 0 4px 6px -2px rgba(48, 86, 105, 0.06);
         }
 
         * { 
@@ -124,7 +158,7 @@
         }
 
         #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 30px; background: var(--color-background); text-align: center; }
-        .login-logo { width: 90px; height: 90px; background: var(--color-brand-navy); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 45px; color: var(--white); box-shadow: 0 10px 15px -3px rgba(18,59,109,0.3); margin-bottom: 25px; transform: rotate(-5deg); transition: var(--transition); }
+        .login-logo { width: 90px; height: 90px; background: var(--color-brand-navy); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 45px; color: var(--white); box-shadow: 0 10px 15px -3px rgba(48, 86, 105,0.3); margin-bottom: 25px; transform: rotate(-5deg); transition: var(--transition); }
         .login-logo:hover { transform: rotate(0deg) scale(1.05); }
         .login-input { width: 100%; padding: 14px 16px; margin-bottom: 15px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 14px; background: var(--white); outline: none; transition: var(--transition); }
         .login-input:focus { border-color: var(--primary-maroon); box-shadow: 0 0 0 4px rgba(0,47,108,0.15); }
@@ -221,8 +255,8 @@
         }
         .nav-item { text-align: center; color: var(--text-gray); font-size: 9px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 700; transition: var(--transition); white-space: nowrap; }
         .nav-item i { font-size: 17px; transition: var(--transition); color: var(--text-gray); }
-        .nav-item.active { color: var(--color-primary); }
-        .nav-item.active i { transform: translateY(-3px) scale(1.08); color: var(--color-primary); }
+        .nav-item.active { color: var(--color-brand-primary); font-weight: 800; }
+        .nav-item.active i { transform: translateY(-3px) scale(1.08); color: var(--color-accent); }
         
         .app-footer-credit { text-align: center; font-size: 11px; color: var(--text-gray); padding: 24px 10px; opacity: 0.8; font-weight: 500; }
 

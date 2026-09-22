@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="إمباكت هب مصر - تطبيق المعلم لإدارة الفصول والحصص والتقييمات والأنشطة.">
-    <meta name="theme-color" content="#123B6D">
+    <meta name="theme-color" content="#305669">
     <title data-i18n="app_title">إمباكت هب مصر - تطبيق المعلم</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,19 +25,53 @@
     <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
-            --color-brand-navy: #123B6D;
-            --color-primary: #2563EB;
-            --color-primary-dark: #1E40AF;
-            --color-primary-soft: #EFF6FF;
-            --color-background: #F8FAFC;
+            /* Color Hunt Palette: b7e5cd8abeb9305669c1785a */
+            /* Brand Primary (Deep Ocean Petrol) */
+            --color-brand-primary: #305669;
+            --color-brand-primary-hover: #244252;
+            --color-brand-primary-light: #EAF3F2;
+
+            --color-brand-navy: #305669;
+            --color-primary: #305669;
+            --color-primary-dark: #244252;
+            --color-primary-hover: #244252;
+            --color-primary-soft: #EAF3F2;
+            --color-primary-light: #EAF3F2;
+
+            /* Accent / Premium CTA (Warm Terracotta) */
+            --color-accent: #C1785A;
+            --color-accent-hover: #A86348;
+            --color-accent-soft: #F9ECE6;
+
+            /* Secondary (Muted Aqua Teal) */
+            --color-secondary: #8ABEB9;
+            --color-secondary-hover: #6EA39E;
+            --color-secondary-light: #EDF7F6;
+
+            /* Mint Highlight Container */
+            --color-mint: #B7E5CD;
+            --color-mint-light: #EBF8F2;
+
+            /* Backgrounds & Surfaces (Light Beige / Warm Ivory) */
+            --color-background: #FAF7F2;
+            --color-background-soft: #F3EDE2;
             --color-surface: #FFFFFF;
-            --color-text-primary: #172033;
-            --color-text-secondary: #64748B;
-            --color-text-muted: #94A3B8;
-            --color-border: #E2E8F0;
-            --color-success: #16A34A;
-            --color-warning: #D97706;
-            --color-error: #DC2626;
+            --color-border: #E6E0D4;
+
+            /* Typography & Icons */
+            --color-text-primary: #1F3845;
+            --color-text-secondary: #57727E;
+            --color-text-muted: #758D98;
+
+            /* Feedback & Status */
+            --color-success: #2E7D5C;
+            --color-success-soft: #E5F5ED;
+            --color-error: #C14B45;
+            --color-error-soft: #FBECEB;
+            --color-warning: #D48443;
+            --color-warning-soft: #FDF3EA;
+            --color-info: #305669;
+            --color-info-soft: #EAF3F2;
 
             --primary-maroon: var(--color-brand-navy);
             --soft-maroon: var(--color-primary);
@@ -51,7 +85,7 @@
             --text-dark: var(--color-text-primary);
             --text-gray: var(--color-text-secondary);
             --border-color: var(--color-border);
-            --card-shadow: 0 1px 3px rgba(18, 59, 109, 0.05);
+            --card-shadow: 0 1px 3px rgba(48, 86, 105, 0.05);
             --danger-red: var(--color-error);
             --success-green: var(--color-success);
         }
@@ -144,7 +178,7 @@
             font-weight: 700;
             padding: 3px 12px;
             border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 10px rgba(48, 86, 105, 0.3);
             white-space: nowrap;
         }
 
@@ -200,12 +234,13 @@
         }
 
         .nav-item.active {
-            background: var(--color-primary) !important;
-            color: var(--color-surface) !important;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+            background: var(--color-accent) !important;
+            color: var(--color-brand-primary) !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(193, 120, 90, 0.35);
         }
         .nav-item.active i {
-            color: var(--color-surface) !important;
+            color: var(--color-brand-primary) !important;
         }
 
         /* محدد اللغة */
@@ -241,7 +276,7 @@
             background: var(--color-primary);
             color: var(--white);
             border-color: var(--color-primary);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 2px 8px rgba(48, 86, 105, 0.3);
         }
 
         /* منطقة المحتوى */
@@ -266,7 +301,7 @@
 
         .panel:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(18, 59, 109, 0.08);
+            box-shadow: 0 8px 20px rgba(48, 86, 105, 0.08);
         }
 
         .panel-header {
@@ -1029,7 +1064,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--color-primary);"><i class="fa-solid fa-gem"></i></div>
+                                <div class="game-icon" style="background: rgba(62, 92, 118, 0.1); color: var(--color-primary);"><i class="fa-solid fa-gem"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_collect">لعبة جمع الحروف والمغامرات</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
