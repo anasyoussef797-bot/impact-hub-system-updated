@@ -1,0 +1,296 @@
+/* ==========================================================================
+   IMPACT HUB EGYPT — GLOBAL CENTRALIZED TYPOGRAPHY SYSTEM
+   Modern International EdTech Standard
+   Unified across: Main Website, Parent App, Teacher App, Nursery Admin, Super Admin
+   ========================================================================== */
+
+/* 1. Global Typography Tokens & Scales */
+:root {
+  /* Font Family Architecture */
+  --font-ar: "IBM Plex Sans Arabic", "Inter", "Noto Sans Arabic", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-latin: "Inter", "IBM Plex Sans Arabic", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  /* Active Default Font */
+  --font-main: var(--font-ar);
+
+  /* Modern international font weights - avoids excessive 800/900 */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line Height Tokens */
+  --leading-none: 1;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* Responsive Typography Scale using clamp() */
+  /* Extra Small / Badges: 12-13px */
+  --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  
+  /* Small / Meta / Secondary Labels: 13-14px */
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  
+  /* Body / Paragraphs / Standard Text: 15-17px */
+  --text-base: clamp(0.9375rem, 0.9rem + 0.25vw, 1.0625rem);
+  
+  /* Medium / High-Emphasis Body: 16-18px */
+  --text-md: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  
+  /* Sub-Headings H4: 20-24px */
+  --text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  
+  /* Section Headings H3: 26-30px */
+  --text-2xl: clamp(1.625rem, 1.45rem + 0.8vw, 1.875rem);
+  
+  /* Major Headings H2: Mobile 28-32px, Desktop 34-42px */
+  --text-3xl: clamp(1.75rem, 1.45rem + 1.5vw, 2.625rem);
+  
+  /* Page Titles H1: Mobile 32-38px, Desktop 48-56px */
+  --text-4xl: clamp(2rem, 1.6rem + 2vw, 3.25rem);
+  
+  /* Display / Hero Titles: Mobile 36-40px, Desktop 50-60px */
+  --text-5xl: clamp(2.25rem, 1.75rem + 2.5vw, 3.75rem);
+
+  /* Element Specific Scale Tokens */
+  --text-nav: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);     /* 15-16px */
+  --text-btn: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);     /* 15-16px */
+  --text-label: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); /* 13-14px */
+  --text-table: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);/* 14-15px */
+  --text-input: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);   /* 15-16px */
+}
+
+/* 2. Base Element Typography Rules */
+html {
+  font-family: var(--font-ar);
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ar);
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 3. Language & Direction Adaptation */
+html[dir="rtl"], body[dir="rtl"], 
+html[lang="ar"], body[lang="ar"] {
+  font-family: var(--font-ar);
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="ltr"], body[dir="ltr"],
+html[lang="en"], body[lang="en"],
+html[lang="fr"], body[lang="fr"],
+html[lang="de"], body[lang="de"] {
+  font-family: var(--font-latin);
+  direction: ltr;
+  text-align: left;
+}
+
+/* Mixed Latin terms inside Arabic context */
+.font-latin, [data-lang="en"], [data-lang="fr"], [data-lang="de"], .latin-text {
+  font-family: var(--font-latin) !important;
+}
+
+.font-ar, [data-lang="ar"], .arabic-text {
+  font-family: var(--font-ar) !important;
+}
+
+/* 4. Form Controls & Interactive Elements */
+button, input, select, textarea, optgroup {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+input, select, textarea {
+  font-size: var(--text-input);
+  font-weight: var(--font-regular);
+  line-height: 1.5;
+}
+
+input::placeholder, textarea::placeholder {
+  font-family: inherit;
+  font-weight: var(--font-regular);
+  opacity: 0.65;
+}
+
+label, .form-label, .input-label {
+  font-size: var(--text-label);
+  font-weight: var(--font-medium);
+  line-height: 1.4;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+/* 5. Buttons & Navigation Links */
+button, .btn, .btn-primary, .btn-secondary, .btn-outline, .btn-danger, .login-btn, .live-btn, .solution-tab-btn {
+  font-family: inherit;
+  font-size: var(--text-btn);
+  font-weight: var(--font-semibold);
+  letter-spacing: normal;
+}
+
+nav a, .nav-links a, .nav-item, .navbar a, .sidebar a {
+  font-family: inherit;
+  font-size: var(--text-nav);
+  font-weight: var(--font-semibold);
+  line-height: 1.4;
+}
+
+/* 6. Tables & Data Grids */
+table {
+  font-family: inherit;
+  font-size: var(--text-table);
+}
+
+th {
+  font-weight: var(--font-semibold);
+  font-size: var(--text-table);
+  line-height: 1.4;
+}
+
+td {
+  font-weight: var(--font-regular);
+  font-size: var(--text-table);
+  line-height: 1.5;
+}
+
+/* 7. Typography Scale Classes */
+.text-xs { font-size: var(--text-xs) !important; }
+.text-sm { font-size: var(--text-sm) !important; }
+.text-base { font-size: var(--text-base) !important; }
+.text-md { font-size: var(--text-md) !important; }
+.text-xl { font-size: var(--text-xl) !important; }
+.text-2xl { font-size: var(--text-2xl) !important; }
+.text-3xl { font-size: var(--text-3xl) !important; }
+.text-4xl { font-size: var(--text-4xl) !important; }
+.text-5xl { font-size: var(--text-5xl) !important; }
+
+.font-light { font-weight: var(--font-light) !important; }
+.font-regular { font-weight: var(--font-regular) !important; }
+.font-medium { font-weight: var(--font-medium) !important; }
+.font-semibold { font-weight: var(--font-semibold) !important; }
+.font-bold { font-weight: var(--font-bold) !important; }
+
+/* 8. Headings Hierarchy Standardization */
+h1, .h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5em;
+}
+
+/* Restrict excessive 800/900 font weights across the platform */
+b, strong, .font-extrabold, .font-black {
+  font-weight: var(--font-bold) !important;
+}
+
+/* Normalization for elements using legacy inline 800/900 */
+[style*="font-weight: 900"], [style*="font-weight:900"],
+[style*="font-weight: 800"], [style*="font-weight:800"] {
+  font-weight: var(--font-bold) !important;
+}
+
+h2, .h2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.4em;
+}
+
+h3, .h3 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-snug);
+  margin-bottom: 0.35em;
+}
+
+h4, .h4 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  line-height: 1.4;
+  margin-bottom: 0.3em;
+}
+
+h5, .h5 {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  line-height: 1.45;
+  margin-bottom: 0.25em;
+}
+
+h6, .h6 {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  line-height: 1.5;
+  margin-bottom: 0.2em;
+}
+
+p, .paragraph {
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-relaxed);
+}
+
+small, .small-text, .caption {
+  font-size: var(--text-sm);
+  font-weight: var(--font-regular);
+  line-height: 1.5;
+}
+
+/* 9. Specialized Component Typography Standards */
+/* Cards & Containers */
+.card, .stat-card, .game-card, .review-card, .order-card, .nursery-card, .teacher-card {
+  font-family: inherit;
+}
+
+/* Modals & Dialogs */
+.modal, .video-modal-content, .modal-content, .drawer-content {
+  font-family: inherit !important;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* Badges & Pills */
+.badge, .status-badge, .pill, .chip {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+/* Notifications & Alerts */
+.notification, .alert, .toast {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+/* Chat & Messaging */
+.chat-message, .message-bubble, .comment-body {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+/* Balanced Latin metrics for brand names inside Arabic sentences */
+.brand-term {
+  font-family: var(--font-latin);
+  font-weight: var(--font-semibold);
+  letter-spacing: -0.01em;
+  display: inline-block;
+  direction: ltr;
+}

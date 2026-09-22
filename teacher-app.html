@@ -10,12 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <!-- Non-blocking fonts -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
-    </noscript>
+    <!-- Impact Hub Global Typography System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="typography.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -52,7 +51,7 @@
         body {
             background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
             color: var(--text-dark);
-            font-family: 'Tajawal', sans-serif;
+            font-family: var(--font-ar);
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -1552,11 +1551,11 @@
             if (lang === 'ar') {
                 htmlRoot.dir = 'rtl';
                 htmlRoot.lang = 'ar';
-                document.body.style.fontFamily = "'Tajawal', sans-serif";
+                document.body.style.fontFamily = "var(--font-ar)";
             } else {
                 htmlRoot.dir = 'ltr';
                 htmlRoot.lang = lang;
-                document.body.style.fontFamily = "'Outfit', sans-serif";
+                document.body.style.fontFamily = "var(--font-latin)";
             }
 
             // تطبيق الترجمات على الواصفات data-i18n
@@ -2704,7 +2703,7 @@
                 const docSnap = await getDoc(doc(db, "nurseries", myNurseryId));
                 if (docSnap.exists() && docSnap.data().status === "frozen") {
                     document.body.innerHTML = `
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:'Tajawal', sans-serif; direction:rtl;">
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
                             <div style="font-size:80px; color:#ef4444; margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
                             <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:#ef4444;">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
                             <p style="font-size:16px; line-height:1.6; color:#475569; max-width:400px; margin:0 auto;">

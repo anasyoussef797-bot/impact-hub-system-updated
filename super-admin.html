@@ -10,12 +10,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <!-- Non-blocking fonts -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Outfit:wght@500;700;900&display=swap">
-    </noscript>
+    <!-- Impact Hub Global Typography System -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="typography.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -53,7 +52,7 @@
         body {
             background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
             color: var(--text-dark);
-            font-family: 'Tajawal', sans-serif;
+            font-family: var(--font-ar);
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
@@ -1244,7 +1243,7 @@
 
             <!-- Modal for Delete/Freeze Options of Nursery -->
             <div id="superAdminDeleteFreezeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 4000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
-                <div style="background: white; border-radius: 20px; width: 100%; max-width: 450px; position: relative; padding: 30px; box-shadow: var(--shadow-2xl); border: 2px solid #ef4444; text-align: center; direction: rtl; font-family: 'Tajawal', sans-serif;">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 450px; position: relative; padding: 30px; box-shadow: var(--shadow-2xl); border: 2px solid #ef4444; text-align: center; direction: rtl; font-family: inherit;">
                     <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeDeleteFreezeModal()"></i>
                     
                     <div style="width: 70px; height: 70px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #ef4444; font-size: 32px;">
@@ -1867,11 +1866,11 @@
             if (lang === 'ar') {
                 htmlRoot.dir = 'rtl';
                 htmlRoot.lang = 'ar';
-                document.body.style.fontFamily = "'Tajawal', sans-serif";
+                document.body.style.fontFamily = "var(--font-ar)";
             } else {
                 htmlRoot.dir = 'ltr';
                 htmlRoot.lang = lang;
-                document.body.style.fontFamily = "'Outfit', sans-serif";
+                document.body.style.fontFamily = "var(--font-latin)";
             }
 
             // ترجمة العناصر data-i18n
@@ -3207,7 +3206,7 @@
                 modal.innerHTML = `
                     <div style="max-width:90%; max-height:90%; position:relative; background:#fff; padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
                         <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:#ef4444; cursor:pointer;" onclick="document.getElementById('super-payment-proof-modal').style.display='none'"></i>
-                        <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold; font-family:'Tajawal', sans-serif;">سند تحويل ولي الأمر 📸</h3>
+                        <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold; font-family:inherit;">سند تحويل ولي الأمر 📸</h3>
                         <img id="super-payment-proof-img" src="" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; border:2px solid var(--border-color);">
                     </div>
                 `;
@@ -3775,7 +3774,7 @@
                 const activeStyle = isActive ? 'background: #fef3c7; border: 1.5px solid var(--primary-maroon);' : 'background: white; border: 1px solid var(--border-color);';
                 
                 contactsListContainer.innerHTML += `
-                    <div onclick="window.openSuperChatWithUser('${c.id}', '${c.name.replace(/'/g, "\\'")}')" style="padding: 10px; border-radius: 10px; cursor: pointer; transition: all 0.2s; ${activeStyle} font-family:'Tajawal', sans-serif; margin-bottom:4px;">
+                    <div onclick="window.openSuperChatWithUser('${c.id}', '${c.name.replace(/'/g, "\\'")}')" style="padding: 10px; border-radius: 10px; cursor: pointer; transition: all 0.2s; ${activeStyle} font-family:inherit; margin-bottom:4px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                             <strong style="font-size:12px; color:var(--text-dark);">${c.name}</strong>
                             <span style="font-size:9px; background: rgba(128,0,0,0.08); color:var(--primary-maroon); padding:2px 6px; border-radius:4px; font-weight:bold;">${c.roleLabel}</span>
