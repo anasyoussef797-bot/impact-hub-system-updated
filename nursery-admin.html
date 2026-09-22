@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="إمباكت هب مصر - لوحة تحكم مديرة الحضانة لإدارة الفصول والمعلمات والاشتراكات.">
-    <meta name="theme-color" content="#002f6c">
+    <meta name="theme-color" content="#123B6D">
     <title data-i18n="app_title">إمباكت هب مصر - لوحة تحكم مديرة الحضانة</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="colors.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -24,21 +25,35 @@
     <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
-            --primary-maroon: #002f6c; /* US Dept of Education Navy */
-            --soft-maroon: #005ea2;    /* Federal Blue Accent */
-            --kid-pink: #dc2626;       /* Crimson Red */
-            --kid-blue: #005ea2;       /* Federal Blue */
-            --kid-yellow: #f59e0b;     /* Gold Amber */
-            --kid-green: #10b981;
-            --kid-purple: #1e3a8a;     /* Deep Blue */
-            --bg-light: #f8fafc;       /* Slate Neutral Light */
-            --white: #ffffff;
-            --text-dark: #1b1b1b;      /* High contrast text */
-            --text-gray: #4b5563;
-            --border-color: #d1d5db;   /* Visible clear border lines */
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --success-green: #10b981;
-            --danger-red: #ef4444;
+            --color-brand-navy: #123B6D;
+            --color-primary: #2563EB;
+            --color-primary-dark: #1E40AF;
+            --color-primary-soft: #EFF6FF;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-text-primary: #172033;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-border: #E2E8F0;
+            --color-success: #16A34A;
+            --color-warning: #D97706;
+            --color-error: #DC2626;
+
+            --primary-maroon: var(--color-brand-navy);
+            --soft-maroon: var(--color-primary);
+            --kid-pink: var(--color-primary);
+            --kid-blue: var(--color-primary);
+            --kid-yellow: var(--color-warning);
+            --kid-green: var(--color-success);
+            --kid-purple: var(--color-brand-navy);
+            --bg-light: var(--color-background);
+            --white: var(--color-surface);
+            --text-dark: var(--color-text-primary);
+            --text-gray: var(--color-text-secondary);
+            --border-color: var(--color-border);
+            --card-shadow: 0 1px 3px rgba(18, 59, 109, 0.05);
+            --success-green: var(--color-success);
+            --danger-red: var(--color-error);
         }
 
         * {
@@ -49,7 +64,7 @@
         }
 
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+            background: var(--color-background);
             color: var(--text-dark);
             font-family: var(--font-ar);
             display: flex;
@@ -85,10 +100,9 @@
         /* الشريط الجانبي */
         .sidebar {
             width: 290px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(128, 0, 0, 0.08);
-            border-right: 1px solid rgba(128, 0, 0, 0.08);
+            background: var(--color-brand-navy) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -96,47 +110,47 @@
             right: 0;
             top: 0;
             z-index: 100;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
         }
 
         .profile-section {
             padding: 30px 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .profile-img {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--white);
-            box-shadow: 0 8px 20px rgba(128, 0, 0, 0.15);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
             margin: 0 auto 15px;
-            background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon));
+            background: var(--color-primary);
             color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
+            font-size: 32px;
         }
 
         .profile-badge {
-            background: linear-gradient(135deg, var(--kid-yellow), var(--primary-maroon));
+            background: var(--color-primary);
             color: var(--white);
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 700;
             padding: 3px 12px;
             border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(255, 183, 3, 0.3);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
             display: inline-block;
             margin-top: 5px;
         }
 
         .profile-section h3 {
-            color: var(--text-dark);
+            color: var(--white) !important;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 700;
             margin-top: 10px;
         }
 
@@ -153,46 +167,51 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-gray);
+            color: rgba(255, 255, 255, 0.75);
             cursor: pointer;
             border-radius: 12px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .nav-item i {
             font-size: 16px;
-            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.75);
+            transition: transform 0.2s ease;
         }
 
         .nav-item:hover {
-            background: rgba(128, 0, 0, 0.04);
-            color: var(--primary-maroon);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-surface);
         }
 
         .nav-item:hover i {
-            transform: scale(1.1);
+            color: var(--color-surface);
+            transform: scale(1.05);
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            background: var(--color-primary) !important;
             color: var(--white);
-            box-shadow: 0 10px 20px -10px rgba(128, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+        .nav-item.active i {
+            color: var(--color-surface) !important;
         }
 
         /* اختيار اللغة */
         .language-picker-sidebar {
             padding: 15px;
-            border-top: 1px solid rgba(128, 0, 0, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: center;
             gap: 6px;
         }
 
         .lang-flag-btn {
-            background: var(--white);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             width: 36px;
             height: 36px;
@@ -201,19 +220,20 @@
             justify-content: center;
             cursor: pointer;
             font-size: 16px;
+            color: var(--color-surface);
             transition: all 0.2s ease;
         }
 
         .lang-flag-btn:hover {
-            transform: scale(1.15) translateY(-2px);
-            border-color: var(--primary-maroon);
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .lang-flag-btn.active {
-            background: var(--primary-maroon);
+            background: var(--color-primary);
             color: var(--white);
-            border-color: var(--primary-maroon);
-            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
 
         /* منطقة المحتوى */
@@ -226,25 +246,24 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
             box-shadow: var(--card-shadow);
         }
 
         .panel-header {
             font-size: 18px;
-            color: var(--primary-maroon);
-            font-weight: 900;
-            margin-bottom: 25px;
+            color: var(--color-brand-navy);
+            font-weight: 700;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed rgba(128, 0, 0, 0.08);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -271,9 +290,9 @@
         }
 
         th {
-            background-color: #f8fafc;
-            color: var(--text-dark);
-            font-weight: 900;
+            background-color: var(--color-background);
+            color: var(--color-brand-navy);
+            font-weight: 600;
         }
 
         tr:last-child td {
@@ -281,7 +300,7 @@
         }
 
         tr:hover {
-            background-color: rgba(128, 0, 0, 0.01);
+            background-color: var(--color-primary-soft);
         }
 
         /* حقول الإدخال */
@@ -359,7 +378,7 @@
         }
 
         .btn-voda {
-            background: #e60000;
+            background: var(--color-error);
             color: var(--white);
             border: none;
             padding: 10px 18px;
@@ -380,7 +399,7 @@
         }
 
         .btn-insta {
-            background: #6366f1;
+            background: var(--color-primary);
             color: var(--white);
             border: none;
             padding: 10px 18px;
@@ -434,12 +453,45 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Mobile Drawer Backdrop Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
         @media (max-width: 1024px) {
+            .sidebar-overlay {
+                display: block;
+            }
             .sidebar {
-                right: -290px;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: auto;
+                height: 100vh;
+                height: 100dvh;
+                transform: translateX(100%);
+                transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease;
+                z-index: 100;
             }
             .sidebar.open {
-                right: 0;
+                transform: translateX(0);
+                box-shadow: -8px 0 32px rgba(15, 23, 42, 0.28);
             }
             .main-content {
                 margin-right: 0;
@@ -450,12 +502,13 @@
                 display: flex;
             }
             html[dir="ltr"] .sidebar {
-                left: -290px;
+                transform: translateX(-100%);
+                left: 0;
                 right: auto;
             }
             html[dir="ltr"] .sidebar.open {
-                left: 0;
-                right: auto;
+                transform: translateX(0);
+                box-shadow: 8px 0 32px rgba(15, 23, 42, 0.28);
             }
             html[dir="ltr"] .menu-toggle {
                 left: auto;
@@ -476,7 +529,7 @@
             min-height: 100vh;
             width: 100%;
             padding: 20px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: var(--color-background);
             text-align: center;
             position: fixed;
             top: 0;
@@ -543,9 +596,11 @@
     </div>
 
     <!-- زر قائمة الجوال -->
-    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" aria-label="تبديل القائمة">
         <i class="fa-solid fa-bars"></i>
     </button>
+    <!-- ستارة التعتيم للقائمة المنزلقة -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" role="button" aria-label="إغلاق القائمة" tabindex="0"></div>
 
     <div class="app-container">
         
@@ -595,7 +650,7 @@
 
             <!-- زر تسجيل الخروج الآمن لحماية البيانات -->
             <div style="padding: 10px 15px; margin-top: 5px; margin-bottom: 10px;">
-                <button onclick="window.doLogout()" style="width: 100%; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #ef4444; border: 1.5px solid #fecaca; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
+                <button onclick="window.doLogout()" style="width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--color-error-soft); color: var(--color-error); border: 1.5px solid var(--color-error-soft); font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>تسجيل الخروج الآمن</span>
                 </button>
@@ -634,7 +689,7 @@
 
                 <!-- تتبع طلبات المتجر المحولة إلى السوبر أدمن -->
                 <div class="panel" style="margin-top: 25px;">
-                    <div class="panel-header" style="background: linear-gradient(135deg, var(--primary-maroon), #991b1b); color: white; display: flex; align-items: center; justify-content: space-between;">
+                    <div class="panel-header" style="background: var(--color-brand-navy); color: white; display: flex; align-items: center; justify-content: space-between;">
                         <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="tracked_store_orders">متابعة طلبات المتجر المحولة (سجل الشحن) 📦</span></span>
                         <small style="opacity: 0.9; font-weight: normal;"><i class="fa-solid fa-sync"></i> تحديث تلقائي</small>
                     </div>
@@ -735,7 +790,7 @@
                         <label data-i18n="post_yt_lbl">رابط فيديو يوتيوب (اختياري)</label>
                         <input type="text" id="post-youtube" class="form-control" data-i18n-placeholder="post_yt_placeholder" placeholder="https://www.youtube.com/...">
                     </div>
-                    <button class="btn-primary" onclick="window.publishManagerPost()" style="background: linear-gradient(135deg, var(--primary-maroon), #500000);">
+                    <button class="btn-primary" onclick="window.publishManagerPost()" style="background: var(--color-brand-navy);">
                         <i class="fa-solid fa-paper-plane"></i> 
                         <span data-i18n="publish_timeline_btn">نشر على التايم لاين ✨</span>
                     </button>
@@ -762,7 +817,7 @@
                         <p style="text-align: center; color: var(--text-gray); font-size: 13px; font-weight: 800;" data-i18n="loading_live_classes">جاري فحص الحصص المباشرة الجارية...</p>
                     </div>
 
-                    <div id="manager-daily-monitor-box" style="display: none; border-radius: 16px; border: 4px solid var(--primary-maroon); overflow: hidden; background: #000; margin-top: 20px; box-shadow: var(--shadow-lg);">
+                    <div id="manager-daily-monitor-box" style="display: none; border-radius: 16px; border: 4px solid var(--primary-maroon); overflow: hidden; background: var(--color-text-primary); margin-top: 20px; box-shadow: var(--shadow-lg);">
                         <div style="background: var(--primary-maroon); color: white; padding: 10px 15px; font-weight: 900; font-size: 13px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <span><i class="fa-solid fa-eye"></i> نافذة المراقبة الصامتة الجارية حالياً</span>
@@ -833,7 +888,7 @@
                             <div id="admin-camera-tabs-list" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
                                 <!-- سيتم التعبئة تلقائياً -->
                             </div>
-                            <div id="admin-camera-editor-content" style="background: #fafafa; border-radius: 12px; padding: 15px; border: 1px dashed var(--border-color);">
+                            <div id="admin-camera-editor-content" style="background: var(--color-background); border-radius: 12px; padding: 15px; border: 1px dashed var(--border-color);">
                                 <p style="text-align: center; color: var(--text-gray); font-size: 13px;">اختر كاميرا لتعديلها أو حذفها، أو قم بإضافة كاميرا جديدة بالأعلى.</p>
                             </div>
                         </div>
@@ -1210,8 +1265,8 @@
                         </div>` : '';
 
                     const typeBadge = isLesson ? 
-                        `<span style="background: #fef3c7; color: #d97706; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📹 حجز حصة أونلاين</span>` : 
-                        `<span style="background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📚 شراء كتب من المتجر</span>`;
+                        `<span style="background: var(--color-warning-soft); color: var(--color-warning); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📹 حجز حصة أونلاين</span>` : 
+                        `<span style="background: var(--color-success-soft); color: var(--color-success); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; margin-top: 5px;">📚 شراء كتب من المتجر</span>`;
 
                     tbody.innerHTML += `
                         <tr>
@@ -1299,13 +1354,13 @@
 
                     let statusDisplay = '';
                     if (order.status === 'approved') {
-                        statusDisplay = `<span style="background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-hourglass-half"></i> تم تلقي الطلب 📥</span>`;
+                        statusDisplay = `<span style="background:var(--color-primary-soft); color:var(--color-primary); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-hourglass-half"></i> تم تلقي الطلب 📥</span>`;
                     } else if (order.status === 'shipped') {
-                        statusDisplay = `<span style="background:#fef3c7; color:#d97706; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-truck-fast"></i> تم شحن الطلب 🚚</span>`;
+                        statusDisplay = `<span style="background:var(--color-warning-soft); color:var(--color-warning); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-truck-fast"></i> تم شحن الطلب 🚚</span>`;
                     } else if (order.status === 'delivered') {
-                        statusDisplay = `<span style="background:#d1fae5; color:#065f46; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-circle-check"></i> تم التسليم 🎉</span>`;
+                        statusDisplay = `<span style="background:var(--color-success-soft); color:var(--color-success); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;"><i class="fa-solid fa-circle-check"></i> تم التسليم 🎉</span>`;
                     } else {
-                        statusDisplay = `<span style="background:#cbd5e1; color:#475569; padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">${order.status}</span>`;
+                        statusDisplay = `<span style="background:var(--color-border); color:var(--color-text-secondary); padding:4px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">${order.status}</span>`;
                     }
 
                     tbody.innerHTML += `
@@ -1334,8 +1389,8 @@
                 modal.className = 'modal-overlay';
                 modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;';
                 modal.innerHTML = `
-                    <div style="max-width:90%; max-height:90%; position:relative; background:#fff; padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:#ef4444; cursor:pointer;" onclick="document.getElementById('payment-proof-modal').style.display='none'"></i>
+                    <div style="max-width:90%; max-height:90%; position:relative; background:var(--color-surface); padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:var(--color-error); cursor:pointer;" onclick="document.getElementById('payment-proof-modal').style.display='none'"></i>
                         <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold;">إثبات تحويل المبلغ</h3>
                         <img id="payment-proof-img" src="" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; border:2px solid var(--border-color);">
                     </div>
@@ -1615,7 +1670,7 @@
             container.innerHTML = `
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     <h5 style="font-size: 13px; font-weight: bold; color: var(--primary-maroon); display: flex; align-items: center; gap: 6px; margin: 0;">
-                        <i class="fa-solid fa-pen"></i> تعديل بيانات الكاميرا: <span style="color:#000;">${cam.name}</span>
+                        <i class="fa-solid fa-pen"></i> تعديل بيانات الكاميرا: <span style="color:var(--color-text-primary);">${cam.name}</span>
                     </h5>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
                         <div class="form-group" style="margin: 0;">
@@ -1628,10 +1683,10 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button class="btn-primary" onclick="window.updateCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; background: #10b981;">
+                        <button class="btn-primary" onclick="window.updateCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; background: var(--color-success);">
                             <i class="fa-solid fa-save"></i> حفظ التعديلات
                         </button>
-                        <button class="btn-secondary" onclick="window.deleteCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; color: #ef4444; border-color: #fca5a5; background: #fff5f5;">
+                        <button class="btn-secondary" onclick="window.deleteCamera('${cam.id}')" style="margin: 0; padding: 8px 16px; font-size: 12px; width: auto; color: var(--color-error); border-color: var(--color-error-soft); background: var(--color-error-soft);">
                             <i class="fa-solid fa-trash-can"></i> حذف الكاميرا
                         </button>
                     </div>
@@ -1795,11 +1850,11 @@
                                     <div><strong style="font-weight:900;">${post.authorName || 'عضو المنصة'}</strong></div>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                     </button>
-                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                     </button>
                                 </div>
                             </div>
@@ -2118,9 +2173,19 @@
             }
         };
 
-        // تبديل قائمة الموبايل
-        window.toggleSidebar = () => {
-            document.getElementById('appSidebar').classList.toggle('open');
+        // تبديل قائمة الموبايل بتأثير Drawer المنزلق
+        window.toggleSidebar = (forceState) => {
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar) return;
+            const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('open');
+            if (willOpen) {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+            }
         };
 
         window.checkNurseryStatus = async () => {
@@ -2128,10 +2193,10 @@
                 const docSnap = await getDoc(doc(db, "nurseries", myNurseryId));
                 if (docSnap.exists() && docSnap.data().status === "frozen") {
                     document.body.innerHTML = `
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
-                            <div style="font-size:80px; color:#ef4444; margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
-                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:#ef4444;">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
-                            <p style="font-size:16px; line-height:1.6; color:#475569; max-width:400px; margin:0 auto;">
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:var(--color-background); color:var(--color-text-primary); padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
+                            <div style="font-size:80px; color:var(--color-error); margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
+                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:var(--color-error);">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
+                            <p style="font-size:16px; line-height:1.6; color:var(--color-text-secondary); max-width:400px; margin:0 auto;">
                                 لقد تم تجميد حساب هذه الحضانة مؤقتاً من قبل الإدارة المركزية للشبكة. يرجى التواصل مع إدارة الشبكة لمزيد من التفاصيل.
                             </p>
                         </div>

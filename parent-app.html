@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="description" content="Impact Hub - تطبيق ولي الأمر لمتابعة الطفل والأنشطة والبث المباشر.">
-    <meta name="theme-color" content="#002f6c">
+    <meta name="theme-color" content="#123B6D">
     <title>Impact Hub - Parent App (Full System with Vercel Games)</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="colors.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -25,20 +26,34 @@
     <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
-            --primary-maroon: #002f6c; /* US Dept of Education Navy */
-            --soft-maroon: #005ea2;    /* Federal Blue Accent */
-            --pastel-bg: #f8fafc;      /* High contrast clean background */
-            --white: #ffffff;
-            --pastel-blue: #e0f2fe;
-            --text-dark: #1b1b1b;      /* High contrast dark text */
-            --text-gray: #4b5563;
-            --border-color: #d1d5db;   /* visible clear border lines */
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --facebook-blue: #1877f2;
-            --warning-yellow: #fdb813;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.06);
+            --color-brand-navy: #123B6D;
+            --color-primary: #2563EB;
+            --color-primary-dark: #1E40AF;
+            --color-primary-soft: #EFF6FF;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-text-primary: #172033;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-border: #E2E8F0;
+            --color-success: #16A34A;
+            --color-warning: #D97706;
+            --color-error: #DC2626;
+
+            --primary-maroon: var(--color-brand-navy);
+            --soft-maroon: var(--color-primary);
+            --pastel-bg: var(--color-background);
+            --white: var(--color-surface);
+            --pastel-blue: var(--color-primary-soft);
+            --text-dark: var(--color-text-primary);
+            --text-gray: var(--color-text-secondary);
+            --border-color: var(--color-border);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --facebook-blue: var(--color-primary);
+            --warning-yellow: var(--color-warning);
+            --shadow-sm: 0 1px 2px 0 rgba(18, 59, 109, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(18, 59, 109, 0.08), 0 2px 4px -1px rgba(18, 59, 109, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(18, 59, 109, 0.12), 0 4px 6px -2px rgba(18, 59, 109, 0.06);
         }
 
         * { 
@@ -59,7 +74,7 @@
         }
 
         body { 
-            background-color: #f1f5f9 !important; 
+            background-color: var(--color-background) !important; 
             color: var(--text-dark) !important; 
             display: flex; 
             justify-content: center; 
@@ -108,8 +123,8 @@
             }
         }
 
-        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 30px; background: linear-gradient(180deg, #fffcf8 0%, #fdfbf7 100%); text-align: center; }
-        .login-logo { width: 90px; height: 90px; background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon)); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 45px; color: var(--white); box-shadow: 0 10px 15px -3px rgba(0,47,108,0.35); margin-bottom: 25px; transform: rotate(-5deg); transition: var(--transition); }
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 30px; background: var(--color-background); text-align: center; }
+        .login-logo { width: 90px; height: 90px; background: var(--color-brand-navy); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 45px; color: var(--white); box-shadow: 0 10px 15px -3px rgba(18,59,109,0.3); margin-bottom: 25px; transform: rotate(-5deg); transition: var(--transition); }
         .login-logo:hover { transform: rotate(0deg) scale(1.05); }
         .login-input { width: 100%; padding: 14px 16px; margin-bottom: 15px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 14px; background: var(--white); outline: none; transition: var(--transition); }
         .login-input:focus { border-color: var(--primary-maroon); box-shadow: 0 0 0 4px rgba(0,47,108,0.15); }
@@ -126,11 +141,11 @@
         .header-profile input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         
         .header-actions { display: flex; align-items: center; gap: 14px; }
-        .header-icon { position: relative; font-size: 21px; cursor: pointer; color: var(--primary-maroon); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: #f0f4f8; border-radius: 12px; transition: var(--transition); }
-        .header-icon:hover { background: #e2e8f0; transform: translateY(-1px); }
-        .badge { position: absolute; top: -5px; right: -5px; background: #fbbf24; color: #1e293b; font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
+        .header-icon { position: relative; font-size: 21px; cursor: pointer; color: var(--primary-maroon); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: var(--color-background); border-radius: 12px; transition: var(--transition); }
+        .header-icon:hover { background: var(--color-border); transform: translateY(-1px); }
+        .badge { position: absolute; top: -5px; right: -5px; background: var(--color-warning); color: var(--color-text-primary); font-size: 10px; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
 
-        #main-content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 80px; background: #faf8f5; -webkit-overflow-scrolling: touch; }
+        #main-content-scroll { flex-grow: 1; overflow-y: auto; padding-bottom: 80px; background: var(--color-background); -webkit-overflow-scrolling: touch; }
         
         .tab-content { display: none; padding: 16px; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .tab-content.active { display: block; }
@@ -143,17 +158,17 @@
         .btn-primary { background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon)); color: var(--white); border: none; padding: 12px 18px; border-radius: 12px; font-weight: 800; width: 100%; font-size: 14px; cursor: pointer; transition: var(--transition); margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,47,108,0.15); }
         .btn-primary:active { transform: scale(0.97); opacity: 0.95; }
         .btn-outline { background: transparent; color: var(--primary-maroon); border: 1.5px solid var(--primary-maroon); box-shadow: none; }
-        .btn-outline:hover { background: #f0f4f8; }
-        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: var(--white); border: none; padding: 12px 18px; border-radius: 12px; font-weight: 800; width: 100%; font-size: 14px; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(239,68,68,0.15); }
+        .btn-outline:hover { background: var(--color-background); }
+        .btn-danger { background: var(--color-error); color: var(--white); border: none; padding: 12px 18px; border-radius: 12px; font-weight: 800; width: 100%; font-size: 14px; cursor: pointer; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(239,68,68,0.15); }
         .form-control { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 13px; outline: none; margin-bottom: 12px; background: var(--white); transition: var(--transition); }
         .form-control:focus { border-color: var(--primary-maroon); }
 
         .create-post-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; border: 1px dashed var(--primary-maroon); }
-        .create-post-area textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; font-size: 13px; outline: none; resize: none; background: #fafafa; margin-bottom: 5px; transition: var(--transition); }
+        .create-post-area textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; font-size: 13px; outline: none; resize: none; background: var(--color-background); margin-bottom: 5px; transition: var(--transition); }
         .create-post-area textarea:focus { background: var(--white); border-color: var(--primary-maroon); }
         .post-actions-row { display: flex; justify-content: space-between; align-items: center; }
-        .file-upload-btn { position: relative; color: var(--primary-maroon); font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #f0f4f8; border-radius: 10px; transition: var(--transition); }
-        .file-upload-btn:hover { background: #e2e8f0; }
+        .file-upload-btn { position: relative; color: var(--primary-maroon); font-size: 13px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--color-background); border-radius: 10px; transition: var(--transition); }
+        .file-upload-btn:hover { background: var(--color-border); }
         .file-upload-btn input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         
         .feed-post { background: var(--white); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
@@ -163,11 +178,11 @@
         .post-actions { display: flex; gap: 20px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
         .action-btn { background: none; border: none; color: var(--text-gray); font-weight: 800; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: var(--transition); }
         .action-btn:hover { color: var(--primary-maroon); }
-        .comments-section { margin-top: 12px; background: #f8fafc; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .comments-section { margin-top: 12px; background: var(--color-background); padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); }
         .comment-item { background: var(--white); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 6px; font-size: 13px; line-height: 1.4; }
         .comment-input-area { display: flex; gap: 8px; margin-top: 10px; }
 
-        #daily-student-container { width: 100%; height: 350px; background: #000; border-radius: 16px; display: none; margin-top: 15px; overflow: hidden; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-lg); }
+        #daily-student-container { width: 100%; height: 350px; background: var(--color-text-primary); border-radius: 16px; display: none; margin-top: 15px; overflow: hidden; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-lg); }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; justify-content: center; align-items: flex-end; backdrop-filter: blur(4px); }
         .modal-content { background: var(--pastel-bg); width: 100%; max-width: 430px; border-radius: 24px 24px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto; color: var(--text-dark); display: flex; flex-direction: column; box-shadow: 0 -10px 25px -5px rgba(0,0,0,0.15); }
@@ -178,14 +193,14 @@
         .msg.received { background: var(--white); border: 1px solid var(--border-color); color: var(--text-dark); align-self: flex-end; border-bottom-right-radius: 4px; }
 
         .cart-items-container { margin-bottom: 15px; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; background: var(--white); }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--color-border); font-size: 13px; }
         .invoice-summary { background: var(--white); padding: 14px; border-radius: 12px; margin-bottom: 15px; border: 1.5px dashed var(--border-color); font-size: 13px; }
         .payment-method { border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 12px; background: var(--white); display: flex; align-items: center; gap: 10px; font-size: 13px; }
 
         .products-grid { display: flex; flex-direction: column; gap: 12px; }
         .product-card { background: var(--white) !important; border-radius: 12px; padding: 10px; text-align: right; border: 1px solid var(--border-color); display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; box-shadow: var(--shadow-sm); transition: var(--transition); cursor: pointer; }
         .product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .product-img-compact { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-gray); }
+        .product-img-compact { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: var(--color-background); display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-gray); }
         .product-info-compact { flex-grow: 1; display: flex; flex-direction: column; gap: 3px; justify-content: center; }
 
         .bottom-nav { 
@@ -206,8 +221,8 @@
         }
         .nav-item { text-align: center; color: var(--text-gray); font-size: 9px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-weight: 700; transition: var(--transition); white-space: nowrap; }
         .nav-item i { font-size: 17px; transition: var(--transition); color: var(--text-gray); }
-        .nav-item.active { color: var(--primary-maroon); }
-        .nav-item.active i { transform: translateY(-3px) scale(1.08); color: var(--primary-maroon); }
+        .nav-item.active { color: var(--color-primary); }
+        .nav-item.active i { transform: translateY(-3px) scale(1.08); color: var(--color-primary); }
         
         .app-footer-credit { text-align: center; font-size: 11px; color: var(--text-gray); padding: 24px 10px; opacity: 0.8; font-weight: 500; }
 
@@ -218,7 +233,7 @@
         .game-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: white; margin: 0 auto 12px; background: var(--primary-maroon); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         .game-title { font-size: 13px; font-weight: 800; color: var(--text-dark); }
         
-        .assignment-card { background: #fffbeb; border: 1.5px solid #fde68a; border-right: 5px solid var(--warning-yellow); padding: 14px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); }
+        .assignment-card { background: var(--color-warning-soft); border: 1.5px solid var(--color-warning-soft); border-right: 5px solid var(--warning-yellow); padding: 14px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); }
 
         #game-player-screen { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 2000; flex-direction: column; }
         #game-player-header { background: var(--primary-maroon); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: var(--shadow-sm); }
@@ -228,7 +243,7 @@
 
         /* Switch styles */
         .switch input:checked + .slider {
-            background-color: #2563eb !important;
+            background-color: var(--color-primary) !important;
         }
         .switch .slider:before {
             position: absolute;
@@ -305,14 +320,14 @@
         }
         body.accessibility-sensory-calm :root,
         body.accessibility-sensory-calm {
-            --primary-maroon: #1e293b !important; /* Muted Slate Gray */
-            --soft-maroon: #475569 !important;
-            --kid-pink: #94a3b8 !important;
-            --kid-blue: #64748b !important;
-            --kid-yellow: #cbd5e1 !important;
-            --kid-green: #94a3b8 !important;
-            --kid-purple: #334155 !important;
-            --pastel-bg: #f1f5f9 !important;
+            --primary-maroon: var(--color-text-primary) !important; /* Muted Slate Gray */
+            --soft-maroon: var(--color-text-secondary) !important;
+            --kid-pink: var(--color-text-secondary) !important;
+            --kid-blue: var(--color-text-secondary) !important;
+            --kid-yellow: var(--color-border) !important;
+            --kid-green: var(--color-text-secondary) !important;
+            --kid-purple: var(--color-text-secondary) !important;
+            --pastel-bg: var(--color-background) !important;
         }
     </style>
 </head>
@@ -382,12 +397,12 @@
                 <!-- 1. الرئيسية / التايم لاين -->
                 <div id="home" class="tab-content active">
                     <!-- تنبيه الحصص المباشرة النشطة حالياً -->
-                    <div id="active-live-class-alert" style="display: none; background: linear-gradient(135deg, #dc2626, #991b1b); color: white; padding: 14px 16px; border-radius: 14px; margin: 15px; font-weight: 800; font-size: 13px; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); flex-wrap: wrap; gap: 10px;">
+                    <div id="active-live-class-alert" style="display: none; background: linear-gradient(135deg, var(--color-error), var(--color-error)); color: white; padding: 14px 16px; border-radius: 14px; margin: 15px; font-weight: 800; font-size: 13px; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); flex-wrap: wrap; gap: 10px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <span class="pulse-indicator" style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; display: inline-block;"></span>
+                            <span class="pulse-indicator" style="width: 10px; height: 10px; background: var(--color-success); border-radius: 50%; display: inline-block;"></span>
                             <span>🔴 هناك حصة مباشرة نشطة الآن مع <strong id="active-class-teacher">أ / المعلم</strong>!</span>
                         </div>
-                        <button class="btn-primary" onclick="window.joinLiveClassFromAlert()" style="margin: 0; padding: 6px 12px; width: auto; font-size: 11px; background: white; color: #991b1b; font-weight: 900; border-radius: 8px; box-shadow: none;">
+                        <button class="btn-primary" onclick="window.joinLiveClassFromAlert()" style="margin: 0; padding: 6px 12px; width: auto; font-size: 11px; background: white; color: var(--color-error); font-weight: 900; border-radius: 8px; box-shadow: none;">
                             دخول الحصة فوراً 📹
                         </button>
                     </div>
@@ -398,8 +413,8 @@
                         
                         <!-- YouTube Video Link Input -->
                         <div style="position: relative; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: #ff0000; font-size: 16px; display: flex; align-items: center;"><i class="fa-brands fa-youtube"></i></span>
-                            <input type="text" id="parent-post-youtube" placeholder="رابط فيديو يوتيوب (اختياري)..." style="width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; background: #faf9f6; color: var(--text-dark); font-family: inherit;">
+                            <span style="color: var(--color-error); font-size: 16px; display: flex; align-items: center;"><i class="fa-brands fa-youtube"></i></span>
+                            <input type="text" id="parent-post-youtube" placeholder="رابط فيديو يوتيوب (اختياري)..." style="width: 100%; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; background: var(--color-background); color: var(--text-dark); font-family: inherit;">
                         </div>
 
                         <!-- Image Preview Area -->
@@ -411,7 +426,7 @@
                         </div>
 
                         <div class="post-actions-row" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div class="file-upload-btn" style="position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; background: #f1f5f9; cursor: pointer; font-size: 13px; font-weight: bold; color: var(--text-dark); transition: all 0.2s;">
+                            <div class="file-upload-btn" style="position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; background: var(--color-background); cursor: pointer; font-size: 13px; font-weight: bold; color: var(--text-dark); transition: all 0.2s;">
                                 <i class="fa-solid fa-camera" style="color: var(--primary-maroon);"></i> <span data-i18n="attach_img">إرفاق صورة</span>
                                 <input type="file" id="parent-post-file" accept="image/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;" onchange="window.handleParentPostImgSelected(this)">
                             </div>
@@ -438,15 +453,15 @@
                                 <p style="font-size: 11px; color: var(--text-gray);" data-i18n="tutoring_subject">لغة إنجليزية</p>
                             </div>
                         </div>
-                        <button class="btn-primary" style="background:#22c55e; margin-bottom: 10px;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
+                        <button class="btn-primary" style="background:var(--color-success); margin-bottom: 10px;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
                         <button class="btn-danger" style="display:none;" id="btn-leave-class" onclick="window.leaveLiveClass()"><i class="fa-solid fa-phone-slash"></i> <span data-i18n="leave_live_btn">مغادرة الحصة</span></button>
                         
-                        <div class="simulation-link-box" id="parent-live-simulation-box" style="display: none; background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 15px; text-align: center; gap: 8px; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
+                        <div class="simulation-link-box" id="parent-live-simulation-box" style="display: none; background: var(--color-primary-soft); border: 1px solid var(--color-primary-soft); color: var(--color-primary); padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 15px; text-align: center; gap: 8px; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
                             <div>
-                                <i class="fa-solid fa-link" style="color: #0284c7;"></i> 
-                                <span style="color: #0369a1;">هل تواجه شاشة بيضاء أو سوداء؟ أو جهازك لا يحتوي على كاميرا؟</span>
+                                <i class="fa-solid fa-link" style="color: var(--color-primary);"></i> 
+                                <span style="color: var(--color-primary);">هل تواجه شاشة بيضاء أو سوداء؟ أو جهازك لا يحتوي على كاميرا؟</span>
                             </div>
-                            <a id="parent-simulation-direct-link" href="#" target="_blank" class="btn-primary" style="margin: 0; padding: 8px 16px; background: #0284c7; color: white; border-radius: 8px; font-size: 11px; text-decoration: none; width: auto; font-weight: 900; box-shadow: none; display: inline-flex; align-items: center; gap: 6px;">
+                            <a id="parent-simulation-direct-link" href="#" target="_blank" class="btn-primary" style="margin: 0; padding: 8px 16px; background: var(--color-primary); color: white; border-radius: 8px; font-size: 11px; text-decoration: none; width: auto; font-weight: 900; box-shadow: none; display: inline-flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> افتح البث المباشر في نافذة مستقلة فورا 🚀
                             </a>
                         </div>
@@ -478,10 +493,10 @@
                     <h3 class="section-title" data-i18n="marketplace_title">متجر الحضانة والكتب</h3>
                     
                     <!-- طلبات الشراء الخاصة بولي الأمر -->
-                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: #fffcf0 !important; border: 1.5px solid #fef08a;">
-                        <h4 style="font-size: 14px; margin-bottom: 8px; color: #854d0e; font-weight: bold; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: var(--color-background) !important; border: 1.5px solid var(--color-warning-soft);">
+                        <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--color-warning); font-weight: bold; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
                             <span><i class="fa-solid fa-truck-fast"></i> <span data-i18n="my_orders_title">طلباتي وحالة الشحن والتوصيل 🚚</span></span>
-                            <small style="font-size: 11px; font-weight: normal; color: #a16207; cursor: pointer; background: #fef08a; padding: 2px 6px; border-radius: 4px;" onclick="window.fetchParentOrders()"><i class="fa-solid fa-sync"></i> تحديث</small>
+                            <small style="font-size: 11px; font-weight: normal; color: var(--color-warning); cursor: pointer; background: var(--color-warning-soft); padding: 2px 6px; border-radius: 4px;" onclick="window.fetchParentOrders()"><i class="fa-solid fa-sync"></i> تحديث</small>
                         </h4>
                         <div id="parent-orders-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
                             <div style="font-size: 12px; color: var(--text-gray); text-align: center; padding: 10px;" data-i18n="no_orders_yet">لا توجد طلبات شراء حالية.</div>
@@ -496,27 +511,27 @@
                     <h3 class="section-title"><span data-i18n="kids_title">ألعاب المناهج التفاعلية 🎮</span></h3>
                     
                     <!-- تسجيل اسم الطفل -->
-                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: #f0fdf4 !important; border: 1.5px solid #bbf7d0;">
-                        <h4 style="font-size: 14px; margin-bottom: 8px; color: #166534; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+                    <div class="card" style="margin-bottom: 20px; padding: 14px; background: var(--color-success-soft) !important; border: 1.5px solid var(--color-success-soft);">
+                        <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--color-success); font-weight: bold; display: flex; align-items: center; gap: 6px;">
                             <i class="fa-solid fa-graduation-cap"></i> <span data-i18n="kid_name_label">اسم طفلي الموهوب:</span>
                         </h4>
                         <div style="display: flex; gap: 8px;">
                             <input type="text" id="kid-name-input" class="form-control" style="margin: 0; flex-grow: 1;" data-i18n-placeholder="kid_name_placeholder" placeholder="ادخل اسم طفلك هنا...">
-                            <button class="btn-primary" style="margin: 0; width: auto; background: #22c55e;" onclick="window.saveKidName()"><span data-i18n="save_btn">حفظ</span></button>
+                            <button class="btn-primary" style="margin: 0; width: auto; background: var(--color-success);" onclick="window.saveKidName()"><span data-i18n="save_btn">حفظ</span></button>
                         </div>
                     </div>
 
                     <!-- إعدادات التكيف لملف تعريف الطفل -->
-                    <div class="card" style="margin-bottom: 20px; padding: 16px; border: 1.5px solid #dbeafe; background: #f0f9ff !important;">
-                        <h4 style="font-size: 14px; margin-bottom: 12px; color: #1e40af; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                    <div class="card" style="margin-bottom: 20px; padding: 16px; border: 1.5px solid var(--color-primary-soft); background: var(--color-primary-soft) !important;">
+                        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--color-primary); font-weight: bold; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-universal-access"></i> <span data-i18n="accessibility_settings_title">الملف الشخصي للتكيف والدمج التعليمي ♿🧭</span>
                         </h4>
                         
                         <div style="display: flex; flex-direction: column; gap: 12px; text-align: right;">
                             <!-- Focus Mode -->
-                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--color-border);">
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-bullseye"></i></span>
+                                    <span style="font-size: 18px; color: var(--color-primary);"><i class="fa-solid fa-bullseye"></i></span>
                                     <div>
                                         <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="focus_mode_label">وضع التركيز (Focus Mode)</div>
                                         <div style="font-size: 10px; color: var(--text-gray);" data-i18n="focus_mode_desc">لتقليل المشتتات والتحفيز البصري المفرط</div>
@@ -524,14 +539,14 @@
                                 </div>
                                 <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
                                     <input type="checkbox" id="acc-focus-mode" onchange="window.toggleAccessibility('focusMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
-                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--color-border); transition: .3s; border-radius: 24px;"></span>
                                 </label>
                             </div>
                             
                             <!-- Accessible Reading Mode -->
-                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--color-border);">
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-book-open"></i></span>
+                                    <span style="font-size: 18px; color: var(--color-primary);"><i class="fa-solid fa-book-open"></i></span>
                                     <div>
                                         <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="reading_mode_label">وضع القراءة الميسرة (Reading Mode)</div>
                                         <div style="font-size: 10px; color: var(--text-gray);" data-i18n="reading_mode_desc">لتكبير الخطوط وزيادة مسافات الكلمات والأسطر</div>
@@ -539,14 +554,14 @@
                                 </div>
                                 <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
                                     <input type="checkbox" id="acc-reading-mode" onchange="window.toggleAccessibility('readingMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
-                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--color-border); transition: .3s; border-radius: 24px;"></span>
                                 </label>
                             </div>
                             
                             <!-- Sensory Calm Mode -->
-                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid #bfdbfe;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--color-border);">
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 18px; color: #0284c7;"><i class="fa-solid fa-spa"></i></span>
+                                    <span style="font-size: 18px; color: var(--color-primary);"><i class="fa-solid fa-spa"></i></span>
                                     <div>
                                         <div style="font-size: 12px; font-weight: bold; color: var(--text-dark);" data-i18n="calm_mode_label">وضع الهدوء الحسي (Sensory Calm)</div>
                                         <div style="font-size: 10px; color: var(--text-gray);" data-i18n="calm_mode_desc">لتقليل الألوان الصاخبة وإلغاء الحركة والتحفيز السمعي البصري</div>
@@ -554,7 +569,7 @@
                                 </div>
                                 <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px; margin: 0;">
                                     <input type="checkbox" id="acc-calm-mode" onchange="window.toggleAccessibility('sensoryCalmMode', this.checked)" style="opacity: 0; width: 0; height: 0;">
-                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;"></span>
+                                    <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--color-border); transition: .3s; border-radius: 24px;"></span>
                                 </label>
                             </div>
                         </div>
@@ -568,27 +583,27 @@
                     <h4 style="font-size:14px; margin-top:20px; margin-bottom:10px; color:var(--text-dark);" data-i18n="library_games"><i class="fa-solid fa-book-open"></i> مكتبة ألعاب إمباكت هب المعتمدة (Vercel Live):</h4>
                     <div class="games-grid">
                         <div class="game-card" onclick="window.playGame('لعبة تتبع الحروف')">
-                            <div class="game-icon" style="background: #ec4899;"><i class="fa-solid fa-pen-nib"></i></div>
+                            <div class="game-icon" style="background: var(--color-primary);"><i class="fa-solid fa-pen-nib"></i></div>
                             <div class="game-title" data-i18n="game_trace">تتبع الحروف</div>
                         </div>
                         <div class="game-card" onclick="window.playGame('لعبة بناء الكلمات ثلاثية الأبعاد')">
-                            <div class="game-icon" style="background: #3b82f6;"><i class="fa-solid fa-cubes"></i></div>
+                            <div class="game-icon" style="background: var(--color-primary);"><i class="fa-solid fa-cubes"></i></div>
                             <div class="game-title" data-i18n="game_build">بناء الكلمات 3D</div>
                         </div>
                         <div class="game-card" onclick="window.playGame('لعبة البحث عن الحروف ثلاثية الأبعاد')">
-                            <div class="game-icon" style="background: #10b981;"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <div class="game-icon" style="background: var(--color-success);"><i class="fa-solid fa-magnifying-glass"></i></div>
                             <div class="game-title" data-i18n="game_search">البحث عن الحروف 3D</div>
                         </div>
                         <div class="game-card" onclick="window.playGame('لعبة مغامرات مطابقة الأرقام')">
-                            <div class="game-icon" style="background: #f59e0b;"><i class="fa-solid fa-arrow-up-1-9"></i></div>
+                            <div class="game-icon" style="background: var(--color-warning);"><i class="fa-solid fa-arrow-up-1-9"></i></div>
                             <div class="game-title" data-i18n="game_match">مطابقة الأرقام 3D</div>
                         </div>
                         <div class="game-card" onclick="window.playGame('لعبة مطابقة الذاكرة ثلاثية الأبعاد')">
-                            <div class="game-icon" style="background: #8b5cf6;"><i class="fa-solid fa-brain"></i></div>
+                            <div class="game-icon" style="background: var(--color-primary);"><i class="fa-solid fa-brain"></i></div>
                             <div class="game-title" data-i18n="game_memory">مطابقة الذاكرة 3D</div>
                         </div>
                         <div class="game-card" onclick="window.playGame('لعبة جمع الحروف والمغامرات')">
-                            <div class="game-icon" style="background: #6366f1;"><i class="fa-solid fa-gem"></i></div>
+                            <div class="game-icon" style="background: var(--color-primary);"><i class="fa-solid fa-gem"></i></div>
                             <div class="game-title" data-i18n="game_collect">جمع الحروف والمغامرات</div>
                         </div>
                     </div>
@@ -599,7 +614,7 @@
                     <h3 class="section-title"><span data-i18n="profile_title">الملف الشخصي وإعدادات الحساب ⚙️</span></h3>
                     
                     <div class="card" style="text-align: center; padding: 25px 20px;">
-                        <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-md); overflow: hidden; background: #f1f5f9;">
+                        <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 15px; border-radius: 50%; border: 3px solid var(--primary-maroon); box-shadow: var(--shadow-md); overflow: hidden; background: var(--color-background);">
                             <img id="profile-tab-avatar" src="https://via.placeholder.com/100" style="width: 100%; height: 100%; object-fit: cover;" alt="Avatar">
                             <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); padding: 4px 0; color: white; font-size: 10px; cursor: pointer;">
                                 <i class="fa-solid fa-camera"></i>
@@ -681,24 +696,24 @@
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
                                 <input type="radio" name="payment-type" value="Cash" checked onchange="window.onPaymentMethodChange()">
-                                <i class="fa-solid fa-money-bill-wave" style="color: #10b981; font-size: 16px;"></i>
+                                <i class="fa-solid fa-money-bill-wave" style="color: var(--color-success); font-size: 16px;"></i>
                                 <span data-i18n="pay_cash">الدفع نقداً بالمقر</span>
                             </label>
                             <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
                                 <input type="radio" name="payment-type" value="Vodafone Cash" onchange="window.onPaymentMethodChange()">
-                                <i class="fa-solid fa-mobile-screen" style="color: #e60000; font-size: 16px;"></i>
+                                <i class="fa-solid fa-mobile-screen" style="color: var(--color-error); font-size: 16px;"></i>
                                 <span data-i18n="pay_voda">فودافون كاش (Vodafone Cash)</span>
                             </label>
                             <label class="payment-method-option" style="display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border-color); padding: 10px; border-radius: 12px; cursor: pointer; background: var(--white); font-size: 13px;">
                                 <input type="radio" name="payment-type" value="InstaPay" onchange="window.onPaymentMethodChange()">
-                                <i class="fa-solid fa-building-columns" style="color: #6366f1; font-size: 16px;"></i>
+                                <i class="fa-solid fa-building-columns" style="color: var(--color-primary); font-size: 16px;"></i>
                                 <span data-i18n="pay_insta">انستاباي (InstaPay)</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- جزء تفاصيل التحويل وصورة إثبات الدفع -->
-                    <div id="transfer-details-area" style="display: none; background: #f8fafc; border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 15px;">
+                    <div id="transfer-details-area" style="display: none; background: var(--color-background); border: 1px dashed var(--border-color); padding: 12px; border-radius: 12px; margin-bottom: 15px;">
                         <p id="transfer-instructions" style="font-size: 12px; color: var(--text-dark); font-weight: bold; margin-bottom: 10px;"></p>
                         <label style="display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px;" data-i18n="upload_proof_lbl">رفع صورة إثبات التحويل:</label>
                         <input type="file" id="payment-proof-file" class="form-control" accept="image/*" style="margin-bottom: 0;">
@@ -717,7 +732,7 @@
                     </div>
                     <div style="text-align: center; margin-bottom: 15px;">
                         <img id="pdm-image" src="" style="max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
-                        <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 12px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
+                        <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 12px; background: var(--color-background); display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
                             <i class="fa-solid fa-book-bookmark"></i>
                         </div>
                     </div>
@@ -726,18 +741,18 @@
                         <div id="pdm-stars" style="display: flex; gap: 2px;"></div>
                         <span id="pdm-sales" style="font-size: 11px; color: var(--text-gray); font-weight: bold;"></span>
                     </div>
-                    <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: var(--color-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 13px; color: var(--text-dark); font-weight: 800;">السعر الفردي:</span>
                         <div id="pdm-price" style="font-size: 20px; font-weight: 900; color: var(--kid-pink);"></div>
                     </div>
 
                     <!-- تفاصيل طرق الدفع المتاحة -->
-                    <div style="border: 1.5px solid #bae6fd; background: #f0f9ff; border-radius: 12px; padding: 14px; margin-bottom: 15px; text-align: right;">
-                        <h5 style="font-size: 13px; font-weight: bold; color: #0369a1; margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتأكيد طلبك:</h5>
-                        <ul style="font-size: 11px; color: #0369a1; padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
+                    <div style="border: 1.5px solid var(--color-primary-soft); background: var(--color-primary-soft); border-radius: 12px; padding: 14px; margin-bottom: 15px; text-align: right;">
+                        <h5 style="font-size: 13px; font-weight: bold; color: var(--color-primary); margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتأكيد طلبك:</h5>
+                        <ul style="font-size: 11px; color: var(--color-primary); padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
                             <li><strong>الدفع نقداً بالمقر:</strong> سداد قيمة المنتج مباشرةً بمقر الحضانة للتفعيل والتسليم الفوري.</li>
-                            <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color:#dc2626; text-decoration: underline; font-weight: 900;">01012345678</span> ورفع لقطة الشاشة في السلة.</li>
-                            <li><strong>إنستاباي:</strong> تحويل المبلغ لـ <span style="color:#16a34a; text-decoration: underline; font-weight: 900;">nursery@instapay</span> ورفع لقطة الشاشة في السلة.</li>
+                            <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color:var(--color-error); text-decoration: underline; font-weight: 900;">01012345678</span> ورفع لقطة الشاشة في السلة.</li>
+                            <li><strong>إنستاباي:</strong> تحويل المبلغ لـ <span style="color:var(--color-success); text-decoration: underline; font-weight: 900;">nursery@instapay</span> ورفع لقطة الشاشة في السلة.</li>
                         </ul>
                     </div>
 
@@ -770,12 +785,12 @@
                         <input type="text" id="booking-student-name" class="form-control" placeholder="أدخل اسم الطالب رباعي..." style="margin: 0; width: 100%;">
                     </div>
 
-                    <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.15); padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: #166534; display: flex; align-items: center; gap: 8px;">
+                    <div style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.15); padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; color: var(--color-success); display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>هذه الحصة فردية خاصة لطالب واحد، وسيتم تحديد سعرها والاتفاق على تفاصيلها مع المدرس وإدارة الحضانة.</span>
                     </div>
 
-                    <button class="btn-primary" onclick="window.submitBooking()" style="background: linear-gradient(135deg, var(--primary-maroon), #991b1b); box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);">
+                    <button class="btn-primary" onclick="window.submitBooking()" style="background: var(--color-brand-navy); box-shadow: 0 8px 15px rgba(128, 0, 0, 0.15);">
                         <i class="fa-solid fa-check"></i> تأكيد الحجز فوراً 🚀
                     </button>
                 </div>
@@ -1263,10 +1278,10 @@
                 if (slotBookings.length > 0) {
                     bookingsListHtml = `
                         <div style="margin-top: 8px; border-top: 1px dashed rgba(128, 0, 0, 0.1); padding-top: 6px; width: 100%;">
-                            <span style="font-size: 10px; font-weight: 900; color: #991b1b; display: block; margin-bottom: 4px;">الحصص المحجوزة 🔴:</span>
+                            <span style="font-size: 10px; font-weight: 900; color: var(--color-error); display: block; margin-bottom: 4px;">الحصص المحجوزة 🔴:</span>
                             <div style="display: flex; flex-direction: column; gap: 3px;">
                                 ${slotBookings.map(b => `
-                                    <div style="font-size: 9px; background: rgba(239, 68, 68, 0.05); padding: 3px 6px; border-radius: 4px; color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.1); display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-size: 9px; background: rgba(239, 68, 68, 0.05); padding: 3px 6px; border-radius: 4px; color: var(--color-error); border: 1px solid rgba(239, 68, 68, 0.1); display: flex; justify-content: space-between; align-items: center;">
                                         <span><i class="fa-solid fa-lock"></i> ${b.time}</span>
                                         <strong>(${b.studentName})</strong>
                                     </div>
@@ -1276,26 +1291,26 @@
                     `;
                 } else {
                     bookingsListHtml = `
-                        <div style="font-size: 9px; color: #166534; margin-top: 6px; width: 100%;">
+                        <div style="font-size: 9px; color: var(--color-success); margin-top: 6px; width: 100%;">
                             <i class="fa-solid fa-circle-check"></i> اليوم متاح بالكامل للحجز الخارجي 🟢
                         </div>
                     `;
                 }
 
-                const cardStyle = `background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
+                const cardStyle = `background: var(--color-success-soft); border: 1.5px solid var(--color-success-soft); color: var(--color-success); padding: 12px; border-radius: 12px; font-size: 11px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; box-shadow: var(--shadow-sm);`;
                 const escapedDay = slot.day.replace(/'/g, "\\'");
                 const escapedTime = slot.time.replace(/'/g, "\\'");
                 const escapedTeacherName = (slot.teacherName || "أ / أحمد علي").replace(/'/g, "\\'");
 
                 const contentHtml = `
                     <div style="width: 100%;">
-                        <div style="font-weight: 900; display: flex; align-items: center; gap: 4px; color:#15803d; font-size: 12px;">
+                        <div style="font-weight: 900; display: flex; align-items: center; gap: 4px; color:var(--color-success); font-size: 12px;">
                             <i class="fa-solid fa-calendar-day"></i> ${slot.day}
                         </div>
-                        <div style="font-size: 10px; margin-top: 2px; color: #166534; font-weight: bold;">المجال العام: ${slot.time}</div>
+                        <div style="font-size: 10px; margin-top: 2px; color: var(--color-success); font-weight: bold;">المجال العام: ${slot.time}</div>
                     </div>
                     ${bookingsListHtml}
-                    <button class="btn-primary" onclick="window.openBookingModal('${escapedDay}', '${escapedTime}', '${escapedTeacherName}')" style="margin: 6px 0 0 0; padding: 5px 8px; font-size: 10px; width: 100%; background: #22c55e; color: white; border-radius: 8px; font-weight: 900; text-align: center; box-shadow: none; align-self: stretch;">
+                    <button class="btn-primary" onclick="window.openBookingModal('${escapedDay}', '${escapedTime}', '${escapedTeacherName}')" style="margin: 6px 0 0 0; padding: 5px 8px; font-size: 10px; width: 100%; background: var(--color-success); color: white; border-radius: 8px; font-weight: 900; text-align: center; box-shadow: none; align-self: stretch;">
                         احجز حصة 📅
                     </button>
                 `;
@@ -1512,7 +1527,7 @@
                 }
 
                 const isGlobal = post.targetApp !== undefined;
-                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:#002f6c; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
+                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:var(--color-brand-navy); padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
 
                 container.innerHTML += `
                     <div class="feed-post" style="background: var(--white); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
@@ -1523,11 +1538,11 @@
                             </div>
                             ${(!isGlobal && post.authorId === activeParentId) ? `
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editPost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
-                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i> تعديل
+                                <button onclick="window.editPost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i> تعديل
                                 </button>
-                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
-                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i> حذف
+                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px; cursor: pointer;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i> حذف
                                 </button>
                             </div>` : ''}
                         </div>
@@ -1884,7 +1899,7 @@
                 if (parentCameras.length === 0) {
                     container.innerHTML = `
                         <div class="card" style="text-align: center; padding: 40px 15px; background: white;">
-                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: var(--color-border); margin-bottom: 15px;"></i>
                             <h4 style="font-size: 16px; font-weight: bold; color: var(--text-dark); margin-bottom: 10px;">
                                 ${currentLang === 'ar' ? 'لا توجد كاميرات نشطة مخصصة لك' : 'No active cameras assigned to you'}
                             </h4>
@@ -1916,14 +1931,14 @@
                 iframeContainer.style.position = 'relative';
                 iframeContainer.style.width = '100%';
                 iframeContainer.style.paddingTop = '56.25%'; // 16:9 Ratio
-                iframeContainer.style.background = '#000';
+                iframeContainer.style.background = 'var(--color-text-primary)';
 
                 const streamOverlay = document.createElement('div');
                 streamOverlay.style.position = 'absolute';
                 streamOverlay.style.top = '10px';
                 streamOverlay.style.left = '10px';
                 streamOverlay.style.background = 'rgba(0,0,0,0.6)';
-                streamOverlay.style.color = '#22c55e';
+                streamOverlay.style.color = 'var(--color-success)';
                 streamOverlay.style.padding = '4px 8px';
                 streamOverlay.style.borderRadius = '4px';
                 streamOverlay.style.fontSize = '11px';
@@ -1932,14 +1947,14 @@
                 streamOverlay.style.alignItems = 'center';
                 streamOverlay.style.gap = '6px';
                 streamOverlay.style.zIndex = '10';
-                streamOverlay.innerHTML = `<span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> LIVE`;
+                streamOverlay.innerHTML = `<span style="width: 8px; height: 8px; background: var(--color-success); border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> LIVE`;
 
                 const cameraNameOverlay = document.createElement('div');
                 cameraNameOverlay.style.position = 'absolute';
                 cameraNameOverlay.style.top = '10px';
                 cameraNameOverlay.style.right = '10px';
                 cameraNameOverlay.style.background = 'rgba(0,0,0,0.6)';
-                cameraNameOverlay.style.color = '#fff';
+                cameraNameOverlay.style.color = 'var(--color-surface)';
                 cameraNameOverlay.style.padding = '4px 8px';
                 cameraNameOverlay.style.borderRadius = '4px';
                 cameraNameOverlay.style.fontSize = '11px';
@@ -1950,7 +1965,7 @@
                 timeOverlay.style.bottom = '10px';
                 timeOverlay.style.left = '10px';
                 timeOverlay.style.background = 'rgba(0,0,0,0.6)';
-                timeOverlay.style.color = '#fff';
+                timeOverlay.style.color = 'var(--color-surface)';
                 timeOverlay.style.padding = '4px 8px';
                 timeOverlay.style.borderRadius = '4px';
                 timeOverlay.style.fontSize = '10px';
@@ -1979,10 +1994,10 @@
 
                 const controlsArea = document.createElement('div');
                 controlsArea.style.padding = '12px 15px';
-                controlsArea.style.background = '#fafafa';
-                controlsArea.style.borderTop = '1px solid #eee';
+                controlsArea.style.background = 'var(--color-background)';
+                controlsArea.style.borderTop = '1px solid var(--color-border)';
                 controlsArea.style.fontSize = '12px';
-                controlsArea.style.color = '#64748b';
+                controlsArea.style.color = 'var(--color-text-secondary)';
 
                 playerCard.appendChild(iframeContainer);
                 playerCard.appendChild(controlsArea);
@@ -1992,7 +2007,7 @@
 
                 const selectCamera = (cam) => {
                     cameraNameOverlay.innerText = cam.name;
-                    controlsArea.innerHTML = `${currentLang === 'ar' ? 'متابعة حالية لـ:' : 'Currently monitoring:'} <strong>${cam.name}</strong><br><small style="font-size:10px;color:#94a3b8;word-break:break-all;">Link: ${cam.url || '-'}</small>`;
+                    controlsArea.innerHTML = `${currentLang === 'ar' ? 'متابعة حالية لـ:' : 'Currently monitoring:'} <strong>${cam.name}</strong><br><small style="font-size:10px;color:var(--color-text-secondary);word-break:break-all;">Link: ${cam.url || '-'}</small>`;
                     
                     let url = cam.url || '';
                     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -2016,12 +2031,12 @@
 
                     tabBtn.onclick = () => {
                         tabsContainer.querySelectorAll('button').forEach(btn => {
-                            btn.style.background = '#f1f5f9';
-                            btn.style.color = '#334155';
-                            btn.style.borderColor = '#e2e8f0';
+                            btn.style.background = 'var(--color-background)';
+                            btn.style.color = 'var(--color-text-secondary)';
+                            btn.style.borderColor = 'var(--color-border)';
                         });
                         tabBtn.style.background = 'var(--primary-maroon)';
-                        tabBtn.style.color = '#fff';
+                        tabBtn.style.color = 'var(--color-surface)';
                         tabBtn.style.borderColor = 'var(--primary-maroon)';
                         selectCamera(cam);
                     };
@@ -2049,7 +2064,7 @@
             document.getElementById('pdm-sales').innerText = currentLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
             
             const starsContainer = document.getElementById('pdm-stars');
-            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:14px;"></i>`).join('');
+            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:14px;"></i>`).join('');
             
             const imgEl = document.getElementById('pdm-image');
             const placeholderEl = document.getElementById('pdm-image-placeholder');
@@ -2094,11 +2109,11 @@
                     <div class="product-info-compact">
                         <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">${dict.book_interactive}</h4>
                         <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
                         </div>
                         <div style="font-size: 10px; color: var(--text-gray);">تم بيع 42 قطعة</div>
                     </div>
@@ -2114,11 +2129,11 @@
                     <div class="product-info-compact">
                         <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">${dict.blocks_interactive}</h4>
                         <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
-                            <i class="fa-solid fa-star" style="color: #fbc21e; font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
                         </div>
                         <div style="font-size: 10px; color: var(--text-gray);">تم بيع 89 قطعة</div>
                     </div>
@@ -2135,7 +2150,7 @@
                     const prod = docSnap.data();
                     const rating = prod.rating || 5;
                     const sales = prod.salesCount || 0;
-                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:11px;"></i>`).join('');
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:11px;"></i>`).join('');
                     
                     htmlContent += `
                         <div class="product-card" onclick="window.showProductDetails('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales})">
@@ -2289,7 +2304,7 @@
                                 <strong style="font-size:13px; color:var(--text-dark);">${hw.gameName}</strong>
                                 <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">${dict.notif_hw_alert}</div>
                             </div>
-                            <button class="btn-primary" style="margin:0; width:auto; padding:5px 12px; background:#22c55e;" onclick="window.playGame('${hw.gameName}', '${d.id}')">${dict.notif_hw_btn}</button>
+                            <button class="btn-primary" style="margin:0; width:auto; padding:5px 12px; background:var(--color-success);" onclick="window.playGame('${hw.gameName}', '${d.id}')">${dict.notif_hw_btn}</button>
                         </div>`;
                 });
             });
@@ -2346,28 +2361,28 @@
 
                     if (order.status === 'pending') {
                         statusText = currentLang === 'ar' ? 'قيد مراجعة الحضانة ⏳' : 'Pending Nursery ⏳';
-                        statusBg = '#fef3c7';
-                        statusColor = '#b45309';
+                        statusBg = 'var(--color-warning-soft)';
+                        statusColor = 'var(--color-warning)';
                     } else if (order.status === 'approved') {
                         statusText = currentLang === 'ar' ? 'تم تلقي الطلب 📥' : 'Order Received 📥';
-                        statusBg = '#e0f2fe';
-                        statusColor = '#0369a1';
+                        statusBg = 'var(--color-primary-soft)';
+                        statusColor = 'var(--color-primary)';
                     } else if (order.status === 'shipped') {
                         statusText = currentLang === 'ar' ? 'تم شحن الطلب 🚚' : 'Order Shipped 🚚';
-                        statusBg = '#fef9c3';
-                        statusColor = '#a16207';
+                        statusBg = 'var(--color-warning-soft)';
+                        statusColor = 'var(--color-warning)';
                     } else if (order.status === 'delivered') {
                         statusText = currentLang === 'ar' ? 'تم التسليم 🎉' : 'Delivered 🎉';
-                        statusBg = '#d1fae5';
-                        statusColor = '#065f46';
+                        statusBg = 'var(--color-success-soft)';
+                        statusColor = 'var(--color-success)';
                     } else {
                         statusText = order.status;
-                        statusBg = '#cbd5e1';
-                        statusColor = '#475569';
+                        statusBg = 'var(--color-border)';
+                        statusColor = 'var(--color-text-secondary)';
                     }
 
                     listEl.innerHTML += `
-                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; box-shadow: var(--shadow-sm);">
+                        <div style="background: white; border: 1px solid var(--color-border); border-radius: 10px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; box-shadow: var(--shadow-sm);">
                             <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                                 <strong style="font-size: 12px; color: var(--text-dark);">${itemsNames}</strong>
                                 <span style="font-size: 10px; font-weight: bold; background: ${statusBg}; color: ${statusColor}; padding: 2px 6px; border-radius: 4px; white-space: nowrap;">${statusText}</span>
@@ -2720,10 +2735,10 @@
                 const docSnap = await getDoc(doc(db, "nurseries", myNurseryId));
                 if (docSnap.exists() && docSnap.data().status === "frozen") {
                     document.body.innerHTML = `
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
-                            <div style="font-size:80px; color:#ef4444; margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
-                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:#ef4444;">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
-                            <p style="font-size:16px; line-height:1.6; color:#475569; max-width:400px; margin:0 auto;">
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:var(--color-background); color:var(--color-text-primary); padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
+                            <div style="font-size:80px; color:var(--color-error); margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
+                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:var(--color-error);">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
+                            <p style="font-size:16px; line-height:1.6; color:var(--color-text-secondary); max-width:400px; margin:0 auto;">
                                 لقد تم تجميد حساب هذه الحضانة مؤقتاً من قبل الإدارة المركزية للشبكة. يرجى التواصل مع إدارة الحضانة لمزيد من التفاصيل.
                             </p>
                         </div>

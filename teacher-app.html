@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="إمباكت هب مصر - تطبيق المعلم لإدارة الفصول والحصص والتقييمات والأنشطة.">
-    <meta name="theme-color" content="#002f6c">
+    <meta name="theme-color" content="#123B6D">
     <title data-i18n="app_title">إمباكت هب مصر - تطبيق المعلم</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="colors.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -24,21 +25,35 @@
     <script src="https://unpkg.com/@daily-co/daily-js" defer></script>
     <style>
         :root {
-            --primary-maroon: #002f6c; /* US Dept of Education Navy */
-            --soft-maroon: #005ea2;    /* Federal Blue Accent */
-            --kid-pink: #dc2626;       /* Crimson Red */
-            --kid-blue: #005ea2;       /* Federal Blue */
-            --kid-yellow: #f59e0b;     /* Gold Amber */
-            --kid-green: #10b981;
-            --kid-purple: #1e3a8a;     /* Deep Blue */
-            --bg-light: #f8fafc;       /* Slate Neutral Light */
-            --white: #ffffff;
-            --text-dark: #1b1b1b;      /* High contrast text */
-            --text-gray: #4b5563;
-            --border-color: #d1d5db;   /* Visible clear border lines */
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --danger-red: #ef4444;
-            --success-green: #10b981;
+            --color-brand-navy: #123B6D;
+            --color-primary: #2563EB;
+            --color-primary-dark: #1E40AF;
+            --color-primary-soft: #EFF6FF;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-text-primary: #172033;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-border: #E2E8F0;
+            --color-success: #16A34A;
+            --color-warning: #D97706;
+            --color-error: #DC2626;
+
+            --primary-maroon: var(--color-brand-navy);
+            --soft-maroon: var(--color-primary);
+            --kid-pink: var(--color-primary);
+            --kid-blue: var(--color-primary);
+            --kid-yellow: var(--color-warning);
+            --kid-green: var(--color-success);
+            --kid-purple: var(--color-brand-navy);
+            --bg-light: var(--color-background);
+            --white: var(--color-surface);
+            --text-dark: var(--color-text-primary);
+            --text-gray: var(--color-text-secondary);
+            --border-color: var(--color-border);
+            --card-shadow: 0 1px 3px rgba(18, 59, 109, 0.05);
+            --danger-red: var(--color-error);
+            --success-green: var(--color-success);
         }
 
         * {
@@ -49,7 +64,7 @@
         }
 
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+            background: var(--color-background);
             color: var(--text-dark);
             font-family: var(--font-ar);
             display: flex;
@@ -82,10 +97,9 @@
         /* الشريط الجانبي */
         .sidebar {
             width: 290px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(128, 0, 0, 0.08);
-            border-right: 1px solid rgba(128, 0, 0, 0.08);
+            background: var(--color-brand-navy) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -93,20 +107,20 @@
             right: 0;
             top: 0;
             z-index: 100;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
         }
 
         .profile-section {
             padding: 30px 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
         }
 
         .profile-img-container {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             margin: 0 auto 15px;
         }
 
@@ -115,8 +129,8 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--white);
-            box-shadow: 0 8px 20px rgba(128, 0, 0, 0.15);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
         }
 
         .profile-badge {
@@ -124,28 +138,28 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%) translateY(40%);
-            background: linear-gradient(135deg, var(--kid-pink), var(--primary-maroon));
+            background: var(--color-primary);
             color: var(--white);
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 700;
             padding: 3px 12px;
             border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(255, 75, 114, 0.3);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
             white-space: nowrap;
         }
 
         .profile-section h3 {
-            color: var(--text-dark);
+            color: var(--white) !important;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 700;
             margin-top: 15px;
         }
 
         .profile-section p {
-            font-size: 11px;
-            color: var(--text-gray);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75) !important;
             margin-top: 4px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .nav-menu {
@@ -161,46 +175,51 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-gray);
+            color: rgba(255, 255, 255, 0.75);
             cursor: pointer;
             border-radius: 12px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .nav-item i {
             font-size: 16px;
-            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.75);
+            transition: transform 0.2s ease;
         }
 
         .nav-item:hover {
-            background: rgba(128, 0, 0, 0.04);
-            color: var(--primary-maroon);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-surface);
         }
 
         .nav-item:hover i {
-            transform: scale(1.1);
+            color: var(--color-surface);
+            transform: scale(1.05);
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
-            color: var(--white);
-            box-shadow: 0 10px 20px -10px rgba(128, 0, 0, 0.4);
+            background: var(--color-primary) !important;
+            color: var(--color-surface) !important;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+        .nav-item.active i {
+            color: var(--color-surface) !important;
         }
 
         /* محدد اللغة */
         .language-picker-sidebar {
             padding: 15px;
-            border-top: 1px solid rgba(128, 0, 0, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: center;
             gap: 6px;
         }
 
         .lang-flag-btn {
-            background: var(--white);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             width: 36px;
             height: 36px;
@@ -209,19 +228,20 @@
             justify-content: center;
             cursor: pointer;
             font-size: 16px;
+            color: var(--color-surface);
             transition: all 0.2s ease;
         }
 
         .lang-flag-btn:hover {
-            transform: scale(1.15) translateY(-2px);
-            border-color: var(--primary-maroon);
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .lang-flag-btn.active {
-            background: var(--primary-maroon);
+            background: var(--color-primary);
             color: var(--white);
-            border-color: var(--primary-maroon);
-            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
 
         /* منطقة المحتوى */
@@ -235,35 +255,34 @@
 
         /* الألواح والبطاقات الحديثة */
         .panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
             box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .panel:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px -10px rgba(128, 0, 0, 0.12);
+            box-shadow: 0 8px 20px rgba(18, 59, 109, 0.08);
         }
 
         .panel-header {
             font-size: 18px;
-            color: var(--primary-maroon);
-            font-weight: 900;
-            margin-bottom: 25px;
+            color: var(--color-brand-navy);
+            font-weight: 700;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed rgba(128, 0, 0, 0.08);
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
         }
 
         .panel-header i {
-            color: var(--kid-pink);
+            color: var(--color-primary);
         }
 
         /* الحقول والاستمارات */
@@ -322,7 +341,7 @@
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: var(--color-error);
             color: var(--white);
             border: none;
             padding: 14px 28px;
@@ -497,7 +516,7 @@
         .chat-sidebar {
             width: 280px;
             border-left: 1px solid var(--border-color);
-            background: #f8fafc;
+            background: var(--color-background);
             overflow-y: auto;
         }
 
@@ -523,7 +542,7 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            background: #fafbfc;
+            background: var(--color-background);
         }
 
         .chat-messages {
@@ -611,7 +630,7 @@
         #daily-class-container {
             width: 100%;
             height: 500px;
-            background: #0f172a;
+            background: var(--color-text-primary);
             border-radius: 20px;
             display: none;
             margin-top: 20px;
@@ -620,13 +639,13 @@
         }
 
         .simulation-link-box {
-            background: #e0f2fe;
-            color: #0369a1;
+            background: var(--color-primary-soft);
+            color: var(--color-primary);
             padding: 14px 20px;
             border-radius: 12px;
             margin-top: 20px;
             display: none;
-            border: 1px solid #bae6fd;
+            border: 1px solid var(--color-primary-soft);
             font-weight: 800;
             font-size: 13px;
         }
@@ -665,13 +684,46 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Mobile Drawer Backdrop Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
         /* تصميم متوافق مع الاتجاهات والشاشات الصغيرة */
         @media (max-width: 1024px) {
+            .sidebar-overlay {
+                display: block;
+            }
             .sidebar {
-                right: -290px;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: auto;
+                height: 100vh;
+                height: 100dvh;
+                transform: translateX(100%);
+                transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease;
+                z-index: 100;
             }
             .sidebar.open {
-                right: 0;
+                transform: translateX(0);
+                box-shadow: -8px 0 32px rgba(15, 23, 42, 0.28);
             }
             .main-content {
                 margin-right: 0;
@@ -683,12 +735,13 @@
             }
             /* في وضع LTR تنعكس المحاذاة */
             html[dir="ltr"] .sidebar {
-                left: -290px;
+                transform: translateX(-100%);
+                left: 0;
                 right: auto;
             }
             html[dir="ltr"] .sidebar.open {
-                left: 0;
-                right: auto;
+                transform: translateX(0);
+                box-shadow: 8px 0 32px rgba(15, 23, 42, 0.28);
             }
             html[dir="ltr"] .menu-toggle {
                 left: auto;
@@ -714,7 +767,7 @@
             min-height: 100vh;
             width: 100%;
             padding: 20px;
-            background: linear-gradient(135deg, #fef8f8 0%, #f1f5f9 100%);
+            background: var(--color-background);
             text-align: center;
             position: fixed;
             top: 0;
@@ -781,9 +834,11 @@
     </div>
 
     <!-- زر القائمة للأجهزة المحمولة -->
-    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" aria-label="تبديل القائمة">
         <i class="fa-solid fa-bars"></i>
     </button>
+    <!-- ستارة التعتيم للقائمة المنزلقة -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" role="button" aria-label="إغلاق القائمة" tabindex="0"></div>
 
     <div class="app-container">
         
@@ -833,7 +888,7 @@
 
             <!-- زر تسجيل الخروج للمعلمة -->
             <div style="padding: 10px 15px; margin-top: 5px; margin-bottom: 10px;">
-                <button onclick="window.doLogout()" style="width: 100%; padding: 10px 12px; border-radius: 10px; background: #fee2e2; color: #ef4444; border: 1.5px solid #fecaca; font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
+                <button onclick="window.doLogout()" style="width: 100%; padding: 10px 12px; border-radius: 10px; background: var(--color-error-soft); color: var(--color-error); border: 1.5px solid var(--color-error-soft); font-weight: 800; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>تسجيل الخروج الآمن</span>
                 </button>
@@ -889,7 +944,7 @@
                         
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;"><i class="fa-solid fa-pen-nib"></i></div>
+                                <div class="game-icon" style="background: rgba(236, 72, 153, 0.1); color: var(--color-primary);"><i class="fa-solid fa-pen-nib"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_trace">لعبة تتبع الحروف</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -906,7 +961,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><i class="fa-solid fa-cubes"></i></div>
+                                <div class="game-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--color-primary);"><i class="fa-solid fa-cubes"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_build">لعبة بناء الكلمات 3D</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -923,7 +978,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <div class="game-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--color-success);"><i class="fa-solid fa-magnifying-glass"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_search">لعبة البحث عن الحروف 3D</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -940,7 +995,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i class="fa-solid fa-arrow-up-1-9"></i></div>
+                                <div class="game-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--color-warning);"><i class="fa-solid fa-arrow-up-1-9"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_match">لعبة مطابقة الأرقام 3D</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -957,7 +1012,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i class="fa-solid fa-brain"></i></div>
+                                <div class="game-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--color-primary);"><i class="fa-solid fa-brain"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_memory">لعبة مطابقة الذاكرة 3D</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -974,7 +1029,7 @@
 
                         <div class="game-card">
                             <div>
-                                <div class="game-icon" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;"><i class="fa-solid fa-gem"></i></div>
+                                <div class="game-icon" style="background: rgba(99, 102, 241, 0.1); color: var(--color-primary);"><i class="fa-solid fa-gem"></i></div>
                                 <h4 style="margin-top: 15px; font-size: 14px; font-weight: 800;" data-i18n="game_collect">لعبة جمع الحروف والمغامرات</h4>
                             </div>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -1052,7 +1107,7 @@
                     </p>
 
                     <!-- شريط التقدم -->
-                    <div style="margin-bottom: 20px; background: #e2e8f0; border-radius: 10px; height: 24px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
+                    <div style="margin-bottom: 20px; background: var(--color-border); border-radius: 10px; height: 24px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
                         <div id="skills-progress-bar" style="background: linear-gradient(135deg, var(--kid-green), var(--primary-maroon)); height: 100%; position: absolute; left: 0; top: 0; width: 0%; transition: width 0.4s ease;"></div>
                         <span id="skills-progress-text" style="position: relative; z-index: 2; font-weight: 800; font-size: 12px; color: var(--text-dark);">0 من 5 حصص مرفوعة</span>
                     </div>
@@ -1138,7 +1193,7 @@
                     </div>
                     
                     <!-- بطاقة ملف التكيف للطفل المعروضة للمعلم -->
-                    <div id="student-accessibility-container" style="display: none; margin-bottom: 20px; padding: 15px; border-radius: 12px; background: #f0f9ff; border: 1.5px solid #bae6fd; text-align: right;">
+                    <div id="student-accessibility-container" style="display: none; margin-bottom: 20px; padding: 15px; border-radius: 12px; background: var(--color-primary-soft); border: 1.5px solid var(--color-primary-soft); text-align: right;">
                     </div>
                     <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                         <button class="btn-primary" style="background: var(--success-green); box-shadow: 0 8px 15px rgba(16, 185, 129, 0.15);" onclick="window.startLiveClassSession()">
@@ -1154,7 +1209,7 @@
                     <div class="simulation-link-box" id="live-simulation-box">
                         <i class="fa-solid fa-link"></i> 
                         <span data-i18n="live_class_active_link">رابط البث المباشر النشط حالياً:</span> 
-                        <a id="simulation-direct-link" href="#" target="_blank" style="color: #0284c7; text-decoration: underline; margin-right: 5px;" data-i18n="live_class_open_tab">اضغط هنا لفتح تابة البث المستقلة</a>
+                        <a id="simulation-direct-link" href="#" target="_blank" style="color: var(--color-primary); text-decoration: underline; margin-right: 5px;" data-i18n="live_class_open_tab">اضغط هنا لفتح تابة البث المستقلة</a>
                     </div>
 
                     <div id="daily-class-container"></div>
@@ -1171,7 +1226,7 @@
                     <div class="table-responsive">
                         <table style="width: 100%; border-collapse: collapse; text-align: right;">
                             <thead>
-                                <tr style="border-bottom: 2px solid var(--border-color); background: #f8fafc;">
+                                <tr style="border-bottom: 2px solid var(--border-color); background: var(--color-background);">
                                     <th style="padding: 12px; font-weight: 800;">اسم الطالب</th>
                                     <th style="padding: 12px; font-weight: 800;">موعد الحصة</th>
                                     <th style="padding: 12px; font-weight: 800;">جهة التحصيل المالي</th>
@@ -1701,7 +1756,7 @@
                                             <i class="fa-solid fa-clock"></i> المدة: ${v.duration} دقيقة | <a href="${v.videoUrl}" target="_blank" style="color:var(--soft-maroon); text-decoration:underline;">معاينة الفيديو</a>
                                         </div>
                                     </div>
-                                    <button onclick="window.deleteSkillVideo('${vId}')" class="btn-danger" style="padding:4px 8px; font-size:11px; margin:0; border-radius:6px; background:#fee2e2; color:#ef4444; border:none; box-shadow:none;">
+                                    <button onclick="window.deleteSkillVideo('${vId}')" class="btn-danger" style="padding:4px 8px; font-size:11px; margin:0; border-radius:6px; background:var(--color-error-soft); color:var(--color-error); border:none; box-shadow:none;">
                                         <i class="fa-solid fa-trash"></i> حذف
                                     </button>
                                 </div>
@@ -1713,14 +1768,14 @@
                 skillsPanel.style.display = 'block';
 
                 if (count >= 5) {
-                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #ecfdf5; border: 1.5px solid #10b981; color: #047857;';
+                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: var(--color-success-soft); border: 1.5px solid var(--color-success); color: var(--color-success);';
                     statusBox.innerHTML = `
                         <div style="font-weight: 800; font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-circle-check"></i> حساب مستقل نشط بالكامل (Active & Verified) 👑</div>
                         <p style="font-size:12.5px;">لقد قمت بإكمال متطلبات السيرة الذاتية (رفع ${count} حصص تعليمية نموذجية لا تقل عن 30 دقيقة). حسابك المستقل معتمد الآن من قبل السوبر أدمن وتظهر عليه الحصص المحجوزة بالكامل.</p>
                     `;
                     btnArea.innerHTML = '';
                 } else {
-                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #fffbeb; border: 1.5px solid #f59e0b; color: #b45309;';
+                    statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: var(--color-warning-soft); border: 1.5px solid var(--color-warning); color: var(--color-warning);';
                     statusBox.innerHTML = `
                         <div style="font-weight: 800; font-size: 15px; margin-bottom: 4px;"><i class="fa-solid fa-circle-exclamation"></i> حساب مستقل نشط جزئياً (في انتظار تلبية الشروط) ⚠️</div>
                         <p style="font-size:12.5px;">لقد قمت بتحويل حسابك إلى مستقل بنجاح! ولكن <strong>يشترط عليك تسجيل ورفع 5 حصص تعليمية نموذجية (المدة لا تقل عن 30 دقيقة لكل حصة)</strong> لتفعيل ملفك بالكامل لقياس المهارات من قبل المؤسسة والسوبر أدمن.</p>
@@ -1729,7 +1784,7 @@
                 }
             } else {
                 skillsPanel.style.display = 'none';
-                statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: #f1f5f9; border: 1.5px solid var(--border-color); color: var(--text-gray);';
+                statusBox.style.cssText = 'padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.6; font-size: 14px; text-align: right; background: var(--color-background); border: 1.5px solid var(--border-color); color: var(--text-gray);';
                 statusBox.innerHTML = `
                     <div style="font-weight: 800; font-size: 15px; color: var(--text-dark); margin-bottom: 4px;"><i class="fa-solid fa-school"></i> حساب محلي تابع لحضانة معينة</div>
                     <p style="font-size:12.5px; color: var(--text-gray);">حسابك حالياً مرتبط بحضانتك المحلية فقط. يمكنك تحويل حسابك إلى حساب مستقل لتقديم حصص فردية وإضافية أونلاين عبر كامل شبكة المنصة وتلقي حجوزات مباشرة من أولياء الأمور ومن السوبر أدمن.</p>
@@ -1875,7 +1930,7 @@
                             <button onclick="window.editAvailabilitySlot('${id}', '${data.day}', '${data.time}')" class="btn-outline" style="padding:4px 8px; font-size:11px; flex:1; margin:0; border-width:1px;">
                                 <i class="fa-solid fa-edit"></i> تعديل
                             </button>
-                            <button onclick="window.deleteAvailabilitySlot('${id}')" class="btn-danger" style="padding:4px 8px; font-size:11px; flex:1; margin:0; border-radius:10px; background:linear-gradient(135deg, #ef4444, #dc2626); box-shadow:none;">
+                            <button onclick="window.deleteAvailabilitySlot('${id}')" class="btn-danger" style="padding:4px 8px; font-size:11px; flex:1; margin:0; border-radius:10px; background:var(--color-error); box-shadow:none;">
                                 <i class="fa-solid fa-trash"></i> حذف
                             </button>
                         </div>
@@ -1949,9 +2004,9 @@
             window.playNotificationChime();
 
             const toast = document.createElement('div');
-            const bgColor = type === "online_academy" ? "#ecfdf5" : "#fff7ed";
-            const borderColor = type === "online_academy" ? "#10b981" : "#f97316";
-            const iconColor = type === "online_academy" ? "#047857" : "#c2410c";
+            const bgColor = type === "online_academy" ? "var(--color-success-soft)" : "var(--color-warning-soft)";
+            const borderColor = type === "online_academy" ? "var(--color-success)" : "var(--color-warning)";
+            const iconColor = type === "online_academy" ? "var(--color-success)" : "var(--color-warning)";
             const icon = type === "online_academy" ? "fa-credit-card" : "fa-school";
 
             toast.style.cssText = `
@@ -2017,13 +2072,13 @@
                 let paymentSourceBadge = '';
                 if (data.isLandingBooking || data.nurseryId === 'online_academy') {
                     paymentSourceBadge = `
-                        <span style="background: #ecfdf5; color: #047857; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #a7f3d0;">
+                        <span style="background: var(--color-success-soft); color: var(--color-success); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--color-success-soft);">
                             <i class="fa-solid fa-credit-card"></i> 💳 أكاديمية أونلاين (الموقع الرئيسي)
                         </span>
                     `;
                 } else {
                     paymentSourceBadge = `
-                        <span style="background: #fff7ed; color: #c2410c; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #ffedd5;">
+                        <span style="background: var(--color-warning-soft); color: var(--color-warning); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--color-warning-soft);">
                             <i class="fa-solid fa-school"></i> 🏫 إدارة الحضانة المحلية
                         </span>
                     `;
@@ -2034,18 +2089,18 @@
 
                 if (data.status === 'completed') {
                     statusLabel = `
-                        <span style="background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                        <span style="background: var(--color-success-soft); color: var(--color-success); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
                             <i class="fa-solid fa-check-double"></i> مكتملة ✅
                         </span>
                     `;
                     actionsHtml = `
-                        <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:#fee2e2; color:#ef4444; border:none;">
+                        <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:var(--color-error-soft); color:var(--color-error); border:none;">
                             <i class="fa-solid fa-trash"></i> حذف الحصة
                         </button>
                     `;
                 } else {
                     statusLabel = `
-                        <span style="background: #eff6ff; color: #1d4ed8; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                        <span style="background: var(--color-primary-soft); color: var(--color-primary); padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
                             <i class="fa-solid fa-hourglass-half"></i> قادمة ⏳
                         </span>
                     `;
@@ -2054,7 +2109,7 @@
                             <button onclick="window.completeBookedClass('${id}')" class="btn-primary" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; background:linear-gradient(135deg, var(--kid-green), var(--kid-green)); box-shadow:none;">
                                 <i class="fa-solid fa-check"></i> اكتمال ✅
                             </button>
-                            <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:#fee2e2; color:#ef4444; border:none;">
+                            <button onclick="window.deleteBookedClass('${id}')" class="btn-danger" style="padding: 6px 12px; font-size: 11px; margin:0; border-radius:8px; box-shadow:none; background:var(--color-error-soft); color:var(--color-error); border:none;">
                                 <i class="fa-solid fa-trash"></i> حذف
                             </button>
                         </div>
@@ -2185,15 +2240,15 @@
                     const profile = docSnap.data().accessibility;
                     if (profile && (profile.focusMode || profile.readingMode || profile.sensoryCalmMode)) {
                         let modesHtml = [];
-                        if (profile.focusMode) modesHtml.push(`<span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-bullseye"></i> وضع التركيز (Focus Mode)</span>`);
-                        if (profile.readingMode) modesHtml.push(`<span style="background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-book-open"></i> وضع القراءة الميسرة (Reading Mode)</span>`);
-                        if (profile.sensoryCalmMode) modesHtml.push(`<span style="background: #f3e8ff; color: #6b21a8; padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-spa"></i> وضع الهدوء الحسي (Sensory Calm)</span>`);
+                        if (profile.focusMode) modesHtml.push(`<span style="background: var(--color-primary-soft); color: var(--color-primary); padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-bullseye"></i> وضع التركيز (Focus Mode)</span>`);
+                        if (profile.readingMode) modesHtml.push(`<span style="background: var(--color-warning-soft); color: var(--color-warning); padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-book-open"></i> وضع القراءة الميسرة (Reading Mode)</span>`);
+                        if (profile.sensoryCalmMode) modesHtml.push(`<span style="background: var(--color-primary-soft); color: var(--color-primary); padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;"><i class="fa-solid fa-spa"></i> وضع الهدوء الحسي (Sensory Calm)</span>`);
 
                         container.innerHTML = `
-                            <h5 style="font-size: 13px; font-weight: 900; color: #1e3a8a; margin-top: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                            <h5 style="font-size: 13px; font-weight: 900; color: var(--color-brand-navy); margin-top: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-universal-access"></i> الملف الطبي/التكيفي للطفل: ${studentName} 🧭
                             </h5>
-                            <p style="font-size: 11px; color: #475569; margin-bottom: 10px; font-weight: 800; margin-top: 0;">
+                            <p style="font-size: 11px; color: var(--color-text-secondary); margin-bottom: 10px; font-weight: 800; margin-top: 0;">
                                 الرجاء مراعاة الأوضاع والأساليب التعليمية التالية لدمج الطفل بشكل فعال أثناء البث المباشر:
                             </p>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -2202,8 +2257,8 @@
                         `;
                     } else {
                         container.innerHTML = `
-                            <h5 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> ملف التكيف للطفل: ${studentName}
+                            <h5 style="font-size: 13px; font-weight: 900; color: var(--color-text-primary); margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> ملف التكيف للطفل: ${studentName}
                             </h5>
                             <p style="font-size: 11px; color: var(--text-gray); font-weight: 800; margin: 0;">
                                 لا توجد متطلبات تكيفية خاصة مسجلة حالياً (الملف التعليمي العادي).
@@ -2212,8 +2267,8 @@
                     }
                 } else {
                     container.innerHTML = `
-                        <h5 style="font-size: 13px; font-weight: 900; color: #0f172a; margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-circle-info" style="color: #3b82f6;"></i> ملف التكيف للطفل: ${studentName}
+                        <h5 style="font-size: 13px; font-weight: 900; color: var(--color-text-primary); margin-top: 0; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-circle-info" style="color: var(--color-primary);"></i> ملف التكيف للطفل: ${studentName}
                         </h5>
                         <p style="font-size: 11px; color: var(--text-gray); font-weight: 800; margin: 0;">
                             لم يتم إعداد ملف الدمج التعليمي من قبل ولي الأمر بعد. سيتم استخدام النمط القياسي للحصة.
@@ -2512,7 +2567,7 @@
                 });
 
                 const isGlobal = post.targetApp !== undefined;
-                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:#002f6c; padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
+                const authorBadge = isGlobal ? `<span style="background:rgba(0,47,108,0.1); color:var(--color-brand-navy); padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-block;">إعلان عام من الإدارة</span>` : '';
 
                 container.innerHTML += `
                     <div class="feed-post" id="post-${postId}">
@@ -2526,11 +2581,11 @@
                             </div>
                             ${(!isGlobal && post.authorId === myTeacherId) ? `
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                 </button>
-                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                 </button>
                             </div>` : ''}
                         </div>
@@ -2690,12 +2745,22 @@
             element.classList.add('active');
             
             // إغلاق الشريط الجانبي على الجوال عند التغيير
-            document.getElementById('appSidebar').classList.remove('open');
+            window.toggleSidebar(false);
         };
 
-        // تبديل ظهور الشريط الجانبي على الجوال
-        window.toggleSidebar = () => {
-            document.getElementById('appSidebar').classList.toggle('open');
+        // تبديل ظهور الشريط الجانبي على الجوال بتأثير Drawer المنزلق
+        window.toggleSidebar = (forceState) => {
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar) return;
+            const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('open');
+            if (willOpen) {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+            }
         };
 
         window.checkNurseryStatus = async () => {
@@ -2703,10 +2768,10 @@
                 const docSnap = await getDoc(doc(db, "nurseries", myNurseryId));
                 if (docSnap.exists() && docSnap.data().status === "frozen") {
                     document.body.innerHTML = `
-                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#fffcf8; color:#1e293b; padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
-                            <div style="font-size:80px; color:#ef4444; margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
-                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:#ef4444;">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
-                            <p style="font-size:16px; line-height:1.6; color:#475569; max-width:400px; margin:0 auto;">
+                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:var(--color-background); color:var(--color-text-primary); padding:40px; text-align:center; font-family:var(--font-ar); direction:rtl;">
+                            <div style="font-size:80px; color:var(--color-error); margin-bottom:20px;"><i class="fa-solid fa-snowflake"></i></div>
+                            <h2 style="font-weight:900; font-size:24px; margin-bottom:15px; color:var(--color-error);">تم تجميد حساب هذه الحضانة مؤقتاً ❄️</h2>
+                            <p style="font-size:16px; line-height:1.6; color:var(--color-text-secondary); max-width:400px; margin:0 auto;">
                                 لقد تم تجميد حساب هذه الحضانة مؤقتاً من قبل الإدارة المركزية للشبكة. يرجى التواصل مع إدارة الحضانة لمزيد من التفاصيل.
                             </p>
                         </div>

@@ -6,7 +6,7 @@
     <meta name="description" content="An interactive educational system connecting administration, teachers, and parents.">
     <meta property="og:title" content="Impact Hub Egypt">
     <meta property="og:description" content="An interactive educational system connecting administration, teachers, and parents.">
-    <meta name="theme-color" content="#002f6c">
+    <meta name="theme-color" content="#123B6D">
     <title>Impact Hub Egypt</title>
     <!-- Preconnect origins for critical resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="colors.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -26,24 +27,41 @@
     </noscript>
     <style>
         :root {
-            --primary-navy: #002f6c; /* US Dept of Education Navy */
-            --primary-indigo: #002f6c; /* Remapped */
-            --primary-violet: #005ea2; /* Remapped */
-            --kid-pink: #dc2626;       /* Remapped to Corporate Accent Red */
-            --kid-blue: #005ea2;       /* Remapped to Federal Blue */
-            --kid-yellow: #f59e0b;     /* Remapped to Gold Amber */
-            --kid-green: #10b981;
-            --kid-purple: #1e3a8a;     /* Deep Blue Accent */
-            --bg-light: #f8fafc;       /* Clear Light grey-blue */
-            --white: #ffffff;
-            --text-dark: #1b1b1b;      /* High contrast dark neutral */
-            --text-gray: #4b5563;
-            --border-color: #d1d5db;   /* Visible, clean dividers */
-            --gold-star: #fdb813;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 12px 24px rgba(0,0,0,0.12);
-            --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+            --color-brand-navy: #123B6D;
+            --color-primary: #2563EB;
+            --color-primary-dark: #1E40AF;
+            --color-primary-soft: #EFF6FF;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-text-primary: #172033;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-border: #E2E8F0;
+            --color-success: #16A34A;
+            --color-warning: #D97706;
+            --color-error: #DC2626;
+
+            --primary-navy: var(--color-brand-navy);
+            --primary-indigo: var(--color-brand-navy);
+            --primary-violet: var(--color-primary);
+            --primary-maroon: var(--color-brand-navy);
+            --soft-maroon: var(--color-primary);
+            --kid-pink: var(--color-primary);
+            --kid-blue: var(--color-primary);
+            --kid-yellow: var(--color-warning);
+            --kid-green: var(--color-success);
+            --kid-purple: var(--color-brand-navy);
+            --bg-light: var(--color-background);
+            --pastel-bg: var(--color-background);
+            --white: var(--color-surface);
+            --text-dark: var(--color-text-primary);
+            --text-gray: var(--color-text-secondary);
+            --border-color: var(--color-border);
+            --gold-star: var(--color-warning);
+            --shadow-sm: 0 1px 2px rgba(18, 59, 109, 0.05);
+            --shadow-md: 0 4px 12px rgba(18, 59, 109, 0.08);
+            --shadow-lg: 0 12px 24px rgba(18, 59, 109, 0.12);
+            --shadow-xl: 0 20px 40px rgba(18, 59, 109, 0.15);
         }
 
         /* Base Styles */
@@ -130,15 +148,15 @@
         
         .logo { 
             font-size: 24px; 
-            font-weight: 900; 
-            color: var(--primary-indigo); 
+            font-weight: 700; 
+            color: var(--color-brand-navy); 
             display: flex; 
             align-items: center; 
             gap: 12px; 
             text-decoration: none;
         }
         .logo i { 
-            color: var(--kid-pink); 
+            color: var(--color-primary); 
             font-size: 28px; 
             animation: float 3s ease-in-out infinite; 
         }
@@ -165,8 +183,8 @@
             border-radius: 9999px; 
         }
         .nav-links a:hover { 
-            color: var(--primary-indigo); 
-            background: rgba(79, 70, 229, 0.06); 
+            color: var(--color-primary); 
+            background: var(--color-primary-soft); 
             transform: translateY(-1px); 
         }
         
@@ -218,28 +236,29 @@
             font-size: 13.5px;
         }
         .dropdown-content a:hover { 
-            background-color: rgba(79, 70, 229, 0.08); 
-            color: var(--primary-indigo); 
+            background-color: var(--color-primary-soft); 
+            color: var(--color-primary); 
         }
         .dropdown:hover .dropdown-content { display: block; }
         .dropdown-content a.active-lang {
-            background-color: rgba(79, 70, 229, 0.12);
-            color: var(--primary-indigo);
+            background-color: var(--color-primary-soft);
+            color: var(--color-primary);
         }
 
         .login-btn { 
-            background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); 
+            background: var(--color-primary) !important; 
             color: var(--white) !important; 
             padding: 10px 24px !important; 
             border-radius: 9999px !important; 
-            box-shadow: 0 4px 14px rgba(0, 47, 108, 0.25); 
-            font-weight: 800 !important;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25); 
+            font-weight: 700 !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
             white-space: nowrap; 
         }
         .login-btn:hover {
+            background: var(--color-primary-dark) !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(0, 47, 108, 0.35) !important;
+            box-shadow: 0 6px 20px rgba(30, 64, 175, 0.35) !important;
         }
 
         /* High-End Motion & Scroll Reveal */
@@ -678,7 +697,7 @@
             content:''; 
             position:absolute; 
             top:0; left:0; width:100%; height:70px; 
-            background: linear-gradient(135deg, var(--kid-yellow), #f59e0b); 
+            background: linear-gradient(135deg, var(--color-brand-navy), var(--color-primary)); 
         }
         .teacher-avatar { 
             width: 100px; 
@@ -695,17 +714,17 @@
         .teacher-subject { color: var(--primary-indigo); font-size: 14px; font-weight: 700; margin-bottom: 16px; position: relative; z-index: 2; }
         .teacher-slots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; min-height: 60px; }
         .slot-badge { 
-            background: rgba(254, 243, 199, 0.6); 
-            color: #b45309; 
+            background: var(--color-warning-soft); 
+            color: var(--color-warning); 
             padding: 6px 12px; 
             border-radius: 9999px; 
             font-size: 12px; 
             font-weight: 700; 
-            border: 1px solid rgba(253, 230, 138, 0.5); 
+            border: 1px solid rgba(217, 119, 6, 0.25); 
         }
         .book-btn { 
-            background: linear-gradient(135deg, var(--kid-green), #059669); 
-            color: white; 
+            background: var(--color-primary); 
+            color: var(--color-surface); 
             border: none; 
             padding: 12px 24px; 
             border-radius: 9999px; 
@@ -715,11 +734,12 @@
             transition: all 0.2s ease; 
             text-decoration: none; 
             display: inline-block; 
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); 
+            box-shadow: 0 4px 12px var(--color-shadow-subtle); 
         }
         .book-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+            background: var(--color-primary-dark);
+            box-shadow: 0 6px 16px var(--color-shadow-medium);
         }
 
         /* Testimonials Section */
@@ -809,7 +829,7 @@
         .cta-btn:hover { 
             transform: translateY(-2px); 
             box-shadow: var(--shadow-lg);
-            background: #fafbff;
+            background: var(--color-primary-soft);
         }
 
         /* Beautiful FAQ Accordion */
@@ -836,7 +856,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            background: #fff; 
+            background: var(--color-surface); 
             transition: all 0.2s ease; 
             font-size: 16px;
         }
@@ -849,7 +869,7 @@
             color: var(--text-gray); 
             font-size: 14.5px; 
             font-weight: 600; 
-            background: #fafbfc; 
+            background: var(--color-background); 
             border-top: 1px solid transparent; 
         }
 
@@ -901,7 +921,7 @@
         .chat-widget-btn { 
             position: fixed; 
             bottom: 30px; 
-            background: linear-gradient(135deg, var(--kid-pink), #ff5a79); 
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); 
             color: white; 
             width: 60px; 
             height: 60px; 
@@ -910,7 +930,7 @@
             align-items: center; 
             justify-content: center; 
             font-size: 26px; 
-            box-shadow: 0 8px 30px rgba(244, 63, 94, 0.4); 
+            box-shadow: 0 8px 30px rgba(37, 99, 235, 0.35); 
             cursor: pointer; 
             z-index: 9999; 
             transition: all 0.3s ease; 
@@ -950,7 +970,7 @@
             flex-grow: 1; 
             padding: 20px; 
             overflow-y: auto; 
-            background: #faf8f5; 
+            background: var(--color-background); 
             display: flex; 
             flex-direction: column; 
             gap: 12px; 
@@ -971,7 +991,7 @@
             align-self: flex-end; 
             border-bottom-right-radius: 4px;
         }
-        .chat-footer { padding: 12px; background: #fff; border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
+        .chat-footer { padding: 12px; background: var(--color-surface); border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
         .chat-footer input { 
             flex-grow: 1; 
             padding: 10px 18px; 
@@ -1051,7 +1071,7 @@
             margin-top: 16px;
         }
         .calendar-day-column {
-            background: #f8fafc;
+            background: var(--color-background);
             border-radius: 16px;
             padding: 12px;
             border: 1px solid var(--border-color);
@@ -1059,10 +1079,10 @@
         .calendar-day-header {
             font-weight: 800;
             font-size: 14px;
-            color: var(--primary-indigo);
+            color: var(--color-brand-navy);
             margin-bottom: 8px;
             text-align: center;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--color-border);
             padding-bottom: 4px;
         }
         .calendar-slot-btn {
@@ -1079,19 +1099,19 @@
             border: none;
         }
         .calendar-slot-btn.available {
-            background: #f0fdf4;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background: var(--color-success-soft);
+            color: var(--color-success);
+            border: 1px solid rgba(22, 163, 74, 0.25);
         }
         .calendar-slot-btn.available:hover {
-            background: #16a34a;
-            color: white;
-            border-color: #16a34a;
+            background: var(--color-success);
+            color: var(--color-surface);
+            border-color: var(--color-success);
         }
         .calendar-slot-btn.booked {
-            background: #fef2f2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background: var(--color-error-soft);
+            color: var(--color-error);
+            border: 1px solid rgba(220, 38, 38, 0.25);
             cursor: not-allowed;
             opacity: 0.85;
         }
@@ -1213,7 +1233,7 @@
                 width: 44px;
                 height: 44px;
                 border-radius: 12px;
-                background: #f1f5f9;
+                background: var(--color-background);
                 border: 1px solid var(--border-color);
                 color: var(--text-dark);
                 font-size: 20px;
@@ -1221,12 +1241,12 @@
                 transition: all 0.25s ease;
             }
             .menu-toggle-btn:hover, .menu-toggle-btn:active {
-                background: #e2e8f0;
-                color: var(--primary-indigo);
+                background: var(--color-primary-soft);
+                color: var(--color-primary);
             }
             .menu-toggle-btn.is-active {
-                background: rgba(0, 47, 108, 0.1);
-                color: var(--primary-indigo);
+                background: var(--color-primary-soft);
+                color: var(--color-primary);
             }
 
             /* Mobile Drawer Overlay Backdrop */
@@ -1258,7 +1278,7 @@
                 width: clamp(285px, 82vw, 340px);
                 height: 100vh;
                 height: 100dvh;
-                background: #ffffff;
+                background: var(--color-surface);
                 z-index: 1050;
                 flex-direction: column;
                 gap: 8px;
@@ -1307,16 +1327,16 @@
                 align-items: center;
                 gap: 10px;
                 font-size: 18px;
-                font-weight: 900;
-                color: var(--primary-indigo);
+                font-weight: 700;
+                color: var(--color-brand-navy);
                 text-decoration: none;
             }
             .mobile-drawer-brand i {
-                color: var(--kid-pink);
+                color: var(--color-primary);
                 font-size: 22px;
             }
             .mobile-drawer-close {
-                background: #f1f5f9;
+                background: var(--color-background);
                 border: 1px solid var(--border-color);
                 width: 38px;
                 height: 38px;
@@ -1330,8 +1350,8 @@
                 transition: all 0.25s ease;
             }
             .mobile-drawer-close:hover, .mobile-drawer-close:active {
-                background: #fee2e2;
-                color: #ef4444;
+                background: var(--color-primary-soft);
+                color: var(--color-primary);
                 transform: rotate(90deg);
             }
 
@@ -1343,7 +1363,7 @@
                 gap: 12px;
                 padding: 12px 16px;
                 font-size: 15px;
-                font-weight: 700;
+                font-weight: 600;
                 border-radius: 12px;
                 color: var(--text-dark);
                 background: transparent;
@@ -1356,9 +1376,9 @@
                 text-align: left;
             }
             .nav-links a:hover, .nav-links a:active {
-                background: rgba(0, 47, 108, 0.05);
-                color: var(--primary-indigo);
-                border-color: rgba(0, 47, 108, 0.08);
+                background: var(--color-primary-soft);
+                color: var(--color-primary);
+                border-color: var(--color-border);
             }
             html[dir="rtl"] .nav-links a:hover {
                 transform: translateX(-4px);
@@ -1380,16 +1400,16 @@
                 padding: 12px 16px;
                 border-radius: 12px;
                 font-size: 15px;
-                font-weight: 700;
-                background: #f8fafc;
+                font-weight: 600;
+                background: var(--color-background);
                 border: 1px solid var(--border-color);
                 color: var(--text-dark);
                 cursor: pointer;
                 transition: all 0.2s ease;
             }
             .dropdown-trigger:hover, .dropdown-trigger:active {
-                background: #f1f5f9;
-                color: var(--primary-indigo);
+                background: var(--color-primary-soft);
+                color: var(--color-primary);
             }
             .dropdown-trigger .fa-chevron-down {
                 transition: transform 0.25s ease;
@@ -1405,7 +1425,7 @@
                 margin-top: 6px;
                 margin-bottom: 4px;
                 width: 100%;
-                background: #f8fafc;
+                background: var(--color-background);
                 animation: none;
                 display: none;
                 padding: 6px;
@@ -1427,7 +1447,8 @@
                 text-align: center;
                 padding: 13px 20px !important;
                 margin-top: 6px;
-                box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25) !important;
+                background: var(--color-brand-navy) !important;
+                box-shadow: 0 4px 14px rgba(18, 59, 109, 0.25) !important;
             }
             .nav-links .login-btn {
                 width: 100%;
@@ -1435,7 +1456,8 @@
                 text-align: center;
                 padding: 13px 20px !important;
                 margin-top: 4px;
-                box-shadow: 0 4px 14px rgba(0, 47, 108, 0.25) !important;
+                background: var(--color-primary) !important;
+                box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25) !important;
             }
 
             /* Drawer Footer */
@@ -1493,10 +1515,10 @@
 <body>
 
     <!-- Top Official Banner (like ed.gov) -->
-    <div class="official-banner" style="background: #eef2f6; border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--text-gray); display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
+    <div class="official-banner" style="background: var(--color-primary-soft); border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--color-brand-navy); display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
         <span class="flag-icon" style="font-size: 14px;">🇪🇬</span>
         <span data-i18n="official_banner_text">البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة</span>
-        <span style="color: var(--primary-violet); text-decoration: underline; cursor: help; margin-right: auto; font-size: 11px;" data-i18n="official_banner_how">كيف تعمل هذه المنصة؟</span>
+        <span style="color: var(--color-primary); text-decoration: underline; cursor: help; margin-right: auto; font-size: 11px;" data-i18n="official_banner_how">كيف تعمل هذه المنصة؟</span>
     </div>
 
     <!-- Orb-emojis floating in backgrounds for high sensory immersion & joy -->
@@ -1554,7 +1576,7 @@
             <a href="#features-section" class="nav-item-animate" data-i18n="nav_features">مميزاتنا</a>
             <a href="#teachers-section" class="nav-item-animate" data-i18n="nav_lessons">دروس أونلاين</a>
             <a href="#nurseries-section" class="nav-item-animate" data-i18n="nav_nurseries">شبكة الحضانات</a>
-            <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn nav-item-animate" style="background: linear-gradient(135deg, #dc2626, #991b1b); color: var(--white) !important; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥</a>
+            <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn nav-item-animate" style="background: var(--color-error); color: var(--color-surface) !important; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥</a>
             <a href="parent-app.html" class="login-btn nav-item-animate" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
 
             <!-- Mobile Drawer Footer -->
@@ -1674,9 +1696,9 @@
                     <div class="mock-portal-card">
                         <div class="mock-portal-header">
                             <div>
-                                <span class="mock-portal-dot" style="background:#ef4444;"></span>
-                                <span class="mock-portal-dot" style="background:#f59e0b;"></span>
-                                <span class="mock-portal-dot" style="background:#10b981;"></span>
+                                <span class="mock-portal-dot" style="background: var(--color-error);"></span>
+                                <span class="mock-portal-dot" style="background: var(--color-warning);"></span>
+                                <span class="mock-portal-dot" style="background: var(--color-success);"></span>
                             </div>
                             <span style="font-size:11px; font-weight:800; color:var(--text-gray);"><i class="fa-solid fa-lock"></i> لوحة تحكم الإدارة</span>
                         </div>
@@ -1684,19 +1706,19 @@
                             <div style="font-size:12px; color:var(--text-gray); margin-bottom: 4px;">الحالة العامة للمنشأة</div>
                             <div style="font-size:20px; font-weight:900; color:var(--primary-navy); margin-bottom:16px;">مكتملة الأركان والنشاط 🟢</div>
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:16px;">
-                                <div style="background:#f0f4f8; padding:12px; border-radius:12px; text-align:center;">
+                                <div style="background: var(--color-background); padding:12px; border-radius:12px; text-align:center;">
                                     <div style="font-size:11px; color:var(--text-gray);">الأطفال النشطون</div>
                                     <div style="font-size:16px; font-weight:900; color:var(--primary-navy);">124 طفل</div>
                                 </div>
-                                <div style="background:#f0f4f8; padding:12px; border-radius:12px; text-align:center;">
+                                <div style="background: var(--color-background); padding:12px; border-radius:12px; text-align:center;">
                                     <div style="font-size:11px; color:var(--text-gray);">الحصص الافتراضية</div>
                                     <div style="font-size:16px; font-weight:900; color:var(--primary-navy);">8 غرف لايف</div>
                                 </div>
                             </div>
                             <div style="border-top:1px solid var(--border-color); padding-top:12px;">
                                 <div style="font-size:11px; font-weight:700; color:var(--text-gray); margin-bottom:8px;">إشعارات فورية من السيستم</div>
-                                <div style="font-size:11.5px; padding:8px; background:rgba(16, 185, 129, 0.08); color:#065f46; border-radius:8px; margin-bottom:6px;"><i class="fa-solid fa-bell"></i> تم دفع قسط الحضانة لحقيبة "المستكشف الصغير" بنجاح.</div>
-                                <div style="font-size:11.5px; padding:8px; background:rgba(0, 94, 162, 0.08); color:#0f4c81; border-radius:8px;"><i class="fa-solid fa-camera"></i> بث حي ذكي نشط الآن في فصل (الزهور أ).</div>
+                                <div style="font-size:11.5px; padding:8px; background: var(--color-success-soft); color: var(--color-success); border-radius:8px; margin-bottom:6px;"><i class="fa-solid fa-bell"></i> تم دفع قسط الحضانة لحقيبة "المستكشف الصغير" بنجاح.</div>
+                                <div style="font-size:11.5px; padding:8px; background: var(--color-primary-soft); color: var(--color-brand-navy); border-radius:8px;"><i class="fa-solid fa-camera"></i> بث حي ذكي نشط الآن في فصل (الزهور أ).</div>
                             </div>
                         </div>
                     </div>
@@ -1739,21 +1761,21 @@
                                     <div style="font-size:11px; color:var(--text-gray);">حضانة إمباكت المتميزة - فصل الرواد</div>
                                 </div>
                             </div>
-                            <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:12px; padding:12px; margin-bottom:12px;">
-                                <div style="font-size:12px; font-weight:900; color:#b45309; margin-bottom:4px;"><i class="fa-solid fa-camera"></i> كاميرا الفصل لايف</div>
-                                <div style="height:120px; background:#e5e7eb; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--text-gray); font-size:11px; font-weight:bold; position:relative; overflow:hidden;">
-                                    <span style="position:absolute; top:8px; right:8px; background:red; color:white; padding:2px 6px; border-radius:4px; font-size:9px; animation:pulse 1s infinite;">بث مباشر</span>
+                            <div style="background: var(--color-warning-soft); border:1px solid rgba(217, 119, 6, 0.25); border-radius:12px; padding:12px; margin-bottom:12px;">
+                                <div style="font-size:12px; font-weight:900; color: var(--color-warning); margin-bottom:4px;"><i class="fa-solid fa-camera"></i> كاميرا الفصل لايف</div>
+                                <div style="height:120px; background: var(--color-background); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--text-gray); font-size:11px; font-weight:bold; position:relative; overflow:hidden;">
+                                    <span style="position:absolute; top:8px; right:8px; background: var(--color-error); color:white; padding:2px 6px; border-radius:4px; font-size:9px; animation:pulse 1s infinite;">بث مباشر</span>
                                     <i class="fa-solid fa-video" style="font-size:24px; margin-bottom:4px;"></i>
                                 </div>
                             </div>
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                                <div style="background:#f0fdf4; border:1px solid #dcfce7; padding:10px; border-radius:10px; text-align:center;">
-                                    <div style="font-size:10px; color:#15803d;">الوجبة الغذائية</div>
-                                    <div style="font-size:12px; font-weight:900; color:#166534;">تم تناول الغذاء 🥦</div>
+                                <div style="background: var(--color-success-soft); border:1px solid rgba(22, 163, 74, 0.25); padding:10px; border-radius:10px; text-align:center;">
+                                    <div style="font-size:10px; color: var(--color-success);">الوجبة الغذائية</div>
+                                    <div style="font-size:12px; font-weight:900; color: var(--color-success);">تم تناول الغذاء 🥦</div>
                                 </div>
-                                <div style="background:#fef2f2; border:1px solid #fee2e2; padding:10px; border-radius:10px; text-align:center;">
-                                    <div style="font-size:10px; color:#b91c1c;">درجة الحرارة</div>
-                                    <div style="font-size:12px; font-weight:900; color:#991b1b;">36.7 درجة طبيعي ✅</div>
+                                <div style="background: var(--color-error-soft); border:1px solid rgba(220, 38, 38, 0.25); padding:10px; border-radius:10px; text-align:center;">
+                                    <div style="font-size:10px; color: var(--color-error);">درجة الحرارة</div>
+                                    <div style="font-size:12px; font-weight:900; color: var(--color-error);">36.7 درجة طبيعي ✅</div>
                                 </div>
                             </div>
                         </div>
@@ -1792,7 +1814,7 @@
                         <div style="text-align: right; direction: rtl;">
                             <div style="font-size:12px; color:var(--text-gray); margin-bottom: 4px;">جدول الحصص المباشرة اليوم</div>
                             <div style="font-size:16px; font-weight:900; color:var(--text-dark); margin-bottom:12px;">حصة تأسيس اللغة العربية 📖</div>
-                            <div style="background:#f4fbf7; border:1px solid #d1fae5; border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="background: var(--color-success-soft); border:1px solid rgba(22, 163, 74, 0.25); border-radius:12px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
                                 <div>
                                     <div style="font-size:12px; font-weight:900; color:var(--primary-navy);">الفصل الافتراضي نشط</div>
                                     <div style="font-size:10px; color:var(--text-gray);">عدد الأطفال الحاضرين: 14 طفل</div>
@@ -1801,7 +1823,7 @@
                             </div>
                             <div style="border-top:1px solid var(--border-color); padding-top:10px;">
                                 <div style="font-size:11px; font-weight:700; color:var(--text-gray); margin-bottom:6px;">الواجبات المرسلة لولي الأمر</div>
-                                <div style="display:flex; justify-content:space-between; font-size:11px; padding:6px; background:#f9fafb; border-radius:6px; margin-bottom:4px;">
+                                <div style="display:flex; justify-content:space-between; font-size:11px; padding:6px; background: var(--color-background); border-radius:6px; margin-bottom:4px;">
                                     <span>كتابة الحروف الهجائية ✍️</span>
                                     <span style="color:var(--kid-green); font-weight:bold;">تم الإرسال</span>
                                 </div>
@@ -1842,23 +1864,23 @@
                         <div style="text-align: right; direction: rtl;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                                 <div style="font-size:14px; font-weight:900; color:var(--text-dark);">النقاط المجمعة: 1540 نقطة</div>
-                                <span style="background:rgba(245, 158, 11, 0.1); color:#b45309; font-size:10px; padding:4px 8px; border-radius:6px; font-weight:bold;">البطل الذهبي</span>
+                                <span style="background: var(--color-warning-soft); color: var(--color-warning); font-size:10px; padding:4px 8px; border-radius:6px; font-weight:bold;">البطل الذهبي</span>
                             </div>
                             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:16px;">
-                                <div style="background:#fef3c7; border:1px solid #fde68a; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#b45309;">
+                                <div style="background: var(--color-warning-soft); border:1px solid rgba(217, 119, 6, 0.25); width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color: var(--color-warning);">
                                     <i class="fa-solid fa-graduation-cap" style="font-size:18px; margin-bottom:2px;"></i>
                                     <span>النابغ 🧠</span>
                                 </div>
-                                <div style="background:#e0f2fe; border:1px solid #bae6fd; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#0369a1;">
+                                <div style="background: var(--color-primary-soft); border:1px solid rgba(37, 99, 235, 0.25); width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color: var(--color-primary-dark);">
                                     <i class="fa-solid fa-bolt" style="font-size:18px; margin-bottom:2px;"></i>
                                     <span>المبادر ⚡</span>
                                 </div>
-                                <div style="background:#dcfce7; border:1px solid #bbf7d0; width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#15803d;">
+                                <div style="background: var(--color-success-soft); border:1px solid rgba(22, 163, 74, 0.25); width:70px; height:70px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; font-weight:900; color: var(--color-success);">
                                     <i class="fa-solid fa-palette" style="font-size:18px; margin-bottom:2px;"></i>
                                     <span>الفنان 🎨</span>
                                 </div>
                             </div>
-                            <div style="background:#f9fafb; padding:10px; border-radius:10px; text-align:center; font-size:11.5px; font-weight:800; color:var(--text-dark);">
+                            <div style="background: var(--color-background); padding:10px; border-radius:10px; text-align:center; font-size:11.5px; font-weight:800; color:var(--text-dark);">
                                 <i class="fa-solid fa-gift" style="color:var(--kid-pink);"></i> الهدية القادمة: حقيبة الأنشطة الإبداعية بعد 60 نقطة!
                             </div>
                         </div>
@@ -1976,7 +1998,7 @@
     </section>
 
     <!-- Parents Reviews / Testimonials -->
-    <section class="marketing-section scroll-reveal" id="testimonials-section" style="background: #ffffff; border-top: 1px solid var(--border-color);">
+    <section class="marketing-section scroll-reveal" id="testimonials-section" style="background: var(--color-surface); border-top: 1px solid var(--border-color);">
         <div class="section-header">
             <h2 class="section-title" data-i18n="testimonials_title">قالوا عن تجربتهم معنا ❤️</h2>
             <p class="section-subtitle" data-i18n="testimonials_subtitle">سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم 🌟</p>
@@ -2054,9 +2076,9 @@
             <h3 style="font-size: 20px; font-weight: 900; color: var(--primary-indigo); margin-bottom: 4px;">تأكيد حجز حصة أونلاين 🧑‍🏫</h3>
             <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;" id="bookingFormSlotDetails">المدرس: مستر محمد - الأحد (من 5 إلى 6 مساءً)</p>
             
-            <div style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.1); padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 13px;">
-                <p style="margin-bottom: 4px; font-weight: 800; color: var(--primary-indigo);">💳 معلومات الدفع وتحويل الرسوم:</p>
-                <p style="margin-bottom: 4px; color: #dc2626; font-weight: 800;">⏰ الحصة الفردية مدتها ساعة كاملة (60 دقيقة) مخصصة لتأسيس طفلك بالكامل.</p>
+            <div style="background: var(--color-primary-soft); border: 1px solid rgba(37, 99, 235, 0.15); padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size: 13px;">
+                <p style="margin-bottom: 4px; font-weight: 800; color: var(--color-brand-navy);">💳 معلومات الدفع وتحويل الرسوم:</p>
+                <p style="margin-bottom: 4px; color: var(--color-error); font-weight: 800;">⏰ الحصة الفردية مدتها ساعة كاملة (60 دقيقة) مخصصة لتأسيس طفلك بالكامل.</p>
                 <p style="margin-bottom: 4px;">• سعر الحصة الثابت: <strong>120 ج.م</strong></p>
                 <p style="margin-bottom: 4px;">• فودافون كاش: <strong>01023456789</strong></p>
                 <p>• حساب انستاباي: <strong>hub@instapay</strong></p>
@@ -2107,14 +2129,14 @@
 
     <!-- Product Details Modal -->
     <div class="video-modal" id="productDetailsModal" style="display: none; justify-content: center; align-items: center;">
-        <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: inherit;">
+        <div class="video-modal-content" style="background: var(--color-surface); border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: inherit;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
                 <h3 id="pdm-title-header" style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;">تفاصيل المنتج وطرق الدفع 🧭</h3>
                 <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="closeProductDetailsModal()" aria-label="إغلاق تفاصيل المنتج" role="button" tabindex="0"></i>
             </div>
             <div style="text-align: center; margin-bottom: 15px;">
                 <img id="pdm-image" src="" alt="صورة المنتج" width="200" height="200" loading="lazy" decoding="async" style="max-width: 100%; max-height: 200px; border-radius: 16px; object-fit: contain; box-shadow: var(--shadow-sm); display: none;">
-                <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 16px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
+                <div id="pdm-image-placeholder" style="width: 100px; height: 100px; border-radius: 16px; background: var(--color-background); display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--text-gray); margin: 0 auto;">
                     <i class="fa-solid fa-book-bookmark" style="color: var(--primary-indigo);"></i>
                 </div>
             </div>
@@ -2123,32 +2145,32 @@
                 <div id="pdm-stars" style="display: flex; gap: 2px;"></div>
                 <span id="pdm-sales" style="font-size: 11px; color: var(--text-gray); font-weight: bold;"></span>
             </div>
-            <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="background: var(--color-background); border: 1.5px solid var(--border-color); border-radius: 16px; padding: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 13.5px; color: var(--text-dark); font-weight: 800;">السعر الفردي:</span>
-                <div id="pdm-price" style="font-size: 20px; font-weight: 900; color: var(--kid-pink);"></div>
+                <div id="pdm-price" style="font-size: 20px; font-weight: 900; color: var(--color-primary);"></div>
             </div>
 
             <!-- طرق الدفع المتاحة -->
-            <div style="border: 1.5px solid #bae6fd; background: #f0f9ff; border-radius: 16px; padding: 14px; margin-bottom: 15px;">
-                <h5 style="font-size: 13px; font-weight: bold; color: #0369a1; margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتسهيل الدورة المالية:</h5>
-                <ul style="font-size: 11px; color: #0369a1; padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
+            <div style="border: 1.5px solid var(--color-border); background: var(--color-primary-soft); border-radius: 16px; padding: 14px; margin-bottom: 15px;">
+                <h5 style="font-size: 13px; font-weight: bold; color: var(--color-brand-navy); margin-bottom: 8px;"><i class="fa-solid fa-credit-card"></i> طرق الدفع المتاحة لتسهيل الدورة المالية:</h5>
+                <ul style="font-size: 11px; color: var(--color-brand-navy); padding-right: 15px; font-weight: 800; line-height: 1.6; list-style-type: disc;">
                     <li><strong>الدفع نقداً في الحضانة:</strong> التفعيل والتسليم الفوري من الحضانة.</li>
-                    <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color:#dc2626; text-decoration: underline; font-weight: 900;">01012345678</span>.</li>
-                    <li><strong>إنستاباي:</strong> تحويل فوري ومباشر لـ <span style="color:#16a34a; text-decoration: underline; font-weight: 900;">nursery@instapay</span>.</li>
+                    <li><strong>فودافون كاش:</strong> تحويل المبلغ لـ <span style="color: var(--color-error); text-decoration: underline; font-weight: 900;">01012345678</span>.</li>
+                    <li><strong>إنستاباي:</strong> تحويل فوري ومباشر لـ <span style="color: var(--color-success); text-decoration: underline; font-weight: 900;">nursery@instapay</span>.</li>
                 </ul>
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <a href="parent-app.html" class="book-btn" style="width: 100%; text-align: center; font-size: 14px; font-weight: 800; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-indigo), var(--primary-violet)); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">سجل دخول كولي أمر واطلب الآن 🚀</a>
+                <a href="parent-app.html" class="book-btn" style="width: 100%; text-align: center; font-size: 14px; font-weight: 800; padding: 12px; border-radius: 12px; background: var(--color-primary); box-shadow: 0 4px 12px var(--color-shadow-subtle);">سجل دخول كولي أمر واطلب الآن 🚀</a>
             </div>
         </div>
     </div>
 
     <!-- Live Class Quick Attendance Modal -->
     <div class="video-modal" id="liveAttendanceModal" style="display: none; justify-content: center; align-items: center;">
-        <div class="video-modal-content" style="background: white; border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: inherit;">
+        <div class="video-modal-content" style="background: var(--color-surface); border-radius: 32px; padding: 28px; width: 92%; max-width: 500px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: inherit;">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
-                <h3 style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;"><i class="fa-solid fa-circle-play" style="color:#dc2626;"></i> بوابة الحضور السريع للحصص 🎥</h3>
+                <h3 style="color: var(--primary-indigo); font-size: 18px; font-weight: 900; margin: 0;"><i class="fa-solid fa-circle-play" style="color: var(--color-error);"></i> بوابة الحضور السريع للحصص 🎥</h3>
                 <i class="fa-solid fa-xmark" style="font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeLiveAttendanceModal()" aria-label="إغلاق استعلام الحضور" role="button" tabindex="0"></i>
             </div>
             
@@ -3062,10 +3084,10 @@
 
                 if (snap1.empty && snap2.empty) {
                     html = `
-                        <div style="text-align: center; padding: 30px; background: #fffbeb; border: 1.5px dashed #f59e0b; border-radius: 16px; direction: rtl;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 32px; color: #f59e0b; margin-bottom: 10px;"></i>
-                            <h4 style="font-weight: 800; color: #b45309; margin-bottom: 6px;">لم يتم العثور على حجوزات!</h4>
-                            <p style="font-size: 13px; color: #78350f; margin: 0;">لم نجد أي حجز مرتبط برقم الهاتف هذا (${phone}). يرجى التأكد من الرقم أو مراجعة الحجز.</p>
+                        <div style="text-align: center; padding: 30px; background: var(--color-warning-soft); border: 1.5px dashed var(--color-warning); border-radius: 16px; direction: rtl;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 32px; color: var(--color-warning); margin-bottom: 10px;"></i>
+                            <h4 style="font-weight: 800; color: var(--color-warning); margin-bottom: 6px;">لم يتم العثور على حجوزات!</h4>
+                            <p style="font-size: 13px; color: var(--color-text-primary); margin: 0;">لم نجد أي حجز مرتبط برقم الهاتف هذا (${phone}). يرجى التأكد من الرقم أو مراجعة الحجز.</p>
                         </div>
                     `;
                     resultsDiv.innerHTML = html;
@@ -3095,31 +3117,31 @@
                         let actionButtonHtml = '';
                         if (liveSession) {
                             actionButtonHtml = `
-                                <div style="margin-top: 12px; background: #ecfdf5; border: 1px solid #10b981; border-radius: 12px; padding: 12px; text-align: center;">
-                                    <div style="color: #065f46; font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">
-                                        <i class="fa-solid fa-circle-play fa-fade" style="color: #10b981;"></i> المعلم بدأ الحصة المباشرة الآن!
+                                <div style="margin-top: 12px; background: var(--color-success-soft); border: 1px solid rgba(22, 163, 74, 0.3); border-radius: 12px; padding: 12px; text-align: center;">
+                                    <div style="color: var(--color-success); font-size: 12.5px; font-weight: 800; margin-bottom: 8px;">
+                                        <i class="fa-solid fa-circle-play fa-fade" style="color: var(--color-success);"></i> المعلم بدأ الحصة المباشرة الآن!
                                     </div>
-                                    <a href="${liveSession.roomUrl}" target="_blank" class="book-btn" style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                                    <a href="${liveSession.roomUrl}" target="_blank" class="book-btn" style="display: inline-flex; align-items: center; gap: 6px; background: var(--color-success); color: white; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);">
                                         <i class="fa-solid fa-video"></i> انضمام للحصة المباشرة (فيديو) 💻🔴
                                     </a>
                                 </div>
                             `;
                         } else {
                             actionButtonHtml = `
-                                <div style="margin-top: 10px; background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--text-gray); font-weight: 700; text-align: center;">
+                                <div style="margin-top: 10px; background: var(--color-background); border: 1.5px solid var(--border-color); border-radius: 10px; padding: 8px 12px; font-size: 11.5px; color: var(--text-gray); font-weight: 700; text-align: center;">
                                     <i class="fa-solid fa-clock"></i> الموعد: يوم ${b.date || 'غير محدد'} الساعة (${b.time || 'غير محدد'}) - البث المباشر يبدأ في موعد الحصة.
                                 </div>
                             `;
                         }
 
                         html += `
-                            <div style="background: var(--white); border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
+                            <div style="background: var(--white); border: 1.5px solid var(--color-border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 10px;">
                                     <div>
                                         <div style="font-weight: 900; color: var(--primary-indigo); font-size: 15px;">الطفل: ${b.studentName}</div>
                                         <div style="font-size: 12px; color: var(--text-gray); font-weight: bold; margin-top: 2px;">المعلم: ${b.teacherName} | حصة ${b.classType || 'خاصة'}</div>
                                     </div>
-                                    <span style="background: #ecfdf5; color: #047857; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ومفعل ✅</span>
+                                    <span style="background: var(--color-success-soft); color: var(--color-success); padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ومفعل ✅</span>
                                 </div>
                                 ${actionButtonHtml}
                             </div>
@@ -3138,19 +3160,19 @@
                         let statusDesc = '';
 
                         if (b.status === 'pending') {
-                            statusBadge = '<span style="background: #fffbeb; color: #d97706; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">قيد المراجعة ⏳</span>';
-                            statusDesc = '<div style="font-size: 11.5px; color: #b45309; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-info"></i> تلقينا إثبات الدفع وجاري التحقق وتأكيد جدول المدرس من الإدارة.</div>';
+                            statusBadge = '<span style="background: var(--color-warning-soft); color: var(--color-warning); padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">قيد المراجعة ⏳</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: var(--color-warning); font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-info"></i> تلقينا إثبات الدفع وجاري التحقق وتأكيد جدول المدرس من الإدارة.</div>';
                         } else if (b.status === 'rejected') {
-                            statusBadge = '<span style="background: #fef2f2; color: #dc2626; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مرفوض ❌</span>';
-                            statusDesc = '<div style="font-size: 11.5px; color: #dc2626; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-xmark"></i> تم رفض طلب الحجز. يرجى التواصل مع الدعم للتحقق.</div>';
+                            statusBadge = '<span style="background: var(--color-error-soft); color: var(--color-error); padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مرفوض ❌</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: var(--color-error); font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-xmark"></i> تم رفض طلب الحجز. يرجى التواصل مع الدعم للتحقق.</div>';
                         } else {
                             // If somehow confirmed but not copied to booked_classes yet
-                            statusBadge = '<span style="background: #ecfdf5; color: #047857; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ✅</span>';
-                            statusDesc = '<div style="font-size: 11.5px; color: #047857; font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-check"></i> الحجز مؤكد وسيبدأ في الموعد المحدد.</div>';
+                            statusBadge = '<span style="background: var(--color-success-soft); color: var(--color-success); padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 900; white-space: nowrap;">مؤكد ✅</span>';
+                            statusDesc = '<div style="font-size: 11.5px; color: var(--color-success); font-weight: bold; margin-top: 6px;"><i class="fa-solid fa-circle-check"></i> الحجز مؤكد وسيبدأ في الموعد المحدد.</div>';
                         }
 
                         html += `
-                            <div style="background: var(--white); border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
+                            <div style="background: var(--white); border: 1.5px solid var(--color-border); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); text-align: right; direction: rtl;">
                                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; gap: 10px;">
                                     <div>
                                         <div style="font-weight: 900; color: var(--primary-indigo); font-size: 15px;">الطفل: ${b.studentName}</div>
@@ -3646,7 +3668,7 @@
             document.getElementById('pdm-sales').innerText = activeLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
             
             const starsContainer = document.getElementById('pdm-stars');
-            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:14px;"></i>`).join('');
+            starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:14px;"></i>`).join('');
             
             const imgEl = document.getElementById('pdm-image');
             const placeholderEl = document.getElementById('pdm-image-placeholder');
@@ -3682,12 +3704,12 @@
                     const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
                     const rating = prod.rating || 5;
                     const sales = prod.salesCount || 0;
-                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:12px;"></i>`).join('');
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:12px;"></i>`).join('');
                     const salesLabel = activeLang === 'ar' ? `تم بيع ${sales} قطعة` : `${sales} items sold`;
 
                     container.innerHTML += `
                         <div class="product-card-row" onclick="openProductDetailsModal('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales})">
-                            <div style="width: 60px; height: 60px; border-radius: 12px; flex-shrink: 0; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <div style="width: 60px; height: 60px; border-radius: 12px; flex-shrink: 0; background: var(--color-background); display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                 ${prod.image ? `<img src="${prod.image}" width="60" height="60" loading="lazy" decoding="async" alt="${prod.title}" style="width:100%; height:100%; object-fit:cover;">` : `<i class="fa-solid fa-book-bookmark" style="font-size: 20px; color: var(--primary-indigo);"></i>`}
                             </div>
                             <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
@@ -3696,8 +3718,8 @@
                                 <div style="font-size:10px; color:var(--text-gray); font-weight:bold;">${salesLabel}</div>
                             </div>
                             <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-                                <span style="color:var(--kid-pink); font-weight:900; font-size:16px;">${prod.price}${currency}</span>
-                                <span style="font-size: 10px; color: var(--primary-indigo); font-weight: bold; background: rgba(79, 70, 229, 0.08); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
+                                <span style="color: var(--color-primary); font-weight:900; font-size:16px;">${prod.price}${currency}</span>
+                                <span style="font-size: 10px; color: var(--color-primary); font-weight: bold; background: var(--color-primary-soft); padding: 2px 6px; border-radius: 6px;">تفاصيل ودفع 🧭</span>
                             </div>
                         </div>`;
                 });

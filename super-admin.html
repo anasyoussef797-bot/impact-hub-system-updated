@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="إمباكت هب مصر - لوحة السوبر أدمن المركزي لإدارة كافة الحضانات والمعلمين والاشتراكات.">
-    <meta name="theme-color" content="#002f6c">
+    <meta name="theme-color" content="#123B6D">
     <title data-i18n="app_title">إمباكت هب مصر - لوحة السوبر أدمن المركزي</title>
     <!-- Preconnect origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
+    <link rel="stylesheet" href="colors.css">
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -23,23 +24,37 @@
     </noscript>
     <style>
         :root {
-            --primary-maroon: #002f6c; /* US Dept of Education Navy */
-            --soft-maroon: #005ea2;    /* Federal Blue Accent */
-            --kid-pink: #dc2626;       /* Crimson Red */
-            --kid-blue: #005ea2;       /* Federal Blue */
-            --kid-yellow: #f59e0b;     /* Gold Amber */
-            --kid-green: #10b981;
-            --kid-purple: #1e3a8a;     /* Deep Blue */
-            --bg-light: #f8fafc;       /* Slate Neutral Light */
-            --white: #ffffff;
-            --text-dark: #1b1b1b;      /* High contrast text */
-            --text-gray: #4b5563;
-            --border-color: #d1d5db;   /* Visible clear border lines */
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --danger-red: #ef4444;
-            --gold-star: #fdb813;
-            --gray-star: #cbd5e1;
-            --success-green: #10b981;
+            --color-brand-navy: #123B6D;
+            --color-primary: #2563EB;
+            --color-primary-dark: #1E40AF;
+            --color-primary-soft: #EFF6FF;
+            --color-background: #F8FAFC;
+            --color-surface: #FFFFFF;
+            --color-text-primary: #172033;
+            --color-text-secondary: #64748B;
+            --color-text-muted: #94A3B8;
+            --color-border: #E2E8F0;
+            --color-success: #16A34A;
+            --color-warning: #D97706;
+            --color-error: #DC2626;
+
+            --primary-maroon: var(--color-brand-navy);
+            --soft-maroon: var(--color-primary);
+            --kid-pink: var(--color-primary);
+            --kid-blue: var(--color-primary);
+            --kid-yellow: var(--color-warning);
+            --kid-green: var(--color-success);
+            --kid-purple: var(--color-brand-navy);
+            --bg-light: var(--color-background);
+            --white: var(--color-surface);
+            --text-dark: var(--color-text-primary);
+            --text-gray: var(--color-text-secondary);
+            --border-color: var(--color-border);
+            --card-shadow: 0 1px 3px rgba(18, 59, 109, 0.05);
+            --danger-red: var(--color-error);
+            --gold-star: var(--color-warning);
+            --gray-star: var(--color-border);
+            --success-green: var(--color-success);
         }
 
         * {
@@ -50,7 +65,7 @@
         }
 
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(244, 249, 252, 1) 0%, rgba(241, 245, 249, 1) 90%);
+            background: var(--color-background);
             color: var(--text-dark);
             font-family: var(--font-ar);
             display: flex;
@@ -86,10 +101,9 @@
         /* الشريط الجانبي */
         .sidebar {
             width: 290px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(128, 0, 0, 0.08);
-            border-right: 1px solid rgba(128, 0, 0, 0.08);
+            background: var(--color-brand-navy) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -97,26 +111,26 @@
             right: 0;
             top: 0;
             z-index: 100;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
         }
 
         .brand-area {
             padding: 30px 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(128, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .brand-area h1 {
-            color: var(--primary-maroon);
+            color: var(--color-surface) !important;
             font-size: 20px;
-            font-weight: 900;
+            font-weight: 700;
         }
 
         .brand-area p {
-            font-size: 11px;
-            color: var(--text-gray);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75) !important;
             margin-top: 5px;
-            font-weight: 800;
+            font-weight: 500;
         }
 
         .nav-menu {
@@ -133,60 +147,65 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: var(--text-gray);
+            color: rgba(255, 255, 255, 0.75);
             cursor: pointer;
             border-radius: 12px;
-            font-weight: bold;
-            font-size: 13px;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 13.5px;
+            transition: all 0.2s ease;
         }
 
         .nav-item i {
             font-size: 15px;
-            transition: transform 0.3s ease;
+            color: rgba(255, 255, 255, 0.75);
+            transition: transform 0.2s ease;
         }
 
         .nav-item:hover {
-            background: rgba(128, 0, 0, 0.04);
-            color: var(--primary-maroon);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--color-surface);
         }
 
         .nav-item:hover i {
-            transform: scale(1.1);
+            color: var(--color-surface);
+            transform: scale(1.05);
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, var(--primary-maroon), var(--soft-maroon));
+            background: var(--color-primary) !important;
             color: var(--white);
-            box-shadow: 0 10px 20px -10px rgba(128, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+        .nav-item.active i {
+            color: var(--color-surface) !important;
         }
 
         .live-builder-btn {
-            background: linear-gradient(135deg, var(--kid-pink), var(--soft-maroon));
+            background: var(--color-primary) !important;
             color: var(--white);
             border-radius: 12px;
             margin: 10px 5px;
-            box-shadow: 0 4px 12px rgba(255, 75, 114, 0.3);
-            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            font-weight: 700;
         }
 
         .live-builder-btn:hover {
+            background: var(--color-primary-dark) !important;
             transform: translateY(-2px);
-            filter: brightness(1.1);
         }
 
         /* اختيار اللغة */
         .language-picker-sidebar {
             padding: 15px;
-            border-top: 1px solid rgba(128, 0, 0, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: center;
             gap: 6px;
         }
 
         .lang-flag-btn {
-            background: var(--white);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             width: 36px;
             height: 36px;
@@ -195,19 +214,20 @@
             justify-content: center;
             cursor: pointer;
             font-size: 16px;
+            color: var(--color-surface);
             transition: all 0.2s ease;
         }
 
         .lang-flag-btn:hover {
-            transform: scale(1.15) translateY(-2px);
-            border-color: var(--primary-maroon);
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .lang-flag-btn.active {
-            background: var(--primary-maroon);
+            background: var(--color-primary);
             color: var(--white);
-            border-color: var(--primary-maroon);
-            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
 
         /* منطقة المحتوى */
@@ -220,22 +240,21 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
             box-shadow: var(--card-shadow);
         }
 
         .panel-header {
             font-size: 18px;
-            color: var(--primary-maroon);
-            font-weight: 900;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed rgba(128, 0, 0, 0.08);
+            color: var(--color-brand-navy);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--color-border);
         }
 
         .form-grid {
@@ -299,7 +318,7 @@
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: var(--color-error);
             color: var(--white);
             border: none;
             padding: 8px 16px;
@@ -354,10 +373,10 @@
         }
 
         .sub-tab-btn.active {
-            background: var(--primary-maroon);
+            background: var(--color-brand-navy);
             color: var(--white);
-            border-color: var(--primary-maroon);
-            box-shadow: 0 4px 10px rgba(128, 0, 0, 0.15);
+            border-color: var(--color-brand-navy);
+            box-shadow: 0 2px 6px rgba(18, 59, 109, 0.15);
         }
 
         /* الجداول */
@@ -383,9 +402,9 @@
         }
 
         th {
-            background-color: #f8fafc;
-            color: var(--text-dark);
-            font-weight: 900;
+            background-color: var(--color-background);
+            color: var(--color-brand-navy);
+            font-weight: 600;
         }
 
         /* النجوم للتقييم */
@@ -456,8 +475,8 @@
         }
 
         .feed-badge {
-            background: #fef08a;
-            color: #854d0e;
+            background: var(--color-warning-soft);
+            color: var(--color-warning);
             padding: 5px 12px;
             border-radius: 10px;
             font-size: 11px;
@@ -530,12 +549,45 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Mobile Drawer Backdrop Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+        }
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
         @media (max-width: 1024px) {
+            .sidebar-overlay {
+                display: block;
+            }
             .sidebar {
-                right: -290px;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                left: auto;
+                height: 100vh;
+                height: 100dvh;
+                transform: translateX(100%);
+                transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.38s ease;
+                z-index: 100;
             }
             .sidebar.open {
-                right: 0;
+                transform: translateX(0);
+                box-shadow: -8px 0 32px rgba(15, 23, 42, 0.28);
             }
             .main-content {
                 margin-right: 0;
@@ -546,12 +598,13 @@
                 display: flex;
             }
             html[dir="ltr"] .sidebar {
-                left: -290px;
+                transform: translateX(-100%);
+                left: 0;
                 right: auto;
             }
             html[dir="ltr"] .sidebar.open {
-                left: 0;
-                right: auto;
+                transform: translateX(0);
+                box-shadow: 8px 0 32px rgba(15, 23, 42, 0.28);
             }
             html[dir="ltr"] .menu-toggle {
                 left: auto;
@@ -563,9 +616,11 @@
 <body>
 
     <!-- زر قائمة الجوال -->
-    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()">
+    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" aria-label="تبديل القائمة">
         <i class="fa-solid fa-bars"></i>
     </button>
+    <!-- ستارة التعتيم للقائمة المنزلقة -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)" role="button" aria-label="إغلاق القائمة" tabindex="0"></div>
 
     <div class="app-container">
         
@@ -596,7 +651,7 @@
                 </div>
                 <div class="nav-item" onclick="switchTab('landing-bookings-tab', this)" style="display: flex; justify-content: space-between; align-items: center;">
                     <span><i class="fa-solid fa-calendar-check"></i> <span style="font-weight: bold; color: var(--kid-pink);">حجوزات الحصص أونلاين</span></span>
-                    <span id="booking-notif-badge" style="background: #dc2626; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none;">0</span>
+                    <span id="booking-notif-badge" style="background: var(--color-error); color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none;">0</span>
                 </div>
                 <div class="nav-item" onclick="switchTab('super-support-tab', this)" style="display: flex; align-items: center; gap: 8px;">
                     <span><i class="fa-solid fa-comments"></i> <span style="font-weight: bold; color: var(--primary-maroon);">غرفة الدعم والتواصل 💬</span></span>
@@ -714,7 +769,7 @@
                                 <i class="fa-solid fa-paper-plane"></i> 
                                 <span data-i18n="btn_send_scoped">إرسال التحديث الخاص</span>
                             </button>
-                            <button class="btn-primary" style="background: #64748b;" onclick="document.getElementById('nursery-profile-panel').style.display='none'">
+                            <button class="btn-primary" style="background: var(--color-text-secondary);" onclick="document.getElementById('nursery-profile-panel').style.display='none'">
                                 <span data-i18n="btn_close">إغلاق</span>
                             </button>
                         </div>
@@ -783,7 +838,7 @@
                     </div>
 
                     <div id="global-network-section" style="display: none;">
-                        <div style="background: #fafbfc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
+                        <div style="background: var(--color-background); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
                             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; flex-grow: 1;">
                                 <label style="font-weight: bold; color: var(--primary-maroon);"><i class="fa-solid fa-filter"></i> <span data-i18n="filter_feed_lbl">تصفية وعرض حائط حضانة معينة:</span></label>
                                 <select id="network-feed-filter" class="form-control" style="width: auto; min-width: 250px;" onchange="window.fetchGlobalNetworkFeed()">
@@ -1007,7 +1062,7 @@
             <div id="super-support-tab" class="tab-content">
                 <div class="panel" style="padding: 0; overflow: hidden; display: flex; flex-direction: row; min-height: 600px; max-height: calc(100vh - 120px); border-radius: 16px; box-shadow: var(--shadow-lg);">
                     <!-- Sidebar: Contacts -->
-                    <div style="width: 35%; border-left: 1px solid var(--border-color); display: flex; flex-direction: column; background: #fafafa; min-width: 280px;">
+                    <div style="width: 35%; border-left: 1px solid var(--border-color); display: flex; flex-direction: column; background: var(--color-background); min-width: 280px;">
                         <div style="padding: 15px; border-bottom: 1px solid var(--border-color); background: white;">
                             <h3 style="font-size: 15px; font-weight: bold; color: var(--primary-maroon); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
                                 <i class="fa-solid fa-address-book"></i> دليل مستخدمي الشبكة والمنصة
@@ -1015,9 +1070,9 @@
                             <input type="text" id="super-support-search" oninput="window.filterSuperSupportContacts()" placeholder="ابحث باسم الحساب، الهاتف أو البريد..." style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 12px; outline: none;">
                             <div style="display: flex; gap: 4px; margin-top: 8px; overflow-x: auto; padding-bottom: 4px;">
                                 <button onclick="window.setSuperSupportFilter('all')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: var(--primary-maroon); color:white;">الكل</button>
-                                <button onclick="window.setSuperSupportFilter('parent')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: #475569; color:white;">أولياء الأمور</button>
-                                <button onclick="window.setSuperSupportFilter('teacher')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: #475569; color:white;">المعلمين</button>
-                                <button onclick="window.setSuperSupportFilter('online_teacher')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: #475569; color:white;">أونلاين</button>
+                                <button onclick="window.setSuperSupportFilter('parent')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: var(--color-text-secondary); color:white;">أولياء الأمور</button>
+                                <button onclick="window.setSuperSupportFilter('teacher')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: var(--color-text-secondary); color:white;">المعلمين</button>
+                                <button onclick="window.setSuperSupportFilter('online_teacher')" class="btn-primary" style="margin:0; padding: 4px 8px; font-size: 10px; width:auto; border-radius:6px; background: var(--color-text-secondary); color:white;">أونلاين</button>
                             </div>
                         </div>
                         <div id="super-support-contacts-list" style="flex-grow: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
@@ -1028,7 +1083,7 @@
                     <!-- Main Chat Panel -->
                     <div style="width: 65%; display: flex; flex-direction: column; background: white;">
                         <!-- Chat Header -->
-                        <div style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; background: #fffcf0;">
+                        <div style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; background: var(--color-background);">
                             <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-maroon); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;">
                                 <i class="fa-solid fa-headset"></i>
                             </div>
@@ -1039,9 +1094,9 @@
                         </div>
 
                         <!-- Chat Messages Box -->
-                        <div id="super-chat-messages-box" style="flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: #f8fafc; height: 400px;">
+                        <div id="super-chat-messages-box" style="flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background: var(--color-background); height: 400px;">
                             <div style="text-align: center; margin-top: 80px; color: var(--text-gray); font-size: 13px;">
-                                <i class="fa-solid fa-comments" style="font-size: 48px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                                <i class="fa-solid fa-comments" style="font-size: 48px; color: var(--color-border); margin-bottom: 15px;"></i>
                                 <p style="font-weight: bold;">مرحباً بك في نظام الدعم والتواصل المركزي</p>
                                 <p style="font-size: 11px; margin-top: 5px;">اضغط على أي حساب (ولي أمر، معلم حضانة، مدرس أونلاين) في القائمة الجانبية لبدء المراسلة والتواصل المباشر لحل مشاكلهم والاستماع لمقترحاتهم.</p>
                             </div>
@@ -1069,7 +1124,7 @@
             <!-- Modal for Teacher Profile Details & Admin Control -->
             <div id="teacherAdminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px);">
                 <div style="background: white; border-radius: 20px; max-width: 500px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; position: relative;">
-                    <div style="background: linear-gradient(135deg, var(--primary-maroon), #9c1c1c); color: white; padding: 20px; text-align: center; position: relative;">
+                    <div style="background: var(--color-brand-navy); color: white; padding: 20px; text-align: center; position: relative;">
                         <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 22px; cursor: pointer;" onclick="document.getElementById('teacherAdminModal').style.display='none'"></i>
                         <img id="m-teacher-pic" src="" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.3); margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
                         <h3 style="font-size: 18px; font-weight: 800; margin: 0;">لوحة تفاصيل المدرس ومستواه</h3>
@@ -1143,7 +1198,7 @@
                             <!-- Camera selector tabs -->
                         </div>
                         
-                        <div style="background: #000; border-radius: 12px; overflow: hidden; position: relative; width: 100%; padding-top: 56.25%;">
+                        <div style="background: var(--color-text-primary); border-radius: 12px; overflow: hidden; position: relative; width: 100%; padding-top: 56.25%;">
                             <div style="position: absolute; top: 12px; left: 12px; background: rgba(220,38,38,0.85); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 6px; z-index: 10; letter-spacing: 0.5px;">
                                 <span style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite;"></span> SUPER ADMIN LIVE FEED
                             </div>
@@ -1156,9 +1211,9 @@
                             <iframe id="super-camera-player-frame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src=""></iframe>
                         </div>
                         
-                        <div style="margin-top: 15px; padding: 12px; background: #fdf2f2; border-radius: 10px; border: 1px solid #fee2e2; display: flex; gap: 10px; align-items: center;">
-                            <i class="fa-solid fa-eye-slash" style="color: #dc2626; font-size: 18px;"></i>
-                            <div style="font-size: 12px; color: #991b1b; line-height: 1.5;">
+                        <div style="margin-top: 15px; padding: 12px; background: var(--color-error-soft); border-radius: 10px; border: 1px solid var(--color-error-soft); display: flex; gap: 10px; align-items: center;">
+                            <i class="fa-solid fa-eye-slash" style="color: var(--color-error); font-size: 18px;"></i>
+                            <div style="font-size: 12px; color: var(--color-error); line-height: 1.5;">
                                 <strong>صلاحية المراقبة الصامتة:</strong> بصفتك سوبر أدمن، لديك صلاحية كاملة لتصفح فصول جميع الحضانات التابعة للشبكة بدون إذن لضمان أعلى مستويات جودة التعليم والأمن والسلامة للأطفال.
                             </div>
                         </div>
@@ -1218,14 +1273,14 @@
                             </div>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #faf9f6; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: var(--color-background); padding: 15px; border-radius: 12px; border: 1px solid var(--border-color);">
                             <div class="form-group" style="margin: 0;">
-                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: #1e3a8a;"><i class="fa-solid fa-wallet"></i> فودافون كاش (Vodafone Cash)</label>
-                                <input type="text" id="edit-n-vodafone" class="form-control" placeholder="رقم محفظة فودافون كاش..." style="margin: 0; width: 100%; border-color: #3b82f6;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: var(--color-brand-navy);"><i class="fa-solid fa-wallet"></i> فودافون كاش (Vodafone Cash)</label>
+                                <input type="text" id="edit-n-vodafone" class="form-control" placeholder="رقم محفظة فودافون كاش..." style="margin: 0; width: 100%; border-color: var(--color-primary);">
                             </div>
                             <div class="form-group" style="margin: 0;">
-                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: #047857;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي (InstaPay)</label>
-                                <input type="text" id="edit-n-instapay" class="form-control" placeholder="عنوان أو رقم انستاباي..." style="margin: 0; width: 100%; border-color: #10b981;">
+                                <label style="font-weight: bold; margin-bottom: 6px; display: block; color: var(--color-success);"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي (InstaPay)</label>
+                                <input type="text" id="edit-n-instapay" class="form-control" placeholder="عنوان أو رقم انستاباي..." style="margin: 0; width: 100%; border-color: var(--color-success);">
                             </div>
                         </div>
                     </div>
@@ -1234,7 +1289,7 @@
                         <button class="btn-primary" onclick="window.saveEditedNursery()" style="margin: 0; width: auto; padding: 10px 25px; background: var(--primary-maroon);">
                             <i class="fa-solid fa-check"></i> حفظ التعديلات
                         </button>
-                        <button class="btn-primary" onclick="window.closeEditNurseryModal()" style="margin: 0; width: auto; padding: 10px 20px; background: #64748b; border-color: #64748b;">
+                        <button class="btn-primary" onclick="window.closeEditNurseryModal()" style="margin: 0; width: auto; padding: 10px 20px; background: var(--color-text-secondary); border-color: var(--color-text-secondary);">
                             إلغاء
                         </button>
                     </div>
@@ -1243,30 +1298,30 @@
 
             <!-- Modal for Delete/Freeze Options of Nursery -->
             <div id="superAdminDeleteFreezeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 4000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px);">
-                <div style="background: white; border-radius: 20px; width: 100%; max-width: 450px; position: relative; padding: 30px; box-shadow: var(--shadow-2xl); border: 2px solid #ef4444; text-align: center; direction: rtl; font-family: inherit;">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 450px; position: relative; padding: 30px; box-shadow: var(--shadow-2xl); border: 2px solid var(--color-error); text-align: center; direction: rtl; font-family: inherit;">
                     <i class="fa-solid fa-xmark" style="position: absolute; top: 20px; left: 20px; font-size: 24px; cursor: pointer; color: var(--text-dark);" onclick="window.closeDeleteFreezeModal()"></i>
                     
-                    <div style="width: 70px; height: 70px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #ef4444; font-size: 32px;">
+                    <div style="width: 70px; height: 70px; background: var(--color-error-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: var(--color-error); font-size: 32px;">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
 
-                    <h3 style="color: #991b1b; font-weight: 900; font-size: 20px; margin-bottom: 10px;" id="df-nursery-name">إجراءات الحذف والتجميد</h3>
+                    <h3 style="color: var(--color-error); font-weight: 900; font-size: 20px; margin-bottom: 10px;" id="df-nursery-name">إجراءات الحذف والتجميد</h3>
                     <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 25px; line-height: 1.5;">برجاء تحديد الإجراء المطلوب تنفيذه على كيان هذه الحضانة من الخيارات أدناه:</p>
                     
                     <input type="hidden" id="df-nursery-id">
                     <input type="hidden" id="df-nursery-status">
 
                     <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-                        <button id="freeze-btn-option" class="btn-primary" onclick="window.confirmFreezeNursery()" style="margin: 0; width: 100%; padding: 12px; background: #0284c7; border-color: #0284c7; border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <button id="freeze-btn-option" class="btn-primary" onclick="window.confirmFreezeNursery()" style="margin: 0; width: 100%; padding: 12px; background: var(--color-primary); border-color: var(--color-primary); border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                             <i class="fa-solid fa-snowflake"></i> <span id="freeze-option-text">تجميد حساب الحضانة (إيقاف جميع التطبيقات)</span>
                         </button>
                         
-                        <button class="btn-primary" onclick="window.confirmDeleteNursery()" style="margin: 0; width: 100%; padding: 12px; background: #ef4444; border-color: #ef4444; border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <button class="btn-primary" onclick="window.confirmDeleteNursery()" style="margin: 0; width: 100%; padding: 12px; background: var(--color-error); border-color: var(--color-error); border-radius: 12px; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                             <i class="fa-solid fa-trash-can"></i> حذف الحضانة نهائياً من السيستم
                         </button>
                     </div>
 
-                    <button class="btn-primary" onclick="window.closeDeleteFreezeModal()" style="margin: 0; width: 100%; padding: 10px; background: #64748b; border-color: #64748b; border-radius: 12px; font-weight: bold; font-size: 14px;">
+                    <button class="btn-primary" onclick="window.closeDeleteFreezeModal()" style="margin: 0; width: 100%; padding: 10px; background: var(--color-text-secondary); border-color: var(--color-text-secondary); border-radius: 12px; font-weight: bold; font-size: 14px;">
                         إلغاء التراجع
                     </button>
                 </div>
@@ -2001,26 +2056,26 @@
                 let rowStyle = '';
                 let statusBadge = '';
                 if (isInactive) {
-                    rowStyle = 'opacity:0.6; background:#ffe2e2;';
-                    statusBadge = '<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">غير نشط 🚫</span>';
+                    rowStyle = 'opacity:0.6; background:var(--color-error-soft);';
+                    statusBadge = '<span style="background:var(--color-error); color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">غير نشط 🚫</span>';
                 } else if (isFrozen) {
-                    rowStyle = 'background:#e0f2fe; border-left: 4px solid #0284c7;';
-                    statusBadge = '<span style="background:#0284c7; color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">مجمدة ❄️</span>';
+                    rowStyle = 'background:var(--color-primary-soft); border-left: 4px solid var(--color-primary);';
+                    statusBadge = '<span style="background:var(--color-primary); color:white; padding:2px 6px; border-radius:4px; font-size:10px; margin-right:5px; font-weight:bold;">مجمدة ❄️</span>';
                 }
 
                 // Extra details
                 let extraDetailsHtml = '';
                 if (item.branches) {
-                    extraDetailsHtml += `<br><small style="color:#0284c7; font-weight:bold;"><i class="fa-solid fa-code-branch"></i> الفروع: ${item.branches}</small>`;
+                    extraDetailsHtml += `<br><small style="color:var(--color-primary); font-weight:bold;"><i class="fa-solid fa-code-branch"></i> الفروع: ${item.branches}</small>`;
                 }
                 if (item.branchPhones) {
-                    extraDetailsHtml += `<br><small style="color:#475569;"><i class="fa-solid fa-phone-volume"></i> هواتف الفروع: ${item.branchPhones}</small>`;
+                    extraDetailsHtml += `<br><small style="color:var(--color-text-secondary);"><i class="fa-solid fa-phone-volume"></i> هواتف الفروع: ${item.branchPhones}</small>`;
                 }
                 if (item.vodafoneCash) {
-                    extraDetailsHtml += `<br><small style="color:#e11d48; font-weight:bold;"><i class="fa-solid fa-wallet"></i> فودافون كاش: ${item.vodafoneCash}</small>`;
+                    extraDetailsHtml += `<br><small style="color:var(--color-error); font-weight:bold;"><i class="fa-solid fa-wallet"></i> فودافون كاش: ${item.vodafoneCash}</small>`;
                 }
                 if (item.instaPay) {
-                    extraDetailsHtml += `<br><small style="color:#059669; font-weight:bold;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي: ${item.instaPay}</small>`;
+                    extraDetailsHtml += `<br><small style="color:var(--color-success); font-weight:bold;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي: ${item.instaPay}</small>`;
                 }
 
                 tbody.innerHTML += `
@@ -2047,15 +2102,15 @@
                         </td>
                         <td>
                             <div style="display: flex; flex-direction: column; gap: 6px;">
-                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: ${isInactive ? '#10b981' : (isFrozen ? '#cbd5e1' : 'var(--danger-red)')}; border-color: ${isInactive ? '#10b981' : (isFrozen ? '#cbd5e1' : 'var(--danger-red)')}; color: ${isFrozen ? '#64748b' : 'white'}; border-radius: 8px; cursor: ${isFrozen ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')" ${isFrozen ? 'disabled' : ''}>
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; border-color: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; color: ${isFrozen ? 'var(--color-text-secondary)' : 'white'}; border-radius: 8px; cursor: ${isFrozen ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')" ${isFrozen ? 'disabled' : ''}>
                                     <i class="fa-solid fa-power-off"></i> ${isInactive ? 'تفعيل العرض' : 'إيقاف العرض'}
                                 </button>
                                 
-                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: #e2e8f0; border-color: #cbd5e1; color: #1e293b; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showEditNurseryModal('${id}')">
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: var(--color-border); border-color: var(--color-border); color: var(--color-text-primary); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showEditNurseryModal('${id}')">
                                     <i class="fa-solid fa-pen-to-square"></i> تعديل التفاصيل
                                 </button>
                                 
-                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: #fee2e2; border-color: #fecaca; color: #991b1b; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showDeleteFreezeModal('${id}', '${item.name.replace(/'/g, "\\'")}', '${item.status}')">
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: var(--color-error-soft); border-color: var(--color-error-soft); color: var(--color-error); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showDeleteFreezeModal('${id}', '${item.name.replace(/'/g, "\\'")}', '${item.status}')">
                                     <i class="fa-solid fa-trash-can"></i> حذف وتجميد
                                 </button>
                             </div>
@@ -2175,12 +2230,12 @@
 
             if (status === "frozen") {
                 freezeText.innerText = "إلغاء تجميد الحضانة (إعادة تشغيل التطبيقات)";
-                freezeBtn.style.background = "#10b981";
-                freezeBtn.style.borderColor = "#10b981";
+                freezeBtn.style.background = "var(--color-success)";
+                freezeBtn.style.borderColor = "var(--color-success)";
             } else {
                 freezeText.innerText = "تجميد حساب الحضانة (إيقاف جميع التطبيقات)";
-                freezeBtn.style.background = "#0284c7";
-                freezeBtn.style.borderColor = "#0284c7";
+                freezeBtn.style.background = "var(--color-primary)";
+                freezeBtn.style.borderColor = "var(--color-primary)";
             }
 
             document.getElementById('superAdminDeleteFreezeModal').style.display = 'flex';
@@ -2271,11 +2326,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <strong style="color:var(--primary-maroon);">${post.authorName || 'إدارة الحضانة'}</strong>
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editNurseryPost('${postId}', '${post.title || ''}', '${post.body || ''}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                <button onclick="window.editNurseryPost('${postId}', '${post.title || ''}', '${post.body || ''}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                 </button>
-                                <button onclick="window.deleteNurseryPost('${postId}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                <button onclick="window.deleteNurseryPost('${postId}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                 </button>
                             </div>
                         </div>
@@ -2443,11 +2498,11 @@
                                 ${nurseryBadge}
                             </div>
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editNurseryPost('${post.id}', '${post.title || ''}', '${post.body || ''}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #e2e8f0; color: #1e293b; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: #475569;"></i>
+                                <button onclick="window.editNurseryPost('${post.id}', '${post.title || ''}', '${post.body || ''}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                 </button>
-                                <button onclick="window.deleteNurseryPost('${post.id}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: #fee2e2; color: #ef4444; width: auto; box-shadow: none; border-radius: 8px;">
-                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: #ef4444;"></i>
+                                <button onclick="window.deleteNurseryPost('${post.id}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                    <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                 </button>
                             </div>
                         </div>
@@ -2523,7 +2578,7 @@
                     nurseryTitle.innerText = '';
                     const noCamsHtml = `
                         <div style="text-align: center; padding: 40px; width: 100%;">
-                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: #cbd5e1; margin-bottom: 15px;"></i>
+                            <i class="fa-solid fa-video-slash" style="font-size: 50px; color: var(--color-border); margin-bottom: 15px;"></i>
                             <h4 style="font-size: 16px; font-weight: bold; color: var(--text-dark); margin-bottom: 10px;">لا توجد كاميرات مسجلة حالياً</h4>
                             <p style="font-size: 12px; color: var(--text-gray); max-width: 400px; margin: 0 auto; line-height: 1.6;">
                                 ${activeNurseryId === 'all' ? 'لم تقم أي حضانة بإضافة روابط كاميرات مراقبة تحت تابة الإعدادات بعد.' : 'لم تقم هذه الحضانة بإضافة أي كاميرا تحت إعدادات لوحة التحكم الخاصة بها.'}
@@ -2576,12 +2631,12 @@
                     
                     btn.onclick = () => {
                         tabsContainer.querySelectorAll('button').forEach(b => {
-                            b.style.background = '#f1f5f9';
-                            b.style.color = '#334155';
-                            b.style.borderColor = '#e2e8f0';
+                            b.style.background = 'var(--color-background)';
+                            b.style.color = 'var(--color-text-secondary)';
+                            b.style.borderColor = 'var(--color-border)';
                         });
                         btn.style.background = 'var(--primary-maroon)';
-                        btn.style.color = '#fff';
+                        btn.style.color = 'var(--color-surface)';
                         btn.style.borderColor = 'var(--primary-maroon)';
                         selectCamera(cam);
                     };
@@ -2671,13 +2726,13 @@
                     const t = uniqueTeachers[tid];
                     const isFeatured = t.featured === true;
                     gridContainer.innerHTML += `
-                        <div class="teacher-account-card" style="background:#fff; border:1px solid var(--border-color); border-radius:16px; padding:20px; text-align:center; position:relative; box-shadow:var(--card-shadow); cursor:pointer; transition: transform 0.2s;" onclick="window.openTeacherAdminDetails('${tid}')">
+                        <div class="teacher-account-card" style="background:var(--color-surface); border:1px solid var(--border-color); border-radius:16px; padding:20px; text-align:center; position:relative; box-shadow:var(--card-shadow); cursor:pointer; transition: transform 0.2s;" onclick="window.openTeacherAdminDetails('${tid}')">
                             <img src="${t.avatarUrl}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; margin:0 auto 12px; border:3px solid ${isFeatured ? 'var(--success-green)' : 'var(--border-color)'};">
                             <h4 style="font-size:15px; font-weight:800; color:var(--text-dark); margin-bottom:4px;">${t.teacherName}</h4>
                             <p style="font-size:11px; color:var(--text-gray); margin-bottom:12px; font-weight:bold;">${t.subject}</p>
                             ${isFeatured ? 
                                 `<span style="background:rgba(16,185,129,0.1); color:var(--success-green); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-circle-check"></i> معروض بالرئيسية</span>` : 
-                                `<span style="background:#f1f5f9; color:var(--text-gray); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-circle-minus"></i> مخفي</span>`
+                                `<span style="background:var(--color-background); color:var(--text-gray); padding:4px 10px; border-radius:12px; font-size:11px; font-weight:bold;"><i class="fa-solid fa-circle-minus"></i> مخفي</span>`
                             }
                         </div>
                     `;
@@ -2791,7 +2846,7 @@
 
             // 1. معاينة اللوجو
             const logoPreview = document.getElementById('current-logo-preview');
-            if(data.logo) { logoPreview.innerHTML = `<img src="${data.logo}" style="max-height:80px; border-radius:12px; border:1px solid #ccc; padding:4px;">`; }
+            if(data.logo) { logoPreview.innerHTML = `<img src="${data.logo}" style="max-height:80px; border-radius:12px; border:1px solid var(--color-border); padding:4px;">`; }
             else { logoPreview.innerHTML = '<small style="color:gray;">لا يوجد لوجو مخصص حالياً، يتم عرض اللوجو الافتراضي.</small>'; }
 
             // 2. عرض بلوكات الفيديو المرنة
@@ -2992,7 +3047,7 @@
                     const item = docSnap.data();
                     const id = docSnap.id;
                     const rating = item.rating || 5;
-                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? '#fbc21e' : '#cbd5e1'}; font-size:11px; margin:0 1px;"></i>`).join('');
+                    const stars = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:11px; margin:0 1px;"></i>`).join('');
                     
                     tbody.innerHTML += `
                         <tr>
@@ -3126,7 +3181,7 @@
                     }
 
                     const statusDropdown = `
-                        <select onchange="window.updateOrderStatus('${order.id}', this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer; color: #1e293b;">
+                        <select onchange="window.updateOrderStatus('${order.id}', this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer; color: var(--color-text-primary);">
                             <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم تلقي الطلب</option>
                             <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم شحن الطلب</option>
                             <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
@@ -3134,7 +3189,7 @@
                     `;
 
                     const deleteBtn = `
-                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: #ef4444;" onclick="window.deleteCentralOrder('${order.id}')">
+                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: var(--color-error);" onclick="window.deleteCentralOrder('${order.id}')">
                             <i class="fa-solid fa-trash-can"></i> حذف
                         </button>
                     `;
@@ -3204,8 +3259,8 @@
                 modal.className = 'modal-overlay';
                 modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; justify-content:center; align-items:center; z-index:9999;';
                 modal.innerHTML = `
-                    <div style="max-width:90%; max-height:90%; position:relative; background:#fff; padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
-                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:#ef4444; cursor:pointer;" onclick="document.getElementById('super-payment-proof-modal').style.display='none'"></i>
+                    <div style="max-width:90%; max-height:90%; position:relative; background:var(--color-surface); padding:20px; border-radius:16px; text-align:center; box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-circle-xmark" style="position:absolute; top:12px; right:12px; font-size:26px; color:var(--color-error); cursor:pointer;" onclick="document.getElementById('super-payment-proof-modal').style.display='none'"></i>
                         <h3 style="margin-bottom:15px; font-size:16px; color:var(--primary-maroon); font-weight:bold; font-family:inherit;">سند تحويل ولي الأمر 📸</h3>
                         <img id="super-payment-proof-img" src="" style="max-width:100%; max-height:70vh; object-fit:contain; border-radius:8px; border:2px solid var(--border-color);">
                     </div>
@@ -3382,9 +3437,9 @@
                 tbody.innerHTML = '';
                 bookings.forEach(booking => {
                     const statusColors = {
-                        pending: 'background: #fef3c7; color: #d97706; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;',
-                        confirmed: 'background: #d1fae5; color: #059669; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;',
-                        rejected: 'background: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;'
+                        pending: 'background: var(--color-warning-soft); color: var(--color-warning); padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;',
+                        confirmed: 'background: var(--color-success-soft); color: var(--color-success); padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;',
+                        rejected: 'background: var(--color-error-soft); color: var(--color-error); padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;'
                     };
                     const statusText = {
                         pending: 'قيد الانتظار ⏳',
@@ -3392,7 +3447,7 @@
                         rejected: 'مرفوض ❌'
                     };
 
-                    const statusStyle = statusColors[booking.status] || 'background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;';
+                    const statusStyle = statusColors[booking.status] || 'background: var(--color-border); color: var(--color-text-secondary); padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 800;';
                     const statusLabel = statusText[booking.status] || booking.status || 'معلق';
 
                     let dateStr = 'غير محدد';
@@ -3560,8 +3615,19 @@
             window.open('index.html?adminMode=true', '_blank');
         };
 
-        window.toggleSidebar = () => {
-            document.getElementById('appSidebar').classList.toggle('open');
+        // تبديل قائمة الموبايل بتأثير Drawer المنزلق
+        window.toggleSidebar = (forceState) => {
+            const sidebar = document.getElementById('appSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (!sidebar) return;
+            const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('open');
+            if (willOpen) {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+            }
         };
 
         window.playNotificationChime = () => {
@@ -3632,7 +3698,7 @@
             toast.style.position = 'fixed';
             toast.style.bottom = '20px';
             toast.style.right = '20px';
-            toast.style.background = '#9c1c1c';
+            toast.style.background = 'var(--color-error)';
             toast.style.color = 'white';
             toast.style.padding = '16px 24px';
             toast.style.borderRadius = '12px';
@@ -3730,7 +3796,7 @@
 
             } catch (err) {
                 console.error("Error loading support contacts:", err);
-                contactsListContainer.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px; font-size: 12px;">حدث خطأ أثناء تحميل دليل الحسابات. يرجى إعادة المحاولة.</div>';
+                contactsListContainer.innerHTML = '<div style="text-align: center; color: var(--color-error); padding: 20px; font-size: 12px;">حدث خطأ أثناء تحميل دليل الحسابات. يرجى إعادة المحاولة.</div>';
             }
         };
 
@@ -3771,7 +3837,7 @@
 
             filtered.forEach(c => {
                 const isActive = window.activeSupportContactId === c.id;
-                const activeStyle = isActive ? 'background: #fef3c7; border: 1.5px solid var(--primary-maroon);' : 'background: white; border: 1px solid var(--border-color);';
+                const activeStyle = isActive ? 'background: var(--color-warning-soft); border: 1.5px solid var(--primary-maroon);' : 'background: white; border: 1px solid var(--border-color);';
                 
                 contactsListContainer.innerHTML += `
                     <div onclick="window.openSuperChatWithUser('${c.id}', '${c.name.replace(/'/g, "\\'")}')" style="padding: 10px; border-radius: 10px; cursor: pointer; transition: all 0.2s; ${activeStyle} font-family:inherit; margin-bottom:4px;">
@@ -3782,7 +3848,7 @@
                         <div style="font-size:10px; color:var(--text-gray); display:flex; flex-direction:column; gap:2px; line-height:1.3;">
                             <span><i class="fa-solid fa-phone" style="font-size:8px;"></i> ${c.phone}</span>
                             <span><i class="fa-solid fa-envelope" style="font-size:8px;"></i> ${c.email}</span>
-                            <span style="color:#0f766e; font-weight:800; font-size:9.5px; margin-top:2px;"><i class="fa-solid fa-school" style="font-size:8px;"></i> ${c.nurseryName}</span>
+                            <span style="color:var(--color-primary); font-weight:800; font-size:9.5px; margin-top:2px;"><i class="fa-solid fa-school" style="font-size:8px;"></i> ${c.nurseryName}</span>
                         </div>
                     </div>
                 `;
@@ -3829,7 +3895,7 @@
                         const isSenderName = msg.senderName || (isMe ? 'السوبر أدمن 👑' : 'المستخدم');
                         
                         // Styled chat bubble
-                        const alignStyle = isMe ? 'align-self: flex-start; background: var(--primary-maroon); color: white; border-bottom-left-radius: 4px;' : 'align-self: flex-end; background: #e2e8f0; color: #1e293b; border-bottom-right-radius: 4px;';
+                        const alignStyle = isMe ? 'align-self: flex-start; background: var(--primary-maroon); color: white; border-bottom-left-radius: 4px;' : 'align-self: flex-end; background: var(--color-border); color: var(--color-text-primary); border-bottom-right-radius: 4px;';
                         const timeString = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'}) : '';
                         
                         msgBox.innerHTML += `

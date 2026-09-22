@@ -1,0 +1,581 @@
+/* ==========================================================================
+   IMPACT HUB EGYPT — GLOBAL MASTER COLOR SYSTEM
+   Standardized Modern EdTech / SaaS Architecture
+   Single Source of Truth for All 5 Interfaces:
+   1. Main Website
+   2. Parent App
+   3. Teacher App
+   4. Nursery Admin
+   5. Super Admin
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. MASTER COLOR PALETTE (Strict User Specification)
+     ------------------------------------------------------------------------ */
+  --color-brand-navy: #123B6D;       /* Main headings, brand elements, sidebar, major titles */
+  --color-primary: #2563EB;          /* Primary buttons, CTAs, active nav, interactive links */
+  --color-primary-dark: #1E40AF;     /* Button hover states, active/pressed states */
+  --color-primary-soft: #EFF6FF;     /* Light backgrounds, selected cards, subtle highlights */
+  --color-background: #F8FAFC;       /* Main page & application background */
+  --color-surface: #FFFFFF;          /* Cards, panels, modals, forms, nav surfaces */
+  --color-text-primary: #172033;     /* Body text, main content, primary labels */
+  --color-text-secondary: #64748B;   /* Descriptions, metadata, secondary labels */
+  --color-text-muted: #94A3B8;       /* Placeholders, disabled states, subtle notes */
+  --color-border: #E2E8F0;           /* Card borders, input borders, dividers, tables */
+
+  /* ------------------------------------------------------------------------
+     2. SEMANTIC COLORS (Restricted strictly to status/meaning, never decorative)
+     ------------------------------------------------------------------------ */
+  --color-success: #16A34A;          /* Success messages, completed actions, positive status */
+  --color-success-soft: #F0FDF4;     /* Soft success container background */
+  --color-warning: #D97706;          /* Warnings, pending actions, attention states */
+  --color-warning-soft: #FFFBEB;     /* Soft warning container background */
+  --color-error: #DC2626;            /* Errors, failed actions, critical warnings, delete */
+  --color-error-soft: #FEF2F2;       /* Soft error container background */
+
+  /* ------------------------------------------------------------------------
+     3. INTERACTIVE & FOCUS TOKENS
+     ------------------------------------------------------------------------ */
+  --color-focus-ring: rgba(37, 99, 235, 0.2);
+  --color-shadow-subtle: rgba(18, 59, 109, 0.05);
+  --color-shadow-medium: rgba(18, 59, 109, 0.09);
+
+  /* ------------------------------------------------------------------------
+     4. BACKWARD-COMPATIBILITY ALIASES (Guarantees zero regression across legacy styles)
+     ------------------------------------------------------------------------ */
+  --primary-navy: var(--color-brand-navy);
+  --primary-maroon: var(--color-brand-navy);
+  --primary-indigo: var(--color-brand-navy);
+  --primary-blue: var(--color-primary);
+  --soft-maroon: var(--color-primary);
+  --primary-violet: var(--color-primary);
+  --bg-light: var(--color-background);
+  --pastel-bg: var(--color-background);
+  --white: var(--color-surface);
+  --text-dark: var(--color-text-primary);
+  --text-gray: var(--color-text-secondary);
+  --border-color: var(--color-border);
+  --pastel-blue: var(--color-primary-soft);
+  --danger-red: var(--color-error);
+  --success-green: var(--color-success);
+  --warning-yellow: var(--color-warning);
+  --gold-star: var(--color-warning);
+
+  /* Remap legacy childish colors to refined SaaS tokens */
+  --kid-pink: var(--color-primary);
+  --kid-blue: var(--color-primary);
+  --kid-purple: var(--color-brand-navy);
+  --kid-yellow: var(--color-warning);
+  --kid-green: var(--color-success);
+}
+
+/* ==========================================================================
+   GLOBAL BASE ELEMENTS
+   ========================================================================== */
+
+body {
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-brand-navy);
+}
+
+p, span, li {
+  color: inherit;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+hr, .divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   BUTTON SYSTEM (Standardized across all interfaces)
+   ========================================================================== */
+
+/* Primary Button */
+.btn-primary, 
+button.btn-primary, 
+a.btn-primary, 
+.login-btn,
+.btn-submit-main {
+  background: var(--color-primary) !important;
+  color: #FFFFFF !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 1px 2px var(--color-shadow-subtle) !important;
+  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s ease, box-shadow 0.2s ease !important;
+}
+
+.btn-primary:hover, 
+button.btn-primary:hover, 
+a.btn-primary:hover, 
+.login-btn:hover,
+.btn-submit-main:hover {
+  background: var(--color-primary-dark) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 10px var(--color-shadow-medium) !important;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active, 
+button.btn-primary:active, 
+a.btn-primary:active, 
+.login-btn:active {
+  background: var(--color-primary-dark) !important;
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary, 
+.btn-outline, 
+button.btn-outline, 
+a.btn-outline {
+  background: var(--color-surface) !important;
+  color: var(--color-brand-navy) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: none !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+}
+
+.btn-secondary:hover, 
+.btn-outline:hover, 
+button.btn-outline:hover, 
+a.btn-outline:hover {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary-dark) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* Destructive / Error Button */
+.btn-danger, 
+button.btn-danger, 
+a.btn-danger {
+  background: var(--color-error) !important;
+  color: #FFFFFF !important;
+  border: 1px solid transparent !important;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(220, 38, 38, 0.2) !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+}
+
+.btn-danger:hover, 
+button.btn-danger:hover, 
+a.btn-danger:hover {
+  background: #B91C1C !important;
+  box-shadow: 0 4px 10px rgba(185, 28, 28, 0.3) !important;
+}
+
+/* ==========================================================================
+   NAVIGATION SURFACES
+   ========================================================================== */
+
+/* Top Header / Navbar */
+.navbar, 
+.app-header {
+  background: var(--color-surface) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  box-shadow: 0 1px 3px var(--color-shadow-subtle);
+}
+
+.navbar .logo,
+.navbar .logo span {
+  color: var(--color-brand-navy) !important;
+}
+
+.nav-links a {
+  color: var(--color-text-primary) !important;
+}
+
+.nav-links a:hover {
+  color: var(--color-primary) !important;
+  background: var(--color-primary-soft) !important;
+}
+
+.nav-links a.active {
+  color: var(--color-primary) !important;
+  background: var(--color-primary-soft) !important;
+}
+
+/* Mobile Bottom Navigation (Parent App) */
+.bottom-nav {
+  background: var(--color-surface) !important;
+  border-top: 1px solid var(--color-border) !important;
+  box-shadow: 0 -2px 10px var(--color-shadow-subtle);
+}
+
+.bottom-nav .nav-item {
+  color: var(--color-text-secondary) !important;
+}
+
+.bottom-nav .nav-item i {
+  color: var(--color-text-secondary) !important;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.bottom-nav .nav-item:hover,
+.bottom-nav .nav-item:hover i {
+  color: var(--color-primary) !important;
+}
+
+.bottom-nav .nav-item.active,
+.bottom-nav .nav-item.active i {
+  color: var(--color-primary) !important;
+}
+
+/* ==========================================================================
+   SIDEBARS (Admin Dashboards & Teacher App)
+   ========================================================================== */
+
+.sidebar {
+  background: var(--color-brand-navy) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.sidebar .brand-area,
+.sidebar .profile-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar .brand-area h1,
+.sidebar .brand-area h2,
+.sidebar .profile-section h3 {
+  color: #FFFFFF !important;
+}
+
+.sidebar .brand-area p,
+.sidebar .profile-section p {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.sidebar .profile-badge {
+  background: var(--color-primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3) !important;
+}
+
+.sidebar .nav-item {
+  color: rgba(255, 255, 255, 0.75) !important;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-item i {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.sidebar .nav-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+}
+
+.sidebar .nav-item:hover i {
+  color: #FFFFFF !important;
+}
+
+.sidebar .nav-item.active {
+  background: var(--color-primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+}
+
+.sidebar .nav-item.active i {
+  color: #FFFFFF !important;
+}
+
+.sidebar .live-builder-btn {
+  background: var(--color-primary) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
+}
+
+.sidebar .live-builder-btn:hover {
+  background: var(--color-primary-dark) !important;
+}
+
+.sidebar .language-picker-sidebar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar .lang-flag-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFFFFF !important;
+}
+
+.sidebar .lang-flag-btn:hover,
+.sidebar .lang-flag-btn.active {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ==========================================================================
+   CARDS & PANELS
+   ========================================================================== */
+
+.card, 
+.stat-badge-card, 
+.mock-portal-card, 
+.feed-post, 
+.product-card, 
+.game-card,
+.dashboard-card,
+.feature-card {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px var(--color-shadow-subtle);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover, 
+.stat-badge-card:hover, 
+.mock-portal-card:hover,
+.feature-card:hover {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 4px 12px var(--color-shadow-medium);
+}
+
+.card h1, .card h2, .card h3, .card h4,
+.stat-badge-card h3, .section-title {
+  color: var(--color-brand-navy) !important;
+}
+
+.card p, 
+.card .description, 
+.card-desc,
+.stat-label {
+  color: var(--color-text-secondary) !important;
+}
+
+.stat-num {
+  color: var(--color-brand-navy) !important;
+}
+
+/* ==========================================================================
+   FORMS & INPUTS
+   ========================================================================== */
+
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="number"], 
+input[type="tel"], 
+input[type="search"], 
+select, 
+textarea, 
+.form-control, 
+.login-input {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+  border-radius: 10px;
+  outline: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input::placeholder, 
+textarea::placeholder,
+.login-input::placeholder {
+  color: var(--color-text-muted) !important;
+}
+
+input:focus, 
+select:focus, 
+textarea:focus, 
+.form-control:focus, 
+.login-input:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px var(--color-focus-ring) !important;
+}
+
+label, 
+.form-label {
+  color: var(--color-text-primary) !important;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   TABLES & DATA GRIDS
+   ========================================================================== */
+
+table, 
+.data-table {
+  width: 100%;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+table thead, 
+.data-table thead, 
+table th {
+  background: var(--color-background) !important;
+  color: var(--color-brand-navy) !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  text-align: inherit;
+  padding: 12px 16px;
+}
+
+table tbody tr {
+  border-bottom: 1px solid var(--color-border) !important;
+  transition: background-color 0.15s ease;
+}
+
+table tbody tr:hover {
+  background: var(--color-primary-soft) !important;
+}
+
+table td {
+  color: var(--color-text-primary) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  padding: 12px 16px;
+}
+
+table td small, 
+table td .secondary-info {
+  color: var(--color-text-secondary) !important;
+}
+
+/* ==========================================================================
+   SEMANTIC BADGES & STATUS INDICATORS
+   (Only green, orange/yellow, red for meaningful state)
+   ========================================================================== */
+
+.badge-success, 
+.status-active, 
+.status-approved, 
+.status-paid, 
+.status-delivered,
+.status-success {
+  background: var(--color-success-soft) !important;
+  color: var(--color-success) !important;
+  border: 1px solid rgba(22, 163, 74, 0.25) !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.badge-warning, 
+.status-pending, 
+.status-waiting, 
+.status-warning {
+  background: var(--color-warning-soft) !important;
+  color: var(--color-warning) !important;
+  border: 1px solid rgba(217, 119, 6, 0.25) !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.badge-error, 
+.badge-danger, 
+.status-frozen, 
+.status-rejected, 
+.status-cancelled, 
+.status-error {
+  background: var(--color-error-soft) !important;
+  color: var(--color-error) !important;
+  border: 1px solid rgba(220, 38, 38, 0.25) !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+.badge-info, 
+.badge-neutral, 
+.solution-tag {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid rgba(37, 99, 235, 0.15) !important;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+
+/* ==========================================================================
+   MODALS & DIALOGS
+   ========================================================================== */
+
+.modal-overlay {
+  background: rgba(18, 59, 109, 0.45) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+.modal-content, 
+.modal-card {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: 0 20px 25px -5px rgba(18, 59, 109, 0.15), 0 8px 10px -6px rgba(18, 59, 109, 0.1) !important;
+}
+
+/* ==========================================================================
+   DROPDOWNS & TABS
+   ========================================================================== */
+
+.dropdown-content {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 10px 25px var(--color-shadow-medium) !important;
+}
+
+.dropdown-content a {
+  color: var(--color-text-primary) !important;
+}
+
+.dropdown-content a:hover {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+}
+
+.dropdown-content a.active-lang {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary) !important;
+  font-weight: 700;
+}
+
+/* Solution Tabs on Landing Page */
+.solution-tab-btn {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text-secondary) !important;
+  transition: all 0.2s ease !important;
+}
+
+.solution-tab-btn:hover {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+.solution-tab-btn.active {
+  background: var(--color-brand-navy) !important;
+  color: #FFFFFF !important;
+  border-color: var(--color-brand-navy) !important;
+  box-shadow: 0 4px 12px rgba(18, 59, 109, 0.25) !important;
+}
