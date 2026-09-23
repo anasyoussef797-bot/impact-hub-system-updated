@@ -12,8 +12,14 @@ const PORT = 3000;
 // Parse JSON bodies
 app.use(express.json());
 
-// Serve static files from the root directory
-app.use(express.static(__dirname));
+// Serve static files from the root directory with html extension support
+app.use(express.static(__dirname, { extensions: ['html', 'htm'] }));
+
+// Direct clean routes for main portals
+app.get('/parent-app', (req, res) => res.sendFile(path.join(__dirname, 'parent-app.html')));
+app.get('/teacher-app', (req, res) => res.sendFile(path.join(__dirname, 'teacher-app.html')));
+app.get('/nursery-admin', (req, res) => res.sendFile(path.join(__dirname, 'nursery-admin.html')));
+app.get('/super-admin', (req, res) => res.sendFile(path.join(__dirname, 'super-admin.html')));
 
 // Route to securely create a Daily.co room using our API key
 app.post('/api/create-daily-room', async (req, res) => {

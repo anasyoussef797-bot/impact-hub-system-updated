@@ -19,6 +19,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="typography.css">
     <link rel="stylesheet" href="colors.css">
+    <link rel="stylesheet" href="notifications.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ImpactHub">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
+    <script src="notifications.js" defer></script>
     <!-- Asynchronous FontAwesome Icons -->
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
@@ -621,7 +630,7 @@
         .cards-slider::-webkit-scrollbar-thumb { background: rgba(48, 86, 105, 0.25); border-radius: 9999px; }
         .cards-slider::-webkit-scrollbar-thumb:hover { background: var(--primary-indigo); }
         
-        .content-card, .teacher-card, .testimonial-card, .product-card { 
+        .testimonial-card, .product-card { 
             background: var(--white); 
             border-radius: 28px; 
             padding: 28px; 
@@ -635,10 +644,56 @@
             position: relative; 
             overflow: hidden;
         }
-        .content-card:hover, .teacher-card:hover, .testimonial-card:hover, .product-card:hover { 
+        .testimonial-card:hover, .product-card:hover { 
             transform: translateY(-8px); 
             box-shadow: var(--shadow-xl); 
             border-color: rgba(48, 86, 105, 0.2); 
+        }
+
+        /* Subtle Tilt-On-Hover CSS Transforms for Content & Teacher Cards */
+        .content-card, .teacher-card {
+            background: var(--white); 
+            border-radius: 28px; 
+            padding: 28px; 
+            box-shadow: var(--shadow-md); 
+            border: 1px solid var(--border-color); 
+            flex: 0 0 auto; 
+            width: 310px; 
+            scroll-snap-align: start; 
+            white-space: normal; 
+            position: relative; 
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transform-origin: center center;
+            will-change: transform, box-shadow;
+            backface-visibility: hidden;
+            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
+        }
+
+        .content-card:hover, .teacher-card:hover { 
+            transform: perspective(1000px) translateY(-10px) rotateX(3.5deg) rotateY(-2.5deg) rotateZ(0.4deg) scale3d(1.025, 1.025, 1.025); 
+            box-shadow: 0 22px 38px -10px rgba(48, 86, 105, 0.16), 0 10px 20px -6px rgba(193, 120, 90, 0.12); 
+            border-color: rgba(48, 86, 105, 0.28); 
+            z-index: 5;
+        }
+
+        .content-card:nth-child(even):hover, .teacher-card:nth-child(even):hover {
+            transform: perspective(1000px) translateY(-10px) rotateX(3.5deg) rotateY(2.5deg) rotateZ(-0.4deg) scale3d(1.025, 1.025, 1.025);
+        }
+
+        .content-card:active, .teacher-card:active {
+            transform: perspective(1000px) translateY(-3px) scale3d(0.99, 0.99, 0.99);
+            transition: transform 0.12s ease;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .content-card, .teacher-card,
+            .content-card:hover, .teacher-card:hover,
+            .content-card:nth-child(even):hover, .teacher-card:nth-child(even):hover {
+                transform: none !important;
+                transition: none !important;
+            }
         }
         
         /* Features Bento Grid Layout */
@@ -693,9 +748,23 @@
 
         /* Interactive Dynamic Section Card */
         .content-card { padding: 0; overflow: hidden; }
-        .content-img { width: 100%; height: 210px; object-fit: cover; transition: transform 0.5s ease; }
-        .content-card:hover .content-img { transform: scale(1.08); }
-        .content-info { padding: 24px; text-align: center; }
+        .content-img { 
+            width: 100%; 
+            height: 210px; 
+            object-fit: cover; 
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
+            transform: translateZ(0);
+        }
+        .content-card:hover .content-img { 
+            transform: scale(1.07) translateZ(12px); 
+        }
+        .content-info { 
+            padding: 24px; 
+            text-align: center; 
+            position: relative;
+            transform: translateZ(8px);
+            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+        }
         .content-title { font-size: 18px; font-weight: 800; color: var(--text-dark); }
         .play-overlay { 
             position: absolute; 
@@ -708,11 +777,15 @@
             align-items: center; 
             justify-content: center; 
             opacity: 0; 
-            transition: all 0.3s ease; 
+            transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); 
             backdrop-filter: blur(4px); 
             -webkit-backdrop-filter: blur(4px);
+            transform: translateZ(10px);
         }
-        .content-card:hover .play-overlay { opacity: 1; }
+        .content-card:hover .play-overlay { 
+            opacity: 1; 
+            transform: translateZ(20px); 
+        }
         .play-overlay i { font-size: 60px; color: var(--white); animation: pulse 1.5s infinite; }
 
         /* Teachers Slider */
@@ -743,6 +816,12 @@
             position: relative; 
             z-index: 2; 
             box-shadow: var(--shadow-md); 
+            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.45s ease;
+            transform: translateZ(0);
+        }
+        .teacher-card:hover .teacher-avatar {
+            transform: translateY(-5px) scale(1.06) translateZ(18px);
+            box-shadow: 0 10px 24px rgba(48, 86, 105, 0.22);
         }
         .teacher-name { font-size: 19px; font-weight: 900; position: relative; z-index: 2; color: var(--text-dark); }
         .teacher-subject { color: var(--primary-indigo); font-size: 14px; font-weight: 700; margin-bottom: 16px; position: relative; z-index: 2; }
@@ -1613,6 +1692,11 @@
             <a href="#features-section" class="nav-item-animate" data-i18n="nav_features">مميزاتنا</a>
             <a href="#teachers-section" class="nav-item-animate" data-i18n="nav_lessons">دروس أونلاين</a>
             <a href="#nurseries-section" class="nav-item-animate" data-i18n="nav_nurseries">شبكة الحضانات</a>
+            <!-- Unified Notification Bell Button -->
+            <button type="button" class="impact-notif-trigger-btn nav-item-animate" onclick="window.toggleNotificationDrawer(); if(window.playImpactSound) window.playImpactSound('chime');" title="مركز التنبيهات الذكي" aria-label="الإشعارات والتنبيهات">
+                <i class="fa-solid fa-bell"></i>
+                <span class="impact-notif-count-badge">0</span>
+            </button>
             <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn nav-item-animate" style="background: var(--color-error); color: var(--color-surface) !important; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥</a>
             <a href="parent-app.html" class="login-btn nav-item-animate" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
 
