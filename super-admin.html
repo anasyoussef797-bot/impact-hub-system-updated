@@ -3281,6 +3281,18 @@
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
             try {
+                // Ensure nurseries map is populated if empty
+                if (!allNurseriesDataMap || Object.keys(allNurseriesDataMap).length === 0) {
+                    try {
+                        const nSnap = await getDocs(collection(db, "nurseries"));
+                        nSnap.forEach(docSnap => {
+                            allNurseriesDataMap[docSnap.id] = docSnap.data();
+                        });
+                    } catch (e) {
+                        console.warn("Could not pre-load nurseries for orders:", e);
+                    }
+                }
+
                 const snap = await getDocs(collection(db, "orders"));
                 let orders = [];
                 snap.forEach(docSnap => {
@@ -3300,7 +3312,7 @@
                 });
 
                 // Sort by approvedAt or timestamp
-                orders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || 0) - (a.approvedAt || a.timestamp?.seconds || 0));
+                orders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || b.timestamp || 0) - (a.approvedAt || a.timestamp?.seconds || a.timestamp || 0));
 
                 if(orders.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: gray; padding: 20px;">${currentLang === 'ar' ? 'لا توجد طلبات شحن حالياً.' : 'No shipping orders currently.'}</td></tr>`;
@@ -3314,25 +3326,28 @@
                     if(order.items && order.items.length > 0) {
                         order.items.forEach(item => {
                             itemsHtml += `<div>- ${item.name} (${item.price} EGP)</div>`;
-                            totalAmount += item.price;
+                            totalAmount += (Number(item.price) || 0);
                         });
                     }
 
                     // Map nursery ID to details for shipping
-                    let nurseryDetails = `<strong>${currentLang === 'ar' ? 'حضانة مشتركة' : 'Nursery Partner'}</strong><br><small style="color:var(--text-gray);">${order.nurseryId || ''}</small>`;
-                    if (order.nurseryId) {
-                        const nurseryData = allNurseriesDataMap[order.nurseryId];
-                        if (nurseryData) {
-                            nurseryDetails = `
-                                <div style="line-height:1.4;">
-                                    <strong>${nurseryData.name}</strong><br>
-                                    <span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-map-marker-alt"></i> ${nurseryData.address || ''}</span><br>
-                                    <span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-phone"></i> ${nurseryData.phone || ''}</span>
-                                </div>
-                            `;
-                        } else {
-                            nurseryDetails = `<strong>${order.nurseryId}</strong>`;
-                        }
+                    let nurseryDetails = '';
+                    const nurseryData = (order.nurseryId && allNurseriesDataMap) ? allNurseriesDataMap[order.nurseryId] : null;
+
+                    if (nurseryData && nurseryData.name) {
+                        nurseryDetails = `
+                            <div style="line-height:1.4;">
+                                <strong style="color:var(--primary-maroon);">${nurseryData.name}</strong><br>
+                                ${nurseryData.address ? `<span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-map-marker-alt"></i> ${nurseryData.address}</span><br>` : ''}
+                                ${nurseryData.phone ? `<span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-phone"></i> ${nurseryData.phone}</span>` : ''}
+                            </div>
+                        `;
+                    } else if (order.nurseryName) {
+                        nurseryDetails = `<strong>${order.nurseryName}</strong>`;
+                    } else if (order.nurseryId && order.nurseryId !== 'undefined') {
+                        nurseryDetails = `<strong>حضانة: ${order.nurseryId}</strong>`;
+                    } else {
+                        nurseryDetails = `<strong style="color:var(--color-brand-primary);"><i class="fa-solid fa-store"></i> ${currentLang === 'ar' ? 'المتجر المركزي العام' : 'Central Store'}</strong>`;
                     }
 
                     // Payment details
@@ -3361,7 +3376,7 @@
                     `;
 
                     const deleteBtn = `
-                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: var(--color-error);" onclick="window.deleteCentralOrder('${order.id}')">
+                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: var(--color-error); cursor: pointer;" onclick="window.deleteCentralOrder('${order.id}')">
                             <i class="fa-solid fa-trash-can"></i> حذف
                         </button>
                     `;
@@ -3401,7 +3416,7 @@
                 window.fetchCentralOrders();
             } catch (err) {
                 console.error("Error updating order status:", err);
-                alert('حدث خطأ أثناء تحديث حالة الطلب.');
+                alert('حدث خطأ أثناء تحديث حالة الطلب: ' + (err.message || err));
             }
         };
 
@@ -3419,7 +3434,7 @@
                 window.fetchCentralOrders();
             } catch (err) {
                 console.error("Error deleting order:", err);
-                alert('حدث خطأ أثناء حذف الطلب.');
+                alert('حدث خطأ أثناء حذف الطلب: ' + (err.message || err));
             }
         };
 

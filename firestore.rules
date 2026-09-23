@@ -52,9 +52,10 @@ service cloud.firestore {
     
     match /products/{productId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && (!('price' in request.resource.data) || isNumber(request.resource.data.price))
         && (!('name' in request.resource.data) || isString(request.resource.data.name));
+      allow delete: if true;
     }
 
     // ==========================================
@@ -63,19 +64,21 @@ service cloud.firestore {
     
     match /nurseries/{nurseryId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && (!('name' in request.resource.data) || isString(request.resource.data.name));
+      allow delete: if true;
     }
     
     match /nursery_users/{userId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && isValidNurseryId(request.resource.data.nurseryId)
         && isString(request.resource.data.name)
         && isString(request.resource.data.phone)
         && (!('email' in request.resource.data) || isString(request.resource.data.email))
         && isString(request.resource.data.role)
         && (request.resource.data.role == 'teacher' || request.resource.data.role == 'parent' || request.resource.data.role == 'admin');
+      allow delete: if true;
     }
 
     // ==========================================
@@ -104,18 +107,13 @@ service cloud.firestore {
     }
 
     // ==========================================
-    // 4. الطلبات اللوجستية (منع التلاعب ببيانات الحجز وسير العملية اللوجستية)
+    // 4. الطلبات اللوجستية (منع التلاعب ببيانات الحجز وسير العملية اللوجستية والحذف)
     // ==========================================
     
     match /orders/{orderId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isValidNurseryId(request.resource.data.nurseryId)
-        && isString(request.resource.data.parentId)
-        && isString(request.resource.data.parentName)
-        && isList(request.resource.data.items)
-        && isString(request.resource.data.status)
-        && (request.resource.data.status == 'pending' || request.resource.data.status == 'approved' || request.resource.data.status == 'rejected' || request.resource.data.status == 'shipped');
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
 
     // ==========================================
@@ -124,45 +122,26 @@ service cloud.firestore {
     
     match /booked_classes/{classId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isValidNurseryId(request.resource.data.nurseryId)
-        && isString(request.resource.data.teacherId)
-        && isString(request.resource.data.studentName)
-        && isString(request.resource.data.date)
-        && isString(request.resource.data.time)
-        && isString(request.resource.data.status)
-        && (request.resource.data.status == 'upcoming' || request.resource.data.status == 'completed' || request.resource.data.status == 'cancelled');
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
     
     match /live_classes/{classId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isValidNurseryId(request.resource.data.nurseryId)
-        && isString(request.resource.data.roomName)
-        && isString(request.resource.data.roomUrl)
-        && isString(request.resource.data.teacherName)
-        && isString(request.resource.data.studentName)
-        && isString(request.resource.data.status)
-        && (request.resource.data.status == 'active' || request.resource.data.status == 'ended' || request.resource.data.status == 'waiting' || request.resource.data.status == 'terminated');
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
     
     match /teacher_availability/{slotId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isValidNurseryId(request.resource.data.nurseryId)
-        && isString(request.resource.data.teacherId)
-        && isString(request.resource.data.teacherName)
-        && isString(request.resource.data.day)
-        && isString(request.resource.data.time);
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
     
     match /teacher_ratings/{ratingId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isString(request.resource.data.teacherId)
-        && isNumber(request.resource.data.rating)
-        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
-        && (!('feedback' in request.resource.data) || isString(request.resource.data.feedback));
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
 
     // ==========================================
@@ -171,11 +150,12 @@ service cloud.firestore {
     
     match /support_chats/{chatId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
+      allow create, update: if isMap(request.resource.data)
         && isString(request.resource.data.senderId)
         && isList(request.resource.data.participants)
         && isString(request.resource.data.text)
-        && request.resource.data.text.size() <= 1000; // منع الرسائل الضخمة العشوائية
+        && request.resource.data.text.size() <= 1000;
+      allow delete: if true;
     }
     
     match /teachers_profile/{docId} {
@@ -192,11 +172,8 @@ service cloud.firestore {
     
     match /homework_assignments/{hwId} {
       allow read: if true;
-      allow write: if isMap(request.resource.data)
-        && isValidNurseryId(request.resource.data.nurseryId)
-        && isString(request.resource.data.gameName)
-        && isString(request.resource.data.status)
-        && (request.resource.data.status == 'pending' || request.resource.data.status == 'completed');
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
     }
     
     match /landing_bookings/{bookingId} {
