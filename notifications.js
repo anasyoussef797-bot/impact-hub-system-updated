@@ -449,7 +449,7 @@
     });
   }
 
-  // 5. INJECT NOTIFICATION BELL BUTTON INTO HEADERS AUTOMATICALLY
+  // 5. INJECT NOTIFICATION BELL BUTTON & INSTALL BUTTON INTO HEADERS AUTOMATICALLY
   function injectNotificationTriggers() {
     // Select headers or navbars
     const headerTargets = [
@@ -457,25 +457,46 @@
       document.querySelector('.navbar .nav-cta'),
       document.querySelector('.top-navbar .nav-right'),
       document.querySelector('.main-header .user-actions'),
-      document.querySelector('#app-header-actions')
+      document.querySelector('#app-header-actions'),
+      document.querySelector('.admin-top-bar .top-bar-right')
     ];
 
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
     headerTargets.forEach((target) => {
-      if (target && !target.querySelector('.impact-notif-trigger-btn')) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'impact-notif-trigger-btn';
-        btn.title = 'التنبيهات والمستجدات';
-        btn.innerHTML = `
-          <i class="fa-solid fa-bell"></i>
-          <span class="impact-notif-count-badge">0</span>
-        `;
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          getAudioContext(); // user gesture unlock
-          toggleNotificationDrawer();
-        });
-        target.prepend(btn);
+      if (target) {
+        if (!target.querySelector('.impact-notif-trigger-btn')) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'impact-notif-trigger-btn';
+          btn.title = 'التنبيهات والمستجدات';
+          btn.innerHTML = `
+            <i class="fa-solid fa-bell"></i>
+            <span class="impact-notif-count-badge">0</span>
+          `;
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            getAudioContext(); // user gesture unlock
+            toggleNotificationDrawer();
+          });
+          target.prepend(btn);
+        }
+
+        if (!isStandalone && !target.querySelector('.impact-header-pwa-btn') && !target.querySelector('.pwa-top-install-btn')) {
+          const pwaBtn = document.createElement('button');
+          pwaBtn.type = 'button';
+          pwaBtn.className = 'impact-header-pwa-btn';
+          pwaBtn.title = 'تثبيت التطبيق على الشاشة الرئيسية للهاتف';
+          pwaBtn.innerHTML = `
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span>تثبيت التطبيق 📲</span>
+          `;
+          pwaBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            triggerPWAInstall();
+          });
+          target.prepend(pwaBtn);
+        }
       }
     });
 
@@ -538,6 +559,48 @@
     }
   }
 
+  // Unified Global Install Trigger for any button across the platform
+  async function triggerPWAInstall() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) {
+      showImpactNotification({
+        title: 'التطبيق مثبت بالفعل 🚀',
+        message: 'أنت تستخدم تطبيق المنصة المثبت مسبقاً على هاتفك بكامل مزاياه والعمل دون اتصال.',
+        type: 'success',
+        icon: 'fa-solid fa-mobile-screen-button'
+      });
+      playImpactSound('chime');
+      return;
+    }
+
+    const isIOS = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    if (isIOS) {
+      showIOSInstallGuide();
+      return;
+    }
+
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          hidePWAInstallBanner();
+          showImpactNotification({
+            title: 'جاري إضافة التطبيق...',
+            message: 'تم قبول التثبيت وجاري إضافة أيقونة التطبيق لشاشتك الرئيسية!',
+            type: 'success',
+            icon: 'fa-solid fa-circle-check'
+          });
+        }
+        deferredPrompt = null;
+      } catch (err) {
+        showAndroidInstallGuide();
+      }
+    } else {
+      showAndroidInstallGuide();
+    }
+  }
+
   function showPWAInstallBanner(isIOS = false) {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (isStandalone) return;
@@ -566,25 +629,8 @@
       if (isIOS) sessionStorage.setItem('ios_install_dismissed', 'true');
     });
 
-    banner.querySelector('#pwa-action-install').addEventListener('click', async () => {
-      if (isIOS) {
-        showIOSInstallGuide();
-      } else if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          hidePWAInstallBanner();
-        }
-        deferredPrompt = null;
-      } else {
-        // Fallback info toast
-        showImpactNotification({
-          title: 'تثبيت التطبيق',
-          message: 'اضغط على خيارات المتصفح (⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".',
-          type: 'admin',
-          icon: 'fa-solid fa-mobile-screen'
-        });
-      }
+    banner.querySelector('#pwa-action-install').addEventListener('click', () => {
+      triggerPWAInstall();
     });
   }
 
@@ -601,16 +647,17 @@
       modal.innerHTML = `
         <div class="ios-modal-card">
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="/pwa-192x192.png" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
-            <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--color-brand-primary);">تثبيت على iPhone و iPad</h3>
-            <p style="margin: 6px 0 0; font-size: 13px; color: var(--color-text-secondary);">خطوات بسيطة لتثبيت التطبيق على شاشتك الرئيسية:</p>
+            <img src="/pwa-192x192.png" alt="Impact Hub" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            <div style="display:inline-block; background: #E0F2FE; color: #0284C7; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;">هواتف iPhone و iPad (سفاري)</div>
+            <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--color-brand-primary);">تثبيت تطبيق المنصة على الشاشة الرئيسية</h3>
+            <p style="margin: 6px 0 0; font-size: 13px; color: var(--color-text-secondary);">3 خطوات بسيطة ليعمل كتطبيق أصلي بالكامل:</p>
           </div>
 
           <div class="ios-step">
             <div class="ios-step-num">1</div>
             <div>
-              <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">اضغط زر المشاركة</strong>
-              <span style="font-size: 12px; color: var(--color-text-secondary);">انقر على أيقونة المشاركة <i class="fa-solid fa-arrow-up-from-bracket" style="color: #007AFF;"></i> في شريط سفاري السفلي.</span>
+              <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">اضغط زر المشاركة (Share)</strong>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">انقر على أيقونة المشاركة <i class="fa-solid fa-arrow-up-from-bracket" style="color: #007AFF; font-size: 14px;"></i> الموجودة في شريط Safari بالأسفل.</span>
             </div>
           </div>
 
@@ -618,7 +665,7 @@
             <div class="ios-step-num">2</div>
             <div>
               <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">إضافة إلى الشاشة الرئيسية</strong>
-              <span style="font-size: 12px; color: var(--color-text-secondary);">مرر لأسفل في القائمة واختر <strong>"Add to Home Screen ⊞"</strong>.</span>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">مرر للأسفل بالقائمة واضغط <strong>"Add to Home Screen" <i class="fa-regular fa-square-plus" style="color: var(--color-brand-primary);"></i></strong>.</span>
             </div>
           </div>
 
@@ -626,11 +673,11 @@
             <div class="ios-step-num">3</div>
             <div>
               <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">تأكيد الإضافة</strong>
-              <span style="font-size: 12px; color: var(--color-text-secondary);">اضغط على كلمة "إضافة" (Add) في الزاوية العلوية لتظهر الأيقونة فوراً.</span>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">اضغط <strong>"إضافة" (Add)</strong> في أعلى الشاشة وستظهر الأيقونة فوراً على هاتفك.</span>
             </div>
           </div>
 
-          <button id="close-ios-guide-btn" style="width: 100%; background: var(--color-brand-primary); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px;">
+          <button id="close-ios-guide-btn" style="width: 100%; background: linear-gradient(135deg, var(--color-brand-primary), var(--color-primary-dark)); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 12px rgba(48, 86, 105, 0.25);">
             فهمت، حسناً
           </button>
         </div>
@@ -638,6 +685,62 @@
       document.body.appendChild(modal);
 
       modal.querySelector('#close-ios-guide-btn').addEventListener('click', () => {
+        modal.classList.remove('modal-open');
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('modal-open');
+      });
+    }
+
+    modal.classList.add('modal-open');
+  }
+
+  function showAndroidInstallGuide() {
+    let modal = document.getElementById('impact-android-install-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'impact-android-install-modal';
+      modal.innerHTML = `
+        <div class="ios-modal-card">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="/pwa-192x192.png" alt="Impact Hub" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            <div style="display:inline-block; background: #DCFCE7; color: #15803D; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;">هواتف Android ومتصفح Chrome</div>
+            <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--color-brand-primary);">تثبيت التطبيق على الشاشة الرئيسية</h3>
+            <p style="margin: 6px 0 0; font-size: 13px; color: var(--color-text-secondary);">خطوات إضافة التطبيق بدون الحاجة لمتجر:</p>
+          </div>
+
+          <div class="ios-step">
+            <div class="ios-step-num">1</div>
+            <div>
+              <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">افتح قائمة المتصفح</strong>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">اضغط على خيارات المتصفح <i class="fa-solid fa-ellipsis-vertical" style="color: var(--color-brand-primary); font-size: 15px;"></i> في الزاوية العلوية أو السفلية.</span>
+            </div>
+          </div>
+
+          <div class="ios-step">
+            <div class="ios-step-num">2</div>
+            <div>
+              <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">اختر "تثبيت التطبيق"</strong>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">اضغط على <strong>"تثبيت التطبيق" (Install app)</strong> أو <strong>"الإضافة إلى الشاشة الرئيسية"</strong>.</span>
+            </div>
+          </div>
+
+          <div class="ios-step">
+            <div class="ios-step-num">3</div>
+            <div>
+              <strong style="font-size: 13.5px; display: block; color: var(--color-text-primary);">تأكيد التثبيت</strong>
+              <span style="font-size: 12px; color: var(--color-text-secondary);">اضغط <strong>"تثبيت" (Install)</strong> لتظهر أيقونة التطبيق على شاشتك الرئيسية فوراً.</span>
+            </div>
+          </div>
+
+          <button id="close-android-guide-btn" style="width: 100%; background: linear-gradient(135deg, var(--color-brand-primary), var(--color-primary-dark)); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 12px rgba(48, 86, 105, 0.25);">
+            فهمت، حسناً
+          </button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      modal.querySelector('#close-android-guide-btn').addEventListener('click', () => {
         modal.classList.remove('modal-open');
       });
       modal.addEventListener('click', (e) => {
@@ -763,4 +866,7 @@
   window.showImpactNotification = showImpactNotification;
   window.playImpactSound = playImpactSound;
   window.toggleNotificationDrawer = toggleNotificationDrawer;
+  window.triggerPWAInstall = triggerPWAInstall;
+  window.showIOSInstallGuide = showIOSInstallGuide;
+  window.showAndroidInstallGuide = showAndroidInstallGuide;
 })();

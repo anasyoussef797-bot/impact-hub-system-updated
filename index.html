@@ -1631,9 +1631,12 @@
 <body>
 
     <!-- Top Official Banner (like ed.gov) -->
-    <div class="official-banner" style="background: var(--color-primary-soft); border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--color-brand-navy); display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
+    <div class="official-banner" style="background: var(--color-primary-soft); border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--color-brand-navy); display: flex; align-items: center; gap: 10px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
         <span class="flag-icon" style="font-size: 14px;">🇪🇬</span>
         <span data-i18n="official_banner_text">البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة</span>
+        <button type="button" onclick="window.triggerPWAInstall()" style="cursor: pointer; background: linear-gradient(135deg, var(--color-accent), #B35E3E); color: white; border: none; padding: 4px 12px; border-radius: 999px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; box-shadow: 0 2px 6px rgba(193, 120, 90, 0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <i class="fa-solid fa-mobile-screen"></i> <span data-i18n="top_banner_install">📲 تثبيت التطبيق على هاتفك</span>
+        </button>
         <span style="color: var(--color-primary); text-decoration: underline; cursor: help; margin-right: auto; font-size: 11px;" data-i18n="official_banner_how">كيف تعمل هذه المنصة؟</span>
     </div>
 
@@ -1652,10 +1655,16 @@
                 <i class="fa-solid fa-building-columns"></i> 
                 <span>Impact Hub Egypt</span>
             </a>
-            <!-- Mobile Menu Toggle Button -->
-            <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleMobileMenu()" aria-label="فتح وإغلاق القائمة" aria-expanded="false">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <!-- Mobile Dedicated Install App Button -->
+                <button type="button" class="mobile-top-install-btn" onclick="window.triggerPWAInstall()" aria-label="تثبيت التطبيق على الهاتف" title="تثبيت التطبيق">
+                    <i class="fa-solid fa-download"></i> <span data-i18n="mobile_install_btn">تثبيت 📲</span>
+                </button>
+                <!-- Mobile Menu Toggle Button -->
+                <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleMobileMenu()" aria-label="فتح وإغلاق القائمة" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
         
         <div class="nav-links" id="nav-links-container" role="dialog" aria-modal="true" aria-label="قائمة التصفح الرئيسية">
@@ -1692,6 +1701,12 @@
             <a href="#features-section" class="nav-item-animate" data-i18n="nav_features">مميزاتنا</a>
             <a href="#teachers-section" class="nav-item-animate" data-i18n="nav_lessons">دروس أونلاين</a>
             <a href="#nurseries-section" class="nav-item-animate" data-i18n="nav_nurseries">شبكة الحضانات</a>
+
+            <!-- Dedicated Top PWA Install Button -->
+            <button type="button" class="pwa-top-install-btn nav-item-animate" onclick="window.triggerPWAInstall()" title="تثبيت منصة Impact Hub على هاتفك (iPhone أو Android)">
+                <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="nav_install_app">تثبيت التطبيق الآن 📲</span>
+            </button>
+
             <!-- Unified Notification Bell Button -->
             <button type="button" class="impact-notif-trigger-btn nav-item-animate" onclick="window.toggleNotificationDrawer(); if(window.playImpactSound) window.playImpactSound('chime');" title="مركز التنبيهات الذكي" aria-label="الإشعارات والتنبيهات">
                 <i class="fa-solid fa-bell"></i>
@@ -2327,6 +2342,9 @@
             ar: {
                 official_banner_text: "البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة",
                 official_banner_how: "كيف تعمل هذه المنصة؟",
+                top_banner_install: "📲 تثبيت التطبيق على هاتفك",
+                nav_install_app: "تثبيت التطبيق الآن 📲",
+                mobile_install_btn: "تثبيت 📲",
                 nav_home: "الرئيسية",
                 nav_explore: 'أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "اللغة",
@@ -2434,6 +2452,9 @@
             en: {
                 official_banner_text: "Official Portal of the Accredited Impact Hub Egypt Educational Network",
                 official_banner_how: "How does it work?",
+                top_banner_install: "📲 Install App on Phone",
+                nav_install_app: "Install App Now 📲",
+                mobile_install_btn: "Install 📲",
                 nav_home: "Home",
                 nav_explore: 'Playrooms & Curricula <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Language",
@@ -2541,6 +2562,9 @@
             fr: {
                 official_banner_text: "Portail officiel du réseau éducatif accrédité Impact Hub Égypte",
                 official_banner_how: "Comment ça marche?",
+                top_banner_install: "📲 Installer sur mobile",
+                nav_install_app: "Installer l'appli 📲",
+                mobile_install_btn: "Installer 📲",
                 nav_home: "Accueil",
                 nav_explore: 'Programmes <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Langue",
@@ -2648,6 +2672,9 @@
             de: {
                 official_banner_text: "Offizielles Portal des akkreditierten Bildungsnetzwerks Impact Hub Ägypten",
                 official_banner_how: "Wie funktioniert es?",
+                top_banner_install: "📲 App auf Handy installieren",
+                nav_install_app: "App installieren 📲",
+                mobile_install_btn: "Installieren 📲",
                 nav_home: "Startseite",
                 nav_explore: 'Spielräume & Pläne <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Sprache",

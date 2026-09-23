@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "mkdir -p dist && cp *.html dist/ && cp server.js dist/",
+    "build": "mkdir -p dist && cp -r *.html *.js *.css *.json *.png *.svg dist/ 2>/dev/null || true",
     "start": "node server.js",
     "lint": "echo 'No linting required'"
   },

@@ -23,13 +23,10 @@
       ]
     }
   ],
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
+  "rewrites": [
+    { "source": "/super-admin", "destination": "/super-admin.html" },
+    { "source": "/parent-app", "destination": "/parent-app.html" },
+    { "source": "/teacher-app", "destination": "/teacher-app.html" },
+    { "source": "/nursery-admin", "destination": "/nursery-admin.html" }
   ]
 }
