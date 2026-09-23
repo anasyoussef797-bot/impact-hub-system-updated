@@ -941,6 +941,51 @@
 
         <!-- منطقة المحتوى الرئيسية -->
         <main class="main-content">
+
+            <!-- اللافتة العائمة للاجتماع المركزي للشبكة (Network-wide Staff Meeting Floating Banner) -->
+            <div id="network-meeting-floating-banner" style="display: none; position: sticky; top: 0; z-index: 999; margin: -10px -10px 20px -10px; background: linear-gradient(135deg, #065F46, #047857); color: white; padding: 14px 20px; border-radius: 14px; box-shadow: 0 10px 25px rgba(4, 120, 87, 0.35); border: 2px solid #34D399; animation: slideDown 0.4s ease-out;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                            <i class="fa-solid fa-tower-broadcast fa-bounce" style="color: #6EE7B7;"></i>
+                        </div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #EF4444; color: white; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;" data-i18n="network_meeting_live_badge">مباشر الآن</span>
+                                <strong style="font-size: 14px; font-weight: 900;" data-i18n="network_meeting_alert_title">يوجد اجتماع مركزي هام للإدارة جاري الآن</strong>
+                            </div>
+                            <p style="font-size: 12px; opacity: 0.9; margin: 3px 0 0 0;" data-i18n="network_meeting_desc">دعت الإدارة العليا لشبكة إمباكت هب كافة الكوادر والمعلمات لحضور الاجتماع العام المباشر.</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="window.joinNetworkMeetingAsGuest()" style="background: white; color: #065F46; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+                            <i class="fa-solid fa-video"></i>
+                            <span data-i18n="network_meeting_join_btn">انضم للاجتماع الآن 🚀</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Guest Meeting in Teacher App -->
+            <div id="network-meeting-guest-modal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 10000; justify-content: center; align-items: center; padding: 15px;">
+                <div style="background: #0F172A; border-radius: 18px; width: 100%; max-width: 950px; height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 2px solid #10B981;">
+                    <div style="background: #1E293B; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <div style="display: flex; align-items: center; gap: 10px; color: white;">
+                            <span style="background: #10B981; color: white; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: bold;">مشارك ضيف</span>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 800;" data-i18n="network_meeting_guest_title">قاعة الاجتماع المركزي للإدارة العليا (وضع المشارك)</h4>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button onclick="window.openNetworkMeetingInNewTab()" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                                <i class="fa-solid fa-up-right-from-square"></i> نافذة كاملة
+                            </button>
+                            <button onclick="window.leaveNetworkMeetingModal()" style="background: #EF4444; color: white; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;">
+                                <i class="fa-solid fa-phone-slash"></i> <span data-i18n="network_meeting_leave_btn">مغادرة الاجتماع</span>
+                            </button>
+                        </div>
+                    </div>
+                    <iframe id="network-meeting-guest-frame" src="" style="width: 100%; flex-grow: 1; border: none;" allow="camera; microphone; display-capture; autoplay; clipboard-write"></iframe>
+                </div>
+            </div>
             
             <!-- تابة حائط الفعاليات والنشاطات اليومية -->
             <div id="feed-tab" class="tab-content active">
@@ -1225,13 +1270,21 @@
             <!-- تابة الفصول والبث المباشر -->
             <div id="live-tab" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header">
-                        <i class="fa-solid fa-video"></i> 
-                        <span data-i18n="live_class_title">بدء حصة أونلاين مباشرة ومحمية 📹</span>
+                    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-video"></i> 
+                            <span data-i18n="live_class_title">بدء حصة أونلاين مباشرة ومحمية 📹</span>
+                        </div>
+                        <div id="teacher-status-badge-container">
+                            <span id="teacher-live-status-badge" class="live-status-badge status-waiting">
+                                <span class="live-pulse-dot"></span>
+                                <span id="teacher-status-badge-text" data-i18n="status_waiting">في انتظار المدرس</span>
+                            </span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label data-i18n="live_class_lbl">اختر الطالب أو الحصة المحجوزة الآن</label>
-                        <select id="live-student-select" class="form-control" style="width: auto; min-width: 250px;" onchange="window.showStudentAccessibilityProfile()">
+                        <select id="live-student-select" class="form-control" style="width: auto; min-width: 250px;" onchange="window.onTeacherStudentSelectChange()">
                             <option value="" data-i18n="choose_class_opt">اختر الحصة للبدء...</option>
                         </select>
                     </div>
@@ -1423,6 +1476,15 @@
                 write_comment_placeholder: "اكتب تعليقاً تفاعلياً...",
                 send_comment_btn: "إرسال",
                 assigned_at: "تم التكليف بنجاح!",
+                network_meeting_live_badge: "مباشر الآن",
+                network_meeting_alert_title: "يوجد اجتماع مركزي هام للإدارة جاري الآن",
+                network_meeting_desc: "دعت الإدارة العليا لشبكة إمباكت هب كافة الكوادر والمعلمات لحضور الاجتماع العام المباشر.",
+                network_meeting_join_btn: "انضم للاجتماع الآن 🚀",
+                network_meeting_guest_title: "قاعة الاجتماع المركزي للإدارة العليا (وضع المشارك)",
+                network_meeting_leave_btn: "مغادرة الاجتماع",
+                status_waiting: "في انتظار المدرس",
+                status_active: "مباشر الآن",
+                status_ended: "انتهت الحصة",
                 sun: "الأحد", mon: "الإثنين", tue: "الثلاثاء", wed: "الأربعاء", thu: "الخميس", fri: "الجمعة", sat: "السبت"
             },
             en: {
@@ -1491,6 +1553,15 @@
                 write_comment_placeholder: "Write a reply...",
                 send_comment_btn: "Send",
                 assigned_at: "Assigned successfully!",
+                network_meeting_live_badge: "LIVE NOW",
+                network_meeting_alert_title: "Important Central Management Meeting is Live",
+                network_meeting_desc: "Impact Hub executive management invites all staff & teachers to attend the live meeting.",
+                network_meeting_join_btn: "Join Meeting Now 🚀",
+                network_meeting_guest_title: "Central Management Meeting Hall (Participant Mode)",
+                network_meeting_leave_btn: "Leave Meeting",
+                status_waiting: "Waiting for Host",
+                status_active: "Active Now",
+                status_ended: "Class Ended",
                 sun: "Sunday", mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday", fri: "Friday", sat: "Saturday"
             },
             fr: {
@@ -1559,6 +1630,15 @@
                 write_comment_placeholder: "Écrire une réponse...",
                 send_comment_btn: "Envoyer",
                 assigned_at: "Assigné avec succès !",
+                network_meeting_live_badge: "EN DIRECT",
+                network_meeting_alert_title: "Une réunion centrale importante de la direction est en cours",
+                network_meeting_desc: "La direction d'Impact Hub invite tout le personnel à assister à la réunion en direct.",
+                network_meeting_join_btn: "Rejoindre la réunion 🚀",
+                network_meeting_guest_title: "Salle de Réunion Centrale (Mode Participant)",
+                network_meeting_leave_btn: "Quitter la réunion",
+                status_waiting: "En attente de l'enseignant",
+                status_active: "En direct maintenant",
+                status_ended: "Séance terminée",
                 sun: "Dimanche", mon: "Lundi", tue: "Mardi", wed: "Mercredi", thu: "Jeudi", fri: "Vendredi", sat: "Samedi"
             },
             de: {
@@ -1627,6 +1707,15 @@
                 write_comment_placeholder: "Schreiben Sie eine Antwort...",
                 send_comment_btn: "Senden",
                 assigned_at: "Erfolgreich zugewiesen !",
+                network_meeting_live_badge: "JETZT LIVE",
+                network_meeting_alert_title: "Wichtiges zentrales Management-Treffen findet gerade statt",
+                network_meeting_desc: "Die Geschäftsleitung von Impact Hub lädt alle Mitarbeiter zum Live-Treffen ein.",
+                network_meeting_join_btn: "Jetzt beitreten 🚀",
+                network_meeting_guest_title: "Zentraler Sitzungssaal (Teilnehmer-Modus)",
+                network_meeting_leave_btn: "Treffen verlassen",
+                status_waiting: "Warten auf Lehrkraft",
+                status_active: "Jetzt Live",
+                status_ended: "Sitzung beendet",
                 sun: "Sonntag", mon: "Montag", tue: "Dienstag", wed: "Mittwoch", thu: "Donnerstag", fri: "Freitag", sat: "Samstag"
             }
         };
@@ -2325,8 +2414,75 @@
             }
         };
 
+        // Real-time Class Status Indicator Helper
+        window.updateTeacherClassBadge = (status) => {
+            const badge = document.getElementById('teacher-live-status-badge');
+            const text = document.getElementById('teacher-status-badge-text');
+            if (!badge || !text) return;
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = teacherTranslations[currentLang] || teacherTranslations.ar;
+            badge.className = `live-status-badge status-${status}`;
+            if (status === 'waiting') {
+                text.innerText = dict.status_waiting || "في انتظار المدرس";
+            } else if (status === 'active') {
+                text.innerText = dict.status_active || "مباشر الآن";
+            } else if (status === 'ended') {
+                text.innerText = dict.status_ended || "انتهت الحصة";
+            }
+        };
+
         let activeClassDocId = "";
         let teacherRoomListener = null;
+
+        // Automatically set room to "waiting" when teacher selects a child
+        window.onTeacherStudentSelectChange = async () => {
+            window.showStudentAccessibilityProfile();
+            const studentSelect = document.getElementById('live-student-select');
+            if (!studentSelect || !studentSelect.value) {
+                window.updateTeacherClassBadge('waiting');
+                return;
+            }
+
+            const studentName = studentSelect.options[studentSelect.selectedIndex].text;
+            window.updateTeacherClassBadge('waiting');
+
+            try {
+                // Check if already active class exists, do not overwrite
+                const qActive = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+                const activeSnap = await getDocs(qActive);
+                if (!activeSnap.empty) {
+                    activeClassDocId = activeSnap.docs[0].id;
+                    window.updateTeacherClassBadge('active');
+                    return;
+                }
+
+                const roomName = `ImpactHub_${studentSelect.value}_${Date.now()}`;
+                const roomUrl = `https://meet.ffmuc.net/${roomName}`;
+
+                // Register or update session as waiting in Firestore
+                if (activeClassDocId) {
+                    await updateDoc(doc(db, "live_classes", activeClassDocId), {
+                        studentName: studentName,
+                        teacherName: myName || "المعلم",
+                        status: "waiting",
+                        timestamp: new Date().getTime()
+                    });
+                } else {
+                    const docRef = await addDoc(collection(db, "live_classes"), {
+                        nurseryId: myNurseryId,
+                        roomName: roomName,
+                        roomUrl: roomUrl,
+                        teacherName: myName || "المعلم",
+                        studentName: studentName,
+                        status: "waiting",
+                        timestamp: new Date().getTime()
+                    });
+                    activeClassDocId = docRef.id;
+                }
+            } catch (err) {
+                console.warn("Could not sync waiting status:", err);
+            }
+        };
 
         window.startLiveClassSession = async () => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
@@ -2345,7 +2501,9 @@
                 const qActive = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
                 const activeSnap = await getDocs(qActive);
                 for (const docSnap of activeSnap.docs) {
-                    await updateDoc(doc(db, "live_classes", docSnap.id), { status: "ended" });
+                    if (docSnap.id !== activeClassDocId) {
+                        await updateDoc(doc(db, "live_classes", docSnap.id), { status: "ended" });
+                    }
                 }
             } catch(e) {
                 console.error("Cleanup error:", e);
@@ -2368,24 +2526,51 @@
                 roomName = apiData.name;
             } catch (err) {
                 console.error("Failed to securely create Daily.co room via API. Falling back to dynamic Jitsi Meet room URL:", err);
-                // Safe fallback to public Jitsi Meet since it does not require account or configuration and works 100% of the time
                 roomName = `ImpactHub_${studentSelect.value}_${Date.now()}`;
                 roomUrl = `https://meet.ffmuc.net/${roomName}`;
             }
             
             simLink.href = roomUrl;
 
-            // 2. إضافة مستند الحصة الجديد كـ active
-            const docRef = await addDoc(collection(db, "live_classes"), {
-                nurseryId: myNurseryId, 
-                roomName: roomName, 
-                roomUrl: roomUrl, 
-                teacherName: myName, 
-                studentName: studentName, 
-                status: "active", 
-                timestamp: new Date().getTime()
-            });
-            activeClassDocId = docRef.id;
+            // 2. تحديث أو إضافة مستند الحصة في Firestore كـ active
+            if (activeClassDocId) {
+                try {
+                    await updateDoc(doc(db, "live_classes", activeClassDocId), {
+                        nurseryId: myNurseryId,
+                        roomName: roomName,
+                        roomUrl: roomUrl,
+                        teacherName: myName || "المعلم",
+                        studentName: studentName,
+                        status: "active",
+                        timestamp: new Date().getTime()
+                    });
+                } catch(e) {
+                    const docRef = await addDoc(collection(db, "live_classes"), {
+                        nurseryId: myNurseryId, 
+                        roomName: roomName, 
+                        roomUrl: roomUrl, 
+                        teacherName: myName || "المعلم", 
+                        studentName: studentName, 
+                        status: "active", 
+                        timestamp: new Date().getTime()
+                    });
+                    activeClassDocId = docRef.id;
+                }
+            } else {
+                const docRef = await addDoc(collection(db, "live_classes"), {
+                    nurseryId: myNurseryId, 
+                    roomName: roomName, 
+                    roomUrl: roomUrl, 
+                    teacherName: myName || "المعلم", 
+                    studentName: studentName, 
+                    status: "active", 
+                    timestamp: new Date().getTime()
+                });
+                activeClassDocId = docRef.id;
+            }
+
+            // Update UI status badge to active
+            window.updateTeacherClassBadge('active');
 
             // Integrate Daily.co Prebuilt inside the iframe container using the official daily-js SDK
             try {
@@ -2433,11 +2618,17 @@
 
             if (activeClassDocId) {
                 try {
-                    await updateDoc(doc(db, "live_classes", activeClassDocId), { status: "ended" });
+                    await updateDoc(doc(db, "live_classes", activeClassDocId), { 
+                        status: "ended",
+                        endedAt: new Date().getTime()
+                    });
                 } catch(e) { console.error(e); }
                 activeClassDocId = "";
             }
             if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
+
+            // Update UI status badge to ended
+            window.updateTeacherClassBadge('ended');
 
             if(window.dailyCallFrame) { 
                 try {
@@ -2460,6 +2651,7 @@
         window.leaveLiveClassFromTeacherSide = () => {
             if(teacherRoomListener) { teacherRoomListener(); teacherRoomListener = null; }
             activeClassDocId = "";
+            window.updateTeacherClassBadge('ended');
             if(window.dailyCallFrame) { 
                 try {
                     window.dailyCallFrame.leave(); 
@@ -2855,6 +3047,72 @@
             loadTeacherProfile();
             fetchAvailabilitySlots();
             fetchBookedClasses();
+            window.listenToNetworkMeetingNotification();
+        };
+
+        // ================== Network-wide Staff Meeting Real-time Listener ==================
+        window.currentNetworkGuestUrl = null;
+        window.networkMeetingUnsubscribe = null;
+
+        window.listenToNetworkMeetingNotification = () => {
+            if (window.networkMeetingUnsubscribe) window.networkMeetingUnsubscribe();
+            
+            const meetingDocRef = doc(db, "global_settings", "network_meeting");
+            window.networkMeetingUnsubscribe = onSnapshot(meetingDocRef, (docSnap) => {
+                const data = docSnap.exists() ? docSnap.data() : null;
+                const banner = document.getElementById('network-meeting-floating-banner');
+                const modal = document.getElementById('network-meeting-guest-modal');
+                const guestFrame = document.getElementById('network-meeting-guest-frame');
+
+                if (data && data.status === 'active') {
+                    window.currentNetworkGuestUrl = data.guestUrl || data.roomUrl;
+                    if (banner) {
+                        banner.style.display = 'block';
+                    }
+                } else {
+                    window.currentNetworkGuestUrl = null;
+                    if (banner) {
+                        banner.style.display = 'none';
+                    }
+                    if (modal && modal.style.display === 'flex') {
+                        modal.style.display = 'none';
+                        if (guestFrame) guestFrame.src = '';
+                        alert("ℹ️ انتهى الاجتماع المركزي بواسطة الإدارة العليا.");
+                    }
+                }
+            }, (err) => {
+                console.warn("Network meeting listener warning:", err);
+            });
+        };
+
+        window.joinNetworkMeetingAsGuest = () => {
+            const guestUrl = window.currentNetworkGuestUrl;
+            if (!guestUrl) {
+                alert("لا يوجد رابط متاح للاجتماع حالياً.");
+                return;
+            }
+
+            const modal = document.getElementById('network-meeting-guest-modal');
+            const guestFrame = document.getElementById('network-meeting-guest-frame');
+            if (modal && guestFrame) {
+                guestFrame.src = guestUrl;
+                modal.style.display = 'flex';
+            } else {
+                window.open(guestUrl, '_blank');
+            }
+        };
+
+        window.leaveNetworkMeetingModal = () => {
+            const modal = document.getElementById('network-meeting-guest-modal');
+            const guestFrame = document.getElementById('network-meeting-guest-frame');
+            if (modal) modal.style.display = 'none';
+            if (guestFrame) guestFrame.src = '';
+        };
+
+        window.openNetworkMeetingInNewTab = () => {
+            if (window.currentNetworkGuestUrl) {
+                window.open(window.currentNetworkGuestUrl, '_blank');
+            }
         };
 
         window.doLogout = () => {

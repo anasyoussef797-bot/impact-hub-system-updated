@@ -700,6 +700,10 @@
                 <div class="nav-item" onclick="switchTab('super-support-tab', this)" style="display: flex; align-items: center; gap: 8px;">
                     <span><i class="fa-solid fa-comments"></i> <span style="font-weight: bold; color: var(--primary-maroon);">غرفة الدعم والتواصل 💬</span></span>
                 </div>
+                <div class="nav-item" onclick="switchTab('network-meeting-tab', this)" style="display: flex; justify-content: space-between; align-items: center; border: 1.5px solid rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08); border-radius: 12px; margin-top: 4px;">
+                    <span><i class="fa-solid fa-video" style="color: #10B981;"></i> <span data-i18n="nav_network_meeting" style="font-weight: 800; color: #10B981;">الاجتماعات المركزية للشبكة</span></span>
+                    <span id="super-meeting-active-badge" style="display: none; background: #10B981; color: white; border-radius: 12px; padding: 2px 7px; font-size: 10px; font-weight: 900; animation: pulse 1.5s infinite;">مباشر</span>
+                </div>
                 <hr style="border: 0; border-top: 1px solid rgba(128, 0, 0, 0.05); margin: 15px 10px;">
                 <div class="nav-item live-builder-btn" onclick="openLiveBuilder()">
                     <span><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="live_builder">مُنشئ الواجهة (Live)</span></span>
@@ -1157,6 +1161,96 @@
                 </div>
             </div>
 
+            <!-- تابة الاجتماعات المركزية للشبكة (Network-wide Staff Meetings) -->
+            <div id="network-meeting-tab" class="tab-content">
+                <div class="panel" style="border: 2px solid rgba(16, 185, 129, 0.3); box-shadow: var(--shadow-md);">
+                    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-tower-broadcast" style="color: #10B981; font-size: 22px;"></i>
+                            <div>
+                                <span style="font-size: 18px; font-weight: 900; color: var(--text-dark);" data-i18n="network_meeting_title">الاجتماعات المركزية للشبكة (Network-wide Staff Meetings)</span>
+                                <p style="font-size: 12.5px; color: var(--text-gray); margin-top: 3px;" data-i18n="network_meeting_subtitle">قاعة المؤتمرات المركزية المباشرة لكافة معلمات ومديرات شبكة إمباكت هب مع صلاحيات المضيف الحصرية للسوبر أدمن</p>
+                            </div>
+                        </div>
+                        <div id="super-meeting-status-badge" style="background: var(--color-background); color: var(--text-gray); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; border: 1px solid var(--border-color); display: flex; align-items: center; gap: 6px;">
+                            <span style="width: 8px; height: 8px; border-radius: 50%; background: #94A3B8;"></span>
+                            <span id="super-meeting-status-text">لا يوجد اجتماع جارٍ حالياً</span>
+                        </div>
+                    </div>
+
+                    <!-- Host Controls Info Box -->
+                    <div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), rgba(59, 130, 246, 0.08)); border: 1.5px solid rgba(59, 130, 246, 0.2); border-radius: 14px; padding: 16px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(37, 99, 235, 0.15); color: #2563EB; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                                <i class="fa-solid fa-crown"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 14px; font-weight: 900; color: var(--color-brand-navy); margin-bottom: 4px;">صلاحيات المضيف الحصرية للسوبر أدمن (Owner / Host Permissions)</h4>
+                                <p style="font-size: 12px; color: var(--text-dark); line-height: 1.5; margin: 0;">بصفتك السوبر أدمن، تدخل قاعة الاجتماع برمز مضيف معتمد (is_owner: true) يمنحك حصرية كتم صوت جميع المشاركين (Mute All)، مشاركة الشاشة، وإدارة الحضور بينما يدخل المدرسون ومديرات الحضانات كمشاركين فقط بدون أي صلاحيات تحكم.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions & Trigger Button Bar -->
+                    <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button id="btn-start-network-meeting" onclick="window.startNetworkMeeting()" class="btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #059669; padding: 14px 28px; font-size: 15px; font-weight: 900; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
+                            <i class="fa-solid fa-tower-broadcast"></i>
+                            <span data-i18n="start_network_meeting_btn">بدء اجتماع مركزي للشبكة</span>
+                        </button>
+
+                        <button id="btn-end-network-meeting" onclick="window.endNetworkMeeting()" class="btn-danger" style="display: none; padding: 14px 26px; font-size: 14px; font-weight: 900; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);">
+                            <i class="fa-solid fa-power-off"></i>
+                            <span data-i18n="end_network_meeting_btn">إنهاء الاجتماع المركزي فوراً 🔴</span>
+                        </button>
+
+                        <button id="btn-popout-meeting" onclick="window.openHostMeetingInNewTab()" class="btn-primary" style="display: none; background: var(--color-brand-navy); padding: 14px 22px; font-size: 14px; font-weight: 800;">
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                            <span>فتح في نافذة كاملة 🗖</span>
+                        </button>
+                    </div>
+
+                    <!-- Guest Link Box (Only when active) -->
+                    <div id="super-guest-link-box" style="display: none; background: #ECFDF5; padding: 16px; border-radius: 12px; border: 1.5px dashed #10B981; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <label style="font-size: 12px; font-weight: 900; color: #065F46; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fa-solid fa-link"></i> رابط دعوة الضيوف (Guest Link الموجه للمعلمات ومديرات الحضانات بدون صلاحيات المضيف):
+                                </label>
+                                <span id="super-guest-link-text" style="font-family: monospace; font-size: 13px; color: var(--text-dark); word-break: break-all; margin-top: 4px; display: block; direction: ltr; text-align: left;"></span>
+                            </div>
+                            <button onclick="window.copyGuestMeetingLink()" class="btn-primary" style="margin: 0; padding: 8px 18px; font-size: 12px; background: #059669; border-color: #059669;">
+                                <i class="fa-solid fa-copy"></i> نسخ الرابط 📋
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Meeting Room Viewport Container -->
+                    <div id="super-meeting-frame-wrapper" style="display: none; border-radius: 16px; overflow: hidden; border: 2px solid var(--border-color); background: #0F172A; min-height: 580px; position: relative;">
+                        <div style="background: #1E293B; color: white; padding: 10px 18px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 800;">
+                                <span style="background: #EF4444; color: white; padding: 2px 8px; border-radius: 6px; font-size: 10px;">بث حي</span>
+                                <span>قاعة السوبر أدمن - وضع المضيف الحصري (Super Admin Host)</span>
+                            </div>
+                            <div style="font-size: 12px; opacity: 0.85;">
+                                <i class="fa-solid fa-shield-halved" style="color: #10B981;"></i> اتصال مشفر ومؤمن
+                            </div>
+                        </div>
+                        <iframe id="super-network-meeting-frame" src="" style="width: 100%; height: 580px; border: none;" allow="camera; microphone; display-capture; autoplay; clipboard-write"></iframe>
+                    </div>
+
+                    <!-- Idle Empty State Graphic -->
+                    <div id="super-meeting-idle-state" style="text-align: center; padding: 50px 20px; background: var(--color-background); border-radius: 16px; border: 1px dashed var(--border-color);">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #10B981; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px auto; font-size: 34px;">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <h3 style="font-size: 17px; font-weight: 900; color: var(--text-dark); margin-bottom: 8px;">لا يوجد اجتماع مركزي نشط حالياً</h3>
+                        <p style="font-size: 13px; color: var(--text-gray); max-width: 520px; margin: 0 auto 20px auto; line-height: 1.6;">
+                            عند الضغط على زر "بدء اجتماع مركزي للشبكة"، سيتم فوراً إنشاء غرفة Daily.co وتوليد رمز المضيف الحصري لك، وسيصل تنبيه فوري عائم لكافة معلمات ومديرات الحضانات للدخول كمشاركين.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal for viewing full size receipt image -->
             <div id="receiptModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; padding: 20px;">
                 <div style="position: relative; max-width: 90%; max-height: 90%;">
@@ -1410,6 +1504,11 @@
                 nav_web: "إعدادات الواجهة العامة",
                 nav_market: "المتجر المركزي",
                 nav_orders: "إدارة الطلبات",
+                nav_network_meeting: "الاجتماعات المركزية للشبكة",
+                network_meeting_title: "الاجتماعات المركزية للشبكة (Network-wide Staff Meetings)",
+                network_meeting_subtitle: "قاعة المؤتمرات المركزية المباشرة لكافة معلمات ومديرات شبكة إمباكت هب مع صلاحيات المضيف الحصرية للسوبر أدمن",
+                start_network_meeting_btn: "بدء اجتماع مركزي للشبكة",
+                end_network_meeting_btn: "إنهاء الاجتماع المركزي فوراً 🔴",
                 live_builder: "مُنشئ الواجهة (Live)",
                 create_nursery_title: "إنشاء كيان حضانة جديد مركزيًا",
                 n_lbl_name: "اسم الحضانة الرسمي",
@@ -1546,6 +1645,11 @@
                 nav_web: "Landing Page Settings",
                 nav_market: "Central Marketplace",
                 nav_orders: "Order Management",
+                nav_network_meeting: "Network Staff Meetings",
+                network_meeting_title: "Network-wide Staff Meetings",
+                network_meeting_subtitle: "Central live conference hall for all Impact Hub teachers and managers with Super Admin exclusive host controls",
+                start_network_meeting_btn: "Start Central Network Meeting",
+                end_network_meeting_btn: "End Network Meeting Now 🔴",
                 live_builder: "Live Interface Builder",
                 create_nursery_title: "Create New Nursery Entity",
                 n_lbl_name: "Official Nursery Name",
@@ -1682,6 +1786,11 @@
                 nav_web: "Paramètres de la page d'accueil",
                 nav_market: "Boutique Centrale",
                 nav_orders: "Gestion des Commandes",
+                nav_network_meeting: "Réunions Centrales du Réseau",
+                network_meeting_title: "Réunions Centrales du Réseau",
+                network_meeting_subtitle: "Salle de conférence centrale en direct pour tout le personnel avec contrôles exclusifs d'hôte",
+                start_network_meeting_btn: "Démarrer une réunion centrale",
+                end_network_meeting_btn: "Terminer la réunion immédiatement 🔴",
                 live_builder: "Générateur Web Live",
                 create_nursery_title: "Créer une nouvelle entité Crèche",
                 n_lbl_name: "Nom officiel de la crèche",
@@ -1818,6 +1927,11 @@
                 nav_web: "Einstellungen der Landingpage",
                 nav_market: "Zentraler Marktplatz",
                 nav_orders: "Bestellungsverwaltung",
+                nav_network_meeting: "Zentrale Netzwerktreffen",
+                network_meeting_title: "Zentrale Mitarbeiter-Treffen des Netzwerks",
+                network_meeting_subtitle: "Zentraler Live-Konferenzsaal für alle Lehrer und Leiterinnen mit exklusiven Host-Rechten",
+                start_network_meeting_btn: "Zentrales Netzwerktreffen starten",
+                end_network_meeting_btn: "Treffen jetzt beenden 🔴",
                 live_builder: "Live Web-Editor",
                 create_nursery_title: "Neue Kita-Einheit erstellen",
                 n_lbl_name: "Offizieller Kita-Name",
@@ -3454,6 +3568,7 @@
             if(tabId === 'marketplace-tab') window.fetchCentralProducts();
             if(tabId === 'orders-tab') window.fetchCentralOrders();
             if(tabId === 'super-support-tab') window.loadSuperSupportCenter();
+            if(tabId === 'network-meeting-tab') window.syncNetworkMeetingTab();
             
             // إغلاق الشريط الجانبي على الجوال
             document.getElementById('appSidebar').classList.remove('open');
@@ -3971,11 +4086,208 @@
             input.value = '';
         };
 
+        // ================== Network-wide Staff Meetings (Daily.co + Firestore) ==================
+        window.currentNetworkMeetingState = null;
+
+        window.listenToNetworkMeetingState = () => {
+            const meetingDocRef = doc(db, "global_settings", "network_meeting");
+            onSnapshot(meetingDocRef, (docSnap) => {
+                const data = docSnap.exists() ? docSnap.data() : null;
+                window.currentNetworkMeetingState = data;
+                window.updateNetworkMeetingSuperUI(data);
+            }, (err) => {
+                console.warn("Network meeting listener error:", err);
+            });
+        };
+
+        window.updateNetworkMeetingSuperUI = (data) => {
+            const activeBadge = document.getElementById('super-meeting-active-badge');
+            const statusBadge = document.getElementById('super-meeting-status-badge');
+            const statusText = document.getElementById('super-meeting-status-text');
+            const btnStart = document.getElementById('btn-start-network-meeting');
+            const btnEnd = document.getElementById('btn-end-network-meeting');
+            const btnPopout = document.getElementById('btn-popout-meeting');
+            const guestBox = document.getElementById('super-guest-link-box');
+            const guestLinkText = document.getElementById('super-guest-link-text');
+            const frameWrapper = document.getElementById('super-meeting-frame-wrapper');
+            const idleState = document.getElementById('super-meeting-idle-state');
+            const meetingFrame = document.getElementById('super-network-meeting-frame');
+
+            const isActive = data && data.status === 'active';
+
+            if (isActive) {
+                if (activeBadge) activeBadge.style.display = 'inline-block';
+                if (statusBadge) {
+                    statusBadge.style.background = '#DCFCE7';
+                    statusBadge.style.color = '#15803D';
+                    statusBadge.style.borderColor = '#86EFAC';
+                }
+                if (statusText) statusText.innerHTML = '<span style="color:#16A34A; font-weight:900;">🟢 الاجتماع المباشر نشط الآن (أنت المضيف 👑)</span>';
+                
+                if (btnStart) btnStart.style.display = 'none';
+                if (btnEnd) btnEnd.style.display = 'inline-flex';
+                if (btnPopout) btnPopout.style.display = 'inline-flex';
+                
+                if (guestBox) guestBox.style.display = 'block';
+                const guestUrl = data.guestUrl || data.roomUrl || '';
+                if (guestLinkText) guestLinkText.innerText = guestUrl;
+
+                if (idleState) idleState.style.display = 'none';
+                if (frameWrapper) frameWrapper.style.display = 'block';
+
+                // If frame not yet loaded with hostUrl or roomUrl
+                const hostUrl = data.hostUrl || data.roomUrl;
+                if (meetingFrame && hostUrl && meetingFrame.src !== hostUrl) {
+                    meetingFrame.src = hostUrl;
+                }
+            } else {
+                if (activeBadge) activeBadge.style.display = 'none';
+                if (statusBadge) {
+                    statusBadge.style.background = 'var(--color-background)';
+                    statusBadge.style.color = 'var(--text-gray)';
+                    statusBadge.style.borderColor = 'var(--border-color)';
+                }
+                if (statusText) statusText.innerText = 'لا يوجد اجتماع جارٍ حالياً';
+                
+                if (btnStart) {
+                    btnStart.style.display = 'inline-flex';
+                    btnStart.disabled = false;
+                    btnStart.innerHTML = '<i class="fa-solid fa-tower-broadcast"></i> <span>بدء اجتماع مركزي للشبكة</span>';
+                }
+                if (btnEnd) btnEnd.style.display = 'none';
+                if (btnPopout) btnPopout.style.display = 'none';
+                if (guestBox) guestBox.style.display = 'none';
+                
+                if (frameWrapper) frameWrapper.style.display = 'none';
+                if (idleState) idleState.style.display = 'block';
+                if (meetingFrame) meetingFrame.src = '';
+            }
+        };
+
+        window.startNetworkMeeting = async () => {
+            const btnStart = document.getElementById('btn-start-network-meeting');
+            if (btnStart) {
+                btnStart.disabled = true;
+                btnStart.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري تجهيز قاعة المضيف...';
+            }
+
+            try {
+                const response = await fetch('/api/create-network-meeting', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: 'الاجتماع المركزي الدوري لإدارة شبكة إمباكت هب',
+                        hostName: 'السوبر أدمن 👑'
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || `HTTP ${response.status}`);
+                }
+
+                const result = await response.json();
+                const roomUrl = result.roomUrl;
+                const hostUrl = result.hostUrl || result.roomUrl;
+                const guestUrl = result.guestUrl || result.roomUrl;
+                const roomName = result.roomName;
+
+                // Update Firestore document global_settings/network_meeting to active
+                const meetingDocRef = doc(db, "global_settings", "network_meeting");
+                await setDoc(meetingDocRef, {
+                    status: "active",
+                    roomName: roomName,
+                    roomUrl: roomUrl,
+                    hostUrl: hostUrl,
+                    guestUrl: guestUrl,
+                    startedAt: Date.now(),
+                    startedBy: "السوبر أدمن 👑",
+                    title: "الاجتماع المركزي الدوري لإدارة شبكة إمباكت هب",
+                    updatedAt: Date.now()
+                });
+
+                window.showNotificationToast("🚀 تم بدء الاجتماع المركزي للشبكة وإرسال التنبيه اللحظي لجميع المعلمات ومديرات الحضانات فوراً!");
+            } catch (err) {
+                console.error("Error starting network meeting:", err);
+                alert("حدث خطأ أثناء بدء الاجتماع المركزي: " + (err.message || err));
+                if (btnStart) {
+                    btnStart.disabled = false;
+                    btnStart.innerHTML = '<i class="fa-solid fa-tower-broadcast"></i> <span>بدء اجتماع مركزي للشبكة</span>';
+                }
+            }
+        };
+
+        window.endNetworkMeeting = async () => {
+            if (!confirm("هل أنت متأكد من إنهاء هذا الاجتماع المركزي وإغلاق القاعة لجميع الحاضرين والمعلمات؟")) return;
+
+            const btnEnd = document.getElementById('btn-end-network-meeting');
+            if (btnEnd) {
+                btnEnd.disabled = true;
+                btnEnd.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري إنهاء الاجتماع...';
+            }
+
+            try {
+                const currentData = window.currentNetworkMeetingState;
+                const roomName = currentData ? currentData.roomName : null;
+
+                // 1. Update Firestore
+                const meetingDocRef = doc(db, "global_settings", "network_meeting");
+                await setDoc(meetingDocRef, {
+                    status: "ended",
+                    endedAt: Date.now(),
+                    updatedAt: Date.now()
+                }, { merge: true });
+
+                // 2. Call backend cleanup
+                if (roomName) {
+                    await fetch('/api/end-network-meeting', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ roomName })
+                    }).catch(e => console.warn("End meeting API warning:", e));
+                }
+
+                alert("✅ تم إنهاء الاجتماع المركزي وإغلاق الغرفة بنجاح.");
+            } catch (err) {
+                console.error("Error ending network meeting:", err);
+                alert("حدث خطأ أثناء إنهاء الاجتماع.");
+            } finally {
+                if (btnEnd) {
+                    btnEnd.disabled = false;
+                    btnEnd.innerHTML = '<i class="fa-solid fa-power-off"></i> <span>إنهاء الاجتماع المركزي فوراً 🔴</span>';
+                }
+            }
+        };
+
+        window.copyGuestMeetingLink = () => {
+            const guestLink = window.currentNetworkMeetingState?.guestUrl || window.currentNetworkMeetingState?.roomUrl || '';
+            if (!guestLink) return;
+            navigator.clipboard.writeText(guestLink).then(() => {
+                alert("📋 تم نسخ رابط الضيوف (Guest Link) بنجاح إلى الحافظة!");
+            }).catch(() => {
+                prompt("انسخ الرابط التالي يدوياً:", guestLink);
+            });
+        };
+
+        window.openHostMeetingInNewTab = () => {
+            const hostUrl = window.currentNetworkMeetingState?.hostUrl || window.currentNetworkMeetingState?.roomUrl;
+            if (hostUrl) {
+                window.open(hostUrl, '_blank');
+            }
+        };
+
+        window.syncNetworkMeetingTab = () => {
+            if (window.currentNetworkMeetingState) {
+                window.updateNetworkMeetingSuperUI(window.currentNetworkMeetingState);
+            }
+        };
+
         // تحميل اللغة المفضلة تلقائياً
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selected_language') || 'ar';
             window.changeSuperLanguage(savedLang);
             window.setupRealtimeBookingNotifications();
+            window.listenToNetworkMeetingState();
         });
     </script>
 </body>

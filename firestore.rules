@@ -30,6 +30,11 @@ service cloud.firestore {
     // 1. إعدادات الواجهة العامة والمنتجات (شاملة التحقق من أنواع البيانات والمدخلات)
     // ==========================================
     
+    match /global_settings/{docId} {
+      allow read: if true;
+      allow write: if isMap(request.resource.data);
+    }
+
     match /web_settings/{docId} {
       allow read: if true;
       allow write: if isMap(request.resource.data);
@@ -138,7 +143,7 @@ service cloud.firestore {
         && isString(request.resource.data.teacherName)
         && isString(request.resource.data.studentName)
         && isString(request.resource.data.status)
-        && (request.resource.data.status == 'active' || request.resource.data.status == 'ended');
+        && (request.resource.data.status == 'active' || request.resource.data.status == 'ended' || request.resource.data.status == 'waiting' || request.resource.data.status == 'terminated');
     }
     
     match /teacher_availability/{slotId} {

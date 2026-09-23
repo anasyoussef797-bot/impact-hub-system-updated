@@ -684,3 +684,71 @@
   50% { opacity: 1; transform: scale(1.2); }
   100% { opacity: 0.4; transform: scale(0.9); }
 }
+
+/* 7. Real-time Live Class Status Indicators (Waiting / Active / Ended) */
+.live-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  transition: all 0.25s ease;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.live-status-badge.status-waiting {
+  background: #FFF7ED;
+  color: #C2410C;
+  border: 1px solid #FDBA74;
+}
+
+.live-status-badge.status-active {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #6EE7B7;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+
+.live-status-badge.status-ended {
+  background: #F3F4F6;
+  color: #4B5563;
+  border: 1px solid #D1D5DB;
+}
+
+.live-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-waiting .live-pulse-dot {
+  background-color: #F97316;
+  animation: statusPulseSlow 1.8s infinite ease-in-out;
+}
+
+.status-active .live-pulse-dot {
+  background-color: #10B981;
+  animation: statusPulseFast 1.2s infinite ease-in-out;
+}
+
+.status-ended .live-pulse-dot {
+  background-color: #9CA3AF;
+}
+
+@keyframes statusPulseFast {
+  0% { transform: scale(0.92); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.92); opacity: 0.8; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@keyframes statusPulseSlow {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+

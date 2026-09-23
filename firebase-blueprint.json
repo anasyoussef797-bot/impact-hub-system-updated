@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "networkMeeting": {
+      "title": "Network Meeting",
+      "description": "Network-wide staff meeting room configuration and state managed by Super Admin",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Active or ended state of the network meeting",
+          "enum": ["active", "ended"]
+        },
+        "roomUrl": {
+          "type": "string",
+          "description": "Public or guest room URL"
+        },
+        "guestUrl": {
+          "type": "string",
+          "description": "Direct guest room URL for staff members"
+        },
+        "roomName": {
+          "type": "string",
+          "description": "Unique room identifier"
+        },
+        "startedAt": {
+          "type": "number",
+          "description": "Timestamp when meeting started"
+        },
+        "endedAt": {
+          "type": "number",
+          "description": "Timestamp when meeting ended"
+        },
+        "startedBy": {
+          "type": "string",
+          "description": "Initiator of the meeting"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the network meeting"
+        },
+        "updatedAt": {
+          "type": "number",
+          "description": "Timestamp of last status update"
+        }
+      },
+      "required": ["status", "roomUrl"]
+    }
+  },
+  "firestore": {
+    "/global_settings/network_meeting": {
+      "schema": "networkMeeting",
+      "description": "Holds network-wide meeting room state for teachers, managers and super admins"
+    }
+  }
+}

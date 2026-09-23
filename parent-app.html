@@ -486,17 +486,25 @@
                 <div id="tutoring" class="tab-content">
                     <h3 class="section-title"><span data-i18n="tutoring_title">حجز ومتابعة الدروس 📹</span></h3>
                     <div class="card">
-                        <div style="display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px;">
-                            <div style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--pastel-bg); border: 2px solid var(--primary-maroon);">
-                                <img id="tutoring-teacher-avatar" src="https://via.placeholder.com/100" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                <i id="tutoring-teacher-icon" class="fa-solid fa-chalkboard-user" style="font-size: 18px; color: var(--primary-maroon);"></i>
+                        <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <div style="width: 44px; height: 44px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--pastel-bg); border: 2px solid var(--primary-maroon);">
+                                    <img id="tutoring-teacher-avatar" src="https://via.placeholder.com/100" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                    <i id="tutoring-teacher-icon" class="fa-solid fa-chalkboard-user" style="font-size: 18px; color: var(--primary-maroon);"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 14px; color: var(--text-dark);" data-i18n="tutoring_teacher">أ / أحمد علي</h4>
+                                    <p style="font-size: 11px; color: var(--text-gray);" data-i18n="tutoring_subject">لغة إنجليزية</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 style="font-size: 14px; color: var(--text-dark);" data-i18n="tutoring_teacher">أ / أحمد علي</h4>
-                                <p style="font-size: 11px; color: var(--text-gray);" data-i18n="tutoring_subject">لغة إنجليزية</p>
+                            <div id="parent-live-status-container">
+                                <span id="parent-live-status-badge" class="live-status-badge status-ended">
+                                    <span class="live-pulse-dot"></span>
+                                    <span id="parent-live-status-text" data-i18n="status_ended">انتهت الحصة</span>
+                                </span>
                             </div>
                         </div>
-                        <button class="btn-primary" style="background:var(--color-success); margin-bottom: 10px;" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
+                        <button class="btn-primary" style="background:var(--color-success); margin-bottom: 10px;" id="btn-join-class" onclick="window.joinLiveClass()"><i class="fa-solid fa-video"></i> <span data-i18n="join_live_btn">الدخول للحصة المباشرة الآن</span></button>
                         <button class="btn-danger" style="display:none;" id="btn-leave-class" onclick="window.leaveLiveClass()"><i class="fa-solid fa-phone-slash"></i> <span data-i18n="leave_live_btn">مغادرة الحصة</span></button>
                         
                         <div class="simulation-link-box" id="parent-live-simulation-box" style="display: none; background: var(--color-primary-soft); border: 1px solid var(--color-primary-soft); color: var(--color-primary); padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-top: 15px; text-align: center; gap: 8px; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">
@@ -956,7 +964,10 @@
                 edit_parent_name_label: "اسم ولي الأمر:",
                 edit_parent_phone_label: "رقم الهاتف / الواتساب:",
                 save_profile_btn: "حفظ التغييرات 💾",
-                save_profile_success: "✅ تم تحديث بيانات الملف الشخصي بنجاح!"
+                save_profile_success: "✅ تم تحديث بيانات الملف الشخصي بنجاح!",
+                status_waiting: "في انتظار المدرس",
+                status_active: "مباشر الآن",
+                status_ended: "انتهت الحصة"
             },
             en: {
                 login_title: "Welcome to the Nursery 🏡",
@@ -1036,7 +1047,10 @@
                 edit_parent_name_label: "Parent Name:",
                 edit_parent_phone_label: "Phone / WhatsApp:",
                 save_profile_btn: "Save Changes 💾",
-                save_profile_success: "✅ Profile information updated successfully!"
+                save_profile_success: "✅ Profile information updated successfully!",
+                status_waiting: "Waiting for Host",
+                status_active: "Active Now",
+                status_ended: "Class Ended"
             },
             fr: {
                 login_title: "Bienvenue à la Crèche 🏡",
@@ -1105,7 +1119,10 @@
                 edit_parent_name_label: "Nom du parent:",
                 edit_parent_phone_label: "Téléphone / WhatsApp:",
                 save_profile_btn: "Enregistrer 💾",
-                save_profile_success: "✅ Informations de profil mises à jour avec succès!"
+                save_profile_success: "✅ Informations de profil mises à jour avec succès!",
+                status_waiting: "En attente de l'enseignant",
+                status_active: "En direct maintenant",
+                status_ended: "Séance terminée"
             },
             de: {
                 login_title: "Willkommen in der Kita 🏡",
@@ -1174,7 +1191,10 @@
                 edit_parent_name_label: "Elternname:",
                 edit_parent_phone_label: "Telefon / WhatsApp:",
                 save_profile_btn: "Änderungen speichern 💾",
-                save_profile_success: "✅ Profilinformationen erfolgreich aktualisiert!"
+                save_profile_success: "✅ Profilinformationen erfolgreich aktualisiert!",
+                status_waiting: "Warten auf Lehrkraft",
+                status_active: "Jetzt Live",
+                status_ended: "Sitzung beendet"
             }
         };
 
@@ -1705,19 +1725,56 @@
         window.listenToActiveLiveClasses = () => {
             if(activeLiveClassUnsub) activeLiveClassUnsub();
             
-            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+            const alertBox = document.getElementById('active-live-class-alert');
+            const teacherNameSpan = document.getElementById('active-class-teacher');
+            const badge = document.getElementById('parent-live-status-badge');
+            const badgeText = document.getElementById('parent-live-status-text');
+            const btnJoin = document.getElementById('btn-join-class');
+
+            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId));
             activeLiveClassUnsub = onSnapshot(q, (snapshot) => {
-                const alertBox = document.getElementById('active-live-class-alert');
-                const teacherNameSpan = document.getElementById('active-class-teacher');
-                
+                const currentLang = localStorage.getItem('selected_language') || 'ar';
+                const dict = parentTranslations[currentLang] || parentTranslations.ar;
+
                 if(snapshot.empty) {
                     if(alertBox) alertBox.style.display = 'none';
-                } else {
-                    let activeClass = null;
-                    snapshot.forEach(docData => { activeClass = docData.data(); });
-                    if(activeClass && alertBox && teacherNameSpan) {
-                        teacherNameSpan.innerText = activeClass.teacherName || "المعلم";
+                    if(badge) badge.className = "live-status-badge status-ended";
+                    if(badgeText) badgeText.innerText = dict.status_ended || "انتهت الحصة";
+                    if(btnJoin) btnJoin.innerHTML = `<i class="fa-solid fa-video"></i> <span>${dict.join_live_btn || "الدخول للحصة المباشرة الآن"}</span>`;
+                    return;
+                }
+
+                // Sort docs descending by timestamp to find current/latest session
+                const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                const activeClass = docs.find(d => d.status === "active");
+                const waitingClass = docs.find(d => d.status === "waiting");
+                const targetSession = activeClass || waitingClass || docs[0];
+
+                if (targetSession.status === "active") {
+                    if (badge) badge.className = "live-status-badge status-active";
+                    if (badgeText) badgeText.innerText = dict.status_active || "مباشر الآن";
+                    if (alertBox && teacherNameSpan) {
+                        teacherNameSpan.innerText = targetSession.teacherName || "المعلم";
                         alertBox.style.display = 'flex';
+                    }
+                    if (btnJoin) {
+                        btnJoin.innerHTML = `<i class="fa-solid fa-video"></i> <span>${dict.join_live_btn || "الدخول للحصة المباشرة الآن"}</span>`;
+                    }
+                } else if (targetSession.status === "waiting") {
+                    if (badge) badge.className = "live-status-badge status-waiting";
+                    if (badgeText) badgeText.innerText = dict.status_waiting || "في انتظار المدرس";
+                    if (alertBox) alertBox.style.display = 'none';
+                    if (btnJoin) {
+                        btnJoin.innerHTML = `<i class="fa-solid fa-clock"></i> <span>${dict.status_waiting || "في انتظار المدرس"} ⏳</span>`;
+                    }
+                } else {
+                    if (badge) badge.className = "live-status-badge status-ended";
+                    if (badgeText) badgeText.innerText = dict.status_ended || "انتهت الحصة";
+                    if (alertBox) alertBox.style.display = 'none';
+                    if (btnJoin) {
+                        btnJoin.innerHTML = `<i class="fa-solid fa-video"></i> <span>${dict.join_live_btn || "الدخول للحصة المباشرة الآن"}</span>`;
                     }
                 }
             });
@@ -1734,7 +1791,7 @@
             const dict = parentTranslations[currentLang] || parentTranslations.ar;
 
             const container = document.getElementById('daily-student-container');
-            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId), where("status", "==", "active"));
+            const q = query(collection(db, "live_classes"), where("nurseryId", "==", myNurseryId));
             const snap = await getDocs(q);
 
             if(snap.empty) {
@@ -1742,12 +1799,24 @@
                 return;
             }
 
-            let activeRoomUrl = "";
-            let activeDocId = "";
-            snap.forEach(d => { 
-                activeRoomUrl = d.data().roomUrl || `https://meet.ffmuc.net/${d.data().roomName}`; 
-                activeDocId = d.id;
-            });
+            const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            const activeClass = docs.find(d => d.status === "active");
+            const waitingClass = docs.find(d => d.status === "waiting");
+
+            if(!activeClass && !waitingClass) {
+                alert(dict.jitsi_empty_alert);
+                return;
+            }
+
+            if(!activeClass && waitingClass) {
+                alert(currentLang === 'ar' ? '⏳ الحصة قيد الانتظار حالياً، المعلم يجهز الغرفة وسيبدأ البث فوراً!' : '⏳ The teacher is preparing the room, broadcast will start shortly!');
+            }
+
+            const targetClass = activeClass || waitingClass;
+            let activeRoomUrl = targetClass.roomUrl || `https://meet.ffmuc.net/${targetClass.roomName}`;
+            let activeDocId = targetClass.id;
 
             container.innerHTML = ''; // Clear container
             container.style.display = 'block';
