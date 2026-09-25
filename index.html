@@ -1310,335 +1310,172 @@
             min-height: 100px;
         }
 
-        .menu-toggle-btn, .chat-widget-btn, .lang-flag-btn, .solution-tab-btn, .book-btn, .login-btn {
+        .chat-widget-btn, .lang-flag-btn, .solution-tab-btn, .book-btn, .login-btn {
             min-height: 44px;
         }
 
-        .mobile-drawer-header, .mobile-drawer-footer, .mobile-drawer-overlay {
-            display: none;
+        /* Navbar Layout & Actions */
+        .navbar-brand-wrap {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
         }
 
-        @media (min-width: 769px) {
-            .nav-item-animate {
-                opacity: 1 !important;
-                transform: none !important;
-                transition: none !important;
-            }
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
         }
 
-        @media (max-width: 768px) {
-            .video-container iframe { height: 260px; }
-            
+        .pwa-top-install-btn {
+            background: linear-gradient(135deg, var(--color-accent), #B35E3E);
+            color: #FFFFFF !important;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(193, 120, 90, 0.35);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            outline: none;
+            text-decoration: none;
+        }
+        .pwa-top-install-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(193, 120, 90, 0.45);
+            background: linear-gradient(135deg, #B35E3E, var(--color-accent));
+        }
+        .pwa-top-install-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (min-width: 992px) {
             .navbar {
+                display: flex;
                 flex-direction: row;
-                padding: 12px 18px;
                 justify-content: space-between;
                 align-items: center;
+                padding: 14px 5%;
+                gap: 16px;
             }
-            .navbar-header-mobile {
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                align-items: center;
+            .navbar-top-row {
+                display: contents;
             }
-
-            .menu-toggle-btn {
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                width: 44px;
-                height: 44px;
-                border-radius: 12px;
-                background: var(--color-background);
-                border: 1px solid var(--border-color);
-                color: var(--text-dark);
-                font-size: 20px;
-                cursor: pointer;
-                transition: all 0.25s ease;
+            .navbar-brand-wrap {
+                order: 1;
             }
-            .menu-toggle-btn:hover, .menu-toggle-btn:active {
-                background: var(--color-primary-soft);
-                color: var(--color-primary);
-            }
-            .menu-toggle-btn.is-active {
-                background: var(--color-primary-soft);
-                color: var(--color-primary);
-            }
-
-            /* Mobile Drawer Overlay Backdrop */
-            .mobile-drawer-overlay {
-                display: block;
-                position: fixed;
-                inset: 0;
-                background: rgba(15, 23, 42, 0.45);
-                backdrop-filter: blur(4px);
-                -webkit-backdrop-filter: blur(4px);
-                z-index: 1040;
-                opacity: 0;
-                visibility: hidden;
-                pointer-events: none;
-                transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
-            }
-            .mobile-drawer-overlay.active {
-                opacity: 1;
-                visibility: visible;
-                pointer-events: auto;
-            }
-
-            /* Slide-in Drawer Container */
             .nav-links {
-                display: flex !important;
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                width: clamp(285px, 82vw, 340px);
-                height: 100vh;
-                height: 100dvh;
-                background: var(--color-surface);
-                z-index: 1050;
-                flex-direction: column;
+                order: 2;
+                display: flex;
+                align-items: center;
                 gap: 8px;
-                padding: 20px 18px 28px 18px;
-                margin-top: 0;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                visibility: hidden;
-                pointer-events: none;
-                transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.38s ease, box-shadow 0.38s ease;
             }
-            /* Slide from right in RTL */
-            html[dir="rtl"] .nav-links {
-                right: 0;
-                left: auto;
-                transform: translateX(100%);
-                box-shadow: -8px 0 32px rgba(15, 23, 42, 0.16);
+            .navbar-actions {
+                order: 3;
             }
-            /* Slide from left in LTR */
-            html[dir="ltr"] .nav-links {
-                left: 0;
-                right: auto;
-                transform: translateX(-100%);
-                box-shadow: 8px 0 32px rgba(15, 23, 42, 0.16);
-            }
-            /* Drawer Open State */
-            .nav-links.mobile-show {
-                visibility: visible;
-                pointer-events: auto;
-                transform: translateX(0) !important;
-            }
+        }
 
-            /* Drawer Header */
-            .mobile-drawer-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding-bottom: 14px;
-                margin-bottom: 8px;
-                border-bottom: 1.5px solid var(--border-color);
-                width: 100%;
-                flex-shrink: 0;
-            }
-            .mobile-drawer-brand {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 18px;
-                font-weight: 700;
-                color: var(--color-brand-navy);
-                text-decoration: none;
-            }
-            .mobile-drawer-brand i {
-                color: var(--color-primary);
-                font-size: 22px;
-            }
-            .mobile-drawer-close {
-                background: var(--color-background);
-                border: 1px solid var(--border-color);
-                width: 38px;
-                height: 38px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--text-dark);
-                font-size: 17px;
-                cursor: pointer;
-                transition: all 0.25s ease;
-            }
-            .mobile-drawer-close:hover, .mobile-drawer-close:active {
-                background: var(--color-primary-soft);
-                color: var(--color-primary);
-                transform: rotate(90deg);
-            }
-
-            /* Drawer Items Styling */
-            .nav-links a {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                padding: 12px 16px;
-                font-size: 15px;
-                font-weight: 600;
-                border-radius: 12px;
-                color: var(--text-dark);
-                background: transparent;
-                border: 1px solid transparent;
-                text-align: right;
-                justify-content: flex-start;
-                transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-            }
-            html[dir="ltr"] .nav-links a {
-                text-align: left;
-            }
-            .nav-links a:hover, .nav-links a:active {
-                background: var(--color-primary-soft);
-                color: var(--color-primary);
-                border-color: var(--color-border);
-            }
-            html[dir="rtl"] .nav-links a:hover {
-                transform: translateX(-4px);
-            }
-            html[dir="ltr"] .nav-links a:hover {
-                transform: translateX(4px);
-            }
-
-            /* Dropdowns in Mobile Drawer */
-            .dropdown {
-                width: 100%;
-                position: relative;
-            }
-            .dropdown-trigger {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 12px 16px;
-                border-radius: 12px;
-                font-size: 15px;
-                font-weight: 600;
-                background: var(--color-background);
-                border: 1px solid var(--border-color);
-                color: var(--text-dark);
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-            .dropdown-trigger:hover, .dropdown-trigger:active {
-                background: var(--color-primary-soft);
-                color: var(--color-primary);
-            }
-            .dropdown-trigger .fa-chevron-down {
-                transition: transform 0.25s ease;
-            }
-            .dropdown.mobile-open .dropdown-trigger .fa-chevron-down {
-                transform: rotate(180deg);
-            }
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                border: 1px solid var(--border-color);
-                border-radius: 12px;
-                margin-top: 6px;
-                margin-bottom: 4px;
-                width: 100%;
-                background: var(--color-background);
-                animation: none;
-                display: none;
-                padding: 6px;
-            }
-            .dropdown.mobile-open .dropdown-content {
-                display: block;
-                animation: drawerItemFade 0.25s ease-out;
-            }
-            .dropdown-content a {
-                padding: 10px 14px;
-                font-size: 14px;
-                border-radius: 8px;
-            }
-
-            /* Special CTA buttons in Drawer */
-            .nav-links .live-btn {
-                width: 100%;
-                justify-content: center;
-                text-align: center;
-                padding: 13px 20px !important;
-                margin-top: 6px;
-                background: var(--color-brand-navy) !important;
-                box-shadow: 0 4px 14px rgba(48, 86, 105, 0.25) !important;
-            }
-            .nav-links .login-btn {
-                width: 100%;
-                justify-content: center;
-                text-align: center;
-                padding: 13px 20px !important;
-                margin-top: 4px;
-                background: var(--color-primary) !important;
-                box-shadow: 0 4px 14px rgba(48, 86, 105, 0.25) !important;
-            }
-
-            /* Drawer Footer */
-            .mobile-drawer-footer {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                margin-top: auto;
-                padding-top: 20px;
-                border-top: 1px solid var(--border-color);
-                font-size: 11.5px;
-                font-weight: 700;
-                color: var(--text-gray);
-                text-align: center;
-                flex-shrink: 0;
-            }
-
-            /* Smooth Staggered Transition Animations for Menu Items */
-            .nav-item-animate {
-                opacity: 0;
-                transform: translateX(24px);
-                transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-                will-change: transform, opacity;
-            }
-            html[dir="ltr"] .nav-item-animate {
-                transform: translateX(-24px);
-            }
-            .nav-links.mobile-show .nav-item-animate {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            .nav-links.mobile-show .nav-item-animate:nth-child(1) { transition-delay: 0.05s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(2) { transition-delay: 0.09s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(3) { transition-delay: 0.13s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(4) { transition-delay: 0.17s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(5) { transition-delay: 0.21s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(6) { transition-delay: 0.25s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(7) { transition-delay: 0.29s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(8) { transition-delay: 0.33s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(9) { transition-delay: 0.37s; }
-            .nav-links.mobile-show .nav-item-animate:nth-child(10) { transition-delay: 0.41s; }
-
+        @media (max-width: 991px) {
+            .video-container iframe { height: 260px; }
             .floating-asset { max-width: 80px; opacity: 0.4; z-index: 0; }
             .cards-slider > div { width: 285px; } 
             #admin-toolbar { flex-direction: column; gap: 12px; padding: 16px; }
-        }
 
-        @keyframes drawerItemFade {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
+            .navbar {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .navbar-top-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                gap: 8px;
+            }
+            .navbar-brand-wrap .logo {
+                font-size: 18px;
+                gap: 8px;
+            }
+            .navbar-brand-wrap .logo i {
+                font-size: 20px;
+            }
+            .navbar-actions {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap;
+            }
+            .pwa-top-install-btn {
+                padding: 6px 12px;
+                font-size: 11.5px;
+                gap: 5px;
+            }
+            .live-btn {
+                padding: 6px 12px !important;
+                font-size: 11.5px !important;
+                gap: 5px !important;
+            }
+            .login-btn {
+                padding: 6px 14px !important;
+                font-size: 11.5px !important;
+            }
+            .nav-links {
+                display: flex !important;
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                box-shadow: none !important;
+                background: transparent !important;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                white-space: nowrap !important;
+                gap: 6px !important;
+                padding: 4px 0 6px 0 !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+                transform: none !important;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                justify-content: flex-start !important;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-links a, .nav-links .dropdown-trigger {
+                font-size: 12px !important;
+                padding: 6px 12px !important;
+                border-radius: 9999px !important;
+                background: var(--color-background-soft) !important;
+                color: var(--text-dark) !important;
+                border: 1px solid var(--border-color) !important;
+                flex-shrink: 0;
+            }
+            .nav-links .dropdown {
+                position: relative;
+                width: auto !important;
+                flex-shrink: 0;
+            }
+            .nav-links .dropdown-content {
+                position: absolute !important;
+                top: 110% !important;
+                box-shadow: var(--shadow-lg) !important;
+                background: var(--white) !important;
+                min-width: 160px !important;
+                z-index: 1050 !important;
+            }
         }
     </style>
 </head>
 <body>
-
-    <!-- Top Official Banner (like ed.gov) -->
-    <div class="official-banner" style="background: var(--color-primary-soft); border-bottom: 1px solid var(--border-color); padding: 8px 6%; font-size: 12px; font-weight: 700; color: var(--color-brand-navy); display: flex; align-items: center; gap: 10px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1001; line-height: 1;">
-        <span class="flag-icon" style="font-size: 14px;">🇪🇬</span>
-        <span data-i18n="official_banner_text">البوابة الإلكترونية الرسمية لشبكة إمباكت هب مصر التعليمية المعتمدة</span>
-        <button type="button" onclick="window.triggerPWAInstall()" style="cursor: pointer; background: linear-gradient(135deg, var(--color-accent), #B35E3E); color: white; border: none; padding: 4px 12px; border-radius: 999px; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; box-shadow: 0 2px 6px rgba(193, 120, 90, 0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-            <i class="fa-solid fa-mobile-screen"></i> <span data-i18n="top_banner_install">📲 تثبيت التطبيق على هاتفك</span>
-        </button>
-        <span style="color: var(--color-primary); text-decoration: underline; cursor: help; margin-right: auto; font-size: 11px;" data-i18n="official_banner_how">كيف تعمل هذه المنصة؟</span>
-    </div>
 
     <!-- Orb-emojis floating in backgrounds for high sensory immersion & joy -->
     <div class="deco-emoji" style="top: 15%; right: 10%;">🧸</div>
@@ -1646,47 +1483,34 @@
     <div class="deco-emoji" style="top: 60%; right: 5%; animation-delay: 3s;">🌈</div>
     <div class="deco-emoji" style="top: 80%; left: 12%; animation-delay: 4.5s;">🚀</div>
 
-    <!-- Mobile Navigation Drawer Overlay Backdrop -->
-    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay" onclick="toggleMobileMenu(false)" aria-label="إغلاق القائمة" role="button" tabindex="0"></div>
+    <nav class="navbar" id="main-public-navbar">
+        <div class="navbar-top-row">
+            <div class="navbar-brand-wrap">
+                <a href="index.html" class="logo" id="pub-main-logo">
+                    <i class="fa-solid fa-building-columns"></i> 
+                    <span>Impact Hub Egypt</span>
+                </a>
+            </div>
 
-    <nav class="navbar">
-        <div class="navbar-header-mobile" style="display: flex; justify-content: space-between; align-items: center; width: auto; flex-grow: 1;">
-            <a href="index.html" class="logo" id="pub-main-logo">
-                <i class="fa-solid fa-building-columns"></i> 
-                <span>Impact Hub Egypt</span>
-            </a>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <!-- Mobile Dedicated Install App Button -->
-                <button type="button" class="mobile-top-install-btn" onclick="window.triggerPWAInstall()" aria-label="تثبيت التطبيق على الهاتف" title="تثبيت التطبيق">
-                    <i class="fa-solid fa-download"></i> <span data-i18n="mobile_install_btn">تثبيت 📲</span>
+            <div class="navbar-actions">
+                <!-- Dedicated Top PWA Install Button (Single unique instance) -->
+                <button type="button" class="pwa-top-install-btn" onclick="window.triggerPWAInstall()" title="تثبيت منصة Impact Hub على هاتفك (iPhone أو Android)">
+                    <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="nav_install_app">تثبيت التطبيق 📲</span>
                 </button>
-                <!-- Mobile Menu Toggle Button -->
-                <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleMobileMenu()" aria-label="فتح وإغلاق القائمة" aria-expanded="false">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
+                <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn" style="background: var(--color-error); color: var(--color-surface) !important; padding: 8px 18px; border-radius: 9999px; font-weight: 800; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 13px;"></i> حضور الحصة 🎥</a>
+                <a href="parent-app.html" class="login-btn" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
             </div>
         </div>
         
-        <div class="nav-links" id="nav-links-container" role="dialog" aria-modal="true" aria-label="قائمة التصفح الرئيسية">
-            <!-- Mobile Drawer Header -->
-            <div class="mobile-drawer-header">
-                <a href="index.html" class="mobile-drawer-brand">
-                    <i class="fa-solid fa-building-columns"></i> 
-                    <span>Impact Hub</span>
-                </a>
-                <button type="button" class="mobile-drawer-close" onclick="toggleMobileMenu(false)" aria-label="إغلاق القائمة">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <a href="#hero-section" class="nav-item-animate" data-i18n="nav_home">الرئيسية</a>
+        <div class="nav-links" id="nav-links-container" aria-label="قائمة التصفح الرئيسية">
+            <a href="#hero-section" data-i18n="nav_home">الرئيسية</a>
             
-            <div class="dropdown nav-item-animate">
+            <div class="dropdown">
                 <a href="#dynamic-content-wrapper" class="mobile-dropdown-toggle-link" data-mobile-dropdown-toggle="true" data-i18n="nav_explore">أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></a>
                 <div class="dropdown-content" id="dynamic-nav-dropdown"></div>
             </div>
             
-            <div class="dropdown nav-item-animate">
+            <div class="dropdown">
                 <div class="dropdown-trigger" onclick="toggleMobileDropdown(this)">
                     <i class="fa-solid fa-globe"></i> <span data-i18n="nav_lang">اللغة</span> <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>
                 </div>
@@ -1698,30 +1522,9 @@
                 </div>
             </div>
 
-            <a href="#features-section" class="nav-item-animate" data-i18n="nav_features">مميزاتنا</a>
-            <a href="#teachers-section" class="nav-item-animate" data-i18n="nav_lessons">دروس أونلاين</a>
-            <a href="#nurseries-section" class="nav-item-animate" data-i18n="nav_nurseries">شبكة الحضانات</a>
-
-            <!-- Dedicated Top PWA Install Button -->
-            <button type="button" class="pwa-top-install-btn nav-item-animate" onclick="window.triggerPWAInstall()" title="تثبيت منصة Impact Hub على هاتفك (iPhone أو Android)">
-                <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="nav_install_app">تثبيت التطبيق الآن 📲</span>
-            </button>
-
-            <!-- Unified Notification Bell Button -->
-            <button type="button" class="impact-notif-trigger-btn nav-item-animate" onclick="window.toggleNotificationDrawer(); if(window.playImpactSound) window.playImpactSound('chime');" title="مركز التنبيهات الذكي" aria-label="الإشعارات والتنبيهات">
-                <i class="fa-solid fa-bell"></i>
-                <span class="impact-notif-count-badge">0</span>
-            </button>
-            <a href="#" onclick="window.openLiveAttendanceModal(event)" class="live-btn nav-item-animate" style="background: var(--color-error); color: var(--color-surface) !important; padding: 10px 24px; border-radius: 9999px; font-weight: 800; font-size: 13.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.25); border: none; white-space: nowrap;" data-i18n="nav_live_attend"><i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥</a>
-            <a href="parent-app.html" class="login-btn nav-item-animate" data-i18n="nav_login"><i class="fa-solid fa-rocket"></i> دخول المنصة</a>
-
-            <!-- Mobile Drawer Footer -->
-            <div class="mobile-drawer-footer">
-                <span style="display: inline-flex; align-items: center; gap: 6px;">
-                    <span>🇪🇬</span>
-                    <span>شبكة إمباكت هب مصر التعليمية المعتمدة</span>
-                </span>
-            </div>
+            <a href="#features-section" data-i18n="nav_features">مميزاتنا</a>
+            <a href="#teachers-section" data-i18n="nav_lessons">دروس أونلاين</a>
+            <a href="#nurseries-section" data-i18n="nav_nurseries">شبكة الحضانات</a>
         </div>
     </nav>
 
