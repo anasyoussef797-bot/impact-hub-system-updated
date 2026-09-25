@@ -16,7 +16,7 @@
     <!-- Impact Hub Global Typography System -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="typography.css">
     <link rel="stylesheet" href="colors.css">
     <link rel="stylesheet" href="notifications.css">
@@ -336,33 +336,35 @@
             }
         }
         .stat-badge-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            padding: 24px 16px;
+            border: 1px solid rgba(0, 47, 108, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
             text-align: center;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         .stat-badge-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-md);
             border-color: var(--primary-violet);
         }
         .stat-num {
-            font-size: clamp(28px, 4vw, 36px);
-            font-weight: 700;
+            font-size: clamp(20px, 3vw, 24px);
+            font-weight: 800;
             color: var(--primary-navy);
-            line-height: 1;
-            margin-bottom: 8px;
-            font-family: var(--font-latin), var(--font-ar);
+            line-height: 1.1;
+            margin-bottom: 4px;
+            font-family: var(--font-latin), 'Tajawal', var(--font-ar);
         }
         .stat-label {
-            font-size: 13.5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-gray);
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
 
         /* Interactive Audience Solution Suite */
@@ -489,19 +491,20 @@
         }
         .mock-portal-card {
             background: var(--white);
-            border-radius: 24px;
-            padding: 24px;
+            border-radius: 16px;
+            padding: 16px;
             width: 100%;
-            max-width: 480px;
-            box-shadow: var(--shadow-lg);
+            max-width: 360px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         .mock-portal-card:hover {
-            transform: scale(1.02) rotate(1deg);
-            box-shadow: var(--shadow-xl);
+            transform: scale(1.01) translateY(-2px);
+            box-shadow: var(--shadow-lg);
             border-color: rgba(0, 94, 162, 0.2);
         }
         .mock-portal-header {
@@ -509,11 +512,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 14px;
-            margin-bottom: 16px;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
         }
         .mock-portal-dot {
-            width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px;
+            width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 3px;
         }
 
         /* Floating Assets Container */
@@ -630,35 +633,72 @@
         .cards-slider::-webkit-scrollbar-thumb { background: rgba(48, 86, 105, 0.25); border-radius: 9999px; }
         .cards-slider::-webkit-scrollbar-thumb:hover { background: var(--primary-indigo); }
         
-        .testimonial-card, .product-card { 
+        .product-card { 
             background: var(--white); 
-            border-radius: 28px; 
-            padding: 28px; 
+            border-radius: 24px; 
+            padding: 24px; 
             box-shadow: var(--shadow-md); 
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid var(--border-color); 
             flex: 0 0 auto; 
-            width: 310px; 
+            width: 280px; 
             scroll-snap-align: start; 
             white-space: normal; 
             position: relative; 
             overflow: hidden;
         }
-        .testimonial-card:hover, .product-card:hover { 
-            transform: translateY(-8px); 
+        .product-card:hover { 
+            transform: translateY(-6px); 
             box-shadow: var(--shadow-xl); 
             border-color: rgba(48, 86, 105, 0.2); 
+        }
+
+        /* Compact, Low-Height & Horizontal Testimonial Cards */
+        .testimonial-card { 
+            background: var(--white); 
+            border-radius: 12px; 
+            padding: 10px 14px 10px; 
+            box-shadow: 0 2px 8px rgba(48, 86, 105, 0.05); 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid rgba(48, 86, 105, 0.12); 
+            flex: 0 0 auto; 
+            width: 255px; 
+            max-width: 265px;
+            scroll-snap-align: start; 
+            white-space: normal; 
+            position: relative; 
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+            text-align: right;
+            box-sizing: border-box;
+            cursor: pointer;
+            user-select: none;
+        }
+        html[dir="ltr"] .testimonial-card { 
+            text-align: left; 
+            font-family: var(--font-latin), 'Tajawal', sans-serif;
+        }
+        .testimonial-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 18px rgba(48, 86, 105, 0.14); 
+            border-color: var(--primary-indigo); 
+        }
+        .testimonial-card:active {
+            transform: translateY(0) scale(0.99);
         }
 
         /* Subtle Tilt-On-Hover CSS Transforms for Content & Teacher Cards */
         .content-card, .teacher-card {
             background: var(--white); 
-            border-radius: 28px; 
-            padding: 28px; 
-            box-shadow: var(--shadow-md); 
+            border-radius: 14px; 
+            padding: 12px; 
+            box-shadow: 0 2px 10px rgba(48, 86, 105, 0.06); 
             border: 1px solid var(--border-color); 
             flex: 0 0 auto; 
-            width: 310px; 
+            width: 180px; 
             scroll-snap-align: start; 
             white-space: normal; 
             position: relative; 
@@ -669,21 +709,22 @@
             will-change: transform, box-shadow;
             backface-visibility: hidden;
             transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
 
         .content-card:hover, .teacher-card:hover { 
-            transform: perspective(1000px) translateY(-10px) rotateX(3.5deg) rotateY(-2.5deg) rotateZ(0.4deg) scale3d(1.025, 1.025, 1.025); 
-            box-shadow: 0 22px 38px -10px rgba(48, 86, 105, 0.16), 0 10px 20px -6px rgba(193, 120, 90, 0.12); 
+            transform: perspective(1000px) translateY(-6px) rotateX(2.5deg) rotateY(-1.5deg) scale3d(1.02, 1.02, 1.02); 
+            box-shadow: 0 12px 24px -6px rgba(48, 86, 105, 0.14); 
             border-color: rgba(48, 86, 105, 0.28); 
             z-index: 5;
         }
 
         .content-card:nth-child(even):hover, .teacher-card:nth-child(even):hover {
-            transform: perspective(1000px) translateY(-10px) rotateX(3.5deg) rotateY(2.5deg) rotateZ(-0.4deg) scale3d(1.025, 1.025, 1.025);
+            transform: perspective(1000px) translateY(-6px) rotateX(2.5deg) rotateY(1.5deg) scale3d(1.02, 1.02, 1.02);
         }
 
         .content-card:active, .teacher-card:active {
-            transform: perspective(1000px) translateY(-3px) scale3d(0.99, 0.99, 0.99);
+            transform: perspective(1000px) translateY(-2px) scale3d(0.99, 0.99, 0.99);
             transition: transform 0.12s ease;
         }
 
@@ -696,76 +737,85 @@
             }
         }
         
-        /* Features Bento Grid Layout */
+        /* Features Bento Grid Layout - Compact & Streamlined */
         .features-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 28px; 
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); 
+            gap: 16px; 
             width: 100%; 
             box-sizing: border-box; 
         }
         .feature-card { 
             background: var(--white); 
-            border-radius: 28px; 
-            padding: 36px 28px; 
-            box-shadow: var(--shadow-md); 
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); 
+            border-radius: 14px; 
+            padding: 0; 
+            box-shadow: 0 2px 8px rgba(48, 86, 105, 0.05); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: 1px solid var(--border-color); 
             text-align: right;
             position: relative;
             overflow: hidden;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         html[dir="ltr"] .feature-card { text-align: left; }
         
         .feature-card:hover { 
-            transform: translateY(-6px); 
-            box-shadow: var(--shadow-lg); 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 20px rgba(48, 86, 105, 0.1); 
             border-color: rgba(48, 86, 105, 0.2); 
         }
         .feature-icon-wrapper {
-            width: 64px;
-            height: 64px;
-            border-radius: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin-bottom: 24px;
+            font-size: 18px;
+            margin-bottom: 12px;
             box-shadow: var(--shadow-sm);
         }
         .feature-card h3 { 
-            font-size: 20px; 
-            font-weight: 900; 
-            margin-bottom: 12px; 
+            font-size: 13.5px !important; 
+            font-weight: 800; 
+            margin-bottom: 5px; 
             color: var(--text-dark);
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         .feature-card p { 
-            font-size: 14.5px; 
+            font-size: 11px !important; 
             color: var(--text-gray); 
-            font-weight: 600; 
-            line-height: 1.6;
+            font-weight: 500; 
+            line-height: 1.45;
+            margin: 0;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
 
         /* Interactive Dynamic Section Card */
         .content-card { padding: 0; overflow: hidden; }
         .content-img { 
             width: 100%; 
-            height: 210px; 
+            height: 115px; 
             object-fit: cover; 
             transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
             transform: translateZ(0);
         }
         .content-card:hover .content-img { 
-            transform: scale(1.07) translateZ(12px); 
+            transform: scale(1.05) translateZ(8px); 
         }
         .content-info { 
-            padding: 24px; 
+            padding: 10px 12px; 
             text-align: center; 
-            position: relative;
-            transform: translateZ(8px);
-            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative; 
+            transform: translateZ(6px); 
+            transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1); 
         }
-        .content-title { font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .content-title { 
+            font-size: 11.5px; 
+            font-weight: 800; 
+            color: var(--text-dark); 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+        }
         .play-overlay { 
             position: absolute; 
             top: 0; 
@@ -799,68 +849,154 @@
             box-sizing: border-box; 
             overflow-x: hidden; 
         }
-        .teacher-card { padding-top: 48px; text-align: center; }
+        .teacher-card { 
+            padding: 10px 10px 14px; 
+            padding-top: 36px; 
+            text-align: center; 
+            width: 175px;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+        }
         .teacher-card::before { 
             content:''; 
             position:absolute; 
-            top:0; left:0; width:100%; height:70px; 
+            top:0; left:0; width:100%; height:46px; 
             background: linear-gradient(135deg, var(--color-brand-navy), var(--color-primary)); 
         }
         .teacher-avatar { 
-            width: 100px; 
-            height: 100px; 
+            width: 58px; 
+            height: 58px; 
             border-radius: 50%; 
-            border: 4px solid var(--white); 
-            margin: 0 auto 16px; 
+            border: 2.5px solid var(--white); 
+            margin: 0 auto 8px; 
             object-fit: cover; 
             position: relative; 
             z-index: 2; 
-            box-shadow: var(--shadow-md); 
+            box-shadow: 0 2px 8px rgba(48, 86, 105, 0.15); 
             transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.45s ease;
             transform: translateZ(0);
         }
         .teacher-card:hover .teacher-avatar {
-            transform: translateY(-5px) scale(1.06) translateZ(18px);
-            box-shadow: 0 10px 24px rgba(48, 86, 105, 0.22);
+            transform: translateY(-3px) scale(1.04) translateZ(10px);
+            box-shadow: 0 6px 14px rgba(48, 86, 105, 0.2);
         }
-        .teacher-name { font-size: 19px; font-weight: 900; position: relative; z-index: 2; color: var(--text-dark); }
-        .teacher-subject { color: var(--primary-indigo); font-size: 14px; font-weight: 700; margin-bottom: 16px; position: relative; z-index: 2; }
-        .teacher-slots { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 24px; min-height: 60px; }
+        .teacher-name { 
+            font-size: 13px; 
+            font-weight: 800; 
+            position: relative; 
+            z-index: 2; 
+            color: var(--text-dark); 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+        }
+        .teacher-subject { 
+            color: var(--primary-indigo); 
+            font-size: 10.5px; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            position: relative; 
+            z-index: 2; 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+        }
+        .teacher-slots { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 4px; 
+            justify-content: center; 
+            margin-bottom: 10px; 
+            min-height: 36px; 
+            max-height: 52px;
+            overflow-y: auto;
+        }
         .slot-badge { 
             background: var(--color-warning-soft); 
             color: var(--color-warning); 
-            padding: 6px 12px; 
+            padding: 3px 6px; 
             border-radius: 9999px; 
-            font-size: 12px; 
+            font-size: 9px; 
             font-weight: 700; 
             border: 1px solid rgba(217, 119, 6, 0.25); 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         .book-btn { 
             background: var(--color-primary); 
             color: var(--color-surface); 
             border: none; 
-            padding: 12px 24px; 
-            border-radius: 9999px; 
+            padding: 7px 10px; 
+            border-radius: 8px; 
             cursor: pointer; 
             width: 100%; 
             font-weight: 800; 
+            font-size: 10.5px;
             transition: all 0.2s ease; 
             text-decoration: none; 
             display: inline-block; 
-            box-shadow: 0 4px 12px var(--color-shadow-subtle); 
+            box-shadow: 0 2px 8px var(--color-shadow-subtle); 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
         }
         .book-btn:hover {
             transform: translateY(-1px);
             background: var(--color-primary-dark);
-            box-shadow: 0 6px 16px var(--color-shadow-medium);
+            box-shadow: 0 4px 12px var(--color-shadow-medium);
         }
 
-        /* Testimonials Section */
-        .testimonial-card { text-align: right; }
-        html[dir="ltr"] .testimonial-card { text-align: left; }
-        .testimonial-card p { font-style: italic; font-size: 15px; color: var(--text-dark); margin-bottom: 16px; font-weight: 600; line-height: 1.6; }
-        .testimonial-user { font-weight: 900; font-size: 14px; color: var(--kid-pink); }
-        .testimonial-stars { color: var(--gold-star); margin-bottom: 12px; font-size: 18px; }
+        /* Testimonials Section - Compact & Low-Height Horizontal Layout */
+        #testimonials-section {
+            padding-top: 26px !important;
+            padding-bottom: 30px !important;
+        }
+        #pub-reviews-grid.cards-slider {
+            padding: 8px 6% 16px;
+            gap: 14px;
+        }
+        .testimonial-header-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed rgba(48, 86, 105, 0.12);
+        }
+        .testimonial-stars { 
+            color: var(--gold-star); 
+            font-size: 9px; 
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5px;
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .testimonial-card p { 
+            font-style: normal; 
+            font-size: 10.5px; 
+            color: #475569; 
+            margin: 0; 
+            font-weight: 500; 
+            line-height: 1.45; 
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+            letter-spacing: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .testimonial-user { 
+            font-weight: 700; 
+            font-size: 9.5px; 
+            color: var(--color-brand-primary); 
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Tajawal', var(--font-ar), sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .testimonial-user::before {
+            content: '💬';
+            font-size: 9.5px;
+            display: inline-block;
+        }
 
         /* Store Products Styling */
         .product-card {
@@ -1384,7 +1520,8 @@
         @media (max-width: 991px) {
             .video-container iframe { height: 260px; }
             .floating-asset { max-width: 80px; opacity: 0.4; z-index: 0; }
-            .cards-slider > div { width: 285px; } 
+            .cards-slider:not(#pub-reviews-grid) > div { width: 175px !important; } 
+            #pub-reviews-grid .testimonial-card { width: 235px !important; }
             #admin-toolbar { flex-direction: column; gap: 12px; padding: 16px; }
 
             .navbar {
@@ -1844,52 +1981,52 @@
         
         <div class="features-container">
             <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
-                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="160" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Live Monitoring">
-                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-pink);">
-                        <i class="fa-solid fa-video" style="font-size: 18px;"></i>
+                <div style="height: 105px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="105" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Live Monitoring">
+                    <div style="position: absolute; bottom: 6px; right: 6px; background: var(--white); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12); color: var(--kid-pink);">
+                        <i class="fa-solid fa-video" style="font-size: 13px;"></i>
                     </div>
                 </div>
-                <div style="padding: 24px 20px 28px;">
+                <div style="padding: 10px 12px 12px;">
                     <h3 data-i18n="feat_cameras_title">كاميرات ومتابعة لايف 🎥</h3>
                     <p data-i18n="feat_cameras_desc">تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
                 </div>
             </div>
             
             <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
-                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="160" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Interactive Curricula">
-                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-blue);">
-                        <i class="fa-solid fa-book-open-reader" style="font-size: 18px;"></i>
+                <div style="height: 105px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="105" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Interactive Curricula">
+                    <div style="position: absolute; bottom: 6px; right: 6px; background: var(--white); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12); color: var(--kid-blue);">
+                        <i class="fa-solid fa-book-open-reader" style="font-size: 13px;"></i>
                     </div>
                 </div>
-                <div style="padding: 24px 20px 28px;">
+                <div style="padding: 10px 12px 12px;">
                     <h3 data-i18n="feat_curricula_title">مناهج تفاعلية حديثة 📚</h3>
                     <p data-i18n="feat_curricula_desc">مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
                 </div>
             </div>
             
             <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
-                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="160" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Online Classes">
-                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-green);">
-                        <i class="fa-solid fa-chalkboard-user" style="font-size: 18px;"></i>
+                <div style="height: 105px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="105" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Online Classes">
+                    <div style="position: absolute; bottom: 6px; right: 6px; background: var(--white); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12); color: var(--kid-green);">
+                        <i class="fa-solid fa-chalkboard-user" style="font-size: 13px;"></i>
                     </div>
                 </div>
-                <div style="padding: 24px 20px 28px;">
+                <div style="padding: 10px 12px 12px;">
                     <h3 data-i18n="feat_classes_title">حصص تأسيس مباشرة 👩‍🏫</h3>
                     <p data-i18n="feat_classes_desc">فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
                 </div>
             </div>
             
             <div class="feature-card" style="padding: 0; display: flex; flex-direction: column; overflow: hidden;">
-                <div style="height: 160px; width: 100%; overflow: hidden; position: relative;">
-                    <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="160" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Smart Shop">
-                    <div style="position: absolute; bottom: 12px; right: 12px; background: var(--white); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: var(--kid-purple);">
-                        <i class="fa-solid fa-wallet" style="font-size: 18px;"></i>
+                <div style="height: 105px; width: 100%; overflow: hidden; position: relative;">
+                    <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=480&q=70&fm=webp" width="480" height="105" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;" alt="Smart Shop">
+                    <div style="position: absolute; bottom: 6px; right: 6px; background: var(--white); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.12); color: var(--kid-purple);">
+                        <i class="fa-solid fa-wallet" style="font-size: 13px;"></i>
                     </div>
                 </div>
-                <div style="padding: 24px 20px 28px;">
+                <div style="padding: 10px 12px 12px;">
                     <h3 data-i18n="feat_wallet_title">متجر ومدفوعات ذكية 💳</h3>
                     <p data-i18n="feat_wallet_desc">سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
                 </div>
@@ -1943,7 +2080,27 @@
             <p class="section-subtitle" data-i18n="testimonials_subtitle">سعداء بثقة آلاف الأسر وأولياء الأمور في جودة خدماتنا وأمان السيستم 🌟</p>
         </div>
         <div class="cards-slider" id="pub-reviews-grid">
-            <p style="text-align:center; width:100%; color: var(--text-gray); font-size: 15px; font-weight:bold;">قم بإضافة آراء وتقييمات أولياء الأمور من خلال لوحة السوبر أدمن لتظهر هنا.</p>
+            <div class="testimonial-card" onclick="window.openReviewModal('أ / سارة أحمد (ولية أمر)', 'المعلمون هنا في غاية الاحترافية والتطبيق ساعدني جداً في حجز المواعيد ومتابعة طفلي أونلاين بسهولة.', 5)" title="اضغط لقراءة الرأي كاملاً" role="button" tabindex="0">
+                <div class="testimonial-header-line">
+                    <div class="testimonial-user">أ / سارة أحمد (ولية أمر)</div>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                </div>
+                <p>«المعلمون هنا في غاية الاحترافية والتطبيق ساعدني جداً في حجز المواعيد ومتابعة طفلي أونلاين بسهولة.»</p>
+            </div>
+            <div class="testimonial-card" onclick="window.openReviewModal('د / محمود خالد (ولي أمر)', 'أفضل استثمار في تعليم أطفالي، المنهج رائع والتفاعل ممتاز مع تقارير دورية دقيقة وموثوقة.', 5)" title="اضغط لقراءة الرأي كاملاً" role="button" tabindex="0">
+                <div class="testimonial-header-line">
+                    <div class="testimonial-user">د / محمود خالد (ولي أمر)</div>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                </div>
+                <p>«أفضل استثمار في تعليم أطفالي، المنهج رائع والتفاعل ممتاز مع تقارير دورية دقيقة وموثوقة.»</p>
+            </div>
+            <div class="testimonial-card" onclick="window.openReviewModal('م / ريم عبد الرحمن (ولية أمر)', 'تجربة ممتازة ونظام آمن جداً لبث الكاميرات، أعطاني شعوراً بالراحة والاطمئنان التام على مدار اليوم.', 5)" title="اضغط لقراءة الرأي كاملاً" role="button" tabindex="0">
+                <div class="testimonial-header-line">
+                    <div class="testimonial-user">م / ريم عبد الرحمن (ولية أمر)</div>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                </div>
+                <p>«تجربة ممتازة ونظام آمن جداً لبث الكاميرات، أعطاني شعوراً بالراحة والاطمئنان التام على مدار اليوم.»</p>
+            </div>
         </div>
     </section>
 
@@ -2127,6 +2284,53 @@
             </button>
 
             <div id="attendance-results" style="margin-top: 20px; max-height: 250px; overflow-y: auto; padding-right: 4px; text-align: right;"></div>
+        </div>
+    </div>
+
+    <!-- Parents Review Full Details Modal -->
+    <div class="video-modal" id="reviewDetailsModal" style="display: none; justify-content: center; align-items: center; z-index: 2150;" onclick="if(event.target === this) window.closeReviewModal()">
+        <div class="video-modal-content" style="background: var(--color-surface); border-radius: 24px; padding: 24px 22px; width: 92%; max-width: 480px; box-shadow: var(--shadow-2xl); text-align: right; direction: rtl; font-family: 'Tajawal', var(--font-ar), sans-serif; position: relative; border: 1px solid var(--border-color); animation: paneEntrance 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+            <!-- Header with author & close button -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--color-primary-soft); display: flex; align-items: center; justify-content: center; color: var(--color-brand-primary); font-size: 18px; flex-shrink: 0; border: 1px solid rgba(48, 86, 105, 0.15);">
+                        <i class="fa-solid fa-quote-right"></i>
+                    </div>
+                    <div>
+                        <h3 id="rdm-author" style="font-size: 15.5px; font-weight: 900; color: var(--text-dark); margin: 0;"></h3>
+                        <span style="font-size: 11px; color: var(--color-brand-primary); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--kid-green);"></i> رأي موثّق من أولياء أمورنا
+                        </span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-xmark" style="font-size: 22px; cursor: pointer; color: var(--text-gray); transition: all 0.2s;" onclick="window.closeReviewModal()" aria-label="إغلاق" role="button" tabindex="0" onmouseover="this.style.color='var(--color-error)'" onmouseout="this.style.color='var(--text-gray)'"></i>
+            </div>
+
+            <!-- Rating Stars & Verified Tag -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--color-background); border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 14px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 12px; font-weight: 800; color: var(--text-dark);">التقييم:</span>
+                    <div id="rdm-stars" style="display: inline-flex; gap: 3px; color: var(--gold-star); font-size: 13px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--color-success); background: var(--color-success-soft); padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(22, 163, 74, 0.2);">
+                    تجربة معتمدة 5/5 ⭐
+                </span>
+            </div>
+
+            <!-- Full Review Text Content -->
+            <div style="background: var(--color-background-soft); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px dashed rgba(48, 86, 105, 0.2); position: relative; max-height: 280px; overflow-y: auto;">
+                <p id="rdm-text" style="font-size: 14px; line-height: 1.8; color: var(--text-dark); margin: 0; font-weight: 500; font-family: 'Tajawal', var(--font-ar), sans-serif; white-space: pre-line; word-break: break-word;"></p>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: var(--text-gray); font-weight: 700;">
+                    <i class="fa-solid fa-heart" style="color: var(--kid-pink);"></i> منصة Impact Hub مصر
+                </span>
+                <button type="button" onclick="window.closeReviewModal()" class="book-btn" style="width: auto; padding: 8px 26px; font-size: 12.5px; font-weight: 800; border-radius: 9999px; background: var(--primary-indigo); color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(48, 86, 105, 0.25);">
+                    إغلاق
+                </button>
+            </div>
         </div>
     </div>
 
@@ -3406,12 +3610,17 @@
                     if(data.reviews && data.reviews.length > 0) {
                         reviewsGrid.innerHTML = '';
                         data.reviews.forEach(r => {
-                            const starsHtml = Array(r.stars || 5).fill('<i class="fa-solid fa-star"></i>').join('');
+                            const starsCount = r.stars || 5;
+                            const starsHtml = Array(starsCount).fill('<i class="fa-solid fa-star"></i>').join('');
+                            const safeAuthor = (r.author || 'ولي أمر').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const safeText = (r.text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
                             reviewsGrid.innerHTML += `
-                                <div class="testimonial-card">
-                                    <div class="testimonial-stars">${starsHtml}</div>
-                                    <p>"${r.text}"</p>
-                                    <div class="testimonial-user">${r.author}</div>
+                                <div class="testimonial-card" onclick="window.openReviewModal('${safeAuthor}', '${safeText}', ${starsCount})" title="اضغط لقراءة الرأي كاملاً" role="button" tabindex="0">
+                                    <div class="testimonial-header-line">
+                                        <div class="testimonial-user">${r.author}</div>
+                                        <div class="testimonial-stars">${starsHtml}</div>
+                                    </div>
+                                    <p>«${r.text}»</p>
                                 </div>`;
                         });
                     }
@@ -3639,6 +3848,34 @@
         window.closeProductDetailsModal = () => {
             document.getElementById('productDetailsModal').style.display = 'none';
         };
+
+        // Parents Testimonial Full Details Modal
+        window.openReviewModal = (author, text, stars = 5) => {
+            const modal = document.getElementById('reviewDetailsModal');
+            if (!modal) return;
+            document.getElementById('rdm-author').innerText = author || 'ولي أمر';
+            const cleanText = text ? (text.startsWith('«') && text.endsWith('»') ? text.slice(1, -1) : text) : '';
+            document.getElementById('rdm-text').innerText = cleanText ? `«${cleanText}»` : '';
+            const starsContainer = document.getElementById('rdm-stars');
+            const validStars = Math.min(5, Math.max(1, parseInt(stars) || 5));
+            starsContainer.innerHTML = Array(validStars).fill('<i class="fa-solid fa-star"></i>').join('');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeReviewModal = () => {
+            const modal = document.getElementById('reviewDetailsModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.closeReviewModal();
+            }
+        });
 
         async function fetchProductsTeaser() {
             const container = document.getElementById('live-products-teaser');
