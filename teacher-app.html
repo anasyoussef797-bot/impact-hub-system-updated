@@ -2888,7 +2888,7 @@
                 teacherGlobalPostsList = [];
                 snap.forEach(docData => {
                     const data = docData.data();
-                    if (data.targetApp === 'teachers' || data.targetApp === 'all') {
+                    if (!data.targetApp || data.targetApp === 'teachers' || data.targetApp === 'all') {
                         teacherGlobalPostsList.push({ id: docData.id, ...data });
                     }
                 });

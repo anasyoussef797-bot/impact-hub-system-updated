@@ -1955,91 +1955,157 @@
             window.fetchTimelineFeed();
         };
 
-        window.fetchTimelineFeed = () => {
+        let managerNurseryPosts = [];
+        let managerGlobalPosts = [];
+        let unsubNurseryPosts = null;
+        let unsubGlobalPosts = null;
+
+        window.renderTimelineCombinedFeed = () => {
             const container = document.getElementById('timeline-feed');
-            const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
-            
+            if (!container) return;
+
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = managerTranslations[currentLang] || managerTranslations.ar;
 
-            onSnapshot(q, (snap) => {
-                container.innerHTML = '';
-                if(snap.empty) { 
-                    container.innerHTML = `<p style="text-align:center; color:var(--text-gray); font-size:12px; font-weight:800;">${dict.no_posts}</p>`; 
-                    return; 
+            // دمج المنشورات مع منع التكرار وترتيبها بالأحدث أولاً
+            const postMap = new Map();
+            managerNurseryPosts.forEach(p => postMap.set(p.id, { ...p, isGlobal: false }));
+            managerGlobalPosts.forEach(p => postMap.set(p.id, { ...p, isGlobal: true }));
+
+            const combined = Array.from(postMap.values());
+            combined.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            container.innerHTML = '';
+            if (combined.length === 0) { 
+                container.innerHTML = `<p style="text-align:center; color:var(--text-gray); font-size:12px; font-weight:800;">${dict.no_posts}</p>`; 
+                return; 
+            }
+
+            combined.forEach(post => {
+                const postId = post.id;
+                const isGlobal = !!post.isGlobal || post.targetApp !== undefined;
+                
+                const likesList = post.likes || [];
+                const commentsList = post.comments || [];
+                const isLiked = likesList.includes(myManagerId);
+
+                let ytIframe = '';
+                if(post.youtubeUrl) {
+                    const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
+                    ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
                 }
 
-                let posts = [];
-                snap.forEach(docData => {
-                    posts.push({ id: docData.id, ...docData.data() });
-                });
-                posts.sort((a, b) => b.timestamp - a.timestamp);
-
-                posts.forEach(post => {
-                    const postId = post.id;
-                    
-                    const likesList = post.likes || [];
-                    const commentsList = post.comments || [];
-                    const isLiked = likesList.includes(myManagerId);
-
-                    let ytIframe = '';
-                    if(post.youtubeUrl) {
-                        const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
-                        ytIframe = `<div class="feed-video"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:300px; border-radius:12px; border:none; margin-top:10px;" allowfullscreen></iframe></div>`;
-                    }
-
-                    let commentsHtml = '';
-                    commentsList.forEach(c => {
-                        commentsHtml += `
-                            <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
-                                <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
-                            </div>
-                        `;
-                    });
-
-                    // لمديرة الحضانة كامل صلاحية الإدارة (تعديل وحذف) لجميع منشورات حضانتها
-                    container.innerHTML += `
-                        <div class="feed-post" id="post-${postId}" style="background:var(--white); padding:20px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
-                            <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>
-                                    <div><strong style="font-weight:900;">${post.authorName || 'عضو المنصة'}</strong></div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button onclick="window.editPost('${postId}', '${post.title || ''}', '${post.body || ''}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
-                                    </button>
-                                    <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
-                                        <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <h3 style="font-weight:900; color:var(--text-dark); font-size:16px; margin-bottom:8px;">${post.title}</h3>
-                            <p class="feed-body" style="color:var(--text-dark); line-height:1.6; margin-bottom:12px; font-size:14px;">${post.body}</p>
-                            ${post.image ? `<div class="feed-media"><img src="${post.image}" style="max-width:100%; border-radius:12px; margin-top:10px;"></div>` : ''}
-                            ${ytIframe}
-                            
-                            <div class="post-actions" style="display:flex; gap:15px; margin-top:15px; border-top:1px solid var(--border-color); padding-top:10px;">
-                                <button class="action-btn" onclick="window.likePost('${postId}', ${isLiked})" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color: ${isLiked ? 'var(--primary-maroon)' : 'var(--text-gray)'};">
-                                    <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${likesList.length})
-                                </button>
-                                <button class="action-btn" onclick="document.getElementById('comment-input-${postId}').focus()" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color:var(--text-gray);">
-                                    <i class="fa-solid fa-comment"></i> ${dict.comments_title} (${commentsList.length})
-                                </button>
-                            </div>
-
-                            <div id="comments-box-${postId}" class="comments-section" style="margin-top:15px; background:rgba(0,0,0,0.02); padding:15px; border-radius:12px;">
-                                <div class="comments-list" style="margin-bottom:10px;">
-                                    ${commentsHtml || `<p style="color:var(--text-gray); font-size:12px; text-align:center; font-weight:800;">${dict.no_comments}</p>`}
-                                </div>
-                                <div style="display:flex; gap:10px;">
-                                    <input type="text" id="comment-input-${postId}" class="form-control" placeholder="${dict.write_comment_placeholder}" style="margin-bottom:0; padding:8px; flex:1;">
-                                    <button class="btn-primary" style="padding:8px 20px; width:auto; margin:0;" onclick="window.addCommentToPost('${postId}')">${dict.send_comment_btn}</button>
-                                </div>
-                            </div>
+                let commentsHtml = '';
+                commentsList.forEach(c => {
+                    commentsHtml += `
+                        <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
+                            <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
                         </div>
                     `;
                 });
+
+                const globalBadge = isGlobal ? `
+                    <span style="background: rgba(0, 47, 108, 0.08); color: var(--color-brand-navy, #002f6c); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; margin-right: 8px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(0, 47, 108, 0.2);">
+                        <i class="fa-solid fa-bullhorn" style="color: var(--primary-maroon);"></i>
+                        تعميم رسمي من الإدارة العليا
+                    </span>
+                ` : '';
+
+                const postCardStyle = isGlobal 
+                    ? `background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:22px; border-radius:16px; margin-bottom:20px; border: 1.5px solid rgba(0, 47, 108, 0.25); box-shadow: 0 4px 16px rgba(0, 47, 108, 0.06); position: relative;`
+                    : `background:var(--white); padding:20px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);`;
+
+                // لمديرة الحضانة صلاحية تعديل وحذف منشورات حضانتها المحلية فقط، بينما التعاميم المركزية مخصصة للعرض والتفاعل
+                const actionButtons = !isGlobal ? `
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="window.editPost('${postId}', '${(post.title || '').replace(/'/g, "\\'")}', '${(post.body || '').replace(/'/g, "\\'")}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                            <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
+                        </button>
+                        <button onclick="window.deletePost('${postId}')" class="btn-primary" style="margin: 0; padding: 6px 10px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                            <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
+                        </button>
+                    </div>
+                ` : '';
+
+                const postMedia = post.image || post.media;
+
+                container.innerHTML += `
+                    <div class="feed-post" id="post-${postId}" style="${postCardStyle}">
+                        <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                ${isGlobal 
+                                    ? `<i class="fa-solid fa-shield-halved" style="font-size:28px; color:var(--primary-maroon);"></i>`
+                                    : `<i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>`
+                                }
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                        <strong style="font-weight:900; color: ${isGlobal ? 'var(--primary-maroon)' : 'inherit'};">${post.authorName || (isGlobal ? 'الإدارة العليا (Impact Hub)' : 'عضو المنصة')}</strong>
+                                        ${globalBadge}
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-gray); margin-top: 2px;">
+                                        ${post.timestamp ? new Date(post.timestamp).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            ${actionButtons}
+                        </div>
+                        <h3 style="font-weight:900; color:var(--text-dark); font-size:16px; margin-bottom:8px;">${post.title || ''}</h3>
+                        <p class="feed-body" style="color:var(--text-dark); line-height:1.6; margin-bottom:12px; font-size:14px; white-space: pre-wrap;">${post.body || ''}</p>
+                        ${postMedia ? `<div class="feed-media"><img src="${postMedia}" style="max-width:100%; border-radius:12px; margin-top:10px;"></div>` : ''}
+                        ${ytIframe}
+                        
+                        <div class="post-actions" style="display:flex; gap:15px; margin-top:15px; border-top:1px solid var(--border-color); padding-top:10px;">
+                            <button class="action-btn" onclick="window.likePost('${postId}', ${isLiked}, ${isGlobal})" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color: ${isLiked ? 'var(--primary-maroon)' : 'var(--text-gray)'};">
+                                <i class="fa-solid fa-thumbs-up"></i> ${dict.like_btn} (${likesList.length})
+                            </button>
+                            <button class="action-btn" onclick="document.getElementById('comment-input-${postId}').focus()" style="background:none; border:none; cursor:pointer; font-weight:800; font-size:13px; color:var(--text-gray);">
+                                <i class="fa-solid fa-comment"></i> ${dict.comments_title} (${commentsList.length})
+                            </button>
+                        </div>
+
+                        <div id="comments-box-${postId}" class="comments-section" style="margin-top:15px; background:rgba(0,0,0,0.02); padding:15px; border-radius:12px;">
+                            <div class="comments-list" style="margin-bottom:10px;">
+                                ${commentsHtml || `<p style="color:var(--text-gray); font-size:12px; text-align:center; font-weight:800;">${dict.no_comments}</p>`}
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="comment-input-${postId}" class="form-control" placeholder="${dict.write_comment_placeholder}" style="margin-bottom:0; padding:8px; flex:1;">
+                                <button class="btn-primary" style="padding:8px 20px; width:auto; margin:0;" onclick="window.addCommentToPost('${postId}', ${isGlobal})">${dict.send_comment_btn}</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        window.fetchTimelineFeed = () => {
+            if (unsubNurseryPosts) unsubNurseryPosts();
+            if (unsubGlobalPosts) unsubGlobalPosts();
+
+            const qNursery = query(collection(db, "nursery_posts"), where("nurseryId", "==", myNurseryId));
+            const qGlobal = query(collection(db, "global_posts"));
+
+            unsubNurseryPosts = onSnapshot(qNursery, (snap) => {
+                managerNurseryPosts = [];
+                snap.forEach(docData => {
+                    managerNurseryPosts.push({ id: docData.id, ...docData.data(), isGlobal: false });
+                });
+                window.renderTimelineCombinedFeed();
+            }, (err) => {
+                console.error("Error fetching nursery posts:", err);
+            });
+
+            unsubGlobalPosts = onSnapshot(qGlobal, (snap) => {
+                managerGlobalPosts = [];
+                snap.forEach(docData => {
+                    const data = docData.data();
+                    // تضمين التعميم إذا كان مستهدفاً لإدارات الحضانات أو كافة الشبكة أو غير محدد
+                    if (!data.targetApp || data.targetApp === 'all' || data.targetApp === 'nurseries') {
+                        managerGlobalPosts.push({ id: docData.id, ...data, isGlobal: true });
+                    }
+                });
+                window.renderTimelineCombinedFeed();
+            }, (err) => {
+                console.error("Error fetching global circulars:", err);
             });
         };
 
@@ -2068,8 +2134,9 @@
             }
         };
 
-        window.likePost = async (postId, isLiked) => {
-            const postRef = doc(db, "nursery_posts", postId);
+        window.likePost = async (postId, isLiked, isGlobal = false) => {
+            const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+            const postRef = doc(db, targetCol, postId);
             if(isLiked) {
                 await updateDoc(postRef, { likes: arrayRemove(myManagerId) });
             } else {
@@ -2077,12 +2144,13 @@
             }
         };
 
-        window.addCommentToPost = async (postId) => {
+        window.addCommentToPost = async (postId, isGlobal = false) => {
             const input = document.getElementById(`comment-input-${postId}`);
             const commentText = input.value.trim();
             if(!commentText) return;
 
-            const postRef = doc(db, "nursery_posts", postId);
+            const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+            const postRef = doc(db, targetCol, postId);
             await updateDoc(postRef, {
                 comments: arrayUnion({
                     authorId: myManagerId,
@@ -2444,6 +2512,9 @@
 
             // الاستماع اللحظي لاجتماعات الشبكة المركزية
             window.listenToNetworkMeetingNotification();
+
+            // تحميل وتفعيل الاستماع اللحظي لحائط الأنشطة والتعميمات
+            window.fetchTimelineFeed();
         };
 
         // ================== Network-wide Staff Meeting Real-time Listener ==================

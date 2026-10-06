@@ -1649,7 +1649,7 @@
                 parentGlobalPostsList = [];
                 snap.forEach(docData => {
                     const data = docData.data();
-                    if (data.targetApp === 'parents' || data.targetApp === 'all') {
+                    if (!data.targetApp || data.targetApp === 'parents' || data.targetApp === 'all') {
                         parentGlobalPostsList.push({ id: docData.id, ...data });
                     }
                 });

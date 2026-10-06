@@ -858,8 +858,10 @@
                         <div class="form-group">
                             <label data-i18n="global_target_lbl">الجهة المستهدفة بالتعميم</label>
                             <select id="global-target-select" class="form-control" style="width: auto;">
-                                <option value="parents" data-i18n="opt_parents_all">جميع أولياء الأمور (كل الحضانات)</option>
-                                <option value="teachers" data-i18n="opt_teachers_all">جميع المدرسين (كل الحضانات)</option>
+                                <option value="all" data-i18n="opt_all_network">الجميع (كافة الحضانات، أولياء الأمور، والمعلمين) 🌐</option>
+                                <option value="nurseries" data-i18n="opt_nurseries_all">حائط إدارات الحضانات فقط 🏫</option>
+                                <option value="parents" data-i18n="opt_parents_all">جميع أولياء الأمور (كل الحضانات) 👨‍👩‍👦</option>
+                                <option value="teachers" data-i18n="opt_teachers_all">جميع المدرسين (كل الحضانات) 👩‍🏫</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1559,8 +1561,10 @@
                 sub_tab_archive: "أرشيف التعميمات",
                 sub_tab_wall: "حائط شبكة الحضانات المُجمع",
                 global_target_lbl: "الجهة المستهدفة بالتعميم",
-                opt_parents_all: "جميع أولياء الأمور (كل الحضانات)",
-                opt_teachers_all: "جميع المدرسين (كل الحضانات)",
+                opt_all_network: "الجميع (كافة الحضانات، أولياء الأمور، والمعلمين) 🌐",
+                opt_nurseries_all: "حائط إدارات الحضانات فقط 🏫",
+                opt_parents_all: "جميع أولياء الأمور (كل الحضانات) 👨‍👩‍👦",
+                opt_teachers_all: "جميع المدرسين (كل الحضانات) 👩‍🏫",
                 global_title_lbl: "العنوان",
                 global_body_lbl: "تفاصيل الرسالة",
                 global_img_lbl: "إرفاق صورة",
@@ -1700,6 +1704,8 @@
                 sub_tab_archive: "Broadcast Archive",
                 sub_tab_wall: "Combined Network Feed",
                 global_target_lbl: "Target Scope for Broadcast",
+                opt_all_network: "Everyone (All Nurseries, Parents & Teachers) 🌐",
+                opt_nurseries_all: "Nursery Administrations Wall Only 🏫",
                 opt_parents_all: "All Parents (All nurseries)",
                 opt_teachers_all: "All Teachers (All nurseries)",
                 global_title_lbl: "Broadcast Title",
@@ -1841,6 +1847,8 @@
                 sub_tab_archive: "Archives des diffusions",
                 sub_tab_wall: "Fil réseau combiné",
                 global_target_lbl: "Cible de la diffusion",
+                opt_all_network: "Tous (Toutes les Crèches, Parents & Enseignants) 🌐",
+                opt_nurseries_all: "Mur des Administrations des Crèches Uniquement 🏫",
                 opt_parents_all: "Tous les parents (Toutes les crèches)",
                 opt_teachers_all: "Tous les enseignants (Toutes les crèches)",
                 global_title_lbl: "Titre de la diffusion",
@@ -1982,6 +1990,8 @@
                 sub_tab_archive: "Rundschreiben-Archiv",
                 sub_tab_wall: "Kombinierter Netzwerkfeed",
                 global_target_lbl: "Ziel des Rundschreibens",
+                opt_all_network: "Alle (Alle Kitas, Eltern & Lehrer) 🌐",
+                opt_nurseries_all: "Nur Kita-Verwaltungswand 🏫",
                 opt_parents_all: "Alle Eltern (Alle Kitas)",
                 opt_teachers_all: "Alle Lehrer (Alle Kitas)",
                 global_title_lbl: "Rundschreibentitel",
@@ -2476,16 +2486,32 @@
             const q = query(collection(db, "nursery_posts"), where("nurseryId", "==", nurseryId));
             const snap = await getDocs(q);
             container.innerHTML = '';
-            if(snap.empty) { container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">لا يوجد منشورات لهذه الحضانة حالياً.</p>'; return; }
             
             let posts = [];
             snap.forEach(docData => {
-                posts.push({ id: docData.id, ...docData.data() });
+                posts.push({ id: docData.id, ...docData.data(), isGlobal: false });
             });
-            posts.sort((a, b) => b.timestamp - a.timestamp);
+
+            // تضمين التعميمات المركزية العامة الموجهة للحضانات
+            try {
+                const snapGlobal = await getDocs(collection(db, "global_posts"));
+                snapGlobal.forEach(docData => {
+                    const data = docData.data();
+                    if (!data.targetApp || data.targetApp === 'all' || data.targetApp === 'nurseries') {
+                        posts.push({ id: docData.id, ...data, isGlobal: true });
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching global circulars for specific nursery feed:", err);
+            }
+
+            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            if(posts.length === 0) { container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">لا يوجد منشورات لهذه الحضانة حالياً.</p>'; return; }
 
             posts.forEach(post => {
                 const postId = post.id;
+                const isGlobal = !!post.isGlobal;
                 
                 let ytIframe = '';
                 if(post.youtubeUrl) {
@@ -2493,22 +2519,29 @@
                     ytIframe = `<div class="feed-video" style="margin-top:10px;"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:250px; border-radius:12px; border:none;" allowfullscreen></iframe></div>`;
                 }
 
+                const badgeHtml = isGlobal 
+                    ? `<span style="background:rgba(0,47,108,0.1); color:var(--color-brand-navy); padding:2px 8px; border-radius:10px; font-size:10px; font-weight:900; margin-right:6px;"><i class="fa-solid fa-bullhorn"></i> تعميم مركزي</span>` 
+                    : '';
+
                 container.innerHTML += `
-                    <div class="feed-post" style="position: relative; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; margin-bottom: 15px;">
+                    <div class="feed-post" style="position: relative; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; margin-bottom: 15px; ${isGlobal ? 'background: rgba(0,47,108,0.02); padding: 12px; border-radius: 12px; border: 1px solid rgba(0,47,108,0.15);' : ''}">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color:var(--primary-maroon);">${post.authorName || 'إدارة الحضانة'}</strong>
+                            <div style="display: flex; align-items: center;">
+                                <strong style="color:var(--primary-maroon);">${post.authorName || (isGlobal ? 'الإدارة العليا (Impact Hub)' : 'إدارة الحضانة')}</strong>
+                                ${badgeHtml}
+                            </div>
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editNurseryPost('${postId}', '${post.title || ''}', '${post.body || ''}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                <button onclick="window.editNurseryPost('${postId}', '${(post.title || '').replace(/'/g, "\\'")}', '${(post.body || '').replace(/'/g, "\\'")}', () => window.fetchSpecificNurseryFeed('${nurseryId}'), ${isGlobal})" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                 </button>
-                                <button onclick="window.deleteNurseryPost('${postId}', () => window.fetchSpecificNurseryFeed('${nurseryId}'))" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                <button onclick="window.deleteNurseryPost('${postId}', () => window.fetchSpecificNurseryFeed('${nurseryId}'), ${isGlobal})" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                 </button>
                             </div>
                         </div>
-                        <h4 style="margin-top:5px; font-weight:800;">${post.title}</h4>
-                        <p style="margin-top:5px; font-size:13px; color:var(--text-dark);">${post.body}</p>
-                        ${post.image ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image}" style="max-width:100%; border-radius:12px;"></div>` : ''}
+                        <h4 style="margin-top:5px; font-weight:800;">${post.title || ''}</h4>
+                        <p style="margin-top:5px; font-size:13px; color:var(--text-dark); white-space: pre-wrap;">${post.body || ''}</p>
+                        ${(post.image || post.media) ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px;"></div>` : ''}
                         ${ytIframe}
                     </div>
                 `;
@@ -2556,23 +2589,35 @@
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
             const targetApp = document.getElementById('global-target-select').value;
-            const title = document.getElementById('global-title').value;
-            const body = document.getElementById('global-body').value;
+            const title = (document.getElementById('global-title').value || '').trim();
+            const body = (document.getElementById('global-body').value || '').trim();
             const fileInput = document.getElementById('global-file').files[0];
-            const youtubeUrl = document.getElementById('global-youtube').value || "";
+            const youtubeUrl = (document.getElementById('global-youtube').value || '').trim();
 
             if(!title || !body) { alert(dict.alert_global_fill); return; }
             const mediaBase64 = fileInput ? await compressImage(fileInput, 800, 800) : "";
 
             await addDoc(collection(db, "global_posts"), {
                 authorName: "الإدارة العليا (Impact Hub)",
-                targetApp, title, body, media: mediaBase64, youtubeUrl, timestamp: new Date().getTime()
+                targetApp, 
+                title, 
+                body, 
+                media: mediaBase64, 
+                image: mediaBase64,
+                youtubeUrl, 
+                timestamp: new Date().getTime(),
+                likes: [],
+                comments: [],
+                isGlobal: true
             });
             alert(dict.alert_global_success);
             document.getElementById('global-title').value = ''; 
             document.getElementById('global-body').value = ''; 
             document.getElementById('global-file').value = '';
             document.getElementById('global-youtube').value = '';
+
+            if (window.fetchGlobalPostsArchive) window.fetchGlobalPostsArchive();
+            if (window.fetchGlobalNetworkFeed) window.fetchGlobalNetworkFeed();
         };
 
         window.fetchGlobalPostsArchive = async () => {
@@ -2581,9 +2626,13 @@
             tbody.innerHTML = '';
             snap.forEach(docData => {
                 const item = docData.data();
+                let targetBadge = '🌐 الجميع (كافة الشبكة)';
+                if(item.targetApp === 'nurseries') targetBadge = '🏫 إدارات الحضانات';
+                else if(item.targetApp === 'parents') targetBadge = '👤 أولياء الأمور';
+                else if(item.targetApp === 'teachers') targetBadge = '👨‍🏫 المدرسين';
                 tbody.innerHTML += `
                     <tr>
-                        <td>${item.targetApp === 'parents' ? '👤 أولياء الأمور' : '👨‍🏫 المدرسين'}</td>
+                        <td>${targetBadge}</td>
                         <td><strong>${item.title}</strong></td>
                         <td><button class="btn-danger" style="padding:4px 8px;" onclick="window.deleteGlobalPost('${docData.id}')"><i class="fa-solid fa-trash"></i> حذف</button></td>
                     </tr>
@@ -2598,10 +2647,11 @@
             if(confirm(dict.alert_delete_post_warn)) { 
                 await deleteDoc(doc(db, "global_posts", id)); 
                 window.fetchGlobalPostsArchive(); 
+                if (window.fetchGlobalNetworkFeed) window.fetchGlobalNetworkFeed();
             }
         };
 
-        window.editNurseryPost = async (postId, currentTitle, currentBody, callback) => {
+        window.editNurseryPost = async (postId, currentTitle, currentBody, callback, isGlobal = false) => {
             let newTitle = currentTitle;
             if (currentTitle && currentTitle !== 'undefined' && currentTitle !== '') {
                 newTitle = prompt('تعديل عنوان المنشور:', currentTitle);
@@ -2610,7 +2660,8 @@
             const newBody = prompt('تعديل محتوى المنشور:', currentBody);
             if (newBody === null) return;
 
-            const postRef = doc(db, "nursery_posts", postId);
+            const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+            const postRef = doc(db, targetCol, postId);
             await updateDoc(postRef, {
                 title: newTitle || "",
                 body: newBody
@@ -2618,9 +2669,10 @@
             if (callback) callback();
         };
 
-        window.deleteNurseryPost = async (postId, callback) => {
+        window.deleteNurseryPost = async (postId, callback, isGlobal = false) => {
             if (confirm('هل أنت متأكد من حذف هذا المنشور نهائياً من الشبكة بالكامل بصفتك مسؤول رئيسي؟')) {
-                await deleteDoc(doc(db, "nursery_posts", postId));
+                const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+                await deleteDoc(doc(db, targetCol, postId));
                 if (callback) callback();
             }
         };
@@ -2632,15 +2684,37 @@
                 q = query(collection(db, "nursery_posts"), where("nurseryId", "==", filterValue));
             }
             const snap = await getDocs(q);
-            let posts = []; snap.forEach(doc => posts.push({id: doc.id, ...doc.data()})); 
-            posts.sort((a, b) => b.timestamp - a.timestamp);
+            let posts = []; 
+            snap.forEach(doc => posts.push({id: doc.id, ...doc.data(), isGlobal: false})); 
+
+            // دمج التعميمات المركزية العامة
+            try {
+                const snapGlobal = await getDocs(collection(db, "global_posts"));
+                snapGlobal.forEach(doc => {
+                    const data = doc.data();
+                    if(filterValue === 'all' || !data.targetApp || data.targetApp === 'all' || data.targetApp === 'nurseries') {
+                        posts.push({id: doc.id, ...data, isGlobal: true});
+                    }
+                });
+            } catch (err) {
+                console.error("Error fetching global circulars:", err);
+            }
+
+            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             
             const container = document.getElementById('network-feed-container');
             container.innerHTML = '';
             if(posts.length === 0) { container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">لا يوجد منشورات متوافقة مع التصفية الحالية.</p>'; return; }
 
             posts.forEach(post => {
-                let nurseryBadge = post.nurseryName ? `<span class="feed-badge"><i class="fa-solid fa-school"></i> حضانة: ${post.nurseryName}</span>` : '';
+                const isGlobal = !!post.isGlobal;
+                let nurseryBadge = '';
+                if (isGlobal) {
+                    const targetName = post.targetApp === 'nurseries' ? 'إدارات الحضانات' : (post.targetApp === 'parents' ? 'أولياء الأمور' : (post.targetApp === 'teachers' ? 'المعلمين' : 'كافة أطراف الشبكة'));
+                    nurseryBadge = `<span class="feed-badge" style="background: rgba(0,47,108,0.1); color: var(--color-brand-navy); border: 1px solid rgba(0,47,108,0.2); font-weight: 900;"><i class="fa-solid fa-bullhorn"></i> تعميم مركزي (${targetName})</span>`;
+                } else if (post.nurseryName) {
+                    nurseryBadge = `<span class="feed-badge"><i class="fa-solid fa-school"></i> حضانة: ${post.nurseryName}</span>`;
+                }
                 
                 let ytIframe = '';
                 if(post.youtubeUrl) {
@@ -2662,30 +2736,32 @@
                     });
                 }
 
+                const postCardBg = isGlobal ? `background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); border: 1.5px solid rgba(0,47,108,0.25);` : `background:var(--white); border:1px solid var(--border-color);`;
+
                 container.innerHTML += `
-                    <div class="feed-post" style="margin-bottom:20px; background:var(--white); padding:20px; border-radius:16px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+                    <div class="feed-post" style="margin-bottom:20px; ${postCardBg} padding:20px; border-radius:16px; box-shadow:var(--shadow-sm);">
                         <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <div class="feed-author"><i class="fa-solid fa-circle-user" style="font-size:24px;"></i> ${post.authorName || 'عضو الحضانة'}</div>
+                                <div class="feed-author"><i class="${isGlobal ? 'fa-solid fa-shield-halved' : 'fa-solid fa-circle-user'}" style="font-size:24px; color:${isGlobal ? 'var(--primary-maroon)' : 'inherit'};"></i> ${post.authorName || 'عضو الحضانة'}</div>
                                 ${nurseryBadge}
                             </div>
                             <div style="display: flex; gap: 8px;">
-                                <button onclick="window.editNurseryPost('${post.id}', '${post.title || ''}', '${post.body || ''}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
+                                <button onclick="window.editNurseryPost('${post.id}', '${(post.title || '').replace(/'/g, "\\'")}', '${(post.body || '').replace(/'/g, "\\'")}', window.fetchGlobalNetworkFeed, ${isGlobal})" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-border); color: var(--color-text-primary); width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-pen" style="font-size: 11px; color: var(--color-text-secondary);"></i>
                                 </button>
-                                <button onclick="window.deleteNurseryPost('${post.id}', window.fetchGlobalNetworkFeed)" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
+                                <button onclick="window.deleteNurseryPost('${post.id}', window.fetchGlobalNetworkFeed, ${isGlobal})" class="btn-primary" style="margin: 0; padding: 4px 8px; font-size: 11px; background: var(--color-error-soft); color: var(--color-error); width: auto; box-shadow: none; border-radius: 8px;">
                                     <i class="fa-solid fa-trash" style="font-size: 11px; color: var(--color-error);"></i>
                                 </button>
                             </div>
                         </div>
                         <h3 style="margin-bottom:10px;">${post.title || ''}</h3>
-                        <div class="feed-body" style="font-size:14px; line-height:1.5; color:var(--text-dark);">${post.body}</div>
-                        ${post.image ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image}" style="max-width:100%; border-radius:12px;"></div>` : ''}
+                        <div class="feed-body" style="font-size:14px; line-height:1.5; color:var(--text-dark); white-space: pre-wrap;">${post.body || ''}</div>
+                        ${(post.image || post.media) ? `<div class="feed-media" style="margin-top:10px;"><img src="${post.image || post.media}" style="max-width:100%; border-radius:12px;"></div>` : ''}
                         ${ytIframe}
                         
                         <!-- Actions & Likes -->
                         <div class="post-actions" style="margin-top: 15px; display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 12px;">
-                            <button class="action-btn" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: bold; ${likeStyle}" onclick="window.likePostFromSuperAdmin('${post.id}', ${isLiked})">
+                            <button class="action-btn" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: bold; ${likeStyle}" onclick="window.likePostFromSuperAdmin('${post.id}', ${isLiked}, ${isGlobal})">
                                 <i class="fa-solid fa-thumbs-up"></i> إعجاب (${post.likes ? post.likes.length : 0})
                             </button>
                         </div>
@@ -2697,7 +2773,7 @@
                             </div>
                             <div class="comment-input-area" style="display:flex; gap:8px; margin-top:12px;">
                                 <input type="text" id="input-${post.id}" class="form-control" style="margin:0; flex-grow: 1; border-radius: 8px; padding: 6px 12px; font-size: 13px; border: 1px solid var(--border-color);" placeholder="اكتب تعليقك بصفتك السوبر أدمن 👑...">
-                                <button class="btn-primary" style="margin:0; width:auto; padding:6px 14px; border-radius: 8px; background: var(--primary-maroon); color:white; font-size:13px; font-weight:bold;" onclick="window.addCommentFromSuperAdmin('${post.id}')">
+                                <button class="btn-primary" style="margin:0; width:auto; padding:6px 14px; border-radius: 8px; background: var(--primary-maroon); color:white; font-size:13px; font-weight:bold;" onclick="window.addCommentFromSuperAdmin('${post.id}', ${isGlobal})">
                                     تعليق
                                 </button>
                             </div>
@@ -3910,17 +3986,19 @@
         };
 
         // ================== Super Admin Moderation & Interactions (Like/Comment) ==================
-        window.likePostFromSuperAdmin = async (postId, isLiked) => {
+        window.likePostFromSuperAdmin = async (postId, isLiked, isGlobal = false) => {
             const superAdminId = "super_admin";
-            const postRef = doc(db, "nursery_posts", postId);
+            const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+            const postRef = doc(db, targetCol, postId);
             await updateDoc(postRef, { likes: isLiked ? arrayRemove(superAdminId) : arrayUnion(superAdminId) });
             window.fetchGlobalNetworkFeed();
         };
 
-        window.addCommentFromSuperAdmin = async (postId) => {
+        window.addCommentFromSuperAdmin = async (postId, isGlobal = false) => {
             const val = document.getElementById(`input-${postId}`).value.trim();
             if(!val) return;
-            const postRef = doc(db, "nursery_posts", postId);
+            const targetCol = isGlobal ? "global_posts" : "nursery_posts";
+            const postRef = doc(db, targetCol, postId);
             await updateDoc(postRef, { comments: arrayUnion({ authorName: "السوبر أدمن 👑", text: val, timestamp: new Date().getTime() }) });
             document.getElementById(`input-${postId}`).value = '';
             window.fetchGlobalNetworkFeed();
