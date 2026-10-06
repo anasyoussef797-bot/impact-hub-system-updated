@@ -3811,10 +3811,11 @@
                 }
                 
                 nurseries.forEach(nursery => {
+                    const nurseryName = nursery.name || 'حضانة معتمدة';
                     grid.innerHTML += `
-                        <div class="nursery-compact-card" title="${nursery.name}">
-                            <img src="${nursery.logo || 'https://via.placeholder.com/60'}" alt="${nursery.name}" width="60" height="60" loading="lazy" decoding="async" class="nursery-compact-logo">
-                            <div class="nursery-compact-name">${nursery.name}</div>
+                        <div class="nursery-compact-card" title="${nurseryName}">
+                            <img src="${nursery.logo || 'https://via.placeholder.com/60'}" alt="${nurseryName}" width="60" height="60" loading="lazy" decoding="async" class="nursery-compact-logo">
+                            <div class="nursery-compact-name">${nurseryName}</div>
                         </div>`;
                 });
             } catch(e) { console.error(e); }

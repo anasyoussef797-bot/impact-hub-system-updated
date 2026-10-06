@@ -784,7 +784,25 @@
                 </div>
 
                 <div class="panel">
-                    <div class="panel-header" data-i18n="network_nurseries_title">جميع الحضانات المشتركة بالشبكة</div>
+                    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span data-i18n="network_nurseries_title">جميع الحضانات المشتركة بالشبكة</span>
+                            <span id="nurseries-count-badge" style="background: var(--primary-maroon); color: white; border-radius: 12px; padding: 2px 10px; font-size: 12px; font-weight: bold;">0</span>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="nursery-search-input" placeholder="🔍 بحث عن حضانة أو مدير أو هاتف..." oninput="window.filterNurseriesTable()" style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 12px; min-width: 220px;">
+                            <select id="nursery-status-filter" onchange="window.filterNurseriesTable()" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 12px;">
+                                <option value="all">جميع الحالات</option>
+                                <option value="active">النشطة فقط 🟢</option>
+                                <option value="inactive">غير النشطة 🚫</option>
+                                <option value="frozen">المجمدة ❄️</option>
+                            </select>
+                            <button id="btn-refresh-nurseries" onclick="window.refreshNurseriesManually()" class="btn-primary" style="margin: 0; padding: 6px 14px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; background: var(--primary-maroon); font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;" title="إعادة جلب الحضانات من قاعدة البيانات">
+                                <i id="refresh-nurseries-icon" class="fa-solid fa-rotate"></i> 
+                                <span id="refresh-nurseries-label" data-i18n="btn_refresh_nurseries">تحديث البيانات</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -797,7 +815,9 @@
                                     <th data-i18n="th_actions">الحالة والتحكم</th>
                                 </tr>
                             </thead>
-                            <tbody id="nurseries-tbody"></tbody>
+                            <tbody id="nurseries-tbody">
+                                <tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-gray);">جاري جلب الحضانات من قاعدة البيانات... ⏳</td></tr>
+                            </tbody>
                         </table>
                     </div>
 
@@ -1538,6 +1558,7 @@
                 n_lbl_students: "عدد الطلاب الحالي",
                 n_lbl_logo: "رفع الشعار (لوجو كملف حقيقي)",
                 btn_create_nursery: "حفظ وإنشاء الكيان",
+                btn_refresh_nurseries: "تحديث البيانات",
                 network_nurseries_title: "جميع الحضانات المشتركة بالشبكة",
                 th_logo: "اللوجو",
                 th_nursery: "اسم الحضانة",
@@ -1681,6 +1702,7 @@
                 n_lbl_students: "Current Kids count",
                 n_lbl_logo: "Upload Logo (Image File)",
                 btn_create_nursery: "Save & Create Entity",
+                btn_refresh_nurseries: "Refresh Nurseries",
                 network_nurseries_title: "All Network-Subscribed Nurseries",
                 th_logo: "Logo",
                 th_nursery: "Nursery Name",
@@ -1824,6 +1846,7 @@
                 n_lbl_students: "Nombre d'enfants",
                 n_lbl_logo: "Uploader Logo (Fichier image)",
                 btn_create_nursery: "Sauvegarder & Créer l'entité",
+                btn_refresh_nurseries: "Actualiser la liste",
                 network_nurseries_title: "Toutes les crèches membres du réseau",
                 th_logo: "Logo",
                 th_nursery: "Nom de la crèche",
@@ -1967,6 +1990,7 @@
                 n_lbl_students: "Anzahl der Kinder",
                 n_lbl_logo: "Logo hochladen (Bilddatei)",
                 btn_create_nursery: "Speichern & Einheit erstellen",
+                btn_refresh_nurseries: "Kitas aktualisieren",
                 network_nurseries_title: "Alle Netzwerk-Mitgliedskitas",
                 th_logo: "Logo",
                 th_nursery: "Kita-Name",
@@ -2212,28 +2236,153 @@
             fetchNurseriesList();
         };
 
-        window.fetchNurseriesList = async () => {
-            const tbody = document.getElementById('nurseries-tbody');
-            const filterDropdown = document.getElementById('network-feed-filter');
-            
+        window.allNurseriesCache = [];
+
+        window.refreshNurseriesManually = async () => {
+            const btn = document.getElementById('btn-refresh-nurseries');
+            const icon = document.getElementById('refresh-nurseries-icon');
+            const label = document.getElementById('refresh-nurseries-label');
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const dict = superTranslations[currentLang] || superTranslations.ar;
 
-            const snap = await getDocs(collection(db, "nurseries"));
-            tbody.innerHTML = '';
-            filterDropdown.innerHTML = `<option value="all">${dict.opt_all_feeds}</option>`;
-            allNurseriesMap = {};
-            
-            snap.forEach((docData) => {
-                const item = docData.data();
-                const id = docData.id;
-                
-                const isInactive = item.status === "inactive";
-                const isFrozen = item.status === "frozen";
+            if (icon) icon.classList.add('fa-spin');
+            if (btn) btn.disabled = true;
+            if (label) label.innerText = currentLang === 'ar' ? 'جاري التحديث... ⏳' : 'Refreshing... ⏳';
 
-                allNurseriesMap[id] = item.name;
-                allNurseriesDataMap[id] = item;
-                filterDropdown.innerHTML += `<option value="${id}">${item.name}</option>`;
+            try {
+                console.log("🔄 [Super Admin] Manual refresh initiated by admin button click...");
+                await window.fetchNurseriesList();
+                const total = window.allNurseriesCache ? window.allNurseriesCache.length : 0;
+                console.log(`✅ [Super Admin] Manual refresh completed successfully. Total nurseries: ${total}`);
+            } catch (err) {
+                console.error("❌ [Super Admin] Error during manual refresh:", err);
+            } finally {
+                setTimeout(() => {
+                    if (icon) icon.classList.remove('fa-spin');
+                    if (btn) btn.disabled = false;
+                    if (label) label.innerText = (dict && dict.btn_refresh_nurseries) ? dict.btn_refresh_nurseries : (currentLang === 'ar' ? 'تحديث البيانات' : 'Refresh Nurseries');
+                }, 400);
+            }
+        };
+
+        window.fetchNurseriesList = async () => {
+            console.log("🔍 [Super Admin] Fetching all nurseries from Firestore collection 'nurseries'...");
+            const tbody = document.getElementById('nurseries-tbody');
+            const currentLang = localStorage.getItem('selected_language') || 'ar';
+            const dict = superTranslations[currentLang] || superTranslations.ar;
+
+            if (tbody && (!window.allNurseriesCache || window.allNurseriesCache.length === 0)) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-gray);">جاري جلب الحضانات من قاعدة البيانات... ⏳</td></tr>';
+            }
+
+            try {
+                const snap = await getDocs(collection(db, "nurseries"));
+                console.log(`📦 [Super Admin] getDocs result: Retrieved ${snap.docs.length} nursery document(s) from collection 'nurseries'. Empty: ${snap.empty}`);
+                
+                window.processAndRenderNurseries(snap.docs, dict);
+            } catch (err) {
+                console.error("❌ [Super Admin] Error fetching nurseries from Firestore:", err);
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--color-error); padding:20px;">حدث خطأ أثناء جلب الحضانات من قاعدة البيانات: ${err.message}</td></tr>`;
+                }
+            }
+        };
+
+        window.processAndRenderNurseries = (docs, dict) => {
+            const tbody = document.getElementById('nurseries-tbody');
+            const filterDropdown = document.getElementById('network-feed-filter');
+            const countBadge = document.getElementById('nurseries-count-badge');
+
+            if (filterDropdown) {
+                filterDropdown.innerHTML = `<option value="all">${dict ? dict.opt_all_feeds : 'عرض منشورات جميع الحضانات المجمعة'}</option>`;
+            }
+            allNurseriesMap = {};
+            allNurseriesDataMap = {};
+            window.allNurseriesCache = [];
+
+            if (!docs || docs.length === 0) {
+                console.warn("⚠️ [Super Admin] No nurseries found in collection 'nurseries'. Total count is 0.");
+                if (countBadge) countBadge.innerText = '0';
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-gray);">لا توجد أي حضانات مسجلة في الشبكة حالياً.</td></tr>';
+                }
+                return;
+            }
+
+            console.log(`🔄 [Super Admin] Parsing and mapping ${docs.length} nursery document(s)...`);
+
+            docs.forEach((docData, index) => {
+                try {
+                    const item = docData.data() || {};
+                    const id = docData.id;
+                    
+                    const nurseryName = item.name || 'حضانة معتمدة';
+                    const adminName = item.admin || item.adminName || 'إدارة الحضانة';
+                    const phone = item.phone || 'غير مسجل';
+                    const address = item.address || 'غير محدد';
+                    const status = item.status || 'active';
+
+                    console.log(`🏫 [Super Admin] Nursery #${index + 1}: ID="${id}" | Name="${nurseryName}" | Status="${status}" | Admin="${adminName}" | Phone="${phone}" | Rating=${item.rating ?? 5}`);
+
+                    allNurseriesMap[id] = nurseryName;
+                    allNurseriesDataMap[id] = { ...item, name: nurseryName, admin: adminName, phone, address, status, id };
+                    window.allNurseriesCache.push({ id, ...item, name: nurseryName, admin: adminName, phone, address, status });
+
+                    if (filterDropdown) {
+                        filterDropdown.innerHTML += `<option value="${id}">${nurseryName}</option>`;
+                    }
+                } catch (docErr) {
+                    console.error("❌ [Super Admin] Error parsing nursery doc:", docData?.id, docErr);
+                }
+            });
+
+            console.log(`✅ [Super Admin] Finished caching ${window.allNurseriesCache.length} nurseries. Now rendering table...`);
+            if (countBadge) {
+                countBadge.innerText = `${window.allNurseriesCache.length}`;
+            }
+
+            window.filterNurseriesTable();
+        };
+
+        window.filterNurseriesTable = () => {
+            const tbody = document.getElementById('nurseries-tbody');
+            if (!tbody) {
+                console.warn("⚠️ [Super Admin] nurseries-tbody element not found in DOM");
+                return;
+            }
+
+            const searchInput = document.getElementById('nursery-search-input');
+            const statusFilter = document.getElementById('nursery-status-filter');
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const statusVal = statusFilter ? statusFilter.value : 'all';
+
+            const filtered = (window.allNurseriesCache || []).filter(item => {
+                const matchesStatus = statusVal === 'all' || item.status === statusVal;
+                const matchesQuery = !query || 
+                    (item.name && item.name.toLowerCase().includes(query)) ||
+                    (item.admin && item.admin.toLowerCase().includes(query)) ||
+                    (item.phone && item.phone.toLowerCase().includes(query)) ||
+                    (item.address && item.address.toLowerCase().includes(query));
+                return matchesStatus && matchesQuery;
+            });
+
+            console.log(`📊 [Super Admin] filterNurseriesTable: Status="${statusVal}", Query="${query}" => Displaying ${filtered.length} of ${window.allNurseriesCache.length} nurseries`);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-gray);">لا توجد نتائج مطابقة للبحث أو الفلتر المحدد.</td></tr>';
+                return;
+            }
+
+            let htmlRows = '';
+            filtered.forEach(item => {
+                const id = item.id;
+                const nurseryName = item.name;
+                const adminName = item.admin;
+                const phone = item.phone;
+                const address = item.address;
+                const status = item.status;
+                const isInactive = status === "inactive";
+                const isFrozen = status === "frozen";
 
                 let rowStyle = '';
                 let statusBadge = '';
@@ -2260,31 +2409,33 @@
                     extraDetailsHtml += `<br><small style="color:var(--color-success); font-weight:bold;"><i class="fa-solid fa-money-bill-transfer"></i> انستاباي: ${item.instaPay}</small>`;
                 }
 
-                tbody.innerHTML += `
+                const safeRating = typeof item.rating === 'number' ? item.rating : 5;
+
+                htmlRows += `
                     <tr style="${rowStyle}">
                         <td><img src="${item.logo || 'https://via.placeholder.com/50'}" width="50" style="border-radius:8px; height:50px; object-fit:cover;"></td>
                         <td>
-                            <a href="#" style="color:var(--primary-maroon); font-weight:bold; text-decoration:none;" onclick="window.openNurseryProfile('${id}', '${item.name}')">
-                                ${item.name} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
+                            <a href="#" style="color:var(--primary-maroon); font-weight:bold; text-decoration:none;" onclick="window.openNurseryProfile('${id}')">
+                                ${nurseryName} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px;"></i>
                             </a>
                             ${statusBadge}
                         </td>
                         <td>
-                            <strong>${item.admin}</strong>
-                            <br><small><i class="fa-solid fa-phone"></i> ${item.phone}</small>
-                            <br><small style="color:gray;"><i class="fa-solid fa-location-dot"></i> ${item.address}</small>
+                            <strong>${adminName}</strong>
+                            <br><small><i class="fa-solid fa-phone"></i> ${phone}</small>
+                            <br><small style="color:gray;"><i class="fa-solid fa-location-dot"></i> ${address}</small>
                             ${extraDetailsHtml}
                         </td>
                         <td>👨‍🏫 ${item.teachersCount || 0} | 👶 ${item.studentsCount || 0}</td>
                         <td>
                             <div class="star-rating" data-id="${id}">
-                                ${[1,2,3,4,5].map(num => `<i class="fa-solid fa-star ${num <= item.rating ? 'checked' : ''}" data-val="${num}" onclick="window.rateNursery('${id}', ${num})"></i>`).join('')}
+                                ${[1,2,3,4,5].map(num => `<i class="fa-solid fa-star ${num <= safeRating ? 'checked' : ''}" data-val="${num}" onclick="window.rateNursery('${id}', ${num})"></i>`).join('')}
                             </div>
-                            <button style="display:block; font-size:10px; margin-top:4px; color:var(--primary-maroon); background:none; border:none; cursor:pointer; font-weight:bold;" onclick="window.saveRatingToDb('${id}', ${item.rating})">حفظ التقييم</button>
+                            <button style="display:block; font-size:10px; margin-top:4px; color:var(--primary-maroon); background:none; border:none; cursor:pointer; font-weight:bold;" onclick="window.saveRatingToDb('${id}', ${safeRating})">حفظ التقييم</button>
                         </td>
                         <td>
                             <div style="display: flex; flex-direction: column; gap: 6px;">
-                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; border-color: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; color: ${isFrozen ? 'var(--color-text-secondary)' : 'white'}; border-radius: 8px; cursor: ${isFrozen ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.toggleNurseryKillSwitch('${id}', '${item.status}')" ${isFrozen ? 'disabled' : ''}>
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; border-color: ${isInactive ? 'var(--color-success)' : (isFrozen ? 'var(--color-border)' : 'var(--danger-red)')}; color: ${isFrozen ? 'var(--color-text-secondary)' : 'white'}; border-radius: 8px; cursor: ${isFrozen ? 'not-allowed' : 'pointer'}; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.toggleNurseryKillSwitch('${id}', '${status}')" ${isFrozen ? 'disabled' : ''}>
                                     <i class="fa-solid fa-power-off"></i> ${isInactive ? 'تفعيل العرض' : 'إيقاف العرض'}
                                 </button>
                                 
@@ -2292,7 +2443,7 @@
                                     <i class="fa-solid fa-pen-to-square"></i> تعديل التفاصيل
                                 </button>
                                 
-                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: var(--color-error-soft); border-color: var(--color-error-soft); color: var(--color-error); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showDeleteFreezeModal('${id}', '${item.name.replace(/'/g, "\\'")}', '${item.status}')">
+                                <button class="btn-primary" style="margin:0; padding: 6px 12px; font-size: 11px; background: var(--color-error-soft); border-color: var(--color-error-soft); color: var(--color-error); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;" onclick="window.showDeleteFreezeModal('${id}')">
                                     <i class="fa-solid fa-trash-can"></i> حذف وتجميد
                                 </button>
                             </div>
@@ -2300,6 +2451,25 @@
                     </tr>
                 `;
             });
+
+            tbody.innerHTML = htmlRows;
+            console.log(`✨ [Super Admin] Rendered ${filtered.length} table rows in nurseries-tbody successfully.`);
+        };
+
+        window.setupNurseriesRealtimeListener = () => {
+            try {
+                console.log("📡 [Super Admin] Setting up real-time listener on collection 'nurseries'...");
+                onSnapshot(collection(db, "nurseries"), (snapshot) => {
+                    console.log(`🔔 [Super Admin] Real-time nurseries snapshot received! Total documents: ${snapshot.docs.length}`);
+                    const currentLang = localStorage.getItem('selected_language') || 'ar';
+                    const dict = superTranslations[currentLang] || superTranslations.ar;
+                    window.processAndRenderNurseries(snapshot.docs, dict);
+                }, (error) => {
+                    console.error("❌ [Super Admin] Real-time nurseries snapshot error:", error);
+                });
+            } catch (err) {
+                console.error("❌ [Super Admin] Error attaching nurseries onSnapshot listener:", err);
+            }
         };
 
         window.rateNursery = (id, ratingValue) => {
@@ -2403,6 +2573,10 @@
         };
 
         window.showDeleteFreezeModal = (id, name, status) => {
+            const nursery = allNurseriesDataMap[id] || {};
+            name = name || nursery.name || 'حضانة معتمدة';
+            status = status || nursery.status || 'active';
+
             document.getElementById('df-nursery-id').value = id;
             document.getElementById('df-nursery-name').innerText = name;
             document.getElementById('df-nursery-status').value = status;
@@ -2473,6 +2647,8 @@
         };
 
         window.openNurseryProfile = (id, name) => {
+            const nursery = allNurseriesDataMap[id] || {};
+            name = name || nursery.name || 'حضانة معتمدة';
             document.getElementById('nursery-profile-panel').style.display = 'block';
             document.getElementById('view-nursery-title').innerText = `${name}`;
             document.getElementById('target-nursery-id').value = id;
@@ -3666,6 +3842,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             element.classList.add('active');
             
+            if(tabId === 'nurseries-tab') window.fetchNurseriesList();
             if(tabId === 'online-teachers-tab') window.fetchOnlineTeachers();
             if(tabId === 'web-settings-tab') window.loadWebSettings();
             if(tabId === 'global-broadcast-tab') window.fetchGlobalNetworkFeed();
@@ -4473,6 +4650,7 @@
             window.changeSuperLanguage(savedLang);
             window.setupRealtimeBookingNotifications();
             window.listenToNetworkMeetingState();
+            window.setupNurseriesRealtimeListener();
         });
     </script>
 </body>

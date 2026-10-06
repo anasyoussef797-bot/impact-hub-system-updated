@@ -11,6 +11,7 @@
     "lint": "echo 'No linting required'"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "firebase": "^12.19.0"
   }
 }
