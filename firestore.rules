@@ -170,6 +170,10 @@ service cloud.firestore {
       allow read, write: if true;
     }
     
+    match /platform_profile/{docId} {
+      allow read, write: if true;
+    }
+    
     match /homework_assignments/{hwId} {
       allow read: if true;
       allow create, update: if isMap(request.resource.data);

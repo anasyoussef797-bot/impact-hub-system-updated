@@ -683,6 +683,10 @@
                     <i class="fa-solid fa-gears"></i> 
                     <span data-i18n="nav_settings">إعدادات الحضانة واللوجو</span>
                 </div>
+                <div class="nav-item" onclick="window.openImpactHubPublicProfile()" style="border: 1px solid rgba(0, 47, 108, 0.15); background: rgba(0, 47, 108, 0.04); border-radius: 12px; margin-top: 6px;">
+                    <i class="fa-solid fa-crown" style="color: #002F6C;"></i> 
+                    <span style="font-weight: 800; color: #002F6C;">بروفايل Impact Hub Egypt 🌟</span>
+                </div>
             </nav>
 
             <!-- المترجم الأربعة للغات الحضانة -->
@@ -715,6 +719,10 @@
                     </span>
                 </div>
                 <div class="header-actions" style="display: flex; align-items: center; gap: 10px;">
+                    <div onclick="window.openImpactHubPublicProfile()" style="display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 5px 12px; background: rgba(0,47,108,0.06); border-radius: 20px; border: 1.5px solid rgba(0,47,108,0.18); transition: transform 0.2s;" title="عرض بروفايل Impact Hub Egypt الرسمي">
+                        <img id="top-hub-avatar" src="/icon.svg" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;">
+                        <span style="font-size: 11.5px; font-weight: 900; color: #002F6C;">Impact Hub Egypt 🌟</span>
+                    </div>
                     <button type="button" class="pwa-top-install-btn" onclick="window.triggerPWAInstall()" title="تثبيت التطبيق على الشاشة الرئيسية">
                         <i class="fa-solid fa-mobile-screen-button"></i> <span>تثبيت التطبيق الآن 📲</span>
                     </button>
@@ -763,6 +771,112 @@
                         </div>
                     </div>
                     <iframe id="network-meeting-guest-frame" src="" style="width: 100%; flex-grow: 1; border: none;" allow="camera; microphone; display-capture; autoplay; clipboard-write"></iframe>
+                </div>
+            </div>
+
+            <!-- مودال بروفايل المنصة الرسمي (Impact Hub Egypt) لمديرة الحضانة -->
+            <div id="impactHubProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(8px); direction: rtl; text-align: right; font-family: inherit;">
+                <div style="background: white; border-radius: 24px; width: 100%; max-width: 650px; max-height: 92vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1.5px solid var(--border-color); padding: 0;">
+                    
+                    <!-- Header Banner & Close Button -->
+                    <div style="background: linear-gradient(135deg, #002F6C 0%, #1F3845 50%, #800000 100%); height: 125px; position: relative; border-radius: 24px 24px 0 0;">
+                        <button onclick="window.closeImpactHubPublicProfile()" style="position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.4); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        <div style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.25);">
+                            🌟 الحساب الرسمي الموثق للمنصة
+                        </div>
+                    </div>
+
+                    <!-- Profile Details Card -->
+                    <div style="padding: 0 24px 24px; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; margin-top: -45px; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: flex-end; gap: 15px;">
+                                <div style="position: relative;">
+                                    <img id="hub-modal-avatar" src="/icon.svg" style="width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.12); background: white;">
+                                    <span style="position: absolute; bottom: 2px; right: 2px; background: #10B981; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 2px solid white;">
+                                        <i class="fa-solid fa-check"></i>
+                                    </span>
+                                </div>
+                                <div style="margin-bottom: 4px;">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <h2 id="hub-modal-name" style="margin: 0; font-size: 19px; font-weight: 900; color: #002F6C;">Impact Hub Egypt</h2>
+                                        <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 15px;"></i>
+                                    </div>
+                                    <p id="hub-modal-bio" style="margin: 4px 0 0; color: var(--text-gray); font-size: 12px; line-height: 1.4; max-width: 450px;">المنصة التعليمية المركزية - إدارة شبكة الحضانات المعتمدة والتعليم التفاعلي 🌟</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact & Direct Interaction Buttons (راسلني / اتصل بي) -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button id="hub-modal-chat-btn" onclick="window.chatWithImpactHub()" class="btn-primary" style="margin: 0; background: #800000; font-size: 12.5px; padding: 8px 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; flex-grow: 1; justify-content: center; box-shadow: 0 4px 12px rgba(128,0,0,0.2);">
+                                <i class="fa-solid fa-comment-dots"></i> <span>مراسلة الحساب مباشرة 💬</span>
+                            </button>
+                            <a id="hub-modal-phone-btn" href="tel:01000000000" class="btn-primary" style="margin: 0; background: #002F6C; font-size: 12.5px; padding: 8px 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; text-decoration: none; justify-content: center;">
+                                <i class="fa-solid fa-phone"></i> <span>اتصال</span>
+                            </a>
+                            <a id="hub-modal-whatsapp-btn" href="https://wa.me/201000000000" target="_blank" class="btn-primary" style="margin: 0; background: #25D366; color: white; font-size: 12.5px; padding: 8px 16px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; text-decoration: none; justify-content: center;">
+                                <i class="fa-brands fa-whatsapp"></i> <span>واتساب</span>
+                            </a>
+                        </div>
+
+                        <!-- Wall / Feed Section Header -->
+                        <div style="border-top: 1.5px solid var(--border-color); padding-top: 18px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                <h3 style="margin: 0; font-size: 15px; font-weight: 900; color: #002F6C; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-bullhorn" style="color: #800000;"></i> منشورات وتحديثات Impact Hub Egypt
+                                </h3>
+                                <span id="hub-modal-posts-count" style="background: rgba(0,47,108,0.08); color: #002F6C; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: bold;">
+                                    0 منشور
+                                </span>
+                            </div>
+
+                            <!-- Feed Container in Modal -->
+                            <div id="hub-modal-feed-container" style="display: flex; flex-direction: column; gap: 15px;">
+                                <div style="text-align: center; padding: 25px; color: var(--text-gray); font-size: 13px;">
+                                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: #800000;"></i>
+                                    <p style="margin-top: 8px;">جاري تحميل منشورات وتعميمات الحساب... ⏳</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- مودال المراسلة الفورية المباشرة مع Impact Hub Egypt لمديرة الحضانة -->
+            <div id="nurseryHubChatModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(8px); direction: rtl; text-align: right; font-family: inherit;">
+                <div style="background: white; border-radius: 20px; width: 100%; max-width: 580px; height: 80vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); border: 1.5px solid var(--border-color);">
+                    <div style="background: linear-gradient(135deg, #002F6C, #800000); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img id="chat-hub-avatar" src="/icon.svg" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <strong id="chat-hub-name" style="font-size: 14px;">Impact Hub Egypt</strong>
+                                    <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 12px;"></i>
+                                </div>
+                                <span style="font-size: 10.5px; opacity: 0.9;">مراسلة الإدارة المركزية المباشرة 💬</span>
+                            </div>
+                        </div>
+                        <button onclick="window.closeNurseryHubChatModal()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="nursery-chat-messages-box" style="flex-grow: 1; overflow-y: auto; padding: 16px; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="text-align: center; color: var(--text-gray); font-size: 13px; padding: 20px;">
+                            <i class="fa-solid fa-spinner fa-spin" style="font-size: 18px; color: #800000;"></i>
+                            <p style="margin-top: 8px;">جاري تحميل المحادثة... ⏳</p>
+                        </div>
+                    </div>
+
+                    <div style="padding: 12px 16px; background: white; border-top: 1px solid var(--border-color); display: flex; gap: 8px;">
+                        <input type="text" id="nursery-chat-input" class="form-control" style="margin: 0; flex-grow: 1; border-radius: 10px; padding: 10px 14px; font-size: 13px;" placeholder="اكتب استفسارك أو رسالتك للإدارة المركزية هنا..." onkeydown="if(event.key === 'Enter') window.sendNurseryHubChatMessage()">
+                        <button onclick="window.sendNurseryHubChatMessage()" class="btn-primary" style="margin: 0; width: auto; padding: 10px 18px; border-radius: 10px; background: #800000; font-weight: bold;">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -900,6 +1014,23 @@
                         <i class="fa-solid fa-paper-plane"></i> 
                         <span data-i18n="publish_timeline_btn">نشر على التايم لاين ✨</span>
                     </button>
+                </div>
+
+                <!-- بطاقة تعريفية وتواصل مباشر مع الحساب الرسمي للمنصة (Impact Hub Egypt) -->
+                <div onclick="window.openImpactHubPublicProfile()" style="background: linear-gradient(135deg, rgba(0,47,108,0.06), rgba(128,0,0,0.06)); border: 1.5px solid rgba(0,47,108,0.18); border-radius: 14px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow-sm);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img id="nursery-feed-hub-avatar" src="/icon.svg" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #002F6C; background: white;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <strong style="font-size: 13.5px; color: #002F6C;">Impact Hub Egypt (الإدارة المركزية)</strong>
+                                <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 12px;"></i>
+                            </div>
+                            <span style="font-size: 11px; color: var(--text-gray); font-weight: 600;">اضغط لزيارة بروفايل المنصة الرسمي وتصفح المنشورات والتفاعل والمراسلة 🌟</span>
+                        </div>
+                    </div>
+                    <span style="background: var(--primary-maroon); color: white; padding: 6px 14px; border-radius: 8px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fa-solid fa-id-card"></i> زيارة البروفايل
+                    </span>
                 </div>
 
                 <h2 style="margin-bottom: 25px; font-weight: 900; font-size: 20px; color: var(--primary-maroon);" data-i18n="feed_title">حائط أنشطة الحضانة والفعاليات المشتركة 📰</h2>
@@ -1955,6 +2086,292 @@
             window.fetchTimelineFeed();
         };
 
+        // ================== الحساب الرسمي الموثق (Impact Hub Egypt) لمديرة الحضانة ==================
+        window.impactHubProfile = {
+            name: "Impact Hub Egypt",
+            avatar: "/icon.svg",
+            bio: "المنصة التعليمية المركزية - إدارة شبكة الحضانات المعتمدة والتعليم التفاعلي 🌟",
+            phone: "01000000000",
+            email: "support@impacthub-egypt.com",
+            whatsapp: "01000000000"
+        };
+
+        window.loadImpactHubProfileData = async () => {
+            try {
+                const profileDoc = await getDoc(doc(db, "platform_profile", "official_account"));
+                if (profileDoc.exists()) {
+                    window.impactHubProfile = { ...window.impactHubProfile, ...profileDoc.data() };
+                    const topAvatar = document.getElementById('top-hub-avatar');
+                    if (topAvatar) topAvatar.src = window.impactHubProfile.avatar || '/icon.svg';
+                    const feedHubAvatar = document.getElementById('nursery-feed-hub-avatar');
+                    if (feedHubAvatar) feedHubAvatar.src = window.impactHubProfile.avatar || '/icon.svg';
+                    const chatHubAvatar = document.getElementById('chat-hub-avatar');
+                    if (chatHubAvatar) chatHubAvatar.src = window.impactHubProfile.avatar || '/icon.svg';
+                    const chatHubName = document.getElementById('chat-hub-name');
+                    if (chatHubName) chatHubName.innerText = window.impactHubProfile.name || 'Impact Hub Egypt';
+                }
+            } catch (err) {
+                console.error("Error loading platform profile:", err);
+            }
+        };
+
+        window.openImpactHubPublicProfile = async () => {
+            await window.loadImpactHubProfileData();
+            const p = window.impactHubProfile;
+            const modal = document.getElementById('impactHubProfileModal');
+            if (!modal) return;
+
+            document.getElementById('hub-modal-avatar').src = p.avatar || '/icon.svg';
+            document.getElementById('hub-modal-name').innerText = p.name || 'Impact Hub Egypt';
+            document.getElementById('hub-modal-bio').innerText = p.bio || '';
+            
+            const phoneBtn = document.getElementById('hub-modal-phone-btn');
+            if (phoneBtn) phoneBtn.href = `tel:${p.phone || '01000000000'}`;
+            
+            const waBtn = document.getElementById('hub-modal-whatsapp-btn');
+            if (waBtn) {
+                const cleanPhone = (p.whatsapp || p.phone || '01000000000').replace(/[^0-9]/g, '');
+                waBtn.href = `https://wa.me/2${cleanPhone}`;
+            }
+
+            modal.style.display = 'flex';
+            window.renderImpactHubModalFeed();
+        };
+
+        window.closeImpactHubPublicProfile = () => {
+            const modal = document.getElementById('impactHubProfileModal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        // المراسلة الفورية اللحظية بين مديرة الحضانة وإدارة المنصة
+        let nurseryHubChatUnsubscribe = null;
+
+        window.chatWithImpactHub = () => {
+            window.closeImpactHubPublicProfile();
+            const modal = document.getElementById('nurseryHubChatModal');
+            if (!modal) return;
+            
+            const p = window.impactHubProfile;
+            const chatHubAvatar = document.getElementById('chat-hub-avatar');
+            if (chatHubAvatar) chatHubAvatar.src = p.avatar || '/icon.svg';
+            const chatHubName = document.getElementById('chat-hub-name');
+            if (chatHubName) chatHubName.innerText = p.name || 'Impact Hub Egypt';
+
+            modal.style.display = 'flex';
+            window.listenToNurseryHubChat();
+        };
+
+        window.closeNurseryHubChatModal = () => {
+            const modal = document.getElementById('nurseryHubChatModal');
+            if (modal) modal.style.display = 'none';
+            if (nurseryHubChatUnsubscribe) {
+                nurseryHubChatUnsubscribe();
+                nurseryHubChatUnsubscribe = null;
+            }
+        };
+
+        window.listenToNurseryHubChat = () => {
+            const msgBox = document.getElementById('nursery-chat-messages-box');
+            if (!msgBox) return;
+
+            msgBox.innerHTML = '<div style="text-align: center; color: var(--text-gray); padding: 20px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 18px; color: #800000;"></i><p style="margin-top: 8px;">جاري تحميل المحادثة... ⏳</p></div>';
+
+            if (nurseryHubChatUnsubscribe) nurseryHubChatUnsubscribe();
+
+            const mySenderId = myManagerId || ("manager_" + (myNurseryId || "general"));
+            const q = query(collection(db, "support_chats"), where("participants", "array-contains", mySenderId));
+
+            nurseryHubChatUnsubscribe = onSnapshot(q, (snapshot) => {
+                const messages = [];
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.participants && data.participants.includes("super_admin")) {
+                        messages.push(data);
+                    }
+                });
+
+                messages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                msgBox.innerHTML = '';
+                if (messages.length === 0) {
+                    msgBox.innerHTML = `
+                        <div style="text-align: center; color: var(--text-gray); padding: 35px 15px; font-size: 13px;">
+                            <i class="fa-solid fa-comments" style="font-size: 28px; color: #002F6C; margin-bottom: 8px; opacity: 0.6;"></i>
+                            <p style="margin: 0; font-weight: 800;">أهلاً بكِ مديرة الحضانة!</p>
+                            <p style="margin: 4px 0 0; font-size: 11.5px;">تفضلي بإرسال أي استفسار أو مقترح أو طلب دعم للإدارة المركزية (Impact Hub Egypt) وسنقوم بالرد عليكِ فوراً. 💬</p>
+                        </div>
+                    `;
+                } else {
+                    messages.forEach(msg => {
+                        const isMe = msg.senderId === mySenderId;
+                        const senderDisplayName = isMe ? (myName || 'مديرة الحضانة') : (window.impactHubProfile?.name || 'Impact Hub Egypt 🌟');
+                        const alignStyle = isMe 
+                            ? 'align-self: flex-start; background: #800000; color: white; border-bottom-left-radius: 4px;' 
+                            : 'align-self: flex-end; background: #e2e8f0; color: #1e293b; border-bottom-right-radius: 4px;';
+                        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '';
+
+                        msgBox.innerHTML += `
+                            <div style="max-width: 75%; padding: 10px 14px; border-radius: 14px; ${alignStyle} box-shadow: var(--shadow-sm); display: flex; flex-direction: column;">
+                                <span style="font-size: 10px; font-weight: bold; margin-bottom: 3px; opacity: 0.9;">${senderDisplayName}</span>
+                                <div style="font-size: 13px; line-height: 1.4; white-space: pre-wrap;">${msg.text}</div>
+                                <div style="font-size: 9px; opacity: 0.75; text-align: left; margin-top: 4px;">${timeStr}</div>
+                            </div>
+                        `;
+                    });
+                }
+                msgBox.scrollTop = msgBox.scrollHeight;
+            }, (err) => {
+                console.error("Error loading chat messages:", err);
+                msgBox.innerHTML = '<p style="color: red; text-align: center; font-size: 12px;">حدث خطأ أثناء تحميل الرسائل.</p>';
+            });
+        };
+
+        window.sendNurseryHubChatMessage = async () => {
+            const input = document.getElementById('nursery-chat-input');
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+
+            const mySenderId = myManagerId || ("manager_" + (myNurseryId || "general"));
+            try {
+                await addDoc(collection(db, "support_chats"), {
+                    senderId: mySenderId,
+                    senderName: myName || "مديرة الحضانة",
+                    participants: ["super_admin", mySenderId],
+                    text: text,
+                    timestamp: new Date().getTime()
+                });
+                input.value = '';
+                input.focus();
+            } catch (err) {
+                console.error("Error sending message to Impact Hub:", err);
+                alert("حدث خطأ أثناء إرسال الرسالة.");
+            }
+        };
+
+        window.renderImpactHubModalFeed = async () => {
+            const feedContainer = document.getElementById('hub-modal-feed-container');
+            const countBadge = document.getElementById('hub-modal-posts-count');
+            if (!feedContainer) return;
+
+            feedContainer.innerHTML = '<div style="text-align: center; padding: 25px; color: var(--text-gray);"><i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: #800000;"></i><p style="margin-top: 8px;">جاري تحميل منشورات وتحديثات الحساب... ⏳</p></div>';
+
+            try {
+                const snap = await getDocs(collection(db, "global_posts"));
+                const posts = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    if (!data.targetApp || data.targetApp === 'all' || data.targetApp === 'nurseries') {
+                        posts.push({ id: d.id, ...data, isGlobal: true });
+                    }
+                });
+                posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                if (countBadge) countBadge.innerText = `${posts.length} منشور`;
+
+                if (posts.length === 0) {
+                    feedContainer.innerHTML = '<div style="text-align: center; color: var(--text-gray); padding: 20px;">لا توجد منشورات بالحساب حالياً.</div>';
+                    return;
+                }
+
+                const p = window.impactHubProfile;
+                let html = '';
+
+                posts.forEach(post => {
+                    const postId = post.id;
+                    const likes = post.likes || [];
+                    const isLiked = likes.includes(myManagerId);
+                    const comments = post.comments || [];
+
+                    let ytIframe = '';
+                    if (post.youtubeUrl) {
+                        const ytId = post.youtubeUrl.split('v=')[1]?.split('&')[0] || post.youtubeUrl.split('/').pop();
+                        ytIframe = `<div style="margin-top:10px;"><iframe src="https://www.youtube.com/embed/${ytId}" style="width:100%; height:220px; border-radius:12px; border:none;" allowfullscreen></iframe></div>`;
+                    }
+
+                    let commentsHtml = '';
+                    comments.forEach(c => {
+                        const isOfficial = c.isOfficial || c.authorId === 'impact_hub_egypt' || c.authorName === 'Impact Hub Egypt' || c.authorName === 'السوبر أدمن 👑';
+                        commentsHtml += `
+                            <div style="background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 10px; margin-bottom: 5px; font-size: 12px; line-height: 1.4;">
+                                <strong style="color: ${isOfficial ? '#002F6C' : 'inherit'};">${isOfficial ? p.name : c.authorName} ${isOfficial ? '<i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 10px;"></i>' : ''}:</strong> <span>${c.text}</span>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                        <div style="background: #f8fafc; border: 1.5px solid var(--border-color); border-radius: 16px; padding: 16px; box-shadow: var(--shadow-sm);">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <img src="${post.authorAvatar || p.avatar || '/icon.svg'}" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid #800000;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 4px;">
+                                        <strong style="font-size: 13px; color: #002F6C;">${post.authorName || p.name || 'Impact Hub Egypt'}</strong>
+                                        <span style="background: #10B981; color: white; width: 14px; height: 14px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 8px;"><i class="fa-solid fa-check"></i></span>
+                                    </div>
+                                    <span style="font-size: 10px; color: var(--text-gray); display: block;">${post.timestamp ? new Date(post.timestamp).toLocaleDateString('ar-EG') : ''}</span>
+                                </div>
+                            </div>
+
+                            ${post.title ? `<h4 style="font-weight: 800; font-size: 14px; margin-bottom: 6px; color: var(--text-dark);">${post.title}</h4>` : ''}
+                            <p style="font-size: 13px; line-height: 1.5; color: var(--text-dark); white-space: pre-wrap; margin-bottom: 8px;">${post.body || ''}</p>
+                            ${(post.image || post.media) ? `<div style="margin-bottom: 10px;"><img src="${post.image || post.media}" style="max-width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px;"></div>` : ''}
+                            ${ytIframe}
+
+                            <!-- Likes and Actions inside profile -->
+                            <div style="display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 8px; align-items: center;">
+                                <button onclick="window.likePostFromHubModal('${postId}', ${isLiked})" style="background: none; border: none; cursor: pointer; font-size: 12.5px; font-weight: bold; display: flex; align-items: center; gap: 5px; color: ${isLiked ? '#800000' : 'var(--text-gray)'};">
+                                    <i class="fa-solid fa-thumbs-up"></i> إعجاب (${likes.length})
+                                </button>
+                                <span style="font-size: 12px; color: var(--text-gray); font-weight: bold;">
+                                    <i class="fa-solid fa-comments"></i> تعليقات (${comments.length})
+                                </span>
+                            </div>
+
+                            <!-- Comments Section inside profile -->
+                            <div style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                                <div style="max-height: 140px; overflow-y: auto; margin-bottom: 8px;">
+                                    ${commentsHtml || '<div style="font-size: 11px; color: var(--text-gray); text-align: center;">لا توجد تعليقات بعد. كوني أول من يعلق!</div>'}
+                                </div>
+                                <div style="display: flex; gap: 6px;">
+                                    <input type="text" id="hub-comment-${postId}" class="form-control" style="margin: 0; flex-grow: 1; border-radius: 8px; padding: 5px 10px; font-size: 12px;" placeholder="اكتبي تعليقك بصفتك مديرة الحضانة...">
+                                    <button onclick="window.addCommentFromHubModal('${postId}')" class="btn-primary" style="margin: 0; width: auto; padding: 5px 12px; border-radius: 8px; font-size: 12px; background: #800000;">
+                                        إرسال
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                feedContainer.innerHTML = html;
+            } catch (err) {
+                console.error("Error rendering hub modal feed:", err);
+                feedContainer.innerHTML = '<p style="color: red; text-align: center; font-size: 12px;">حدث خطأ أثناء تحميل المنشورات.</p>';
+            }
+        };
+
+        window.likePostFromHubModal = async (postId, isLiked) => {
+            const postRef = doc(db, "global_posts", postId);
+            await updateDoc(postRef, { likes: isLiked ? arrayRemove(myManagerId) : arrayUnion(myManagerId) });
+            window.renderImpactHubModalFeed();
+        };
+
+        window.addCommentFromHubModal = async (postId) => {
+            const inp = document.getElementById(`hub-comment-${postId}`);
+            if (!inp || !inp.value.trim()) return;
+            const text = inp.value.trim();
+            const postRef = doc(db, "global_posts", postId);
+            await updateDoc(postRef, { 
+                comments: arrayUnion({ 
+                    authorId: myManagerId,
+                    authorName: myName || "مديرة الحضانة", 
+                    text: text, 
+                    timestamp: new Date().getTime() 
+                }) 
+            });
+            inp.value = '';
+            window.renderImpactHubModalFeed();
+        };
+
         let managerNurseryPosts = [];
         let managerGlobalPosts = [];
         let unsubNurseryPosts = null;
@@ -1984,6 +2401,14 @@
             combined.forEach(post => {
                 const postId = post.id;
                 const isGlobal = !!post.isGlobal || post.targetApp !== undefined;
+                const isPlatformAuthor = isGlobal || post.isOfficialPlatform || post.authorId === 'impact_hub_egypt' || post.authorName?.includes('Impact Hub') || post.authorName?.includes('السوبر');
+                
+                const authorDisplayName = isPlatformAuthor 
+                    ? (window.impactHubProfile?.name || 'Impact Hub Egypt') 
+                    : (post.authorName || 'عضو المنصة');
+                const authorAvatar = isPlatformAuthor 
+                    ? (window.impactHubProfile?.avatar || post.authorAvatar || '/icon.svg') 
+                    : null;
                 
                 const likesList = post.likes || [];
                 const commentsList = post.comments || [];
@@ -1997,21 +2422,27 @@
 
                 let commentsHtml = '';
                 commentsList.forEach(c => {
+                    const isOfficialComm = c.isOfficial || c.authorId === 'impact_hub_egypt' || c.authorName === 'Impact Hub Egypt' || c.authorName === 'السوبر أدمن 👑' || c.authorName?.includes('السوبر');
+                    const commentAuthorName = isOfficialComm ? (window.impactHubProfile?.name || 'Impact Hub Egypt') : c.authorName;
                     commentsHtml += `
                         <div style="background:var(--white); padding:10px 14px; border-radius:10px; margin-bottom:6px; font-size:13px; border: 1px solid var(--border-color); font-weight:800;">
-                            <strong style="color:var(--primary-maroon);">${c.authorName}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
+                            <strong style="color:${isOfficialComm ? '#002F6C' : 'var(--primary-maroon)'};">${commentAuthorName} ${isOfficialComm ? '<i class="fa-solid fa-circle-check" style="color:#10B981; font-size:10px;"></i>' : ''}:</strong> <span style="color:var(--text-dark);">${c.text}</span>
                         </div>
                     `;
                 });
 
-                const globalBadge = isGlobal ? `
+                const globalBadge = isPlatformAuthor ? `
                     <span style="background: rgba(0, 47, 108, 0.08); color: var(--color-brand-navy, #002f6c); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 900; margin-right: 8px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(0, 47, 108, 0.2);">
                         <i class="fa-solid fa-bullhorn" style="color: var(--primary-maroon);"></i>
                         تعميم رسمي من الإدارة العليا
                     </span>
                 ` : '';
 
-                const postCardStyle = isGlobal 
+                const authorBadge = isPlatformAuthor 
+                    ? `<span onclick="window.openImpactHubPublicProfile()" style="cursor: pointer; background:rgba(0,47,108,0.1); color:var(--color-brand-navy); padding:2px 8px; border-radius:12px; font-size:10px; font-weight:900; margin-right:8px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-id-card"></i> زيارة البروفايل 🌟</span>` 
+                    : '';
+
+                const postCardStyle = isPlatformAuthor 
                     ? `background: linear-gradient(180deg, #ffffff 0%, #f6f9fc 100%); padding:22px; border-radius:16px; margin-bottom:20px; border: 1.5px solid rgba(0, 47, 108, 0.25); box-shadow: 0 4px 16px rgba(0, 47, 108, 0.06); position: relative;`
                     : `background:var(--white); padding:20px; border-radius:16px; margin-bottom:20px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);`;
 
@@ -2033,17 +2464,21 @@
                     <div class="feed-post" id="post-${postId}" style="${postCardStyle}">
                         <div class="feed-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                ${isGlobal 
-                                    ? `<i class="fa-solid fa-shield-halved" style="font-size:28px; color:var(--primary-maroon);"></i>`
-                                    : `<i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>`
-                                }
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                                        <strong style="font-weight:900; color: ${isGlobal ? 'var(--primary-maroon)' : 'inherit'};">${post.authorName || (isGlobal ? 'الإدارة العليا (Impact Hub)' : 'عضو المنصة')}</strong>
-                                        ${globalBadge}
-                                    </div>
-                                    <div style="font-size: 11px; color: var(--text-gray); margin-top: 2px;">
-                                        ${post.timestamp ? new Date(post.timestamp).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}
+                                <div style="display: flex; align-items: center; gap: 8px; cursor: ${isPlatformAuthor ? 'pointer' : 'default'};" ${isPlatformAuthor ? 'onclick="window.openImpactHubPublicProfile()"' : ''}>
+                                    ${authorAvatar 
+                                        ? `<img src="${authorAvatar}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:2px solid var(--primary-maroon);">`
+                                        : `<i class="fa-solid fa-circle-user" style="font-size:32px; color:var(--primary-maroon);"></i>`
+                                    }
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                            <strong style="font-weight:900; color: ${isPlatformAuthor ? 'var(--primary-maroon)' : 'inherit'};">${authorDisplayName}</strong>
+                                            ${isPlatformAuthor ? '<i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 11px;"></i>' : ''}
+                                            ${globalBadge}
+                                            ${authorBadge}
+                                        </div>
+                                        <div style="font-size: 11px; color: var(--text-gray); margin-top: 2px;">
+                                            ${post.timestamp ? new Date(post.timestamp).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : ''}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2512,6 +2947,9 @@
 
             // الاستماع اللحظي لاجتماعات الشبكة المركزية
             window.listenToNetworkMeetingNotification();
+
+            // تحميل بيانات الحساب الرسمي الموثق Impact Hub Egypt
+            window.loadImpactHubProfileData();
 
             // تحميل وتفعيل الاستماع اللحظي لحائط الأنشطة والتعميمات
             window.fetchTimelineFeed();
