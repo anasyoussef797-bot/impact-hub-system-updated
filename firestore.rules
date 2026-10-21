@@ -116,6 +116,12 @@ service cloud.firestore {
       allow delete: if true;
     }
 
+    match /store_orders/{orderId} {
+      allow read: if true;
+      allow create, update: if isMap(request.resource.data);
+      allow delete: if true;
+    }
+
     // ==========================================
     // 5. الحصص والبث المباشر (التحقق الصارم من الحقول وحالات الحصص الافتراضية)
     // ==========================================

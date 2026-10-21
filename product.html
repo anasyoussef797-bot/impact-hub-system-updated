@@ -943,8 +943,111 @@
             background: var(--color-brand-primary-light);
         }
 
+        .payment-choice-card.active {
+            border-color: var(--color-brand-primary);
+            background: var(--color-brand-primary-light);
+            box-shadow: 0 0 0 2px rgba(48, 86, 105, 0.15);
+        }
+
         .payment-choice-card input {
             accent-color: var(--color-brand-primary);
+        }
+
+        .payment-instructions-box {
+            background: linear-gradient(135deg, #FAF7F2 0%, #F4F8F7 100%);
+            border: 1.5px solid var(--color-border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-top: 10px;
+            margin-bottom: 14px;
+            animation: fadeIn 0.25s ease-out;
+            font-size: 13px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .payment-data-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            margin: 6px 0;
+            gap: 8px;
+        }
+
+        .payment-data-value {
+            font-family: monospace, 'Tajawal', sans-serif;
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--color-brand-primary);
+            direction: ltr;
+        }
+
+        .copy-pill-btn {
+            background: var(--color-brand-primary);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .copy-pill-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .copy-pill-btn.copied {
+            background: #059669 !important;
+        }
+
+        /* Order Success Modal */
+        .success-checkmark-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #DCFCE7;
+            color: #16A34A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+        }
+
+        .order-summary-box {
+            background: var(--color-background);
+            border: 1.5px solid var(--color-border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin: 16px 0;
+            text-align: right;
+        }
+
+        .order-summary-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--color-border);
+            font-size: 13px;
+        }
+        .order-summary-line:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
@@ -1335,23 +1438,94 @@
                 <div class="form-group">
                     <label>طريقة الدفع المفضلة:</label>
                     
-                    <label class="payment-choice-card">
-                        <input type="radio" name="payMethod" value="instapay" checked>
+                    <label class="payment-choice-card active" id="card-pay-instapay" onclick="window.selectPaymentMethod('instapay')">
+                        <input type="radio" name="payMethod" value="instapay" checked onchange="window.selectPaymentMethod('instapay')">
                         <i class="fa-solid fa-building-columns" style="color: var(--instapay-pink);"></i>
                         <span>إنستاباي (InstaPay) تحويل فوري ومباشر</span>
                     </label>
 
-                    <label class="payment-choice-card">
-                        <input type="radio" name="payMethod" value="vodafone_cash">
+                    <label class="payment-choice-card" id="card-pay-vodafone" onclick="window.selectPaymentMethod('vodafone_cash')">
+                        <input type="radio" name="payMethod" value="vodafone_cash" onchange="window.selectPaymentMethod('vodafone_cash')">
                         <i class="fa-solid fa-mobile-screen" style="color: var(--vodafone-red);"></i>
                         <span>محفظة فودافون كاش (Vodafone Cash)</span>
                     </label>
 
-                    <label class="payment-choice-card">
-                        <input type="radio" name="payMethod" value="cash_on_delivery">
+                    <label class="payment-choice-card" id="card-pay-cod" onclick="window.selectPaymentMethod('cash_on_delivery')">
+                        <input type="radio" name="payMethod" value="cash_on_delivery" onchange="window.selectPaymentMethod('cash_on_delivery')">
                         <i class="fa-solid fa-hand-holding-dollar" style="color: #047857;"></i>
                         <span>الدفع نقداً عند استلام الشحنة لباب المنزل</span>
                     </label>
+
+                    <!-- InstaPay details box (Visible when selected) -->
+                    <div id="instapay-details" class="payment-instructions-box" style="display: block; border-color: #F0ABFC; background: #FDF4FF;">
+                        <div style="font-weight: 900; color: #9333EA; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-building-columns"></i> <span>بيانات حساب إنستاباي (InstaPay) المعتمدة للتحويل:</span>
+                        </div>
+                        <div class="payment-data-row">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-gray); display: block;">عنوان الدفع اللحظي (IPA):</span>
+                                <span class="payment-data-value" id="instapay-ipa-text">impacthub@instapay</span>
+                            </div>
+                            <button type="button" class="copy-pill-btn" style="background: #9333EA;" onclick="window.copyPaymentData('impacthub@instapay', this)">
+                                <i class="fa-solid fa-copy"></i> <span>نسخ الـ IPA</span>
+                            </button>
+                        </div>
+                        <div class="payment-data-row">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-gray); display: block;">أو التحويل برقم الهاتف المسجل:</span>
+                                <span class="payment-data-value">01030013810</span>
+                            </div>
+                            <button type="button" class="copy-pill-btn" style="background: #9333EA;" onclick="window.copyPaymentData('01030013810', this)">
+                                <i class="fa-solid fa-copy"></i> <span>نسخ الرقم</span>
+                            </button>
+                        </div>
+                        <div class="payment-data-row">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-gray); display: block;">اسم المستلم المعتمد:</span>
+                                <span style="font-weight: 800; font-size: 13px; color: #581C87;">Impact Hub Egypt</span>
+                            </div>
+                            <span style="font-size: 11px; color: #059669; font-weight: 800;"><i class="fa-solid fa-circle-check"></i> حساب بنكي رسمي</span>
+                        </div>
+                        <p style="font-size: 11.5px; color: #6B21A8; margin: 8px 0 0; line-height: 1.5;">
+                            📌 <strong>طريقة التحويل:</strong> افتح تطبيق InstaPay، اختر "إرسال نقود"، وضع عنوان الـ IPA أو رقم الهاتف، واكتب اسمك أو رقم هاتفك في خانة الملاحظات.
+                        </p>
+                    </div>
+
+                    <!-- Vodafone Cash details box (Visible when selected) -->
+                    <div id="vodafone-cash-details" class="payment-instructions-box" style="display: none; border-color: #FCA5A5; background: #FEF2F2;">
+                        <div style="font-weight: 900; color: #DC2626; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-mobile-screen"></i> <span>رقم محفظة فودافون كاش المعتمدة للتحويل:</span>
+                        </div>
+                        <div class="payment-data-row">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-gray); display: block;">رقم المحفظة المعتمد:</span>
+                                <span class="payment-data-value" style="color: #DC2626; font-size: 17px;">01030013810</span>
+                            </div>
+                            <button type="button" class="copy-pill-btn" style="background: #DC2626;" onclick="window.copyPaymentData('01030013810', this)">
+                                <i class="fa-solid fa-copy"></i> <span>نسخ الرقم</span>
+                            </button>
+                        </div>
+                        <div class="payment-data-row">
+                            <div>
+                                <span style="font-size: 11px; color: var(--text-gray); display: block;">اسم صاحب المحفظة:</span>
+                                <span style="font-weight: 800; font-size: 13px; color: #991B1B;">Impact Hub Egypt - مبيعات المتجر</span>
+                            </div>
+                            <span style="font-size: 11px; color: #059669; font-weight: 800;"><i class="fa-solid fa-circle-check"></i> موثق رسمياً</span>
+                        </div>
+                        <p style="font-size: 11.5px; color: #7F1D1D; margin: 8px 0 0; line-height: 1.5;">
+                            📌 <strong>طريقة التحويل:</strong> اطلب كود <code style="direction:ltr; display:inline-block; font-weight:bold; background:#FFF; padding:1px 5px; border-radius:4px;">*9*7*01030013810*المبلغ#</code> أو عبر تطبيق "أنا فودافون"، واحتفظ برسالة التأكيد.
+                        </p>
+                    </div>
+
+                    <!-- Cash on Delivery details box (Visible when selected) -->
+                    <div id="cod-details" class="payment-instructions-box" style="display: none; border-color: #A7F3D0; background: #ECFDF5;">
+                        <div style="font-weight: 900; color: #047857; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-hand-holding-dollar"></i> <span>الدفع نقداً عند استلام الشحنة:</span>
+                        </div>
+                        <p style="font-size: 12px; color: #065F46; margin: 0; line-height: 1.5;">
+                            🚚 يتم تسليم الشحنة لباب المنزل في أي محافظة بمصر، ويتاح لك فحص ومعاينة البوستر والتأكد من جودته وخامته الفاخرة قبل دفع المبلغ لمندوب الشحن.
+                        </p>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1364,6 +1538,58 @@
                     <span>تأكيد طلب الشراء الآن 🚀</span>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- Order Success Modal (Rich celebration view with WhatsApp direct confirmation & transfer details) -->
+    <div class="modal-overlay" id="orderSuccessModal">
+        <div class="modal-box" style="text-align: center; max-width: 500px;">
+            <div class="success-checkmark-circle">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 900; color: var(--color-brand-primary); margin-bottom: 6px;">
+                تم استلام وتسجيل طلبك بنجاح! 🎉
+            </h3>
+            <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 12px;">
+                شكراً لثقتك في Impact Hub Egypt. تم حفظ طلبك وجاري مراجعته وتجهيزه للشحن السريع.
+            </p>
+
+            <div class="order-summary-box">
+                <div class="order-summary-line">
+                    <span style="color: var(--text-gray); font-weight: 700;">رقم الطلب (Order ID):</span>
+                    <strong id="success-order-id" style="color: var(--color-accent); font-family: monospace; font-size: 15px;">#ORD-000000</strong>
+                </div>
+                <div class="order-summary-line">
+                    <span style="color: var(--text-gray); font-weight: 700;">المنتج والكمية:</span>
+                    <strong id="success-prod-summary" style="color: var(--text-dark);">بوستر عقلية النمو (1 قطعة)</strong>
+                </div>
+                <div class="order-summary-line">
+                    <span style="color: var(--text-gray); font-weight: 700;">إجمالي المبلغ:</span>
+                    <strong id="success-total-price" style="color: var(--color-brand-primary); font-size: 16px;">195 ج.م</strong>
+                </div>
+                <div class="order-summary-line">
+                    <span style="color: var(--text-gray); font-weight: 700;">طريقة الدفع:</span>
+                    <strong id="success-payment-method" style="color: var(--text-dark);">إنستاباي (InstaPay)</strong>
+                </div>
+                <div class="order-summary-line">
+                    <span style="color: var(--text-gray); font-weight: 700;">رقم التواصل:</span>
+                    <strong id="success-phone" style="color: var(--text-dark); direction: ltr;">01xxxxxxxxx</strong>
+                </div>
+            </div>
+
+            <!-- Payment reminder box inside success screen -->
+            <div id="success-payment-instructions" style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 12.5px; text-align: right; color: #92400E; line-height: 1.6;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="#" id="success-whatsapp-btn" target="_blank" class="btn-whatsapp-buy" style="font-size: 14.5px; padding: 14px 20px;">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 22px;"></i>
+                    <span>تأكيد الطلب وإرسال إشعار الدفع عبر واتساب 💬</span>
+                </a>
+                <button type="button" onclick="window.closeSuccessModal()" class="nav-link-btn btn-ghost" style="justify-content: center; padding: 11px; font-size: 13.5px; border-radius: 12px; cursor: pointer; border: 1px solid var(--color-border);">
+                    <span>إغلاق ومتابعة التصفح</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1564,7 +1790,65 @@
             if (el) el.innerText = total + ' ج.م';
         };
 
-        // Submit Order to Firestore
+        // Copy payment details to clipboard with visual feedback
+        window.copyPaymentData = async (text, btnEl) => {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                }
+                const oldHtml = btnEl.innerHTML;
+                btnEl.classList.add('copied');
+                btnEl.innerHTML = '<i class="fa-solid fa-check"></i> <span>تم النسخ بنجاح!</span>';
+                setTimeout(() => {
+                    btnEl.classList.remove('copied');
+                    btnEl.innerHTML = oldHtml;
+                }, 2200);
+            } catch (err) {
+                console.error("Copy failed:", err);
+            }
+        };
+
+        // Switch between payment methods and show corresponding instructions
+        window.selectPaymentMethod = (method) => {
+            const radios = document.querySelectorAll('input[name="payMethod"]');
+            radios.forEach(r => {
+                r.checked = (r.value === method);
+            });
+
+            document.querySelectorAll('.payment-choice-card').forEach(card => card.classList.remove('active'));
+            if (method === 'instapay') {
+                document.getElementById('card-pay-instapay')?.classList.add('active');
+            } else if (method === 'vodafone_cash') {
+                document.getElementById('card-pay-vodafone')?.classList.add('active');
+            } else if (method === 'cash_on_delivery') {
+                document.getElementById('card-pay-cod')?.classList.add('active');
+            }
+
+            const instapayBox = document.getElementById('instapay-details');
+            const vodafoneBox = document.getElementById('vodafone-cash-details');
+            const codBox = document.getElementById('cod-details');
+
+            if (instapayBox) instapayBox.style.display = (method === 'instapay') ? 'block' : 'none';
+            if (vodafoneBox) vodafoneBox.style.display = (method === 'vodafone_cash') ? 'block' : 'none';
+            if (codBox) codBox.style.display = (method === 'cash_on_delivery') ? 'block' : 'none';
+        };
+
+        window.closeSuccessModal = () => {
+            const modal = document.getElementById('orderSuccessModal');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        };
+
+        // Submit Order to Firestore with localStorage backup and rich celebration screen
         window.submitInstantOrder = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-order');
@@ -1580,40 +1864,128 @@
             const prod = window.currentProduct;
             const qty = window.currentOrderQty;
             const totalPrice = prod.price * qty;
+            const orderNum = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
+            const orderData = {
+                orderId: orderNum,
+                customerName: name,
+                customerPhone: phone,
+                customerAddress: address,
+                customerNotes: notes || '',
+                paymentMethod: payMethod,
+                productId: prod.id,
+                productTitle: prod.title,
+                itemTitle: prod.title,
+                itemPrice: prod.price,
+                unitPrice: prod.price,
+                quantity: qty,
+                totalPrice: totalPrice,
+                total: totalPrice,
+                status: "pending",
+                paymentStatus: payMethod === 'cash_on_delivery' ? 'unpaid' : 'pending_verification',
+                source: "marketplace_landing",
+                createdAt: Date.now(),
+                timestamp: Date.now()
+            };
+
+            // 1. Save to Firestore (attempt both orders and store_orders collections)
+            let savedToFirestore = false;
             try {
-                const orderData = {
-                    customerName: name,
-                    customerPhone: phone,
-                    customerAddress: address,
-                    customerNotes: notes,
-                    paymentMethod: payMethod,
-                    productId: prod.id,
-                    productTitle: prod.title,
-                    unitPrice: prod.price,
-                    quantity: qty,
-                    totalPrice: totalPrice,
-                    status: "new",
-                    source: "marketplace_landing",
-                    createdAt: Date.now()
-                };
-
-                await addDoc(collection(db, "store_orders"), orderData);
-
-                window.closeCheckoutModal();
-                alert(`✅ تم استلام طلبك بنجاح يا فندم! \n\nطلبك لـ (${prod.title}) مسجل لدينا برقم هاتف: ${phone}.\nسيتواصل معك فريق خدمة العملاء والشحن فوراً لتأكيد ميعاد التوصيل. شكراً لثقتك في Impact Hub Egypt! ❤️`);
-                
-                // Reset form
-                document.getElementById('instant-checkout-form').reset();
-                window.currentOrderQty = 1;
-                document.getElementById('order-qty').innerText = "1";
-            } catch (err) {
-                console.error("Error submitting order:", err);
-                alert("حدث خطأ أثناء حفظ الطلب، يرجى المحاولة مرة أخرى أو الطلب مباشرة عبر الواتساب.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
+                await addDoc(collection(db, "orders"), orderData);
+                savedToFirestore = true;
+            } catch (err1) {
+                console.warn("Could not save to 'orders', attempting 'store_orders':", err1);
+                try {
+                    await addDoc(collection(db, "store_orders"), orderData);
+                    savedToFirestore = true;
+                } catch (err2) {
+                    console.error("Firestore save error:", err2);
+                }
             }
+
+            // 2. Local Storage backup so order details are NEVER lost under any connection glitch
+            try {
+                const localOrders = JSON.parse(localStorage.getItem('impact_hub_customer_orders') || '[]');
+                localOrders.unshift(orderData);
+                localStorage.setItem('impact_hub_customer_orders', JSON.stringify(localOrders.slice(0, 50)));
+            } catch (localErr) {
+                console.warn("localStorage backup error:", localErr);
+            }
+
+            // 3. Reset form and close checkout form modal
+            document.getElementById('instant-checkout-form').reset();
+            window.currentOrderQty = 1;
+            document.getElementById('order-qty').innerText = "1";
+            window.closeCheckoutModal();
+
+            // 4. Populate and display the Order Success celebration modal
+            document.getElementById('success-order-id').innerText = '#' + orderNum;
+            document.getElementById('success-prod-summary').innerText = `${prod.shortTitle || prod.title} (${qty} قطعة)`;
+            document.getElementById('success-total-price').innerText = `${totalPrice} ج.م`;
+            document.getElementById('success-phone').innerText = phone;
+
+            let payLabel = "إنستاباي (InstaPay)";
+            let payInstructions = "";
+            let waPayNotice = "";
+
+            if (payMethod === 'vodafone_cash') {
+                payLabel = "محفظة فودافون كاش (Vodafone Cash)";
+                payInstructions = `
+                    <div style="font-weight:900; color:#DC2626; margin-bottom:4px;">
+                        <i class="fa-solid fa-mobile-screen"></i> بيانات تحويل فودافون كاش:
+                    </div>
+                    <div>المبلغ المطلوب: <strong>${totalPrice} ج.م</strong></div>
+                    <div>رقم المحفظة المعتمد: <strong style="font-size:14.5px; direction:ltr; display:inline-block; color:#B91C1C;">01030013810</strong></div>
+                    <div style="font-size:11.5px; margin-top:4px; opacity:0.9;">يرجى إرسال لقطة شاشة لإشعار التحويل عبر الواتساب لتأكيد الشحن الفوري.</div>
+                `;
+                waPayNotice = `طريقة الدفع: محفظة فودافون كاش إلى 01030013810`;
+            } else if (payMethod === 'instapay') {
+                payLabel = "إنستاباي (InstaPay)";
+                payInstructions = `
+                    <div style="font-weight:900; color:#9333EA; margin-bottom:4px;">
+                        <i class="fa-solid fa-building-columns"></i> بيانات تحويل إنستاباي (InstaPay):
+                    </div>
+                    <div>المبلغ المطلوب: <strong>${totalPrice} ج.م</strong></div>
+                    <div>عنوان الـ IPA: <strong style="font-size:13.5px; direction:ltr; display:inline-block; color:#7E22CE;">impacthub@instapay</strong></div>
+                    <div>أو عبر رقم الهاتف: <strong style="font-size:13.5px; direction:ltr; display:inline-block; color:#7E22CE;">01030013810</strong></div>
+                    <div style="font-size:11.5px; margin-top:4px; opacity:0.9;">يرجى إرسال لقطة شاشة لإيصال التحويل عبر الواتساب.</div>
+                `;
+                waPayNotice = `طريقة الدفع: إنستاباي إلى impacthub@instapay (أو 01030013810)`;
+            } else {
+                payLabel = "الدفع نقداً عند استلام الشحنة";
+                payInstructions = `
+                    <div style="font-weight:900; color:#059669; margin-bottom:4px;">
+                        <i class="fa-solid fa-truck"></i> سيتم الدفع عند الاستلام:
+                    </div>
+                    <div>المبلغ المطلوب عند التسليم: <strong>${totalPrice} ج.م</strong></div>
+                    <div style="font-size:11.5px; margin-top:4px; opacity:0.9;">مندوب الشحن سيتواصل معكِ قبل الوصول، ويتاح لك فحص الشحنة قبل الاستلام.</div>
+                `;
+                waPayNotice = `طريقة الدفع: الدفع نقداً عند الاستلام`;
+            }
+
+            document.getElementById('success-payment-method').innerText = payLabel;
+            document.getElementById('success-payment-instructions').innerHTML = payInstructions;
+
+            // Prepare WhatsApp direct confirmation message
+            const waMsg = `السلام عليكم ورحمة الله وبركاته،\nلقد قمت بتسجيل طلب شراء جديد من متجر Impact Hub Egypt:\n\n` +
+                          `• رقم الطلب: ${orderNum}\n` +
+                          `• المنتج: ${prod.title}\n` +
+                          `• الكمية: ${qty}\n` +
+                          `• إجمالي المبلغ: ${totalPrice} ج.م\n` +
+                          `• الاسم: ${name}\n` +
+                          `• رقم الهاتف: ${phone}\n` +
+                          `• العنوان: ${address}\n` +
+                          `• ${waPayNotice}\n\n` +
+                          `أرجو تأكيد استلام الطلب وتجهيزه للشحن لكافة المحافظات. شكراً جزيلاً! 🌟`;
+
+            document.getElementById('success-whatsapp-btn').href = `https://wa.me/201030013810?text=${encodeURIComponent(waMsg)}`;
+
+            // Open Order Success Celebration Modal
+            document.getElementById('orderSuccessModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         };
 
         // Initialize on load
