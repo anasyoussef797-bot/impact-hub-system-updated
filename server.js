@@ -20,6 +20,8 @@ app.get('/parent-app', (req, res) => res.sendFile(path.join(__dirname, 'parent-a
 app.get('/teacher-app', (req, res) => res.sendFile(path.join(__dirname, 'teacher-app.html')));
 app.get('/nursery-admin', (req, res) => res.sendFile(path.join(__dirname, 'nursery-admin.html')));
 app.get('/super-admin', (req, res) => res.sendFile(path.join(__dirname, 'super-admin.html')));
+app.get('/product', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
+app.get('/marketplace', (req, res) => res.sendFile(path.join(__dirname, 'product.html')));
 
 // Route to securely create a Daily.co room using our API key
 app.post('/api/create-daily-room', async (req, res) => {

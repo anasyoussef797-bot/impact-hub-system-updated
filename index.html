@@ -1610,6 +1610,100 @@
                 z-index: 1050 !important;
             }
         }
+
+        /* High Performance Mobile Quick Navigation Dock */
+        .mobile-bottom-quick-bar {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1.5px solid rgba(48, 86, 105, 0.12);
+            box-shadow: 0 -4px 20px rgba(48, 86, 105, 0.08);
+            z-index: 1040;
+            align-items: center;
+            justify-content: space-around;
+            padding: 4px 6px;
+            padding-bottom: max(6px, env(safe-area-inset-bottom));
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 74px !important;
+            }
+            .mobile-bottom-quick-bar {
+                display: flex !important;
+            }
+            .chat-widget-btn {
+                bottom: 80px !important;
+            }
+        }
+
+        .quick-nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 4px;
+            border-radius: 12px;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            flex: 1;
+            max-width: 74px;
+        }
+
+        .quick-nav-tab i {
+            font-size: 18px;
+            transition: transform 0.15s ease;
+        }
+
+        .quick-nav-tab:active {
+            transform: scale(0.92);
+        }
+
+        .quick-nav-tab.active {
+            color: var(--color-brand-primary);
+            font-weight: 900;
+        }
+
+        .quick-nav-tab.active i {
+            transform: translateY(-2px);
+            color: var(--color-brand-primary);
+        }
+
+        .quick-nav-tab.highlight {
+            color: var(--color-accent);
+        }
+
+        .quick-nav-tab.highlight i {
+            color: var(--color-accent);
+        }
+
+        .quick-tab-badge {
+            position: absolute;
+            top: 1px;
+            left: 50%;
+            transform: translateX(4px);
+            background: var(--color-accent);
+            color: white;
+            font-size: 8.5px;
+            font-weight: 900;
+            padding: 1px 5px;
+            border-radius: 8px;
+            line-height: 1.1;
+            box-shadow: 0 2px 4px rgba(193, 120, 90, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1641,6 +1735,7 @@
         
         <div class="nav-links" id="nav-links-container" aria-label="قائمة التصفح الرئيسية">
             <a href="#hero-section" data-i18n="nav_home">الرئيسية</a>
+            <a href="product.html" style="background: var(--color-accent-soft) !important; color: var(--color-accent) !important; border: 1.5px solid var(--color-accent) !important; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;" data-i18n="nav_marketplace"><i class="fa-solid fa-bag-shopping"></i> المتجر والحقائب 🎒</a>
             
             <div class="dropdown">
                 <a href="#dynamic-content-wrapper" class="mobile-dropdown-toggle-link" data-mobile-dropdown-toggle="true" data-i18n="nav_explore">أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i></a>
@@ -1681,16 +1776,17 @@
 
     <!-- Hero Area -->
     <section class="hero scroll-reveal active" id="hero-section" style="padding-bottom: 80px;">
-        <div style="display: inline-block; background: rgba(0, 47, 108, 0.06); border: 1px solid rgba(0, 47, 108, 0.15); padding: 8px 18px; border-radius: 9999px; font-weight: 800; font-size: 13px; color: var(--primary-navy); margin-bottom: 24px;">
-            <i class="fa-solid fa-circle-check" style="color: var(--kid-green);"></i> <span data-i18n="hero_badge_text">البوابة الرسمية والشبكة التعليمية المعتمدة رقم 1 بمصر</span>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(48, 86, 105, 0.08); border: 1px solid rgba(48, 86, 105, 0.2); padding: 8px 18px; border-radius: 9999px; font-weight: 800; font-size: 13px; color: var(--primary-navy); margin-bottom: 24px;">
+            <i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> <span data-i18n="hero_badge_text">🇪🇬 البوابة والشبكة التعليمية المعتمدة رقم 1 للأسرة المصرية والعربية</span>
         </div>
-        <h1 id="pub-hero-title" data-i18n="hero_title">مرحباً بك في عالم Impact Hub التفاعلي 🌟</h1>
-        <p id="pub-hero-subtitle" data-i18n="hero_subtitle">نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸</p>
+        <h1 id="pub-hero-title" data-i18n="hero_title" style="line-height: 1.35;">مرحباً بكم في عالم Impact Hub: شريكك التربوي لبناء طفل مبدع وواثق 🌟</h1>
+        <p id="pub-hero-subtitle" data-i18n="hero_subtitle" style="font-size: 17.5px; font-weight: 600; max-width: 820px; margin: 0 auto 16px; color: var(--text-dark); line-height: 1.7;">مناهج مصممة بأيدي خبراء تربويين خصيصاً لتنشئة طفلك العربي والمصري 📚 | نربط الحضانة والبيت بنظام ذكي متكامل وبث حي آمن ومتابعة دورية، لنبني معاً مستقبلاً مشرقاً لأطفالنا. 🧸</p>
         <p id="pub-about-text" style="font-size: 16px; color: var(--text-gray); max-width: 700px; margin: 0 auto 30px; opacity: 0.95; font-weight: 500;"></p>
         
         <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; position: relative; z-index: 10;">
-            <a href="parent-app.html" class="login-btn" style="padding: 14px 32px !important; font-size: 15px;"><i class="fa-solid fa-rocket"></i> <span data-i18n="hero_cta_start">ابدأ الرحلة الآن مجاناً</span></a>
-            <a href="#solutions-suite" class="solution-tab-btn" style="border-width: 2px; padding: 12px 28px; background: var(--white);"><i class="fa-solid fa-circle-info"></i> <span data-i18n="hero_cta_learn">كيف نعمل؟</span></a>
+            <a href="parent-app.html" class="login-btn" style="padding: 14px 28px !important; font-size: 15px; display: inline-flex; align-items: center; gap: 8px;"><i class="fa-solid fa-child-reaching"></i> <span data-i18n="hero_cta_parent">تطبيق ولي الأمر 👨‍👩‍👧</span></a>
+            <a href="product.html" class="solution-tab-btn" style="border: 2px solid var(--color-accent); background: var(--color-accent-soft); color: var(--color-accent); padding: 13px 26px; border-radius: 9999px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="hero_cta_store">متجر بوسترات وحقائب المناهج 🎒</span></a>
+            <a href="#solutions-suite" class="solution-tab-btn" style="border-width: 2px; padding: 12px 24px; background: var(--white);"><i class="fa-solid fa-circle-info"></i> <span data-i18n="hero_cta_learn">كيف نعمل؟</span></a>
         </div>
 
         <div class="video-container" id="pub-video-container" style="display:none;"></div>
@@ -1975,8 +2071,8 @@
     <!-- Features Bento Grid Section -->
     <section class="marketing-section scroll-reveal" id="features-section">
         <div class="section-header">
-            <h2 class="section-title" data-i18n="features_title">لماذا تختار منصة Impact Hub؟ 🤔</h2>
-            <p class="section-subtitle" data-i18n="features_subtitle">نظام ذكي متكامل بمواصفات عالمية وتكامل مباشر لتوفير أفضل تجربة للطفل 🚀</p>
+            <h2 class="section-title" data-i18n="features_title">لماذا تثق آلاف الأسر المصرية والعربية بمنصة Impact Hub؟ 🇪🇬 🌟</h2>
+            <p class="section-subtitle" data-i18n="features_subtitle">مناهج مصممة بأيدي خبراء تربويين خصيصاً لتنشئة طفلك العربي، تجمع بين غرس القيم والتقنيات التفاعلية الحديثة 🚀</p>
         </div>
         
         <div class="features-container">
@@ -1988,8 +2084,8 @@
                     </div>
                 </div>
                 <div style="padding: 10px 12px 12px;">
-                    <h3 data-i18n="feat_cameras_title">كاميرات ومتابعة لايف 🎥</h3>
-                    <p data-i18n="feat_cameras_desc">تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.</p>
+                    <h3 data-i18n="feat_cameras_title">أمان ومتابعة لايف لراحة بال الأسرة 🎥</h3>
+                    <p data-i18n="feat_cameras_desc">اطمئن على طفلك لحظة بلحظة داخل الفصل والملاعب عبر بث حي مباشر ومشفّر مخصص لكل أسرة بأعلى معايير الخصوصية والأمان.</p>
                 </div>
             </div>
             
@@ -2001,8 +2097,8 @@
                     </div>
                 </div>
                 <div style="padding: 10px 12px 12px;">
-                    <h3 data-i18n="feat_curricula_title">مناهج تفاعلية حديثة 📚</h3>
-                    <p data-i18n="feat_curricula_desc">مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.</p>
+                    <h3 data-i18n="feat_curricula_title">مناهج مصممة بأيدي خبراء تربويين 📚</h3>
+                    <p data-i18n="feat_curricula_desc">مناهج مطبوعة UV وحقائب تفاعلية وبوسترات عقلية النمو (Growth Mindset) مصممة خصيصاً لتنشئة الطفل العربي والمصري وتنمية مهاراته الحياتية.</p>
                 </div>
             </div>
             
@@ -2014,8 +2110,8 @@
                     </div>
                 </div>
                 <div style="padding: 10px 12px 12px;">
-                    <h3 data-i18n="feat_classes_title">حصص تأسيس مباشرة 👩‍🏫</h3>
-                    <p data-i18n="feat_classes_desc">فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.</p>
+                    <h3 data-i18n="feat_classes_title">تأسيس لغوي وقيمي مبكر 👩‍🏫</h3>
+                    <p data-i18n="feat_classes_desc">فصول تفاعلية ذكية بإشراف نخبة من أفضل المعلمات والتربويين لتأسيس طفلك لغوياً وحركياً بأسلوب محبب وممتع.</p>
                 </div>
             </div>
             
@@ -2027,8 +2123,8 @@
                     </div>
                 </div>
                 <div style="padding: 10px 12px 12px;">
-                    <h3 data-i18n="feat_wallet_title">متجر ومدفوعات ذكية 💳</h3>
-                    <p data-i18n="feat_wallet_desc">سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.</p>
+                    <h3 data-i18n="feat_wallet_title">متجر وحقائب تعليمية ودفع محلي ميسر 💳</h3>
+                    <p data-i18n="feat_wallet_desc">تجهيز وشحن فوري لكافة محافظات مصر للبوسترات والحقائب مع إمكانية الدفع عبر إنستاباي، فودافون كاش أو عند الاستلام.</p>
                 </div>
             </div>
         </div>
@@ -2059,6 +2155,11 @@
         </div>
         <div id="live-products-teaser" style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 600px; margin: 0 auto; padding: 0 15px;">
             <p style="text-align:center; width:100%; font-weight: bold; color: var(--text-gray);" data-i18n="store_loading">جاري تحميل المنتجات... ⏳</p>
+        </div>
+        <div style="margin-top: 25px; text-align: center;">
+            <a href="product.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--color-brand-primary) 0%, #1F3845 100%); color: white; padding: 14px 32px; border-radius: 9999px; font-size: 15px; font-weight: 800; text-decoration: none; box-shadow: 0 6px 18px rgba(48, 86, 105, 0.25);">
+                <i class="fa-solid fa-arrow-left"></i> <span>استكشاف صفحة بوستر عقلية النمو والحقائب التعليمية (Marketplace) 🛒</span>
+            </a>
         </div>
     </section>
 
@@ -2334,6 +2435,31 @@
         </div>
     </div>
 
+    <!-- Mobile Bottom Quick Navigation Bar (Buttery smooth & lightning fast for Mobile View) -->
+    <nav class="mobile-bottom-quick-bar" aria-label="شريط التنقل السريع للهواتف">
+        <a href="#hero-section" class="quick-nav-tab active" id="tab-nav-home" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return true;">
+            <i class="fa-solid fa-house"></i>
+            <span>الرئيسية</span>
+        </a>
+        <a href="product.html" class="quick-nav-tab highlight" id="tab-nav-market">
+            <span class="quick-tab-badge">جديد</span>
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>الماركت</span>
+        </a>
+        <a href="parent-app.html" class="quick-nav-tab" id="tab-nav-parent">
+            <i class="fa-solid fa-child-reaching"></i>
+            <span>ولي الأمر</span>
+        </a>
+        <a href="teacher-app.html" class="quick-nav-tab" id="tab-nav-teacher">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span>المعلم</span>
+        </a>
+        <a href="nursery-admin.html" class="quick-nav-tab" id="tab-nav-nursery">
+            <i class="fa-solid fa-school"></i>
+            <span>الإدارة</span>
+        </a>
+    </nav>
+
     <!-- Main Footer -->
     <footer class="footer">
         <div id="pub-footer-logo" style="margin-bottom: 20px; background: var(--white); padding: 12px 28px; border-radius: 16px; display: inline-block; box-shadow: var(--shadow-sm);">
@@ -2353,6 +2479,7 @@
                 nav_install_app: "تثبيت التطبيق الآن 📲",
                 mobile_install_btn: "تثبيت 📲",
                 nav_home: "الرئيسية",
+                nav_marketplace: "المتجر والحقائب 🎒",
                 nav_explore: 'أركان ومناهج <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "اللغة",
                 nav_features: "مميزاتنا",
@@ -2361,21 +2488,21 @@
                 nav_login: '<i class="fa-solid fa-rocket"></i> دخول المنصة',
                 nav_live_attend: '<i class="fa-solid fa-circle-play fa-beat" style="color: white; font-size: 14px;"></i> حضور الحصة المباشرة 🎥',
                 
-                hero_title: "مرحباً بك في عالم Impact Hub التفاعلي 🌟",
-                hero_subtitle: "نظام ذكي متكامل يربط بين الإدارة، المدرسين، وأولياء الأمور لتوفير أفضل تجربة تعليمية للطفل. 🧸",
+                hero_title: "مرحباً بكم في عالم Impact Hub: شريكك التربوي لبناء طفل مبدع وواثق 🌟",
+                hero_subtitle: "مناهج مصممة بأيدي خبراء تربويين خصيصاً لتنشئة طفلك العربي والمصري 📚 | نربط الحضانة والبيت بنظام ذكي متكامل وبث حي آمن ومتابعة دورية، لنبني معاً مستقبلاً مشرقاً لأطفالنا. 🧸",
                 hero_video_title: "شاهد كيف يعمل السيستم في دقيقتين 🎥",
                 
-                features_title: "لماذا تختار منصة Impact Hub؟ 🤔",
-                features_subtitle: "نظام ذكي متكامل بمواصفات عالمية وتكامل مباشر لتوفير أفضل تجربة للطفل 🚀",
+                features_title: "لماذا تثق آلاف الأسر المصرية والعربية بمنصة Impact Hub؟ 🇪🇬 🌟",
+                features_subtitle: "مناهج مصممة بأيدي خبراء تربويين خصيصاً لتنشئة طفلك العربي، تجمع بين غرس القيم والتقنيات التفاعلية الحديثة 🚀",
                 
-                feat_cameras_title: "كاميرات ومتابعة لايف 🎥",
-                feat_cameras_desc: "تابع طفلك لحظة بلحظة من داخل الفصل والملعب عبر بث آمن تماماً لأولياء الأمور المعنيين فقط.",
-                feat_curricula_title: "مناهج تفاعلية حديثة 📚",
-                feat_curricula_desc: "مناهج مسجلة ومطبوعة UV بجودة متميزة، مخصصة لتنمية مهارات الأطفال ما قبل المدرسة.",
-                feat_classes_title: "حصص تأسيس مباشرة 👩‍🏫",
-                feat_classes_desc: "فصول افتراضية تفاعلية أونلاين لتقوية طفلك في اللغات والحساب مع نخبة من أفضل المعلمين.",
-                feat_wallet_title: "متجر ومدفوعات ذكية 💳",
-                feat_wallet_desc: "سلة مشتريات موحدة لشراء الكتب والزي والمستلزمات، مع إمكانية التحويل عبر المحافظ الإلكترونية لايف.",
+                feat_cameras_title: "أمان ومتابعة لايف لراحة بال الأسرة 🎥",
+                feat_cameras_desc: "اطمئن على طفلك لحظة بلحظة داخل الفصل والملاعب عبر بث حي مباشر ومشفّر مخصص لكل أسرة بأعلى معايير الخصوصية والأمان.",
+                feat_curricula_title: "مناهج مصممة بأيدي خبراء تربويين 📚",
+                feat_curricula_desc: "مناهج مطبوعة UV وحقائب تفاعلية وبوسترات عقلية النمو (Growth Mindset) مصممة خصيصاً لتنشئة الطفل العربي والمصري وتنمية مهاراته الحياتية.",
+                feat_classes_title: "تأسيس لغوي وقيمي مبكر 👩‍🏫",
+                feat_classes_desc: "فصول تفاعلية ذكية بإشراف نخبة من أفضل المعلمات والتربويين لتأسيس طفلك لغوياً وحركياً بأسلوب محبب وممتع.",
+                feat_wallet_title: "متجر وحقائب تعليمية ودفع محلي ميسر 💳",
+                feat_wallet_desc: "تجهيز وشحن فوري لكافة محافظات مصر للبوسترات والحقائب مع إمكانية الدفع عبر إنستاباي، فودافون كاش أو عند الاستلام.",
                 
                 teachers_title: "خبراء التعليم المباشر 🌟",
                 teachers_subtitle: "احجز حصتك الفردية أو الجماعية الآن واضمن تأسيس طفلك صح 🎓",
@@ -2413,8 +2540,10 @@
                 footer_slogan: "بيئة تعليمية مبهجة وآمنة لأجل مستقبل أطفالنا ❤️",
                 footer_copyright: "جميع الحقوق محفوظة &copy; 2026 - تم التطوير بواسطة Impact Hub Egypt (ESAIA)",
 
-                hero_badge_text: "البوابة الرسمية والشبكة التعليمية المعتمدة رقم 1 بمصر",
-                hero_cta_start: "ابدأ الرحلة الآن مجاناً",
+                hero_badge_text: "🇪🇬 البوابة والشبكة التعليمية المعتمدة رقم 1 للأسرة المصرية والعربية",
+                hero_cta_parent: "تطبيق ولي الأمر 👨‍👩‍👧",
+                hero_cta_store: "متجر بوسترات وحقائب المناهج 🎒",
+                hero_cta_start: "ابدأ الرحلة الآن مجاناً 🚀",
                 hero_cta_learn: "كيف نعمل؟",
                 stat_students_label: "طفل مستفيد ونشط 🧒",
                 stat_nurseries_label: "حضانة معتمدة بمصر 🏫",
@@ -2463,6 +2592,7 @@
                 nav_install_app: "Install App Now 📲",
                 mobile_install_btn: "Install 📲",
                 nav_home: "Home",
+                nav_marketplace: "Marketplace & Kits 🎒",
                 nav_explore: 'Playrooms & Curricula <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Language",
                 nav_features: "Features",
@@ -2524,6 +2654,8 @@
                 footer_copyright: "All rights reserved &copy; 2026 - Developed by Impact Hub Egypt (ESAIA)",
 
                 hero_badge_text: "Official Portal & #1 Accredited Educational Network in Egypt",
+                hero_cta_parent: "Parent App 👨‍👩‍👧",
+                hero_cta_store: "Growth Mindset Store 🎒",
                 hero_cta_start: "Start Journey Free",
                 hero_cta_learn: "How it works?",
                 stat_students_label: "Benefited active children 🧒",
@@ -2573,6 +2705,7 @@
                 nav_install_app: "Installer l'appli 📲",
                 mobile_install_btn: "Installer 📲",
                 nav_home: "Accueil",
+                nav_marketplace: "Boutique & Kits 🎒",
                 nav_explore: 'Programmes <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Langue",
                 nav_features: "Atouts",
@@ -2634,6 +2767,8 @@
                 footer_copyright: "Tous droits réservés &copy; 2026 - Développé par Impact Hub Egypt (ESAIA)",
 
                 hero_badge_text: "Portail officiel et réseau éducatif agréé n°1 en Égypte",
+                hero_cta_parent: "Espace Parents 👨‍👩‍👧",
+                hero_cta_store: "Boutique Kits & Posters 🎒",
                 hero_cta_start: "Commencer Maintenant",
                 hero_cta_learn: "Comment ça marche?",
                 stat_students_label: "Enfants actifs bénéficiaires 🧒",
@@ -2683,6 +2818,7 @@
                 nav_install_app: "App installieren 📲",
                 mobile_install_btn: "Installieren 📲",
                 nav_home: "Startseite",
+                nav_marketplace: "Marktplatz & Kits 🎒",
                 nav_explore: 'Spielräume & Pläne <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>',
                 nav_lang: "Sprache",
                 nav_features: "Vorteile",
@@ -2744,6 +2880,8 @@
                 footer_copyright: "Alle Rechte vorbehalten &copy; 2026 - Entwickelt von Impact Hub Egypt (ESAIA)",
 
                 hero_badge_text: "Offizielles Portal & das akkreditierte Bildungsnetzwerk Nr. 1 in Ägypten",
+                hero_cta_parent: "Eltern-App 👨‍👩‍👧",
+                hero_cta_store: "Lernkits & Poster 🎒",
                 hero_cta_start: "Jetzt kostenlos starten",
                 hero_cta_learn: "Wie funktioniert es?",
                 stat_students_label: "Aktive begünstigte Kinder 🧒",

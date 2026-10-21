@@ -558,6 +558,19 @@
                 <div id="marketplace" class="tab-content">
                     <h3 class="section-title" data-i18n="marketplace_title">متجر الحضانة والكتب</h3>
                     
+                    <!-- بنر الانتقال لصفحة المنتج المستقلة والتفصيلية -->
+                    <div class="card" style="margin-bottom: 16px; padding: 14px 16px; background: linear-gradient(135deg, var(--color-brand-primary-light) 0%, #FFFFFF 100%) !important; border: 1.5px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <div style="font-weight: 900; font-size: 13.5px; color: var(--color-brand-primary); display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-sparkles" style="color: var(--color-accent);"></i> <span>صفحة عرض المنتجات التفصيلية (Marketplace Landing)</span>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-gray); margin-top: 3px;">تصفح بوستر عقلية النمو والحقائب التعليمية المعتمدة بتفاصيلها الكاملة.</div>
+                        </div>
+                        <a href="product.html" class="btn-primary" style="margin: 0; padding: 8px 16px; font-size: 11.5px; font-weight: 800; width: auto; background: var(--color-accent); color: white; text-decoration: none; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span>تصفح المتجر</span> <i class="fa-solid fa-arrow-left"></i>
+                        </a>
+                    </div>
+
                     <!-- طلبات الشراء الخاصة بولي الأمر -->
                     <div class="card" style="margin-bottom: 20px; padding: 14px; background: var(--color-background) !important; border: 1.5px solid var(--color-warning-soft);">
                         <h4 style="font-size: 14px; margin-bottom: 8px; color: var(--color-warning); font-weight: bold; display: flex; align-items: center; justify-content: space-between; gap: 6px;">
@@ -2499,6 +2512,27 @@
             
             // Start with pre-configured static items as defaults
             let htmlContent = `
+                <div class="product-card" style="border: 1.5px solid var(--color-accent); background: #FFFDFB;" onclick="window.location.href='product.html?id=growth-mindset'">
+                    <div class="product-img-compact" style="background: var(--color-accent-soft);">
+                        <i class="fa-solid fa-brain" style="color: var(--color-accent); font-size: 20px;"></i>
+                    </div>
+                    <div class="product-info-compact">
+                        <div style="font-size: 9.5px; font-weight: 900; color: var(--color-accent);"><i class="fa-solid fa-fire"></i> الأكثر طلباً بمصر</div>
+                        <h4 style="font-weight: 800; font-size: 13px; color: var(--text-dark); margin: 0;">بوستر عقلية النمو والتفكير الإيجابي (Growth Mindset)</h4>
+                        <div style="display: flex; gap: 2px; align-items: center; margin: 2px 0;">
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                            <i class="fa-solid fa-star" style="color: var(--color-warning); font-size:11px;"></i>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-gray);">تم بيع 3,850+ قطعة بمصر</div>
+                    </div>
+                    <div style="text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                        <span style="color: var(--color-accent); font-weight: 900; font-size: 14px;">195${currency}</span>
+                        <span style="font-size: 10px; color: white; font-weight: bold; background: var(--color-accent); padding: 2px 6px; border-radius: 6px;">شراء وتفاصيل ⚡</span>
+                    </div>
+                </div>
                 <div class="product-card" onclick="window.showProductDetails('${dict.book_interactive.replace(/'/g, "\\'")}', 85, '', 5, 42)">
                     <div class="product-img-compact">
                         <i class="fa-solid fa-book" style="color: var(--primary-maroon);"></i>
