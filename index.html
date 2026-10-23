@@ -2358,7 +2358,7 @@
             </div>
 
             <div style="display: flex; gap: 10px; flex-direction: column;">
-                <a href="product.html" class="book-btn" style="width: 100%; text-align: center; font-size: 14px; font-weight: 800; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--color-accent, #C1785A), #A86348); color: white; text-decoration: none; box-shadow: 0 4px 12px rgba(193, 120, 90, 0.3);">صفحة الشراء المباشر والفوري ⚡</a>
+                <a href="product.html?id=growth-mindset-poster" id="pdm-direct-buy-link" class="book-btn" style="width: 100%; text-align: center; font-size: 14px; font-weight: 800; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, var(--color-accent, #C1785A), #A86348); color: white; text-decoration: none; box-shadow: 0 4px 12px rgba(193, 120, 90, 0.3);">شراء مباشر وفوري بنقرة واحدة ⚡</a>
                 <a href="parent-app.html" class="book-btn" style="width: 100%; text-align: center; font-size: 13.5px; font-weight: 800; padding: 11px; border-radius: 12px; background: var(--color-primary); color: white; text-decoration: none; box-shadow: 0 4px 12px var(--color-shadow-subtle);">سجل دخول كولي أمر واطلب من التطبيق 🎒</a>
             </div>
         </div>
@@ -3961,12 +3961,28 @@
         }
 
         // 6. Fetch products teaser limit 4
-        window.openProductDetailsModal = (title, price, image, rating, salesCount) => {
+        window.openProductDetailsModal = (title, price, image, rating, salesCount, prodId) => {
             const currency = activeLang === 'ar' ? ' ج.م' : ' EGP';
             document.getElementById('pdm-title').innerText = title;
             document.getElementById('pdm-price').innerText = price + currency;
             document.getElementById('pdm-sales').innerText = activeLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
             
+            // Map title/id to product landing query
+            let queryId = prodId || 'growth-mindset-poster';
+            if (title && (title.includes('عقلية') || title.includes('Growth') || title.includes('بوستر'))) {
+                queryId = 'growth-mindset-poster';
+            } else if (title && (title.includes('تأسيس') || title.includes('STEM'))) {
+                queryId = 'prod_stem_kit';
+            } else if (title && (title.includes('مكعبات') || title.includes('ذكاء'))) {
+                queryId = 'prod_003';
+            } else if (title && (title.includes('رسم') || title.includes('تلوين'))) {
+                queryId = 'prod_002';
+            }
+            const buyLink = document.getElementById('pdm-direct-buy-link');
+            if (buyLink) {
+                buyLink.href = `product.html?id=${encodeURIComponent(queryId)}`;
+            }
+
             const starsContainer = document.getElementById('pdm-stars');
             starsContainer.innerHTML = Array.from({length: 5}, (_, i) => `<i class="fa-solid fa-star" style="color: ${i < rating ? 'var(--color-warning)' : 'var(--color-border)'}; font-size:14px;"></i>`).join('');
             
@@ -4036,7 +4052,7 @@
                     const salesLabel = activeLang === 'ar' ? `تم بيع ${sales} قطعة` : `${sales} items sold`;
 
                     container.innerHTML += `
-                        <div class="product-card-row" onclick="openProductDetailsModal('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales})">
+                        <div class="product-card-row" onclick="openProductDetailsModal('${prod.title.replace(/'/g, "\\'")}', ${prod.price}, '${prod.image || ''}', ${rating}, ${sales}, '${docData.id}')">
                             <div style="width: 60px; height: 60px; border-radius: 12px; flex-shrink: 0; background: var(--color-background); display: flex; align-items: center; justify-content: center; overflow: hidden;">
                                 ${prod.image ? `<img src="${prod.image}" width="60" height="60" loading="lazy" decoding="async" alt="${prod.title}" style="width:100%; height:100%; object-fit:cover;">` : `<i class="fa-solid fa-book-bookmark" style="font-size: 20px; color: var(--primary-indigo);"></i>`}
                             </div>

@@ -1179,27 +1179,132 @@
                 </div>
             </div>
 
-            <!-- تابة إدارة طلبات الشحن اللوجستية (Axon Express) -->
+            <!-- تابة إدارة ومتابعة الطلبات الموحدة (المتجر الخارجي / الحضانات / أولياء الأمور) -->
             <div id="orders-tab" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header" data-i18n="shipping_header"><i class="fa-solid fa-truck-fast"></i> إدارة الطلبات اللوجستية (جاهزة للشحن عبر Axon Express)</div>
-                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 15px;" data-i18n="shipping_desc">هنا تظهر الطلبات التي أكدت المديرات استلام قيمتها. تفاصيل الحضانة ظاهرة لتسهيل عملية الشحن والتوصيل عبر نظام (Axon Express).</p>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th data-i18n="th_nursery_details">تفاصيل الحضانة (للتوصيل)</th>
-                                    <th data-i18n="th_parent_student">ولي الأمر / الطالب</th>
-                                    <th data-i18n="th_requested_prods">المنتجات المطلوبة</th>
-                                    <th data-i18n="th_order_status">حالة الطلب</th>
-                                    <th data-i18n="th_shipping_action">إجراء الشحن</th>
-                                </tr>
-                            </thead>
-                            <tbody id="central-orders-tbody">
-                                <tr><td colspan="5" style="text-align: center;" data-i18n="loading_orders">جاري جلب الطلبات...</td></tr>
-                            </tbody>
-                        </table>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; border-bottom: 1px solid var(--color-border); padding-bottom: 14px;">
+                        <div>
+                            <div class="panel-header" style="margin-bottom: 4px; border-bottom: none; padding-bottom: 0;">
+                                <i class="fa-solid fa-truck-fast" style="color: var(--primary-maroon);"></i>
+                                <span data-i18n="shipping_header">مركز إدارة الطلبات الموحد والخدمات اللوجستية</span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-gray); margin: 0;" data-i18n="shipping_desc">
+                                متابعة وفصل طلبات المتجر العام الخارجي، طلبات الحضانات، وطلبات أولياء الأمور لتسهيل المراجعة والتسليم عبر نظام Axon Express.
+                            </p>
+                        </div>
+                        <button class="btn-outline" onclick="window.fetchCentralOrders()" style="padding: 9px 18px; border-radius: 12px; border: 1.5px solid var(--border-color); background: var(--color-background); font-weight: 800; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-arrows-rotate" style="color: var(--color-brand-primary);"></i>
+                            <span>تحديث الطلبات الآن</span>
+                        </button>
                     </div>
+
+                    <!-- الأزرار الفرعية لتقسيم الطلبات إلى 3 تابات واضحة -->
+                    <div class="sub-tabs" style="margin-bottom: 20px; gap: 8px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 14px;">
+                        <button type="button" class="sub-tab-btn active" id="subtab-btn-external" onclick="window.switchOrdersSubTab('external')">
+                            <i class="fa-solid fa-store" style="color: var(--color-accent, #C1785A); margin-left: 6px;"></i>
+                            <span>طلبات المتجر العام الخارجي</span>
+                            <span id="badge-count-external" style="background: var(--color-accent, #C1785A); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 6px; font-weight: 900;">0</span>
+                        </button>
+                        <button type="button" class="sub-tab-btn" id="subtab-btn-nursery" onclick="window.switchOrdersSubTab('nursery')">
+                            <i class="fa-solid fa-school" style="color: var(--primary-indigo, #305669); margin-left: 6px;"></i>
+                            <span>طلبات الحضانات والمدرسين</span>
+                            <span id="badge-count-nursery" style="background: var(--color-brand-primary, #305669); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 6px; font-weight: 900;">0</span>
+                        </button>
+                        <button type="button" class="sub-tab-btn" id="subtab-btn-parent" onclick="window.switchOrdersSubTab('parent')">
+                            <i class="fa-solid fa-user-group" style="color: #059669; margin-left: 6px;"></i>
+                            <span>طلبات أولياء الأمور (تطبيق ولي الأمر)</span>
+                            <span id="badge-count-parent" style="background: #059669; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-right: 6px; font-weight: 900;">0</span>
+                        </button>
+                    </div>
+
+                    <!-- 1. تاب طلبات المتجر العام الخارجي (العملاء وزوار الموقع و Pinterest) -->
+                    <div id="subtab-content-external" class="orders-subtab-pane">
+                        <div style="background: rgba(193, 120, 90, 0.08); border: 1.5px solid rgba(193, 120, 90, 0.25); border-radius: 14px; padding: 12px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                            <div style="font-size: 13.5px; font-weight: 800; color: #8A4426; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-circle-info" style="font-size: 16px;"></i>
+                                <span>الطلبات الواردة من عملاء وزوار الموقع الخارجي المباشر وماركت بليس (Landing Page / Pinterest / وسائل التواصل):</span>
+                            </div>
+                            <div style="font-size: 12.5px; color: var(--text-gray); font-weight: 800;" id="external-orders-stat-summary">
+                                <!-- إحصائيات سريعة للطلبات الخارجية -->
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 130px;">رقم وتاريخ الطلب</th>
+                                        <th style="min-width: 210px;">العميل والعنوان والتوصيل</th>
+                                        <th style="min-width: 230px;">المنتج والكمية والمبلغ</th>
+                                        <th style="min-width: 160px;">طريقة وسند الدفع</th>
+                                        <th style="min-width: 150px;">حالة الطلب</th>
+                                        <th style="min-width: 140px;">الإجراءات السريعة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="external-orders-tbody">
+                                    <tr><td colspan="6" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري جلب طلبات المتجر الخارجي... ⏳</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 2. تاب طلبات الحضانات والمدرسين -->
+                    <div id="subtab-content-nursery" class="orders-subtab-pane" style="display: none;">
+                        <div style="background: rgba(48, 86, 105, 0.08); border: 1.5px solid rgba(48, 86, 105, 0.2); border-radius: 14px; padding: 12px 18px; margin-bottom: 16px;">
+                            <div style="font-size: 13.5px; font-weight: 800; color: var(--color-brand-primary); display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-school" style="font-size: 16px;"></i>
+                                <span>طلبات الحقائب التعليمية والمناهج المجمعة الواردة من إدارات الحضانات والمعلمين لتجهيز الفصول:</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 180px;">تفاصيل الحضانة (للتوصيل)</th>
+                                        <th style="min-width: 170px;">المسؤول / الهاتف</th>
+                                        <th style="min-width: 220px;">المنتجات والمناهج المطلوبة</th>
+                                        <th style="min-width: 140px;">حالة الطلب</th>
+                                        <th style="min-width: 110px;">إجراء الشحن</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nursery-orders-tbody">
+                                    <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري جلب طلبات الحضانات... ⏳</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 3. تاب طلبات أولياء الأمور (تطبيق ولي الأمر) -->
+                    <div id="subtab-content-parent" class="orders-subtab-pane" style="display: none;">
+                        <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 12px 18px; margin-bottom: 16px;">
+                            <div style="font-size: 13.5px; font-weight: 800; color: #047857; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-user-group" style="font-size: 16px;"></i>
+                                <span>طلبات أولياء الأمور التابعين للحضانات المشتركة بالمنظومة (الواردة عبر تطبيق ولي الأمر):</span>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 170px;">الحضانة المسجل بها</th>
+                                        <th style="min-width: 180px;">ولي الأمر / الطالب</th>
+                                        <th style="min-width: 220px;">المنتجات المطلوبة والإجمالي</th>
+                                        <th style="min-width: 140px;">حالة الطلب</th>
+                                        <th style="min-width: 110px;">إجراء الشحن</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="parent-orders-tbody">
+                                    <tr><td colspan="5" style="text-align: center; padding: 25px; color: var(--text-gray);">جاري جلب طلبات أولياء الأمور... ⏳</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Fallback hidden tbody for backwards compatibility with any legacy script referencing central-orders-tbody -->
+                    <table style="display: none;"><tbody id="central-orders-tbody"></tbody></table>
+
                 </div>
             </div>
 
@@ -1788,8 +1893,8 @@
                 p_lbl_price: "السعر الثابت (ج.م)",
                 p_lbl_image: "صورة المنتج الحقيقية (ملف)",
                 btn_publish_market: "نشر بالماركت بليس الموحد",
-                shipping_header: "إدارة الطلبات اللوجستية (جاهزة للشحن عبر Axon Express)",
-                shipping_desc: "هنا تظهر الطلبات التي أكدت المديرات استلام قيمتها. تفاصيل الحضانة ظاهرة لتسهيل عملية الشحن والتوصيل عبر نظام (Axon Express).",
+                shipping_header: "مركز إدارة ومتابعة الطلبات الموحد واللوجستيات",
+                shipping_desc: "متابعة وفصل طلبات المتجر العام الخارجي، طلبات الحضانات، وطلبات أولياء الأمور لتسهيل المراجعة والتسليم عبر نظام Axon Express.",
                 th_nursery_details: "تفاصيل الحضانة (للتوصيل)",
                 th_parent_student: "ولي الأمر / الطالب",
                 th_requested_prods: "المنتجات المطلوبة",
@@ -4017,17 +4122,76 @@
             window.fetchCentralProducts();
         };
 
-        // 6. الشحن والخدمات اللوجستية مع Axon Express
+        // ================== 6. مركز إدارة الطلبات والخدمات اللوجستية (المتجر الخارجي / الحضانات / أولياء الأمور) ==================
+        
+        window.activeOrdersSubTab = localStorage.getItem('super_orders_subtab') || 'external';
+
+        window.switchOrdersSubTab = (subTabKey) => {
+            window.activeOrdersSubTab = subTabKey;
+            localStorage.setItem('super_orders_subtab', subTabKey);
+
+            // Update buttons active class
+            document.querySelectorAll('.orders-subtab-pane').forEach(el => el.style.display = 'none');
+            const targetPane = document.getElementById(`subtab-content-${subTabKey}`);
+            if (targetPane) targetPane.style.display = 'block';
+
+            document.querySelectorAll('.sub-tabs .sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`subtab-btn-${subTabKey}`);
+            if (activeBtn) activeBtn.classList.add('active');
+        };
+
+        window.formatOrderDate = (timestamp) => {
+            if (!timestamp) return 'حديثاً';
+            try {
+                let date;
+                if (typeof timestamp === 'number') {
+                    date = new Date(timestamp);
+                } else if (timestamp.seconds) {
+                    date = new Date(timestamp.seconds * 1000);
+                } else {
+                    date = new Date(timestamp);
+                }
+                return date.toLocaleDateString('ar-EG', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'حديثاً';
+            }
+        };
+
+        window.openCustomerWhatsApp = (phone, name, orderId, total, itemsSummary) => {
+            if (!phone) {
+                alert('لا يوجد رقم هاتف مسجل لهذا العميل.');
+                return;
+            }
+            let cleanPhone = phone.replace(/[^0-9]/g, '');
+            if (cleanPhone.startsWith('01')) {
+                cleanPhone = '2' + cleanPhone;
+            }
+            const msg = `السلام عليكم ورحمة الله وبركاته أستاذ/ة ${name || ''}،\n` +
+                        `معكم إدارة منصة Impact Hub Egypt بخصوص طلبكم رقم (${orderId}).\n` +
+                        `• المنتجات: ${itemsSummary || 'طلب المتجر'}\n` +
+                        `• الإجمالي: ${total} ج.م\n` +
+                        `نود إفادتكم بحالة الطلب والتأكيد على ميعاد الشحن والتوصيل. يسعدنا خدمتكم دائماً! 🌟`;
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
         window.fetchCentralOrders = async () => {
-            const tbody = document.getElementById('central-orders-tbody');
-            if(!tbody) return;
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">جاري تحميل طلبات الشحن اللوجستية... ⏳</td></tr>';
-            
+            const externalTbody = document.getElementById('external-orders-tbody');
+            const nurseryTbody = document.getElementById('nursery-orders-tbody');
+            const parentTbody = document.getElementById('parent-orders-tbody');
+
+            if (externalTbody) externalTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 25px;">جاري تحميل طلبات المتجر الخارجي... ⏳</td></tr>';
+            if (nurseryTbody) nurseryTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 25px;">جاري تحميل طلبات الحضانات... ⏳</td></tr>';
+            if (parentTbody) parentTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 25px;">جاري تحميل طلبات أولياء الأمور... ⏳</td></tr>';
+
             const currentLang = localStorage.getItem('selected_language') || 'ar';
-            const dict = superTranslations[currentLang] || superTranslations.ar;
 
             try {
-                // Ensure nurseries map is populated if empty
+                // 1. Ensure nurseries cache is populated
                 if (!allNurseriesDataMap || Object.keys(allNurseriesDataMap).length === 0) {
                     try {
                         const nSnap = await getDocs(collection(db, "nurseries"));
@@ -4039,12 +4203,53 @@
                     }
                 }
 
-                const snap = await getDocs(collection(db, "orders"));
-                let orders = [];
-                snap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    // Show bookstore purchases that have been approved or forwarded by nursery admin
-                    const isLesson = data.items && data.items.some(item => 
+                // 2. Fetch both 'orders' and 'store_orders' in parallel to guarantee zero missing orders
+                const [ordersRes, storeOrdersRes] = await Promise.allSettled([
+                    getDocs(collection(db, "orders")),
+                    getDocs(collection(db, "store_orders"))
+                ]);
+
+                const ordersMap = new Map();
+
+                if (ordersRes.status === 'fulfilled' && ordersRes.value) {
+                    ordersRes.value.forEach(docSnap => {
+                        ordersMap.set(docSnap.id, { id: docSnap.id, collectionName: 'orders', ...docSnap.data() });
+                    });
+                }
+
+                if (storeOrdersRes.status === 'fulfilled' && storeOrdersRes.value) {
+                    storeOrdersRes.value.forEach(docSnap => {
+                        if (!ordersMap.has(docSnap.id)) {
+                            ordersMap.set(docSnap.id, { id: docSnap.id, collectionName: 'store_orders', ...docSnap.data() });
+                        }
+                    });
+                }
+
+                // 3. Fallback check on localStorage backup orders (safety net for offline/client sync)
+                try {
+                    const localBackup = JSON.parse(localStorage.getItem('impact_hub_customer_orders') || '[]');
+                    localBackup.forEach(locOrder => {
+                        const candidateId = locOrder.orderId || locOrder.id;
+                        let alreadyExists = false;
+                        for (let val of ordersMap.values()) {
+                            if (val.orderId === candidateId || val.id === candidateId) {
+                                alreadyExists = true;
+                                break;
+                            }
+                        }
+                        if (!alreadyExists && candidateId) {
+                            ordersMap.set(candidateId, { id: candidateId, collectionName: 'orders', isLocalBackup: true, ...locOrder });
+                        }
+                    });
+                } catch (localErr) {
+                    console.warn("Local storage orders read err:", localErr);
+                }
+
+                // 4. Normalize and clean all orders
+                let allOrders = [];
+                ordersMap.forEach((data, id) => {
+                    // Exclude private lesson bookings from product shipping table
+                    const isLesson = data.items && Array.isArray(data.items) && data.items.some(item => 
                         item.name && (
                             item.name.includes("حجز درس") || 
                             item.name.includes("حصة") || 
@@ -4052,112 +4257,393 @@
                             item.name.includes("أونلاين")
                         )
                     );
-                    if (!isLesson && data.status !== 'pending') {
-                        orders.push({ id: docSnap.id, ...data });
+                    if (isLesson) return;
+
+                    // Normalize items
+                    let items = [];
+                    if (data.items && Array.isArray(data.items) && data.items.length > 0) {
+                        items = data.items.map(it => ({
+                            name: it.name || it.title || 'منتج',
+                            price: Number(it.price || it.unitPrice || 0),
+                            quantity: Number(it.quantity || it.qty || 1)
+                        }));
+                    } else if (data.productTitle || data.itemTitle) {
+                        items = [{
+                            name: data.productTitle || data.itemTitle,
+                            price: Number(data.itemPrice || data.unitPrice || data.price || 0),
+                            quantity: Number(data.quantity || data.qty || 1)
+                        }];
+                    }
+
+                    // Normalize total price
+                    let calcTotal = items.reduce((sum, it) => sum + (it.price * (it.quantity || 1)), 0);
+                    let finalTotal = Number(data.totalPrice || data.total || calcTotal || 0);
+
+                    const normalized = {
+                        id: id,
+                        collectionName: data.collectionName || 'orders',
+                        orderId: data.orderId || data.orderNum || ('ORD-' + id.slice(0, 6).toUpperCase()),
+                        customerName: data.customerName || data.parentName || data.name || 'عميل المتجر',
+                        customerPhone: data.customerPhone || data.parentPhone || data.phone || '',
+                        customerAddress: data.customerAddress || data.address || '',
+                        customerNotes: data.customerNotes || data.notes || '',
+                        parentName: data.parentName || data.customerName || '',
+                        parentPhone: data.parentPhone || data.customerPhone || '',
+                        studentName: data.studentName || data.childName || data.kidName || '',
+                        nurseryId: data.nurseryId || '',
+                        nurseryName: data.nurseryName || '',
+                        items: items,
+                        totalPrice: finalTotal,
+                        paymentMethod: data.paymentMethod || 'cash_on_delivery',
+                        paymentProof: data.paymentProof || '',
+                        paymentStatus: data.paymentStatus || (data.paymentMethod === 'cash_on_delivery' ? 'unpaid' : 'pending_verification'),
+                        status: data.status || 'pending',
+                        source: data.source || '',
+                        orderType: data.orderType || '',
+                        timestamp: data.timestamp || data.createdAt || data.approvedAt || 0,
+                        isLocalBackup: !!data.isLocalBackup
+                    };
+
+                    allOrders.push(normalized);
+                });
+
+                // Sort by timestamp descending (newest first)
+                allOrders.sort((a, b) => {
+                    const timeA = typeof a.timestamp === 'number' ? a.timestamp : (a.timestamp?.seconds ? a.timestamp.seconds * 1000 : 0);
+                    const timeB = typeof b.timestamp === 'number' ? b.timestamp : (b.timestamp?.seconds ? b.timestamp.seconds * 1000 : 0);
+                    return timeB - timeA;
+                });
+
+                // 5. Partition orders into 3 clear categories:
+                // Tab 1: External Marketplace / Public Store orders
+                // Tab 2: Nursery & Teacher bulk curriculum orders
+                // Tab 3: Parent App orders
+                const externalOrders = [];
+                const nurseryOrders = [];
+                const parentOrders = [];
+
+                allOrders.forEach(ord => {
+                    const src = (ord.source || '').toLowerCase();
+                    const type = (ord.orderType || '').toLowerCase();
+
+                    // Check external marketplace conditions
+                    const isExternal = src === 'marketplace_landing' || src === 'public_store' || src === 'external' || src === 'pinterest' ||
+                                      type === 'external_store' || type === 'marketplace' || type === 'store_order' ||
+                                      (ord.customerAddress && (!ord.nurseryId || ord.nurseryId === 'undefined')) ||
+                                      (!ord.nurseryId && !ord.parentId && !ord.studentName);
+
+                    // Check parent app conditions
+                    const isParent = src === 'parent_app' || (!isExternal && (ord.parentId || ord.studentName || (ord.parentName && ord.nurseryId)));
+
+                    // Check nursery conditions
+                    const isNursery = type === 'nursery' || src === 'nursery_admin' || src === 'teacher_app' || (!isExternal && !isParent && ord.nurseryId);
+
+                    if (isExternal) {
+                        externalOrders.push(ord);
+                    } else if (isNursery) {
+                        nurseryOrders.push(ord);
+                    } else if (isParent) {
+                        parentOrders.push(ord);
+                    } else {
+                        // Fallback to external so NO order is hidden
+                        externalOrders.push(ord);
                     }
                 });
 
-                // Sort by approvedAt or timestamp
-                orders.sort((a, b) => (b.approvedAt || b.timestamp?.seconds || b.timestamp || 0) - (a.approvedAt || a.timestamp?.seconds || a.timestamp || 0));
+                // Update counter badges
+                document.getElementById('badge-count-external').innerText = externalOrders.length;
+                document.getElementById('badge-count-nursery').innerText = nurseryOrders.length;
+                document.getElementById('badge-count-parent').innerText = parentOrders.length;
 
-                if(orders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: gray; padding: 20px;">${currentLang === 'ar' ? 'لا توجد طلبات شحن حالياً.' : 'No shipping orders currently.'}</td></tr>`;
-                    return;
+                // Update external orders stat summary
+                const pendingCount = externalOrders.filter(o => o.status === 'pending').length;
+                const totalRevenue = externalOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+                const statSummaryEl = document.getElementById('external-orders-stat-summary');
+                if (statSummaryEl) {
+                    statSummaryEl.innerHTML = `
+                        <span>إجمالي المبيعات: <strong style="color:var(--color-brand-primary);">${totalRevenue} ج.م</strong></span>
+                        <span style="margin: 0 6px;">|</span>
+                        <span>طلبات بانتظار التأكيد: <strong style="color:#DC2626;">${pendingCount}</strong></span>
+                    `;
                 }
 
-                tbody.innerHTML = '';
-                orders.forEach(order => {
-                    let itemsHtml = '';
-                    let totalAmount = 0;
-                    if(order.items && order.items.length > 0) {
-                        order.items.forEach(item => {
-                            itemsHtml += `<div>- ${item.name} (${item.price} EGP)</div>`;
-                            totalAmount += (Number(item.price) || 0);
-                        });
-                    }
-
-                    // Map nursery ID to details for shipping
-                    let nurseryDetails = '';
-                    const nurseryData = (order.nurseryId && allNurseriesDataMap) ? allNurseriesDataMap[order.nurseryId] : null;
-
-                    if (nurseryData && nurseryData.name) {
-                        nurseryDetails = `
-                            <div style="line-height:1.4;">
-                                <strong style="color:var(--primary-maroon);">${nurseryData.name}</strong><br>
-                                ${nurseryData.address ? `<span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-map-marker-alt"></i> ${nurseryData.address}</span><br>` : ''}
-                                ${nurseryData.phone ? `<span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-phone"></i> ${nurseryData.phone}</span>` : ''}
-                            </div>
-                        `;
-                    } else if (order.nurseryName) {
-                        nurseryDetails = `<strong>${order.nurseryName}</strong>`;
-                    } else if (order.nurseryId && order.nurseryId !== 'undefined') {
-                        nurseryDetails = `<strong>حضانة: ${order.nurseryId}</strong>`;
-                    } else {
-                        nurseryDetails = `<strong style="color:var(--color-brand-primary);"><i class="fa-solid fa-store"></i> ${currentLang === 'ar' ? 'المتجر المركزي العام' : 'Central Store'}</strong>`;
-                    }
-
-                    // Payment details
-                    const chosenMethod = order.paymentMethod || 'Cash';
-                    let methodDisplay = chosenMethod;
-                    if (chosenMethod === 'Cash') methodDisplay = 'نقداً بالمقر 💵';
-                    else if (chosenMethod === 'Vodafone Cash') methodDisplay = 'فودافون كاش 📱';
-                    else if (chosenMethod === 'InstaPay') methodDisplay = 'انستاباي 🏛️';
-                    else if (chosenMethod === 'cod') methodDisplay = 'الدفع عند الاستلام 🚚';
-
-                    let proofBtnHtml = '';
-                    if (order.paymentProof) {
-                        proofBtnHtml = `
-                            <button class="btn-success" style="padding: 2px 6px; font-size: 10px; margin-top: 5px; display: inline-block; width: auto;" onclick="window.viewSuperPaymentProof('${order.id}', \`${order.paymentProof}\`)">
-                                <i class="fa-solid fa-image"></i> عرض سند الدفع 📸
-                            </button>
-                        `;
-                    }
-
-                    const statusDropdown = `
-                        <select onchange="window.updateOrderStatus('${order.id}', this.value)" style="padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer; color: var(--color-text-primary);">
-                            <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم تلقي الطلب</option>
-                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم شحن الطلب</option>
-                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
-                        </select>
-                    `;
-
-                    const deleteBtn = `
-                        <button class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; margin-right: 5px; background: var(--color-error); cursor: pointer;" onclick="window.deleteCentralOrder('${order.id}')">
-                            <i class="fa-solid fa-trash-can"></i> حذف
-                        </button>
-                    `;
-
-                    tbody.innerHTML += `
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td>${nurseryDetails}</td>
-                            <td>
-                                <strong>${order.parentName || 'ولي أمر'}</strong>
-                                <div style="font-size:11px; color:var(--text-gray); margin-top:4px;">الهاتف: ${order.parentPhone || 'غير مسجل'}</div>
+                // ================= Render 1: External Store Orders =================
+                if (externalOrders.length === 0) {
+                    externalTbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 40px; color: var(--text-gray);">
+                                <i class="fa-solid fa-store" style="font-size: 32px; color: var(--border-color); display: block; margin-bottom: 10px;"></i>
+                                <span style="font-size: 15px; font-weight: 800;">لا توجد طلبات متجر خارجي حتى الآن.</span>
+                                <div style="font-size: 12px; margin-top: 5px;">ستظهر هنا فوراً الطلبات الواردة من صفحة المنتج وحملات التسويق.</div>
                             </td>
-                            <td>
-                                ${itemsHtml}
-                                <div style="margin-top:4px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${totalAmount} EGP</div>
-                                <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">الدفع: ${methodDisplay}</div>
-                                ${proofBtnHtml}
-                            </td>
-                            <td>${statusDropdown}</td>
-                            <td>${deleteBtn}</td>
                         </tr>
                     `;
-                });
+                } else {
+                    externalTbody.innerHTML = '';
+                    externalOrders.forEach(order => {
+                        // Customer items summary
+                        let itemsHtml = '';
+                        let itemsTextSummary = [];
+                        order.items.forEach(it => {
+                            itemsHtml += `
+                                <div style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                    <span>• ${it.name}</span>
+                                    <span style="background: var(--color-background); border: 1px solid var(--border-color); padding: 1px 7px; border-radius: 8px; font-size: 11px; color: var(--color-accent); font-weight: 900;">×${it.quantity || 1}</span>
+                                </div>
+                            `;
+                            itemsTextSummary.push(`${it.name} (×${it.quantity || 1})`);
+                        });
+                        const itemsJoinedText = itemsTextSummary.join(' + ');
+
+                        // Payment label formatting
+                        let payBadge = '';
+                        const payMethod = order.paymentMethod;
+                        if (payMethod === 'vodafone_cash') {
+                            payBadge = `<span style="background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; padding: 3px 8px; border-radius: 8px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-mobile-screen"></i> فودافون كاش</span>`;
+                        } else if (payMethod === 'instapay') {
+                            payBadge = `<span style="background: #F3E8FF; color: #9333EA; border: 1px solid #D8B4FE; padding: 3px 8px; border-radius: 8px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-building-columns"></i> إنستاباي</span>`;
+                        } else {
+                            payBadge = `<span style="background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; padding: 3px 8px; border-radius: 8px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;"><i class="fa-solid fa-hand-holding-dollar"></i> عند الاستلام</span>`;
+                        }
+
+                        let proofBtn = '';
+                        if (order.paymentProof) {
+                            proofBtn = `
+                                <button class="btn-success" style="padding: 3px 8px; font-size: 11px; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px;" onclick="window.viewSuperPaymentProof('${order.id}', \`${order.paymentProof}\`)">
+                                    <i class="fa-solid fa-image"></i> إيصال الدفع 📸
+                                </button>
+                            `;
+                        }
+
+                        // Status dropdown
+                        const statusDropdown = `
+                            <select onchange="window.updateOrderStatus('${order.id}', this.value, '${order.collectionName}')" style="padding: 7px 10px; border-radius: 10px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: 900; cursor: pointer; width: 100%; color: var(--color-text-primary);">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ قيد المراجعة</option>
+                                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>📦 جاري التجهيز</option>
+                                <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم التأكيد</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم الشحن (Axon)</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ ملغي</option>
+                            </select>
+                        `;
+
+                        // Quick WhatsApp button
+                        const waBtn = `
+                            <button type="button" class="btn-success" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; background: #25D366; color: white;" onclick="window.openCustomerWhatsApp('${order.customerPhone}', '${order.customerName}', '${order.orderId}', ${order.totalPrice}, '${itemsJoinedText.replace(/'/g, "\\'")}')">
+                                <i class="fa-brands fa-whatsapp" style="font-size: 14px;"></i> <span>مراسلة واتساب</span>
+                            </button>
+                        `;
+
+                        // Delete button
+                        const deleteBtn = `
+                            <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;" onclick="window.deleteCentralOrder('${order.id}', '${order.collectionName}')">
+                                <i class="fa-solid fa-trash-can"></i> حذف
+                            </button>
+                        `;
+
+                        const formattedDate = window.formatOrderDate(order.timestamp);
+
+                        externalTbody.innerHTML += `
+                            <tr style="border-bottom: 1px solid var(--border-color); vertical-align: top;">
+                                <td>
+                                    <div style="font-family: monospace; font-weight: 900; color: var(--color-accent); font-size: 13.5px;">#${order.orderId}</div>
+                                    <div style="font-size: 11px; color: var(--text-gray); margin-top: 4px;"><i class="fa-regular fa-clock"></i> ${formattedDate}</div>
+                                    <span style="display: inline-block; font-size: 10px; font-weight: 800; background: rgba(193, 120, 90, 0.12); color: var(--color-accent); padding: 1px 6px; border-radius: 6px; margin-top: 4px;">المتجر الخارجي</span>
+                                </td>
+                                <td>
+                                    <div style="font-size: 14px; font-weight: 900; color: var(--color-brand-navy);">${order.customerName}</div>
+                                    <div style="margin-top: 3px;">
+                                        <a href="tel:${order.customerPhone}" style="color: var(--color-brand-primary); font-size: 12px; font-weight: 800; text-decoration: none; direction: ltr; display: inline-block;">
+                                            <i class="fa-solid fa-phone" style="font-size: 10px;"></i> ${order.customerPhone || 'غير مدخل'}
+                                        </a>
+                                    </div>
+                                    <div style="font-size: 11.5px; color: var(--text-dark); margin-top: 4px; line-height: 1.4;">
+                                        <i class="fa-solid fa-location-dot" style="color: var(--color-accent); font-size: 11px;"></i>
+                                        <span>${order.customerAddress || 'العنوان غير محدد'}</span>
+                                    </div>
+                                    ${order.customerNotes ? `<div style="background: #FFFBEB; border-radius: 6px; padding: 3px 6px; font-size: 11px; color: #92400E; margin-top: 4px;">📝 ${order.customerNotes}</div>` : ''}
+                                </td>
+                                <td>
+                                    ${itemsHtml}
+                                    <div style="margin-top: 6px; font-weight: 900; color: var(--primary-maroon); font-size: 14.5px; border-top: 1px dashed var(--border-color); padding-top: 4px;">
+                                        الإجمالي: ${order.totalPrice} ج.م
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>${payBadge}</div>
+                                    ${proofBtn}
+                                </td>
+                                <td>${statusDropdown}</td>
+                                <td>
+                                    <div style="display: flex; gap: 6px; flex-direction: column;">
+                                        ${waBtn}
+                                        ${deleteBtn}
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // ================= Render 2: Nursery & Teacher Orders =================
+                if (nurseryOrders.length === 0) {
+                    nurseryTbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-gray);">
+                                <i class="fa-solid fa-school" style="font-size: 32px; color: var(--border-color); display: block; margin-bottom: 10px;"></i>
+                                <span style="font-size: 15px; font-weight: 800;">لا توجد طلبات واردة من إدارات الحضانات حالياً.</span>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    nurseryTbody.innerHTML = '';
+                    nurseryOrders.forEach(order => {
+                        let itemsHtml = '';
+                        order.items.forEach(it => {
+                            itemsHtml += `<div>• ${it.name} (${it.price} ج.م × ${it.quantity || 1})</div>`;
+                        });
+
+                        const nurseryData = (order.nurseryId && allNurseriesDataMap) ? allNurseriesDataMap[order.nurseryId] : null;
+                        let nurseryDetails = '';
+                        if (nurseryData && nurseryData.name) {
+                            nurseryDetails = `
+                                <div>
+                                    <strong style="color:var(--primary-maroon);">${nurseryData.name}</strong><br>
+                                    ${nurseryData.address ? `<span style="font-size:11px; color:var(--text-gray);"><i class="fa-solid fa-map-marker-alt"></i> ${nurseryData.address}</span><br>` : ''}
+                                    ${nurseryData.phone ? `<span style="font-size:11px; color:var(--text-gray); direction:ltr; display:inline-block;"><i class="fa-solid fa-phone"></i> ${nurseryData.phone}</span>` : ''}
+                                </div>
+                            `;
+                        } else {
+                            nurseryDetails = `<strong>${order.nurseryName || order.nurseryId || 'حضانة معتمدة'}</strong>`;
+                        }
+
+                        const statusDropdown = `
+                            <select onchange="window.updateOrderStatus('${order.id}', this.value, '${order.collectionName}')" style="padding: 6px 10px; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer;">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ قيد المراجعة</option>
+                                <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم تلقي الطلب</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم شحن الطلب</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
+                            </select>
+                        `;
+
+                        const deleteBtn = `
+                            <button class="btn-danger" style="padding: 6px 10px; font-size: 12px;" onclick="window.deleteCentralOrder('${order.id}', '${order.collectionName}')">
+                                <i class="fa-solid fa-trash-can"></i> حذف
+                            </button>
+                        `;
+
+                        nurseryTbody.innerHTML += `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td>${nurseryDetails}</td>
+                                <td>
+                                    <strong>${order.customerName || order.parentName || 'مديرة الروضة'}</strong>
+                                    <div style="font-size:11px; color:var(--text-gray); margin-top:4px;">الهاتف: ${order.customerPhone || 'غير مسجل'}</div>
+                                </td>
+                                <td>
+                                    ${itemsHtml || 'طلب مناهج تعليمية'}
+                                    <div style="margin-top:4px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${order.totalPrice} ج.م</div>
+                                    <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">الدفع: ${order.paymentMethod}</div>
+                                </td>
+                                <td>${statusDropdown}</td>
+                                <td>${deleteBtn}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // ================= Render 3: Parent App Orders =================
+                if (parentOrders.length === 0) {
+                    parentTbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-gray);">
+                                <i class="fa-solid fa-user-group" style="font-size: 32px; color: var(--border-color); display: block; margin-bottom: 10px;"></i>
+                                <span style="font-size: 15px; font-weight: 800;">لا توجد طلبات واردة من أولياء الأمور حالياً.</span>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    parentTbody.innerHTML = '';
+                    parentOrders.forEach(order => {
+                        let itemsHtml = '';
+                        order.items.forEach(it => {
+                            itemsHtml += `<div>• ${it.name} (${it.price} ج.م × ${it.quantity || 1})</div>`;
+                        });
+
+                        const nurseryData = (order.nurseryId && allNurseriesDataMap) ? allNurseriesDataMap[order.nurseryId] : null;
+                        const nurseryTitle = nurseryData?.name || order.nurseryName || 'حضانة الطفل';
+
+                        let proofBtnHtml = '';
+                        if (order.paymentProof) {
+                            proofBtnHtml = `
+                                <button class="btn-success" style="padding: 3px 8px; font-size: 10.5px; margin-top: 5px; display: inline-flex; align-items: center; gap: 4px;" onclick="window.viewSuperPaymentProof('${order.id}', \`${order.paymentProof}\`)">
+                                    <i class="fa-solid fa-image"></i> عرض سند الدفع 📸
+                                </button>
+                            `;
+                        }
+
+                        const statusDropdown = `
+                            <select onchange="window.updateOrderStatus('${order.id}', this.value, '${order.collectionName}')" style="padding: 6px 10px; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--white); font-size: 12px; font-weight: bold; cursor: pointer;">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ قيد المراجعة</option>
+                                <option value="approved" ${order.status === 'approved' ? 'selected' : ''}>📥 تم تلقي الطلب</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 تم شحن الطلب</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>🎉 تم التسليم</option>
+                            </select>
+                        `;
+
+                        const deleteBtn = `
+                            <button class="btn-danger" style="padding: 6px 10px; font-size: 12px;" onclick="window.deleteCentralOrder('${order.id}', '${order.collectionName}')">
+                                <i class="fa-solid fa-trash-can"></i> حذف
+                            </button>
+                        `;
+
+                        parentTbody.innerHTML += `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td>
+                                    <strong style="color:var(--primary-maroon);">${nurseryTitle}</strong>
+                                    ${order.studentName ? `<div style="font-size:11px; color:var(--text-gray); margin-top:2px;">الطفل: ${order.studentName}</div>` : ''}
+                                </td>
+                                <td>
+                                    <strong>${order.parentName || order.customerName || 'ولي أمر'}</strong>
+                                    <div style="font-size:11px; color:var(--text-gray); margin-top:4px;">الهاتف: ${order.parentPhone || 'غير مسجل'}</div>
+                                </td>
+                                <td>
+                                    ${itemsHtml || 'مشتريات تعليمية'}
+                                    <div style="margin-top:4px; font-weight:bold; color:var(--primary-maroon);">الإجمالي: ${order.totalPrice} ج.م</div>
+                                    <div style="font-size:11px; color:var(--text-gray); margin-top:3px;">الدفع: ${order.paymentMethod}</div>
+                                    ${proofBtnHtml}
+                                </td>
+                                <td>${statusDropdown}</td>
+                                <td>${deleteBtn}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                // Restore active sub-tab view
+                window.switchOrdersSubTab(window.activeOrdersSubTab || 'external');
+
             } catch (err) {
                 console.error("Error fetching central orders:", err);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
+                if (externalTbody) externalTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">حدث خطأ أثناء تحميل الطلبات.</td></tr>';
             }
         };
 
-        window.updateOrderStatus = async (orderId, newStatus) => {
+        window.updateOrderStatus = async (orderId, newStatus, collectionName = 'orders') => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             try {
-                await updateDoc(doc(db, "orders", orderId), {
-                    status: newStatus,
-                    updatedAt: new Date().getTime()
-                });
+                // Try updating in specified collection, fallback to the other
+                try {
+                    await updateDoc(doc(db, collectionName, orderId), {
+                        status: newStatus,
+                        updatedAt: Date.now()
+                    });
+                } catch (firstErr) {
+                    const altColl = collectionName === 'orders' ? 'store_orders' : 'orders';
+                    await updateDoc(doc(db, altColl, orderId), {
+                        status: newStatus,
+                        updatedAt: Date.now()
+                    });
+                }
                 alert(currentLang === 'ar' ? '✅ تم تحديث حالة الطلب بنجاح!' : '✅ Order status updated successfully!');
                 window.fetchCentralOrders();
             } catch (err) {
@@ -4166,7 +4652,7 @@
             }
         };
 
-        window.deleteCentralOrder = async (orderId) => {
+        window.deleteCentralOrder = async (orderId, collectionName = 'orders') => {
             const currentLang = localStorage.getItem('selected_language') || 'ar';
             const confirmMsg = currentLang === 'ar' ? 
                 'هل أنت متأكد من حذف هذا الطلب نهائياً من السيستم؟ لا يمكن التراجع عن هذا الإجراء.' : 
@@ -4175,7 +4661,21 @@
             if (!confirm(confirmMsg)) return;
 
             try {
-                await deleteDoc(doc(db, "orders", orderId));
+                // Try deleting from specified collection, then fallback
+                try {
+                    await deleteDoc(doc(db, collectionName, orderId));
+                } catch (e1) {
+                    const altColl = collectionName === 'orders' ? 'store_orders' : 'orders';
+                    await deleteDoc(doc(db, altColl, orderId));
+                }
+
+                // Also clean up from local storage backup if present
+                try {
+                    let localBackup = JSON.parse(localStorage.getItem('impact_hub_customer_orders') || '[]');
+                    localBackup = localBackup.filter(o => o.orderId !== orderId && o.id !== orderId);
+                    localStorage.setItem('impact_hub_customer_orders', JSON.stringify(localBackup));
+                } catch (e2) {}
+
                 alert(currentLang === 'ar' ? '🗑️ تم حذف الطلب بنجاح!' : '🗑️ Order deleted successfully!');
                 window.fetchCentralOrders();
             } catch (err) {

@@ -1872,6 +1872,8 @@
                 customerPhone: phone,
                 customerAddress: address,
                 customerNotes: notes || '',
+                parentName: name,
+                parentPhone: phone,
                 paymentMethod: payMethod,
                 productId: prod.id,
                 productTitle: prod.title,
@@ -1881,9 +1883,19 @@
                 quantity: qty,
                 totalPrice: totalPrice,
                 total: totalPrice,
+                items: [
+                    {
+                        id: prod.id,
+                        name: prod.title,
+                        price: prod.price,
+                        qty: qty,
+                        quantity: qty
+                    }
+                ],
                 status: "pending",
                 paymentStatus: payMethod === 'cash_on_delivery' ? 'unpaid' : 'pending_verification',
                 source: "marketplace_landing",
+                orderType: "external_store",
                 createdAt: Date.now(),
                 timestamp: Date.now()
             };
