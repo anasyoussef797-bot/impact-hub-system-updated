@@ -3967,16 +3967,20 @@
             document.getElementById('pdm-price').innerText = price + currency;
             document.getElementById('pdm-sales').innerText = activeLang === 'ar' ? `تم بيع ${salesCount} قطعة` : `${salesCount} items sold`;
             
-            // Map title/id to product landing query
-            let queryId = prodId || 'growth-mindset-poster';
-            if (title && (title.includes('عقلية') || title.includes('Growth') || title.includes('بوستر'))) {
-                queryId = 'growth-mindset-poster';
-            } else if (title && (title.includes('تأسيس') || title.includes('STEM'))) {
-                queryId = 'prod_stem_kit';
-            } else if (title && (title.includes('مكعبات') || title.includes('ذكاء'))) {
-                queryId = 'prod_003';
-            } else if (title && (title.includes('رسم') || title.includes('تلوين'))) {
-                queryId = 'prod_002';
+            // Direct link to the exact Firestore product document ID
+            let queryId = prodId;
+            if (!queryId) {
+                if (title && (title.includes('عقلية') || title.includes('Growth') || title.includes('بوستر'))) {
+                    queryId = 'growth-mindset-poster';
+                } else if (title && (title.includes('تأسيس') || title.includes('STEM'))) {
+                    queryId = 'prod_stem_kit';
+                } else if (title && (title.includes('مكعبات') || title.includes('ذكاء'))) {
+                    queryId = 'prod_003';
+                } else if (title && (title.includes('رسم') || title.includes('تلوين'))) {
+                    queryId = 'prod_002';
+                } else {
+                    queryId = 'growth-mindset-poster';
+                }
             }
             const buyLink = document.getElementById('pdm-direct-buy-link');
             if (buyLink) {

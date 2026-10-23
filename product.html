@@ -1231,44 +1231,9 @@
         </p>
 
         <div class="switch-grid" id="products-catalog-grid">
-            <!-- Growth Mindset Poster Card -->
-            <div class="product-switch-card active" onclick="loadProductById('growth-mindset-poster')">
-                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=150&q=80" alt="بوستر عقلية النمو" class="switch-thumb">
-                <div>
-                    <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark);">بوستر عقلية النمو للأطفال</h4>
-                    <span style="font-size: 11px; color: var(--color-accent); font-weight: bold;">⭐ الأكثر مبيعاً في مصر</span>
-                    <div style="font-weight: 900; color: var(--color-brand-primary); font-size: 15px; margin-top: 4px;">195 ج.م</div>
-                </div>
-            </div>
-
-            <!-- Foundation STEM Kit -->
-            <div class="product-switch-card" onclick="loadProductById('prod_stem_kit')">
-                <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=150&q=80" alt="حقيبة التأسيس التفاعلية" class="switch-thumb">
-                <div>
-                    <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark);">حقيبة التأسيس التفاعلية والحروف</h4>
-                    <span style="font-size: 11px; color: #047857; font-weight: bold;">شاملة الكتب والمجسمات</span>
-                    <div style="font-weight: 900; color: var(--color-brand-primary); font-size: 15px; margin-top: 4px;">350 ج.م</div>
-                </div>
-            </div>
-
-            <!-- Building Blocks -->
-            <div class="product-switch-card" onclick="loadProductById('prod_003')">
-                <img src="https://images.unsplash.com/photo-1515462277126-270d878326e5?auto=format&fit=crop&w=150&q=80" alt="مكعبات الذكاء" class="switch-thumb">
-                <div>
-                    <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark);">مكعبات الذكاء والتفكير الهندسي</h4>
-                    <span style="font-size: 11px; color: var(--text-gray); font-weight: bold;">لتنمية التخيل المكاني</span>
-                    <div style="font-weight: 900; color: var(--color-brand-primary); font-size: 15px; margin-top: 4px;">240 ج.م</div>
-                </div>
-            </div>
-
-            <!-- Smart Water Drawing Book -->
-            <div class="product-switch-card" onclick="loadProductById('prod_002')">
-                <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=150&q=80" alt="كتاب الرسم المائي" class="switch-thumb">
-                <div>
-                    <h4 style="font-size: 14px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark);">كتاب التلوين بالماء الذكي السحري</h4>
-                    <span style="font-size: 11px; color: var(--text-gray); font-weight: bold;">إبداع بدون أي فوضى</span>
-                    <div style="font-weight: 900; color: var(--color-brand-primary); font-size: 15px; margin-top: 4px;">120 ج.م</div>
-                </div>
+            <div style="grid-column: 1/-1; text-align: center; padding: 25px; color: var(--text-gray);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: var(--color-brand-primary); margin-bottom: 8px;"></i>
+                <div>جاري جلب وقراءة أحدث منتجات المتجر المركزي مباشرة...</div>
             </div>
         </div>
     </section>
@@ -1593,10 +1558,10 @@
         </div>
     </div>
 
-    <!-- Firebase SDK & Client-side Product Engine -->
+    <!-- Firebase SDK & Client-side Product Engine (Live Real-time Sync with Internal Store) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBQf6KEsbBXnK9AZ3UnKNZGD4z4uIswAZk",
@@ -1610,8 +1575,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app, "ai-studio-impacthubsystem-8d8e446d-b85a-48ae-a555-81773397809d");
 
-        // Curated Products Catalog Data with Rich Educational Specs
-        window.PRODUCTS_CATALOG = {
+        // Curated specifications for default educational products
+        const DEFAULT_CATALOG = {
             "growth-mindset-poster": {
                 id: "growth-mindset-poster",
                 title: "بوستر عقلية النمو والتفكير الإيجابي للأطفال (Growth Mindset Poster)",
@@ -1628,62 +1593,132 @@
                     "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80"
                 ],
                 summary: "الأداة التربوية الأكثر طلباً وتأثيراً في مصر والوطن العربي؛ تساعد طفلك على تحويل مشاعر الإحباط واليأس الدراسي إلى إصرار وشغف بالتجربة والتعلم. مصمم باللغة العربية بعبارات تحفيزية واضحة ورسومات مبسطة يسهل تطبيقها يومياً في البيت والمدرسة."
-            },
-            "prod_stem_kit": {
-                id: "prod_stem_kit",
-                title: "حقيبة التأسيس التفاعلية والحروف المغناطيسية (STEM & Arabic Kit)",
-                shortTitle: "حقيبة التأسيس والحروف التفاعلية",
-                price: 350,
-                oldPrice: 480,
-                rating: 5,
-                salesCount: 1920,
-                image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=800&q=80",
-                    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80"
-                ],
-                summary: "حقيبة متكاملة تضم كتب أنشطة تفاعلية مطبوعة UV، الحروف والأرقام المغناطيسية ثلاثية الأبعاد، وبطاقات التحدي الذهني، متوافقة مع تطبيق ولي الأمر لتأسيس قوي ومرح."
-            },
-            "prod_003": {
-                id: "prod_003",
-                title: "مجموعة مكعبات البناء والذكاء الهندسي الملونة",
-                shortTitle: "مكعبات الذكاء والتفكير الهندسي",
-                price: 240,
-                oldPrice: 320,
-                rating: 5,
-                salesCount: 840,
-                image: "https://images.unsplash.com/photo-1515462277126-270d878326e5?auto=format&fit=crop&w=800&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1515462277126-270d878326e5?auto=format&fit=crop&w=800&q=80"
-                ],
-                summary: "ألعاب خشبية وحسية معتمدة لتنمية مهارات التخيل، التخطيط الحركي، والتفكير المنطقي للأعمار من سنتين إلى 7 سنوات بأعلى معايير الأمان."
-            },
-            "prod_002": {
-                id: "prod_002",
-                title: "كتاب التلوين بالماء الذكي السحري للأطفال",
-                shortTitle: "كتاب التلوين بالماء الذكي",
-                price: 120,
-                oldPrice: 170,
-                rating: 5,
-                salesCount: 1450,
-                image: "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80",
-                gallery: [
-                    "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80"
-                ],
-                summary: "مجموعات رسم مبتكرة تعيد تلوين الصفحات بالماء فقط دون أي ألوان كيميائية أو فوضى، وتجف ليعيد الطفل استخدامها مئات المرات."
             }
         };
 
+        window.PRODUCTS_CATALOG = { ...DEFAULT_CATALOG };
         window.currentProduct = window.PRODUCTS_CATALOG["growth-mindset-poster"];
         window.currentOrderQty = 1;
+        window.isFirstRealtimeLoad = true;
+
+        // Render catalog items dynamically into the switch grid
+        window.renderProductsCatalogGrid = () => {
+            const grid = document.getElementById('products-catalog-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const prods = Object.values(window.PRODUCTS_CATALOG);
+            if (prods.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 25px; color: var(--text-gray);">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: var(--color-brand-primary); margin-bottom: 8px;"></i>
+                        <div>جاري قراءة المنتجات من المتجر المركزي...</div>
+                    </div>
+                `;
+                return;
+            }
+
+            prods.forEach(prod => {
+                const isActive = (window.currentProduct && window.currentProduct.id === prod.id);
+                const card = document.createElement('div');
+                card.className = `product-switch-card ${isActive ? 'active' : ''}`;
+                card.id = `catalog-card-${prod.id}`;
+                card.onclick = () => window.loadProductById(prod.id);
+                card.innerHTML = `
+                    <img src="${prod.image}" alt="${prod.shortTitle || prod.title}" class="switch-thumb">
+                    <div style="flex: 1; min-width: 0;">
+                        <h4 style="font-size: 13.5px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${prod.shortTitle || prod.title}</h4>
+                        <span style="font-size: 11px; color: var(--color-accent); font-weight: bold;">⭐ (${prod.salesCount} مبيعة)</span>
+                        <div style="font-weight: 900; color: var(--color-brand-primary); font-size: 15px; margin-top: 4px;">${prod.price} ج.م</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        // Real-time synchronization with internal store products collection
+        window.initRealtimeStoreSync = () => {
+            onSnapshot(collection(db, "products"), (snapshot) => {
+                const liveItems = {};
+                
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const docId = docSnap.id;
+                    const title = data.title || data.name || 'منتج تعليمي معتمد';
+                    const shortTitle = title.length > 38 ? (title.slice(0, 35) + '...') : title;
+                    const price = Number(data.price) || 100;
+                    const oldPrice = Number(data.oldPrice) || Math.round(price * 1.35);
+                    const sales = Number(data.salesCount) || 150;
+                    const rating = Number(data.rating) || 5;
+                    const image = data.image || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=80';
+                    const gallery = (data.gallery && Array.isArray(data.gallery) && data.gallery.length > 0) ? data.gallery : [image];
+                    const summary = data.summary || data.description || 
+                        `أداة ومنهج تفاعلي متقدم مصمم بأيدي خبراء تربويين لدعم نمو وتأسيس الطفل، متوافق مع مناهج Impact Hub Egypt وتطبيق ولي الأمر. خامات معتمدة آمنة ومقاومة للماء والتمزق.`;
+
+                    liveItems[docId] = {
+                        id: docId,
+                        title: title,
+                        shortTitle: shortTitle,
+                        price: price,
+                        oldPrice: oldPrice,
+                        salesCount: sales,
+                        rating: rating,
+                        image: image,
+                        gallery: gallery,
+                        summary: summary,
+                        isRealtimeFirestore: true
+                    };
+                });
+
+                // If Firestore has products, prioritize them
+                if (Object.keys(liveItems).length > 0) {
+                    window.PRODUCTS_CATALOG = liveItems;
+                } else {
+                    window.PRODUCTS_CATALOG = { ...DEFAULT_CATALOG };
+                }
+
+                // Render dynamic switch grid
+                window.renderProductsCatalogGrid();
+
+                // Check URL parameter or active product
+                const params = new URLSearchParams(window.location.search);
+                const urlId = params.get('id') || params.get('p') || params.get('product');
+
+                if (urlId && window.PRODUCTS_CATALOG[urlId]) {
+                    window.loadProductById(urlId);
+                } else if (urlId) {
+                    // Match by partial title keyword
+                    const foundKey = Object.keys(window.PRODUCTS_CATALOG).find(k => {
+                        const p = window.PRODUCTS_CATALOG[k];
+                        return p.id === urlId || (urlId.includes('growth') && p.title.includes('عقلية')) || p.title.toLowerCase().includes(urlId.toLowerCase());
+                    });
+                    if (foundKey) {
+                        window.loadProductById(foundKey);
+                    } else if (window.isFirstRealtimeLoad) {
+                        const firstId = Object.keys(window.PRODUCTS_CATALOG)[0];
+                        if (firstId) window.loadProductById(firstId);
+                    }
+                } else if (window.isFirstRealtimeLoad) {
+                    const firstId = Object.keys(window.PRODUCTS_CATALOG)[0];
+                    if (firstId) window.loadProductById(firstId);
+                } else if (window.currentProduct && window.PRODUCTS_CATALOG[window.currentProduct.id]) {
+                    // Update active product view with latest Firestore edits (price/title/image)
+                    window.loadProductById(window.currentProduct.id);
+                }
+
+                window.isFirstRealtimeLoad = false;
+            }, (err) => {
+                console.error("Firestore products onSnapshot error:", err);
+                window.renderProductsCatalogGrid();
+            });
+        };
 
         // URL Parameters Parsing: Support direct links from Pinterest, Social Ads, or Custom IDs
         function parseUrlProduct() {
             const params = new URLSearchParams(window.location.search);
-            const id = params.get('id') || params.get('p') || params.get('product');
             const source = params.get('source') || params.get('ref');
 
-            // Pinterest Special Welcome
+            // Pinterest Special Welcome Banner
             if (source && source.toLowerCase().includes('pinterest')) {
                 const notice = document.getElementById('top-notice');
                 if (notice) {
@@ -1693,20 +1728,15 @@
                     `;
                 }
             }
-
-            if (id && window.PRODUCTS_CATALOG[id]) {
-                window.loadProductById(id);
-            } else {
-                window.loadProductById("growth-mindset-poster");
-            }
         }
 
         window.loadProductById = (id) => {
-            const prod = window.PRODUCTS_CATALOG[id] || window.PRODUCTS_CATALOG["growth-mindset-poster"];
+            const prod = window.PRODUCTS_CATALOG[id] || Object.values(window.PRODUCTS_CATALOG)[0];
+            if (!prod) return;
             window.currentProduct = prod;
 
             // Update UI elements
-            document.getElementById('breadcrumb-current-title').innerText = prod.shortTitle;
+            document.getElementById('breadcrumb-current-title').innerText = prod.shortTitle || prod.title;
             document.getElementById('prod-main-title').innerText = prod.title;
             document.getElementById('prod-summary').innerText = prod.summary;
             document.getElementById('prod-price-text').innerText = prod.price;
@@ -1717,7 +1747,7 @@
             document.getElementById('modal-summary-title').innerText = prod.title;
             document.getElementById('modal-summary-price').innerText = prod.price + ' ج.م';
 
-            // Update OpenGraph metadata
+            // Update OpenGraph metadata dynamically
             document.title = prod.title + ' | Impact Hub Egypt';
             const ogTitle = document.getElementById('og-title');
             if (ogTitle) ogTitle.content = prod.title;
@@ -1727,19 +1757,19 @@
             // Update active state in catalog switcher
             document.querySelectorAll('.product-switch-card').forEach(c => {
                 c.classList.remove('active');
-                if (c.getAttribute('onclick')?.includes(id)) {
-                    c.classList.add('active');
-                }
             });
+            const activeCard = document.getElementById(`catalog-card-${prod.id}`);
+            if (activeCard) activeCard.classList.add('active');
 
             // Update thumbnails
             const thumbsContainer = document.getElementById('thumbs-container');
-            if (thumbsContainer && prod.gallery && prod.gallery.length > 0) {
+            if (thumbsContainer) {
+                const gallery = (prod.gallery && prod.gallery.length > 0) ? prod.gallery : [prod.image];
                 thumbsContainer.innerHTML = '';
-                prod.gallery.forEach((imgUrl, idx) => {
+                gallery.forEach((imgUrl, idx) => {
                     thumbsContainer.innerHTML += `
                         <div class="thumb-box ${idx === 0 ? 'active' : ''}" onclick="switchMainImage(${idx})">
-                            <img src="${imgUrl}" alt="Thumbnail ${idx + 1}">
+                            <img src="${imgUrl}" alt="معاينة ${idx + 1}">
                         </div>
                     `;
                 });
@@ -2000,8 +2030,20 @@
             btn.innerHTML = originalText;
         };
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', parseUrlProduct);
+        // Initialize on load and start live Firestore sync
+        parseUrlProduct();
+        if (typeof window.initRealtimeStoreSync === 'function') {
+            window.initRealtimeStoreSync();
+        }
+
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', () => {
+                parseUrlProduct();
+                if (typeof window.initRealtimeStoreSync === 'function') {
+                    window.initRealtimeStoreSync();
+                }
+            });
+        }
     </script>
 </body>
 </html>
